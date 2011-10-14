@@ -36,7 +36,7 @@ public class SampleTest1 {
         // truststore
         try {
             URL url = new URL(
-                    "https://www.allplayers.com/?q=api/v1/rest/groups.json&search=\"Badminton+Devs\"");
+                    "https://www.allplayers.com/?q=api/v1/rest/groups.json");
             URLConnection connection = url.openConnection();
             connection.setDoInput(true);
             InputStream inStream = connection.getInputStream();
