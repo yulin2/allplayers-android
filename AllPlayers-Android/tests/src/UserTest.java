@@ -57,7 +57,7 @@ public class UserTest
 		//Log in
 		try
 		{
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/login.xml");
+			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/login.json");
 			HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
 			DataOutputStream printout;
 			BufferedReader input;
