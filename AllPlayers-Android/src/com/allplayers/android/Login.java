@@ -4,19 +4,13 @@ package com.allplayers.android;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.method.PasswordTransformationMethod;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONSerializer;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -32,8 +26,8 @@ import javax.net.ssl.X509TrustManager;
 /* Class information */
 public class Login extends Activity
 {
-	private EditText username;
-	private EditText password;
+	//private EditText username;
+	//private EditText password;
 
 	/** called when the activity is first created. */
 	@Override
@@ -42,14 +36,47 @@ public class Login extends Activity
 		super.onCreate(savedInstanceState);
 
 		//create the panel to enclose everything
-		View mainPanel = createInputForm();
+		//View mainPanel = createInputForm();
 		
 		//show the panel on the screen
-		setContentView(mainPanel);
+		//setContentView(mainPanel);
+		setContentView(R.layout.main);
+		
+		final Button button = (Button) findViewById(R.id.loginButton);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+            	EditText usernameEditText = (EditText)findViewById(R.id.usernameField);     
+            	EditText passwordEditText = (EditText)findViewById(R.id.passwordField);
+            	
+            	String username = usernameEditText.getText().toString();
+            	String password = passwordEditText.getText().toString();;
+            	
+                String result = validateLogin(username, password);
+                
+                String name = "";
+				try
+				{
+					JSONObject jsonResult = new JSONObject(result);
+					name += jsonResult.getJSONObject("user").getString("nickname");
+				}
+				catch(JSONException ex)
+				{
+					System.out.println(ex);
+					name += "Login Error: " + ex.toString();
+				}
+				
+                TextView tv = new TextView(Login.this);
+				tv.setText("Hello, " + name);
+				setContentView(tv);
+            }
+        });
 	}
 	
+	//No longer needed with xml login screen
 	/** create the login form */
-	private ViewGroup createInputForm()
+/*	private ViewGroup createInputForm()
 	{
 		LinearLayout panel = new LinearLayout(this);
 		panel.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -86,8 +113,8 @@ public class Login extends Activity
 				TextView tv = new TextView(Login.this);
 				
 				String name = "";
-				String result = checkLogin(username.getText().toString(), password.getText().toString());
-				JSONArray jsonArray = (JSONArray) JSONSerializer.toJSON(result);
+				//String result = checkLogin(username.getText().toString(), password.getText().toString());
+				//JSONArray jsonArray = (JSONArray) JSONSerializer.toJSON(result);
 				
 				tv.setText("Hello, " + name);
 				setContentView(tv);
@@ -106,8 +133,8 @@ public class Login extends Activity
 
 		return panel;
 	}
-	
-	public String checkLogin(String username, String password)
+*/	
+	public String validateLogin(String username, String password)
 	{
 		//Create a trust manager that does not validate certificate chains
 		TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager()
@@ -136,16 +163,17 @@ public class Login extends Activity
 		catch (Exception ex)
 		{
 		}
-		
 		//Now you can access an https URL without having the certificate in the truststore
 		
 		//Log in
 		try
 		{
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/login.json");
-			HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
+			HttpURLConnection urlConn;
 			DataOutputStream printout;
 			BufferedReader input;
+			
+			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/login.json");
+			urlConn = (HttpURLConnection)url.openConnection();
 			
 			urlConn.setDoInput(true);
 			urlConn.setDoOutput(true);
@@ -153,8 +181,9 @@ public class Login extends Activity
 			urlConn.setRequestMethod("POST");
 			urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			
-			//Send POST output.
 			printout = new DataOutputStream(urlConn.getOutputStream());
+			
+			//Send POST output.
 			String content = "username=" + URLEncoder.encode(username, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8");
 			printout.writeBytes(content);
 			printout.flush();
@@ -176,7 +205,7 @@ public class Login extends Activity
 		catch(Exception ex)
 		{
 			System.out.println(ex);
-			return "";
+			return ex.toString();
 		}
 	}
 }
