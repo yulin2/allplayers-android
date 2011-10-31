@@ -5,15 +5,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import javax.net.ssl.*;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.XMLReader;
-import org.xml.sax.InputSource;
-import org.xml.sax.ContentHandler;
-
-import java.io.ByteArrayInputStream;
-
-
 public class GroupTest
 {
 	public static void main(String[] args)
