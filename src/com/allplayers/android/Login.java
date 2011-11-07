@@ -3,6 +3,7 @@
 package com.allplayers.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -67,9 +68,12 @@ public class Login extends Activity
 					name += "Login Error: " + ex.toString();
 				}
 				
-                TextView tv = new TextView(Login.this);
+                /*TextView tv = new TextView(Login.this);
 				tv.setText("Hello, " + name);
-				setContentView(tv);
+				setContentView(tv);*/
+				
+				Intent intent = new Intent(Login.this, MainScreen.class);
+				startActivity(intent);
             }
         });
 	}
