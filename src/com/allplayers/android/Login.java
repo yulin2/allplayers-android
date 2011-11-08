@@ -8,10 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -54,9 +50,10 @@ public class Login extends Activity
             	String username = usernameEditText.getText().toString();
             	String password = passwordEditText.getText().toString();;
             	
-                String result = validateLogin(username, password);
+                //String result = 
+            	validateLogin(username, password);
                 
-                String name = "";
+                /*String name = "";
 				try
 				{
 					JSONObject jsonResult = new JSONObject(result);
@@ -68,7 +65,7 @@ public class Login extends Activity
 					name += "Login Error: " + ex.toString();
 				}
 				
-                /*TextView tv = new TextView(Login.this);
+                TextView tv = new TextView(Login.this);
 				tv.setText("Hello, " + name);
 				setContentView(tv);*/
 				

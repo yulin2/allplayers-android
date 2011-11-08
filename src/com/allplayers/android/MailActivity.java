@@ -1,6 +1,8 @@
 package com.allplayers.android;
 
-public class MailActivity
+import android.app.Activity;
+
+public class MailActivity extends Activity
 {
 
 }

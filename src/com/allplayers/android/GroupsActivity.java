@@ -1,6 +1,8 @@
 package com.allplayers.android;
 
-public class GroupsActivity
+import android.app.Activity;
+
+public class GroupsActivity extends Activity
 {
 
 }

@@ -1,6 +1,8 @@
 package com.allplayers.android;
 
-public class AccountActivity
+import android.app.Activity;
+
+public class AccountActivity extends Activity
 {
 
 }
