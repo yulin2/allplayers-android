@@ -35,11 +35,15 @@ public class MainScreen extends TabActivity
 				res.getDrawable(R.drawable.ic_tab_mail)).setContent(intent);
 		tabHost.addTab(spec);
 		
-		/*intent = new Intent().setClass(this, AccountActivity.class);
-		spec = tabHost.newTabSpec("account").setIndicator("Account")
-				//,res.getDrawable(R.drawable.ic_tab_account))
-				.setContent(intent);
-		tabHost.addTab(spec);*/
+		intent = new Intent().setClass(this, PhotosActivity.class);
+		spec = tabHost.newTabSpec("photos").setIndicator("Photos", 
+				res.getDrawable(R.drawable.ic_tab_photos)).setContent(intent);
+		tabHost.addTab(spec);
+		
+		intent = new Intent().setClass(this, EventsActivity.class);
+		spec = tabHost.newTabSpec("events").setIndicator("Events", 
+				res.getDrawable(R.drawable.ic_tab_events)).setContent(intent);
+		tabHost.addTab(spec);
 		
 		tabHost.setCurrentTab(1);
 	}
