@@ -50,7 +50,7 @@ public class Login extends Activity
 				{
 					JSONObject jsonResult = new JSONObject(result);
 					//name += 
-					jsonResult.getJSONObject("user").getString("nickname");
+					APCI_RestServices.user_id = jsonResult.getJSONObject("user").getString("uuid");
 					
 					Intent intent = new Intent(Login.this, MainScreen.class);
 					startActivity(intent);
