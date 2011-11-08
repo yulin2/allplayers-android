@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <drawable name="ic_tab_groups_white">#ffffff</drawable>
-    <drawable name="ic_tab_groups_grey">#000000</drawable>
+    <drawable name="ic_tab_groups_grey">#808080</drawable>
+    <drawable name="ic_tab_mail_white">#ffffff</drawable>
+    <drawable name="ic_tab_mail_grey">#808080</drawable>
     
 </resources>
