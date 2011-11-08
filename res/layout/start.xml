@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+<!-- the following ImageView holds the AllPlayers logo -->
+<ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:layout_weight="1"></ImageView>
+
+<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_weight="0">
+<Button android:id="@+id/findGroupsButton" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Find Groups" android:gravity="center" android:layout_weight="0"></Button>
+<Button android:id="@+id/logOnButton" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Log on" android:gravity="center" android:layout_weight="0"></Button>
+</LinearLayout>
+
+</LinearLayout>

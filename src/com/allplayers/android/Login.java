@@ -13,17 +13,6 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 /* Class information */
 public class Login extends Activity
 {
@@ -54,13 +43,14 @@ public class Login extends Activity
             	String username = usernameEditText.getText().toString();
             	String password = passwordEditText.getText().toString();;
             	
-                String result = validateLogin(username, password);
+                String result = APCI_RestServices.validateLogin(username, password);
                 
-                String name = "";
+                //String name = "";
 				try
 				{
 					JSONObject jsonResult = new JSONObject(result);
-					name += jsonResult.getJSONObject("user").getString("nickname");
+					//name += 
+					jsonResult.getJSONObject("user").getString("nickname");
 					
 					Intent intent = new Intent(Login.this, MainScreen.class);
 					startActivity(intent);
@@ -68,7 +58,7 @@ public class Login extends Activity
 				catch(JSONException ex)
 				{
 					System.out.println(ex);
-					name += "Login Error: " + ex.toString();
+					//name += "Login Error: " + ex.toString();
 					
 					TextView tv = new TextView(Login.this);
 					tv.setText("Invalid Login");
@@ -138,79 +128,5 @@ public class Login extends Activity
 
 		return panel;
 	}
-*/	
-	public String validateLogin(String username, String password)
-	{
-		//Create a trust manager that does not validate certificate chains
-		TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager()
-		{
-			public java.security.cert.X509Certificate[] getAcceptedIssuers()
-			{
-			return null;
-			}
-			
-			public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
-			{
-			}
-			
-			public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
-			{
-			}
-		}};
-		
-		//Install the all-trusting trust manager
-		try
-		{
-			SSLContext sc = SSLContext.getInstance("SSL");
-			sc.init(null, trustAllCerts, new java.security.SecureRandom());
-			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		}
-		catch (Exception ex)
-		{
-		}
-		//Now you can access an https URL without having the certificate in the truststore
-		
-		//Log in
-		try
-		{
-			HttpURLConnection urlConn;
-			DataOutputStream printout;
-			BufferedReader input;
-			
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/login.json");
-			urlConn = (HttpURLConnection)url.openConnection();
-			
-			urlConn.setDoInput(true);
-			urlConn.setDoOutput(true);
-			urlConn.setUseCaches(false);
-			urlConn.setRequestMethod("POST");
-			urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			
-			printout = new DataOutputStream(urlConn.getOutputStream());
-			
-			//Send POST output.
-			String content = "username=" + URLEncoder.encode(username, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8");
-			printout.writeBytes(content);
-			printout.flush();
-			printout.close();
-			
-			//Get response data.
-			input = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-			String str;
-			
-			String result = "";
-			while((str = input.readLine()) != null)
-			{
-				result += str;
-			}
-			
-			input.close();
-			return result;
-		}
-		catch(Exception ex)
-		{
-			System.out.println(ex);
-			return ex.toString();
-		}
-	}
+*/
 }
