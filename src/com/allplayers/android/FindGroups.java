@@ -1,5 +1,6 @@
 package com.allplayers.android;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,17 +33,27 @@ public class FindGroups extends Activity
             	String groups = "";
 				try
 				{
-					JSONObject jsonResult = new JSONObject(result);
-					groups += jsonResult.getJSONObject("group").getString("title");
+					JSONArray jsonResult = new JSONArray(result);
+					
+					if(jsonResult.length() > 0)
+					{
+						for(int i = 0; i < jsonResult.length(); i++)
+						{
+							groups += jsonResult.getJSONObject(i).getString("title") + "\n\n";
+						}
+					}
+					else
+					{
+						groups += "There were no matches for your search terms.";
+					}
 				}
 				catch(JSONException ex)
 				{
 					groups += ex.toString();
 				}
-            	
-            	TextView tv = new TextView(FindGroups.this);
-        		tv.setText(result);
-        		setContentView(tv);
+				
+				TextView resultView = (TextView)findViewById(R.id.searchGroupsResults);
+				resultView.setText(groups);
             }
         });
 	}

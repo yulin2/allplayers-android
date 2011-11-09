@@ -148,7 +148,7 @@ public class APCI_RestServices
 		//Return all groups that meet search requirement
 		try
 		{
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/groups.json?search=\"" + search + "\"");
+			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/groups.json&search=\"" + search + "\"");
 			URLConnection connection = url.openConnection();
 			connection.setDoInput(true);
 			InputStream inStream = connection.getInputStream();
