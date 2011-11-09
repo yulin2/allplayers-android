@@ -70,13 +70,14 @@ public class APCI_RestServices
 			
 			String line = "";
 			String result = "";
+			
 			while((line = input.readLine()) != null)
 			{
 				result += line;
 			}
 			
 			JSONObject jsonResult = new JSONObject(result);
-			String retrievedUUID = jsonResult.getJSONObject("user").getString("uuid");
+			String retrievedUUID = jsonResult.getString("uuid");
 			
 			if(retrievedUUID.equals(user_id))
 			{
