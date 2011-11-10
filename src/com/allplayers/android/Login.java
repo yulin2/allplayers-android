@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,6 +53,14 @@ public class Login extends Activity
 					JSONObject jsonResult = new JSONObject(result);
 					//name += 
 					APCI_RestServices.user_id = jsonResult.getJSONObject("user").getString("uuid");
+					
+					String sessionName = jsonResult.getString("session_name");
+					
+					CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(Login.this);
+					cookieSyncManager.startSync();
+					CookieManager cookieManager = CookieManager.getInstance();
+					cookieManager.setAcceptCookie(true);
+					cookieManager.setCookie("allplayers.com", sessionName);
 					
 					Intent intent = new Intent(Login.this, MainScreen.class);
 					startActivity(intent);
