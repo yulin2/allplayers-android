@@ -2,7 +2,7 @@ package com.allplayers.android;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+//import org.json.JSONObject; //this import was unused, so i commented it out
 
 import android.app.Activity;
 import android.os.Bundle;
