@@ -13,7 +13,7 @@ public class MailActivity extends Activity
 		super.onCreate(savedInstanceState);
 		
 		TextView tv = new TextView(this);
-		tv.setText("Mail Activity");
+		tv.setText("Mail Activity OH YEAHHH");
 		setContentView(tv);
 	}
 }
