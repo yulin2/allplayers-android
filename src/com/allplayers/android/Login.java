@@ -48,19 +48,26 @@ public class Login extends Activity
                 String result = APCI_RestServices.validateLogin(username, password);
                 
                 //String name = "";
+                
+                //TextView tv = new TextView(Login.this);
+				//tv.setText("" + result);
+				//setContentView(tv);
+                
 				try
 				{
+					
 					JSONObject jsonResult = new JSONObject(result);
 					//name += 
 					APCI_RestServices.user_id = jsonResult.getJSONObject("user").getString("uuid");
 					
 					String sessionName = jsonResult.getString("session_name");
+					String sessionID = jsonResult.getString("sessid");
 					
 					CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(Login.this);
 					cookieSyncManager.startSync();
 					CookieManager cookieManager = CookieManager.getInstance();
 					cookieManager.setAcceptCookie(true);
-					cookieManager.setCookie("allplayers.com", sessionName);
+					cookieManager.setCookie(sessionName, sessionID);
 					
 					Intent intent = new Intent(Login.this, MainScreen.class);
 					startActivity(intent);
