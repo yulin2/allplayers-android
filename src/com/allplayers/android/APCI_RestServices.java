@@ -18,6 +18,8 @@ import org.json.JSONObject;
 public class APCI_RestServices
 {
 	public static String user_id = "";
+	public static String session_name = "";
+	public static String session_id = "";
 	
 	public APCI_RestServices()
 	{
@@ -63,8 +65,9 @@ public class APCI_RestServices
 		try
 		{
 			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + ".json");
-			URLConnection connection = url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setDoInput(true);
+			connection.setRequestProperty("Cookie", session_name + "=" + session_id);
 			InputStream inStream = connection.getInputStream();
 			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
@@ -94,7 +97,7 @@ public class APCI_RestServices
 		{
 			System.out.println(ex);
 			//return false;
-			return ex.toString();
+			return "ERRORRORROROR" + ex.toString();
 		}
 	}
 	

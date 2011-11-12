@@ -50,7 +50,7 @@ public class Login extends Activity
                 //String name = "";
                 
                 //TextView tv = new TextView(Login.this);
-				//tv.setText(result);
+				//tv.setText("" + result);
 				//setContentView(tv);
                 
 				try
@@ -61,12 +61,18 @@ public class Login extends Activity
 					APCI_RestServices.user_id = jsonResult.getJSONObject("user").getString("uuid");
 					
 					String sessionName = jsonResult.getString("session_name");
+					String sessionID = jsonResult.getString("sessid");
 					
-					CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(Login.this);
-					cookieSyncManager.startSync();
-					CookieManager cookieManager = CookieManager.getInstance();
-					cookieManager.setAcceptCookie(true);
-					cookieManager.setCookie(sessionName, sessionName);
+					APCI_RestServices.session_name = sessionName;
+					APCI_RestServices.session_id = sessionID;
+					
+					//CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(Login.this);
+					//cookieSyncManager.startSync();
+					//CookieManager cookieManager = CookieManager.getInstance();
+					//cookieManager.setAcceptCookie(true);
+					//cookieManager.setCookie("www.allplayers.com", sessionName);
+					//cookieManager.setCookie("www.allplayers.com", sessionID);
+					//cookieManager.setCookie(sessionName, sessionID);
 					
 					Intent intent = new Intent(Login.this, MainScreen.class);
 					startActivity(intent);
