@@ -62,17 +62,18 @@ public class APCI_RestServices
 		}
 		
 		//Check an authorized call
+		String result = "";
 		try
 		{
 			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + ".json");
-			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
 			connection.setDoInput(true);
 			connection.setRequestProperty("Cookie", session_name + "=" + session_id);
 			InputStream inStream = connection.getInputStream();
 			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
 			String line = "";
-			String result = "";
+			
 			
 			while((line = input.readLine()) != null)
 			{
@@ -97,7 +98,7 @@ public class APCI_RestServices
 		{
 			System.out.println(ex);
 			//return false;
-			return "ERRORRORROROR" + ex.toString();
+			return "ERRORRORROROR: " + result + "\nuserid=" + user_id + "\nsessionname=" + session_name + "\nsessionid=" + session_id;
 		}
 	}
 	
@@ -187,8 +188,9 @@ public class APCI_RestServices
 		try
 		{
 			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/user/" + user_id + "/groups.json");
-			URLConnection connection = url.openConnection();
+			HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
 			connection.setDoInput(true);
+			connection.setRequestProperty("Cookie", session_name + "=" + session_id);
 			InputStream inStream = connection.getInputStream();
 			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
@@ -204,7 +206,7 @@ public class APCI_RestServices
 		catch(Exception ex)
 		{
 			System.out.println(ex);
-			return test + "\n\n" + ex.toString();
+			return test + "\n\nhmmmmm\n" + ex.toString();
 		}
 	}
 }
