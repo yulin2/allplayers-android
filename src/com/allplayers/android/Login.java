@@ -45,6 +45,9 @@ public class Login extends Activity
             	String username = usernameEditText.getText().toString();
             	String password = passwordEditText.getText().toString();;
             	
+            	username = "masta08";
+            	password = "abc123";
+            	
                 String result = APCI_RestServices.validateLogin(username, password);
                 
                 //String name = "";
@@ -60,19 +63,12 @@ public class Login extends Activity
 					//name += 
 					APCI_RestServices.user_id = jsonResult.getJSONObject("user").getString("uuid");
 					
-					String sessionName = jsonResult.getString("session_name");
-					String sessionID = jsonResult.getString("sessid");
-					
-					APCI_RestServices.session_name = sessionName;
-					APCI_RestServices.session_id = sessionID;
-					
-					//CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(Login.this);
-					//cookieSyncManager.startSync();
-					//CookieManager cookieManager = CookieManager.getInstance();
-					//cookieManager.setAcceptCookie(true);
-					//cookieManager.setCookie("www.allplayers.com", sessionName);
-					//cookieManager.setCookie("www.allplayers.com", sessionID);
-					//cookieManager.setCookie(sessionName, sessionID);
+					/*CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(Login.this);
+					cookieSyncManager.startSync();
+					CookieManager cookieManager = CookieManager.getInstance();
+					cookieManager.setAcceptCookie(true);
+					cookieManager.setCookie("allplayers.com", APCI_RestServices.session_cookie);
+					cookieManager.setCookie("allplayers.com", APCI_RestServices.chocolatechip_cookie);*/
 					
 					Intent intent = new Intent(Login.this, MainScreen.class);
 					startActivity(intent);

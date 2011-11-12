@@ -18,8 +18,8 @@ import org.json.JSONObject;
 public class APCI_RestServices
 {
 	public static String user_id = "";
-	public static String session_name = "";
-	public static String session_id = "";
+	public static String session_cookie = ""; //first session cookie
+	public static String chocolatechip_cookie = ""; //second cookie
 	
 	public APCI_RestServices()
 	{
@@ -63,18 +63,25 @@ public class APCI_RestServices
 		
 		//Check an authorized call
 		String result = "";
+		HttpURLConnection connection;
+		int responsecode = 0;
 		try
 		{
 			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + ".json");
-			HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+			connection = (HttpURLConnection)url.openConnection();
 			connection.setDoInput(true);
-			connection.setRequestProperty("Cookie", session_name + "=" + session_id);
+			connection.setRequestProperty("Cookie", chocolatechip_cookie);
+			connection.addRequestProperty("Cookie", session_cookie);
+			responsecode = connection.getResponseCode();
 			InputStream inStream = connection.getInputStream();
 			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
 			String line = "";
 			
-			
+			if((line = input.readLine()) == null)
+			{
+				result += "null";
+			}
 			while((line = input.readLine()) != null)
 			{
 				result += line;
@@ -98,7 +105,7 @@ public class APCI_RestServices
 		{
 			System.out.println(ex);
 			//return false;
-			return "ERRORRORROROR: " + result + "\nuserid=" + user_id + "\nsessionname=" + session_name + "\nsessionid=" + session_id;
+			return "ERRORRORROROR: \nresult=" + result + "\nresponsecode=" + responsecode + "\nerror=" + ex.toString();
 		}
 	}
 	
@@ -107,20 +114,20 @@ public class APCI_RestServices
 		//Log in
 		try
 		{
-			HttpURLConnection urlConn;
+			HttpURLConnection connection;
 			DataOutputStream printout;
 			BufferedReader input;
 			
 			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/login.json");
-			urlConn = (HttpURLConnection)url.openConnection();
+			connection = (HttpURLConnection)url.openConnection();
 			
-			urlConn.setDoInput(true);
-			urlConn.setDoOutput(true);
-			urlConn.setUseCaches(false);
-			urlConn.setRequestMethod("POST");
-			urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setUseCaches(false);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			
-			printout = new DataOutputStream(urlConn.getOutputStream());
+			printout = new DataOutputStream(connection.getOutputStream());
 			
 			//Send POST output.
 			String content = "username=" + URLEncoder.encode(username, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8");
@@ -129,7 +136,7 @@ public class APCI_RestServices
 			printout.close();
 			
 			//Get response data.
-			input = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+			input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String str;
 			
 			String result = "";
@@ -139,6 +146,55 @@ public class APCI_RestServices
 			}
 			
 			input.close();
+			
+			// Get all cookies from the server.
+		    // Note: The first call to getHeaderFieldKey() will implicit send
+		    // the HTTP request to the server.
+		    for (int i=0; ; i++) {
+		        String headerName = connection.getHeaderFieldKey(i);
+		        String headerValue = connection.getHeaderField(i);
+
+		        if (headerName == null && headerValue == null) {
+		            // No more headers
+		            break;
+		        }
+		        if ("Set-Cookie".equalsIgnoreCase(headerName)) {
+		            // Parse cookie
+		            String[] fields = headerValue.split(";\\s*");
+
+		            String cookieValue = fields[0];
+		            String expires = null;
+		            String path = null;
+		            String domain = null;
+		            boolean secure = false;
+
+		            // Parse each field
+		            for (int j=1; j<fields.length; j++) {
+		                if ("secure".equalsIgnoreCase(fields[j])) {
+		                    secure = true;
+		                } else if (fields[j].indexOf('=') > 0) {
+		                    String[] f = fields[j].split("=");
+		                    if ("expires".equalsIgnoreCase(f[0])) {
+		                        expires = f[1];
+		                    } else if ("domain".equalsIgnoreCase(f[0])) {
+		                        domain = f[1];
+		                    } else if ("path".equalsIgnoreCase(f[0])) {
+		                        path = f[1];
+		                    }
+		                }
+		            }
+		            
+		            if(cookieValue.startsWith("SESS"))
+		            {
+		            	session_cookie = cookieValue;
+		            }
+		            else if(cookieValue.startsWith("CHOCOLATECHIP"))
+		            {
+		            	chocolatechip_cookie = cookieValue;
+		            }
+		        }
+		    }
+			
 			return result;
 		}
 		catch(Exception ex)
@@ -188,9 +244,9 @@ public class APCI_RestServices
 		try
 		{
 			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/user/" + user_id + "/groups.json");
-			HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setDoInput(true);
-			connection.setRequestProperty("Cookie", session_name + "=" + session_id);
+			//connection.setRequestProperty("Cookie", session_name + "=" + session_id);
 			InputStream inStream = connection.getInputStream();
 			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
