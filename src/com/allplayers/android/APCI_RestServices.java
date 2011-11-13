@@ -28,7 +28,7 @@ public class APCI_RestServices
 		{
 			public java.security.cert.X509Certificate[] getAcceptedIssuers()
 			{
-			return null;
+				return null;
 			}
 			
 			public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
@@ -53,35 +53,28 @@ public class APCI_RestServices
 		//Now you can access an https URL without having the certificate in the truststore
 	}
 	
-	public static String isLoggedIn()
+	public static boolean isLoggedIn()
 	{
 		if(user_id.equals(""))
 		{
-			//return false;
-			return "empty";
+			return false;
 		}
 		
 		//Check an authorized call
-		String result = "";
-		HttpURLConnection connection;
-		int responsecode = 0;
 		try
 		{
 			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + ".json");
-			connection = (HttpURLConnection)url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setDoInput(true);
-			connection.setRequestProperty("Cookie", chocolatechip_cookie);
-			connection.addRequestProperty("Cookie", session_cookie);
-			responsecode = connection.getResponseCode();
+			connection.addRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
+			//connection.addRequestProperty("Cookie", session_cookie);
 			InputStream inStream = connection.getInputStream();
 			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
 			String line = "";
-			
-			if((line = input.readLine()) == null)
-			{
-				result += "null";
-			}
+
+			String result = "";
+
 			while((line = input.readLine()) != null)
 			{
 				result += line;
@@ -92,20 +85,17 @@ public class APCI_RestServices
 			
 			if(retrievedUUID.equals(user_id))
 			{
-				//return true;
-				return user_id;
+				return true;
 			}
-			else //this case should not occur
+			else //This case should not occur
 			{
-				//return false;
-				return retrievedUUID;
+				return false;
 			}
 		}
 		catch(Exception ex)
 		{
 			System.out.println(ex);
-			//return false;
-			return "ERRORRORROROR: \nresult=" + result + "\nresponsecode=" + responsecode + "\nerror=" + ex.toString();
+			return false;
 		}
 	}
 	
@@ -147,54 +137,66 @@ public class APCI_RestServices
 			
 			input.close();
 			
-			// Get all cookies from the server.
-		    // Note: The first call to getHeaderFieldKey() will implicit send
-		    // the HTTP request to the server.
-		    for (int i=0; ; i++) {
-		        String headerName = connection.getHeaderFieldKey(i);
-		        String headerValue = connection.getHeaderField(i);
+			//Get all cookies from the server
+			for(int i = 0; ; i++)
+			{
+				String headerName = connection.getHeaderFieldKey(i);
+				String headerValue = connection.getHeaderField(i);
+				
+				if (headerName == null && headerValue == null)
+				{
+					//No more headers
+					break;
+				}
+				
+				if("Set-Cookie".equalsIgnoreCase(headerName))
+				{
+					//parse cookie
+					String[] fields = headerValue.split(";\\s*");
+					
+					//Only cookieValue is used for now
+					String cookieValue = fields[0];
+					String expires = null;
+					String path = null;
+					String domain = null;
+					boolean secure = false;
+					
+					//Parse each field
+					for(int j=1; j<fields.length; j++)
+					{
+						if("secure".equalsIgnoreCase(fields[j]))
+						{
+							secure = true;
+						}
+						else if(fields[j].indexOf('=') > 0)
+						{
+							String[] f = fields[j].split("=");
+							if("expires".equalsIgnoreCase(f[0]))
+							{
+								expires = f[1];
+							}
+							else if("domain".equalsIgnoreCase(f[0]))
+							{
+								domain = f[1];
+							}
+							else if("path".equalsIgnoreCase(f[0]))
+							{
+								path = f[1];
+							}
+						}
+					}
+					
+					if(cookieValue.startsWith("SESS"))
+					{
+					session_cookie = cookieValue;
+					}
+					else if(cookieValue.startsWith("CHOCOLATECHIP"))
+					{
+					chocolatechip_cookie = cookieValue;
+					}
+				}
+			}
 
-		        if (headerName == null && headerValue == null) {
-		            // No more headers
-		            break;
-		        }
-		        if ("Set-Cookie".equalsIgnoreCase(headerName)) {
-		            // Parse cookie
-		            String[] fields = headerValue.split(";\\s*");
-
-		            String cookieValue = fields[0];
-		            String expires = null;
-		            String path = null;
-		            String domain = null;
-		            boolean secure = false;
-
-		            // Parse each field
-		            for (int j=1; j<fields.length; j++) {
-		                if ("secure".equalsIgnoreCase(fields[j])) {
-		                    secure = true;
-		                } else if (fields[j].indexOf('=') > 0) {
-		                    String[] f = fields[j].split("=");
-		                    if ("expires".equalsIgnoreCase(f[0])) {
-		                        expires = f[1];
-		                    } else if ("domain".equalsIgnoreCase(f[0])) {
-		                        domain = f[1];
-		                    } else if ("path".equalsIgnoreCase(f[0])) {
-		                        path = f[1];
-		                    }
-		                }
-		            }
-		            
-		            if(cookieValue.startsWith("SESS"))
-		            {
-		            	session_cookie = cookieValue;
-		            }
-		            else if(cookieValue.startsWith("CHOCOLATECHIP"))
-		            {
-		            	chocolatechip_cookie = cookieValue;
-		            }
-		        }
-		    }
-			
 			return result;
 		}
 		catch(Exception ex)
@@ -233,20 +235,18 @@ public class APCI_RestServices
 	
 	public static String getUserGroups()
 	{
-		/*if(!isLoggedIn())
+		if(!isLoggedIn())
 		{
-			return "not logged in\n\n" + user_id;
-		}*/
-		
-		String test = isLoggedIn();
+			return "You are not logged in";
+		}
 		
 		//Return all groups that meet search requirement
 		try
 		{
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/user/" + user_id + "/groups.json");
+			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/groups.json");
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setDoInput(true);
-			//connection.setRequestProperty("Cookie", session_name + "=" + session_id);
+			connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
 			InputStream inStream = connection.getInputStream();
 			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
@@ -257,12 +257,12 @@ public class APCI_RestServices
 				result += line;
 			}
 			
-			return test + "\n\n" + result;
+			return result;
 		}
 		catch(Exception ex)
 		{
 			System.out.println(ex);
-			return test + "\n\nhmmmmm\n" + ex.toString();
+			return ex.toString();
 		}
 	}
 }

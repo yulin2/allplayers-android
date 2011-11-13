@@ -12,7 +12,7 @@ public class GroupsActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		
-		String result = APCI_RestServices.isLoggedIn();
+		String result = APCI_RestServices.getUserGroups();
 		
 		TextView tv = new TextView(this);
 		tv.setText("Groups Activity\n\n" + result);
