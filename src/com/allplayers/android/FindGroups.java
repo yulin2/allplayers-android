@@ -1,8 +1,6 @@
 package com.allplayers.android;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-//import org.json.JSONObject; //this import was unused, so i commented it out 
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,32 +26,23 @@ public class FindGroups extends Activity
             	EditText searchEditText = (EditText)findViewById(R.id.searchGroupsField);
             	String search = searchEditText.getText().toString();
             	
-            	String result = APCI_RestServices.searchGroups(search);
+            	String jsonResult = APCI_RestServices.searchGroups(search);
             	
-            	String groups = "";
-				try
-				{
-					JSONArray jsonResult = new JSONArray(result);
-					
-					if(jsonResult.length() > 0)
-					{
-						for(int i = 0; i < jsonResult.length(); i++)
-						{
-							groups += jsonResult.getJSONObject(i).getString("title") + "\n\n";
-						}
-					}
-					else
-					{
-						groups += "There were no matches for your search terms.";
-					}
-				}
-				catch(JSONException ex)
-				{
-					groups += ex.toString();
-				}
+            	GroupsMap groups = new GroupsMap(jsonResult);
+        		ArrayList<GroupData> groupList = groups.getGroupData();
+        		
+        		String result = "";
+        		
+        		if(!groupList.isEmpty())
+        		{
+        			for(int i = 0; i < groupList.size(); i++)
+        			{
+        				result += groupList.get(i).getTitle();
+        			}
+        		}
 				
 				TextView resultView = (TextView)findViewById(R.id.searchGroupsResults);
-				resultView.setText(groups);
+				resultView.setText(result);
             }
         });
 	}

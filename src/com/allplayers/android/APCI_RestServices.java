@@ -156,35 +156,35 @@ public class APCI_RestServices
 					
 					//Only cookieValue is used for now
 					String cookieValue = fields[0];
-					String expires = null;
-					String path = null;
-					String domain = null;
-					boolean secure = false;
+					//String expires = null;
+					//String path = null;
+					//String domain = null;
+					//boolean secure = false;
 					
 					//Parse each field
-					for(int j=1; j<fields.length; j++)
+					/*for(int j=1; j<fields.length; j++)
 					{
 						if("secure".equalsIgnoreCase(fields[j]))
 						{
-							secure = true;
+							//secure = true;
 						}
 						else if(fields[j].indexOf('=') > 0)
 						{
 							String[] f = fields[j].split("=");
 							if("expires".equalsIgnoreCase(f[0]))
 							{
-								expires = f[1];
+								//expires = f[1];
 							}
 							else if("domain".equalsIgnoreCase(f[0]))
 							{
-								domain = f[1];
+								//domain = f[1];
 							}
 							else if("path".equalsIgnoreCase(f[0]))
 							{
-								path = f[1];
+								//path = f[1];
 							}
 						}
-					}
+					}*/
 					
 					if(cookieValue.startsWith("SESS"))
 					{
@@ -208,12 +208,103 @@ public class APCI_RestServices
 	
 	public static String searchGroups(String search)
 	{
-		//Return all groups that meet search requirement
+		return makeUnauthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups.json&search=\"" + search + "\"");
+	}
+	
+	public static String getUserGroups()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/groups.json");
+	}
+	
+	public static String getUserFriends()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/friends.json");
+	}
+	
+	public static String getUserGroupmates()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/groupmates.json");
+	}
+	
+	public static String getUserEvents()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/events.json");
+	}
+	
+	public static String getGroupInformationByID(String group_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + ".json");
+	}
+	
+	public static String getGroupAlbumsByID(String group_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/albums.json");
+	}
+	
+	public static String getGroupEventsByID(String group_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/events.json");
+	}
+	
+	public static String getGroupMembersByID(String group_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/members.json");
+	}
+	
+	public static String getGroupPhotosByID(String group_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/photos.json");
+	}
+	
+	public static String getAlbumByID(String album_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/" + album_uuid + ".json");
+	}
+	
+	public static String getAlbumPhotosByID(String album_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/" + album_uuid + "/photos.json");
+	}
+	
+	public static String getPhotoByID(String photo_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/photos/" + photo_uuid + ".json");
+	}
+	
+	public static String getUserMessages()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages.json");
+	}
+	
+	public static String getUserMessageByID(String message_id)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages/" + message_id + ".json");
+	}
+	
+	public static String getEventByID(String event_id)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/events/" + event_id + ".json");
+	}
+	
+	public static String getUserResourceByID(String resource_id)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/resources/" + resource_id + ".json");
+	}
+	
+	private static String makeAuthenticatedGet(String urlString)
+	{
+		if(!isLoggedIn())
+		{
+			return "You are not logged in";
+		}
+		
+		//Make and return from authenticated call
 		try
 		{
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/groups.json&search=\"" + search + "\"");
-			URLConnection connection = url.openConnection();
+			URL url = new URL(urlString);
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setDoInput(true);
+			connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
 			InputStream inStream = connection.getInputStream();
 			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
@@ -233,20 +324,14 @@ public class APCI_RestServices
 		}
 	}
 	
-	public static String getUserGroups()
+	private static String makeUnauthenticatedGet(String urlString)
 	{
-		if(!isLoggedIn())
-		{
-			return "You are not logged in";
-		}
-		
-		//Return all groups that meet search requirement
+		//Make and return from unauthenticated call
 		try
 		{
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/groups.json");
-			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			URL url = new URL(urlString);
+			URLConnection connection = url.openConnection();
 			connection.setDoInput(true);
-			connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
 			InputStream inStream = connection.getInputStream();
 			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
