@@ -11,10 +11,6 @@ import android.widget.Toast;
 public class MailActivity extends ListActivity
 {
 	
-	//final Intent mailInbox = new Intent(this, MailInbox.class);
-	//final Intent mailCreate = new Intent(this, MailCreate.class);
-	//final Intent mailSent = new Intent(this, MailSent.class);
-	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -33,15 +29,23 @@ public class MailActivity extends ListActivity
 		
 		if(position == 0)
 		{
+			//Intent intent = new Intent(MailActivity.this, MailCreate.class);
+			//startActivity(intent);
+			
 			Toast.makeText(this, "You clicked \"Create New\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the CreateNewMail.class activity
 		}
 		else if(position == 1)
 		{
-			//startActivity(mailInbox);
+			Intent intent = new Intent(MailActivity.this, MailInbox.class);
+			startActivity(intent);
+			
 			//Toast.makeText(this, "You clicked \"Inbox\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the MailInbox.class activity
 		}
 		else if(position == 2)
 		{
+			//Intent intent = new Intent(MailActivity.this, MailSent.class);
+			//startActivity(intent);
+			
 			Toast.makeText(this, "You clicked \"Sent\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the MailSent.class activity
 		}
 	}
