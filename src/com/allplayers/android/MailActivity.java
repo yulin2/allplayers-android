@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -26,10 +27,17 @@ public class MailActivity extends ListActivity
 		super.onListItemClick(l, v, position, id);
 		
 		if(position == 0)
+		{
 			Toast.makeText(this, "You clicked \"Create New\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the CreateNewMail.class activity
+		}
 		else if(position == 1)
+		{
+			Intent intent = new Intent().setClass(this, MailInbox.class);
 			Toast.makeText(this, "You clicked \"Inbox\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the MailInbox.class activity
+		}
 		else if(position == 2)
+		{
 			Toast.makeText(this, "You clicked \"Sent\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the MailSent.class activity
+		}
 	}
 }
