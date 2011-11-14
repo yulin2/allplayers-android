@@ -1,9 +1,7 @@
 package com.allplayers.android;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.widget.TextView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
