@@ -30,9 +30,15 @@ public class GroupData
 	 "url",
 	 "groups_above_uuid"]*/
 	
-	private String uuid;
-	private String title;
-	private String description;
+	private String uuid = "";
+	private String title = "";
+	private String description = "";
+	private String logo = "";
+	
+	public GroupData()
+	{
+		
+	}
 	
 	public GroupData(String jsonResult)
 	{
@@ -42,6 +48,9 @@ public class GroupData
 			uuid = groupObject.getString("uuid");
 			title = groupObject.getString("title");
 			description = groupObject.getString("description");
+			String logoURL = groupObject.getString("logo");
+			
+			//make logo the actual image
 		}
 		catch(JSONException ex)
 		{
@@ -62,5 +71,10 @@ public class GroupData
 	public String getDescription()
 	{
 		return description;
+	}
+	
+	public String getLogo()
+	{
+		return logo;
 	}
 }
