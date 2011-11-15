@@ -15,7 +15,7 @@ public class FirstScreen extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start);
 		
-		final Button logOnButton = (Button) findViewById(R.id.logOnButton);
+		final Button logOnButton = (Button)findViewById(R.id.logOnButton);
         logOnButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
@@ -24,7 +24,7 @@ public class FirstScreen extends Activity
             }
         });
         
-        final Button findGroupsButton = (Button) findViewById(R.id.findGroupsButton);
+        final Button findGroupsButton = (Button)findViewById(R.id.findGroupsButton);
         findGroupsButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)

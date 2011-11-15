@@ -32,7 +32,7 @@ public class Login extends Activity
 		//setContentView(mainPanel);
 		setContentView(R.layout.main);
 		
-		final Button findGroupsButton = (Button) findViewById(R.id.findGroupsButton);
+		final Button findGroupsButton = (Button)findViewById(R.id.findGroupsButton);
         findGroupsButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
@@ -41,7 +41,7 @@ public class Login extends Activity
             }
         });
 		
-		final Button button = (Button) findViewById(R.id.loginButton);
+		final Button button = (Button)findViewById(R.id.loginButton);
         button.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)

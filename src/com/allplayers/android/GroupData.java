@@ -48,9 +48,7 @@ public class GroupData
 			uuid = groupObject.getString("uuid");
 			title = groupObject.getString("title");
 			description = groupObject.getString("description");
-			String logoURL = groupObject.getString("logo");
-			
-			//make logo the actual image
+			logo = groupObject.getString("logo");
 		}
 		catch(JSONException ex)
 		{

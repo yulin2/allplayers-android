@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+	<ImageView 
+	  android:id="@+id/groupLogo" 
+	  android:layout_width="wrap_content" 
+	  android:layout_height="wrap_content" 
+	  android:layout_gravity="center">
+	</ImageView>
+	  
+	<TextView
+	  android:editable="false"
+	  android:text=""
+	  android:id="@+id/groupDetails"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content">
+	</TextView>
+	
+	<Button 
+	  android:id="@+id/groupMembersButton" 
+	  android:layout_width="fill_parent" 
+	  android:layout_height="wrap_content" 
+	  android:text="Group Members" 
+	  android:gravity="center" 
+	  android:layout_weight="0">
+	</Button>
+	<Button 
+	  android:id="@+id/groupEventsButton" 
+	  android:layout_width="fill_parent" 
+	  android:layout_height="wrap_content" 
+	  android:text="Group Events" 
+	  android:gravity="center" 
+	  android:layout_weight="0">
+	</Button>
+	
+	<Button 
+	  android:id="@+id/groupPhotosButton" 
+	  android:layout_width="fill_parent" 
+	  android:layout_height="wrap_content" 
+	  android:text="Group Photos" 
+	  android:gravity="center" 
+	  android:layout_weight="0">
+	</Button>
+	
+</LinearLayout>
