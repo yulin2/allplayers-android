@@ -49,4 +49,5 @@ public class MailActivity extends ListActivity
 			Toast.makeText(this, "You clicked \"Sent\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the MailSent.class activity
 		}
 	}
+	
 }
