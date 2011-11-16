@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class AlbumPhotosActivity extends ListActivity
 {
@@ -26,7 +25,7 @@ public class AlbumPhotosActivity extends ListActivity
 		
 		String[] values;
 		
-		if(!photoList.isEmpty())
+		if(photoList == null || !photoList.isEmpty())
 		{
 			values = new String[photoList.size()];
 			
@@ -34,20 +33,17 @@ public class AlbumPhotosActivity extends ListActivity
 			{
 				values[i] = photoList.get(i).getTitle();
 			}
-			
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, values);
-			setListAdapter(adapter);
 		}
 		else
 		{
-			TextView tv = new TextView(this);
-			tv.setText("No photos to display");
-			setContentView(tv);
+			values = new String[]{"no photos to display"};
 		}
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, values);
+		setListAdapter(adapter);
 	}
 	
-
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{

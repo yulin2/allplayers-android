@@ -11,21 +11,24 @@ public class PhotosMap
 	
 	public PhotosMap(String jsonResult)
 	{
-		try
+		if(!jsonResult.equals("false"))
 		{
-			JSONArray jsonArray = new JSONArray(jsonResult);
-			
-			if(jsonArray.length() > 0)
+			try
 			{
-				for(int i = 0; i < jsonResult.length(); i++)
+				JSONArray jsonArray = new JSONArray(jsonResult);
+				
+				if(jsonArray.length() > 0)
 				{
-					photos.add(new PhotoData(jsonArray.getString(i)));
+					for(int i = 0; i < jsonResult.length(); i++)
+					{
+						photos.add(new PhotoData(jsonArray.getString(i)));
+					}
 				}
 			}
-		}
-		catch(JSONException ex)
-		{
-			System.out.println(ex);
+			catch(JSONException ex)
+			{
+				System.out.println(ex);
+			}
 		}
 	}
 	

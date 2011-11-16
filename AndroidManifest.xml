@@ -27,14 +27,16 @@
 		<activity android:name="GroupPageActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="GroupMembersActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="GroupEventsActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name=".AlbumPhotosActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="GroupAlbumsActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="AlbumPhotosActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="PhotoDisplayActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<!-- End Group Activities -->
 		
-		<!-- Myles added Mail related activites below here -->
+		<!-- Myles added Mail related activities below here -->
 		<activity android:name="MailInbox" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="MailCreate" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="MailSent" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<!-- Myles added Mail related activites above here -->
+		<!-- Myles added Mail related activities above here -->
 		
 		
     </application>

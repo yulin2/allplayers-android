@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 public class GroupEventsActivity extends ListActivity
 {
@@ -33,15 +32,14 @@ public class GroupEventsActivity extends ListActivity
 				values[i] = eventsList.get(i).getTitle();
 			}
 			
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, values);
-			setListAdapter(adapter);
 		}
 		else
 		{
-			TextView tv = new TextView(this);
-			tv.setText("No events to display");
-			setContentView(tv);
+			values = new String[]{"No members to display"};
 		}
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, values);
+		setListAdapter(adapter);
 	}
 }

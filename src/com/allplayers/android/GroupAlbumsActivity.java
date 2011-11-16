@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class GroupAlbumsActivity  extends ListActivity
 {
@@ -35,16 +34,15 @@ public class GroupAlbumsActivity  extends ListActivity
 				values[i] = albumList.get(i).getTitle();
 			}
 			
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, values);
-			setListAdapter(adapter);
 		}
 		else
 		{
-			TextView tv = new TextView(this);
-			tv.setText("No albums to display");
-			setContentView(tv);
+			values = new String[]{"No albums to display"};
 		}
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, values);
+		setListAdapter(adapter);
 	}
 	
 	@Override
@@ -57,6 +55,5 @@ public class GroupAlbumsActivity  extends ListActivity
 		//Display the group page for the selected group
 		Intent intent = new Intent(GroupAlbumsActivity.this, AlbumPhotosActivity.class);
 		startActivity(intent);
-		
 	}
 }
