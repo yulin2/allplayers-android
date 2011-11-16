@@ -27,7 +27,7 @@
 		<activity android:name="GroupPageActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="GroupMembersActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="GroupEventsActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="GroupPhotosActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name=".AlbumPhotosActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<!-- End Group Activities -->
 		
 		<!-- Myles added Mail related activites below here -->

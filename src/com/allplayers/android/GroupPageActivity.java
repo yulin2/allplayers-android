@@ -40,7 +40,7 @@ public class GroupPageActivity extends Activity
             }
         });
         
-        final Button groupEventsButton = (Button) findViewById(R.id.groupEventsButton);
+        final Button groupEventsButton = (Button)findViewById(R.id.groupEventsButton);
         groupEventsButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
@@ -49,12 +49,12 @@ public class GroupPageActivity extends Activity
             }
         });
         
-        final Button groupPhotosButton = (Button) findViewById(R.id.groupPhotosButton);
+        final Button groupPhotosButton = (Button)findViewById(R.id.groupPhotosButton);
         groupPhotosButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
-            	startActivity(new Intent(GroupPageActivity.this, GroupPhotosActivity.class));
+            	startActivity(new Intent(GroupPageActivity.this, GroupAlbumsActivity.class));
             }
         });
 	}

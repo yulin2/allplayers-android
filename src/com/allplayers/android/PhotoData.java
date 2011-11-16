@@ -6,8 +6,11 @@ import org.json.JSONObject;
 public class PhotoData
 {
 	private String uuid = "";
+	private String groupUUID = "";
 	private String title = "";
-	private String url = "";
+	private String description = "";
+	private String photoFull = "";
+	private String photoThumb = "";
 	
 	public PhotoData()
 	{
@@ -20,8 +23,11 @@ public class PhotoData
 		{
 			JSONObject photoObject = new JSONObject(jsonResult);
 			uuid = photoObject.getString("uuid");
+			groupUUID = photoObject.getString("group_uuid");
 			title = photoObject.getString("title");
-			url = photoObject.getString("logo");
+			description = photoObject.getString("description");
+			photoFull = photoObject.getString("photo_full");
+			photoThumb = photoObject.getString("photo_thumb");
 		}
 		catch(JSONException ex)
 		{
@@ -34,13 +40,28 @@ public class PhotoData
 		return uuid;
 	}
 	
+	public String getGroupUUID()
+	{
+		return groupUUID;
+	}
+	
 	public String getTitle()
 	{
 		return title;
 	}
 	
-	public String getURL()
+	public String getDescription()
 	{
-		return url;
+		return description;
+	}
+	
+	public String getPhotoFull()
+	{
+		return photoFull;
+	}
+	
+	public String getPhotoThumb()
+	{
+		return photoThumb;
 	}
 }

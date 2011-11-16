@@ -23,10 +23,10 @@ public class AlbumData
 		try
 		{
 			JSONObject albumObject = new JSONObject(jsonResult);
-			uuid = albumObject.getString("uuid");
+			//uuid = albumObject.getString("uuid");
 			title = albumObject.getString("title");
-			description = albumObject.getString("description");
-			photoCount = albumObject.getInt("photo_count");
+			//description = albumObject.getString("description");
+			//photoCount = albumObject.getInt("photo_count");
 			//modifiedData = Timestamp.valueOf(albumObject.getString("modified_date"));
 		}
 		catch(JSONException ex)
