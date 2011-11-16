@@ -231,62 +231,67 @@ public class APCI_RestServices
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/events.json");
 	}
 	
-	public static String getGroupInformationByID(String group_uuid)
+	public static String getGroupInformationByGroupId(String group_uuid)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + ".json");
 	}
 	
-	public static String getGroupAlbumsByID(String group_uuid)
+	public static String getGroupAlbumsByGroupId(String group_uuid)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/albums.json");
 	}
 	
-	public static String getGroupEventsByID(String group_uuid)
+	public static String getGroupEventsByGroupId(String group_uuid)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/events.json");
 	}
 	
-	public static String getGroupMembersByID(String group_uuid)
+	public static String getGroupMembersByGroupId(String group_uuid)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/members.json");
 	}
 	
-	public static String getGroupPhotosByID(String group_uuid)
+	public static String getGroupPhotosByGroupId(String group_uuid)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/photos.json");
 	}
 	
-	public static String getAlbumByID(String album_uuid)
+	public static String getAlbumByAlbumId(String album_uuid)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/" + album_uuid + ".json");
 	}
 	
-	public static String getAlbumPhotosByID(String album_uuid)
+	public static String getAlbumPhotosByAlbumId(String album_uuid)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/" + album_uuid + "/photos.json");
 	}
 	
-	public static String getPhotoByID(String photo_uuid)
+	public static String getPhotoByPhotoId(String photo_uuid)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/photos/" + photo_uuid + ".json");
 	}
 	
-	public static String getUserMessages()
+	public static String getUserInbox()
 	{
-		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages.json");
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages.json&box=inbox");
 	}
 	
-	public static String getUserMessageByID(String message_id)
+	public static String getUserSentBox()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages.json&box=sent");
+	}
+	
+	public static String getUserMessageByMessageId(String message_id)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages/" + message_id + ".json");
 	}
 	
-	public static String getEventByID(String event_id)
+	public static String getEventByEventId(String event_id)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/events/" + event_id + ".json");
 	}
 	
-	public static String getUserResourceByID(String resource_id)
+	public static String getUserResourceByResourceId(String resource_id)
 	{
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/resources/" + resource_id + ".json");
 	}

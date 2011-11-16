@@ -14,7 +14,7 @@ public class MailInbox extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		
-		String jsonResult = APCI_RestServices.getUserMessages();
+		String jsonResult = APCI_RestServices.getUserInbox();
 		
 		//GroupsMap groups = new GroupsMap(jsonResult);
 		//ArrayList<GroupData> groupList = groups.getGroupData();

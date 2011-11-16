@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class EventsMap
+public class GroupMembersMap
 {
-private ArrayList<EventData> events = new ArrayList<EventData>();
+private ArrayList<GroupMemberData> members = new ArrayList<GroupMemberData>();
 	
-	public EventsMap(String jsonResult)
+	public GroupMembersMap(String jsonResult)
 	{
 		try
 		{
@@ -19,7 +19,7 @@ private ArrayList<EventData> events = new ArrayList<EventData>();
 			{
 				for(int i = 0; i < jsonResult.length(); i++)
 				{
-					events.add(new EventData(jsonArray.getString(i)));
+					members.add(new GroupMemberData(jsonArray.getString(i)));
 				}
 			}
 		}
@@ -29,8 +29,8 @@ private ArrayList<EventData> events = new ArrayList<EventData>();
 		}
 	}
 	
-	public ArrayList<EventData> getEventData()
+	public ArrayList<GroupMemberData> getGroupMemberData()
 	{
-		return events;
+		return members;
 	}
 }

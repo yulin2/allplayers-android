@@ -7,11 +7,12 @@
 
 	<ImageView 
 	  android:id="@+id/groupLogo" 
-	  android:layout_width="wrap_content" 
+	  android:layout_width="match_parent" 
 	  android:layout_height="wrap_content" 
-	  android:layout_gravity="center">
+	  android:layout_gravity="center"
+	  android:scaleType="centerInside">
 	</ImageView>
-	  
+	
 	<TextView
 	  android:editable="false"
 	  android:text=""
@@ -22,7 +23,7 @@
 	
 	<Button 
 	  android:id="@+id/groupMembersButton" 
-	  android:layout_width="fill_parent" 
+	  android:layout_width="match_parent" 
 	  android:layout_height="wrap_content" 
 	  android:text="Group Members" 
 	  android:gravity="center" 
@@ -30,16 +31,15 @@
 	</Button>
 	<Button 
 	  android:id="@+id/groupEventsButton" 
-	  android:layout_width="fill_parent" 
+	  android:layout_width="match_parent" 
 	  android:layout_height="wrap_content" 
 	  android:text="Group Events" 
 	  android:gravity="center" 
 	  android:layout_weight="0">
 	</Button>
-	
 	<Button 
 	  android:id="@+id/groupPhotosButton" 
-	  android:layout_width="fill_parent" 
+	  android:layout_width="match_parent" 
 	  android:layout_height="wrap_content" 
 	  android:text="Group Photos" 
 	  android:gravity="center" 

@@ -11,9 +11,11 @@ public class GroupPhotosActivity extends Activity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
+		String jsonResult = APCI_RestServices.getGroupAlbumsByGroupId(Globals.currentGroup.getUUID());
 		
 		TextView tv = new TextView(this);
-		tv.setText("Group Photos Activity");
+		tv.setText("Group Photos Activity\n\n" + jsonResult);
 		setContentView(tv);
 	}
 }
