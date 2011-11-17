@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class GroupsActivity extends ListActivity
 {
 	private ArrayList<GroupData> groupList;
+	private boolean hasGroups = false;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -36,16 +36,17 @@ public class GroupsActivity extends ListActivity
 				values[i] = groupList.get(i).getTitle();
 			}
 			
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, values);
-			setListAdapter(adapter);
+			hasGroups = true;
 		}
 		else
 		{
-			TextView tv = new TextView(this);
-			tv.setText("No groups to display");
-			setContentView(tv);
+			values = new String[]{"no groups to display"};
+			hasGroups = false;
 		}
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, values);
+		setListAdapter(adapter);
 	}
 
 	@Override
@@ -53,11 +54,13 @@ public class GroupsActivity extends ListActivity
 	{
 		super.onListItemClick(l, v, position, id);
 		
-		Globals.currentGroup = groupList.get(position);
-		
-		//Display the group page for the selected group
-		Intent intent = new Intent(GroupsActivity.this, GroupPageActivity.class);
-		startActivity(intent);
-		
+		if(hasGroups)
+		{
+			Globals.currentGroup = groupList.get(position);
+			
+			//Display the group page for the selected group
+			Intent intent = new Intent(GroupsActivity.this, GroupPageActivity.class);
+			startActivity(intent);
+		}
 	}
 }

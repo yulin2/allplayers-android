@@ -101,109 +101,18 @@ public class APCI_RestServices
 	
 	public static String validateLogin(String username, String password)
 	{
-		//Log in
-		try
-		{
-			HttpURLConnection connection;
-			DataOutputStream printout;
-			BufferedReader input;
-			
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/login.json");
-			connection = (HttpURLConnection)url.openConnection();
-			
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			connection.setUseCaches(false);
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			
-			printout = new DataOutputStream(connection.getOutputStream());
-			
-			//Send POST output.
-			String content = "username=" + URLEncoder.encode(username, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8");
-			printout.writeBytes(content);
-			printout.flush();
-			printout.close();
-			
-			//Get response data.
-			input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String str;
-			
-			String result = "";
-			while((str = input.readLine()) != null)
-			{
-				result += str;
-			}
-			
-			input.close();
-			
-			//Get all cookies from the server
-			for(int i = 0; ; i++)
-			{
-				String headerName = connection.getHeaderFieldKey(i);
-				String headerValue = connection.getHeaderField(i);
-				
-				if (headerName == null && headerValue == null)
-				{
-					//No more headers
-					break;
-				}
-				
-				if("Set-Cookie".equalsIgnoreCase(headerName))
-				{
-					//parse cookie
-					String[] fields = headerValue.split(";\\s*");
-					
-					//Only cookieValue is used for now
-					String cookieValue = fields[0];
-					//String expires = null;
-					//String path = null;
-					//String domain = null;
-					//boolean secure = false;
-					
-					//Parse each field
-					/*for(int j=1; j<fields.length; j++)
-					{
-						if("secure".equalsIgnoreCase(fields[j]))
-						{
-							//secure = true;
-						}
-						else if(fields[j].indexOf('=') > 0)
-						{
-							String[] f = fields[j].split("=");
-							if("expires".equalsIgnoreCase(f[0]))
-							{
-								//expires = f[1];
-							}
-							else if("domain".equalsIgnoreCase(f[0]))
-							{
-								//domain = f[1];
-							}
-							else if("path".equalsIgnoreCase(f[0]))
-							{
-								//path = f[1];
-							}
-						}
-					}*/
-					
-					if(cookieValue.startsWith("SESS"))
-					{
-					session_cookie = cookieValue;
-					}
-					else if(cookieValue.startsWith("CHOCOLATECHIP"))
-					{
-					chocolatechip_cookie = cookieValue;
-					}
-				}
-			}
-
-			return result;
-		}
-		catch(Exception ex)
-		{
-			System.out.println(ex);
-			return ex.toString();
-		}
+		String[][] contents = new String[2][2];
+		contents[0][0] = "username";
+		contents[0][1] = username;
+		contents[1][0] = "password";
+		contents[1][1] = password;
+		
+		return makeAuthenticatedPost("https://www.allplayers.com/?q=api/v1/rest/users/login.json", contents);
+	}
+	
+	public static String postMessage(String[][] contents)
+	{
+		return makeAuthenticatedPost("https://www.allplayers.com/?q=api/v1/rest/", contents);
 	}
 	
 	public static String searchGroups(String search)
@@ -303,7 +212,7 @@ public class APCI_RestServices
 			return "You are not logged in";
 		}
 		
-		//Make and return from authenticated call
+		//Make and return from authenticated get call
 		try
 		{
 			URL url = new URL(urlString);
@@ -331,7 +240,7 @@ public class APCI_RestServices
 	
 	private static String makeUnauthenticatedGet(String urlString)
 	{
-		//Make and return from unauthenticated call
+		//Make and return from unauthenticated get call
 		try
 		{
 			URL url = new URL(urlString);
@@ -353,6 +262,141 @@ public class APCI_RestServices
 		{
 			System.out.println(ex);
 			return ex.toString();
+		}
+	}
+	
+	private static String makeAuthenticatedPost(String urlString, String[][] contents)
+	{
+		//Make and return from authenticated post call
+		try
+		{
+			HttpURLConnection connection;
+			DataOutputStream printout;
+			BufferedReader input;
+			
+			URL url = new URL(urlString);
+			connection = (HttpURLConnection)url.openConnection();
+			
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setUseCaches(false);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			
+			//If not logging in, set the cookies in the header
+			if(!urlString.equals("https://www.allplayers.com/?q=api/v1/rest/users/login.json"))
+			{
+				connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
+			}
+			
+			printout = new DataOutputStream(connection.getOutputStream());
+			
+			//Send POST output.
+			String content = "";
+			if(contents.length > 0)
+			{
+				for(int i = 0; i < contents.length; i++)
+				{
+					if(i > 0)
+					{
+						content += "&";
+					}
+					
+					content += contents[i][0] + "=" + URLEncoder.encode(contents[i][1], "UTF-8");
+				}
+			}
+			
+			printout.writeBytes(content);
+			printout.flush();
+			printout.close();
+			
+			//Get response data.
+			input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String str;
+			
+			String result = "";
+			while((str = input.readLine()) != null)
+			{
+				result += str;
+			}
+			
+			input.close();
+			
+			//If logging in, store the cookies for future use
+			if(urlString.equals("https://www.allplayers.com/?q=api/v1/rest/users/login.json"))
+			{
+				setCookies(connection);
+			}
+			
+			return result;
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex);
+			return ex.toString();
+		}
+	}
+
+	private static void setCookies(HttpURLConnection connection)
+	{
+		//Get all cookies from the server
+		for(int i = 0; ; i++)
+		{
+			String headerName = connection.getHeaderFieldKey(i);
+			String headerValue = connection.getHeaderField(i);
+			
+			if (headerName == null && headerValue == null)
+			{
+				//No more headers
+				break;
+			}
+			
+			if("Set-Cookie".equalsIgnoreCase(headerName))
+			{
+				//parse cookie
+				String[] fields = headerValue.split(";\\s*");
+				
+				//Only cookieValue is used for now
+				String cookieValue = fields[0];
+				//String expires = null;
+				//String path = null;
+				//String domain = null;
+				//boolean secure = false;
+				
+				//Parse each field
+				/*for(int j=1; j<fields.length; j++)
+				{
+					if("secure".equalsIgnoreCase(fields[j]))
+					{
+						//secure = true;
+					}
+					else if(fields[j].indexOf('=') > 0)
+					{
+						String[] f = fields[j].split("=");
+						if("expires".equalsIgnoreCase(f[0]))
+						{
+							//expires = f[1];
+						}
+						else if("domain".equalsIgnoreCase(f[0]))
+						{
+							//domain = f[1];
+						}
+						else if("path".equalsIgnoreCase(f[0]))
+						{
+							//path = f[1];
+						}
+					}
+				}*/
+				
+				if(cookieValue.startsWith("SESS"))
+				{
+				session_cookie = cookieValue;
+				}
+				else if(cookieValue.startsWith("CHOCOLATECHIP"))
+				{
+				chocolatechip_cookie = cookieValue;
+				}
+			}
 		}
 	}
 }

@@ -37,7 +37,7 @@ public class Login extends Activity
         {
             public void onClick(View v)
             {
-            	startActivity(new Intent(Login.this, FindGroups.class));
+            	startActivity(new Intent(Login.this, FindGroupsActivity.class));
             }
         });
 		

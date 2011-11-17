@@ -12,6 +12,7 @@ import android.widget.ListView;
 public class AlbumPhotosActivity extends ListActivity
 {
 	private ArrayList<PhotoData> photoList;
+	private boolean hasPhotos = false;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -25,7 +26,7 @@ public class AlbumPhotosActivity extends ListActivity
 		
 		String[] values;
 		
-		if(photoList == null || !photoList.isEmpty())
+		if(!photoList.isEmpty())
 		{
 			values = new String[photoList.size()];
 			
@@ -33,10 +34,13 @@ public class AlbumPhotosActivity extends ListActivity
 			{
 				values[i] = photoList.get(i).getTitle();
 			}
+			
+			hasPhotos = true;
 		}
 		else
 		{
 			values = new String[]{"no photos to display"};
+			hasPhotos = false;
 		}
 		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -49,11 +53,13 @@ public class AlbumPhotosActivity extends ListActivity
 	{
 		super.onListItemClick(l, v, position, id);
 		
-		Globals.currentPhoto = photoList.get(position);
-		
-		//Display the group page for the selected group
-		Intent intent = new Intent(AlbumPhotosActivity.this, PhotoDisplayActivity.class);
-		startActivity(intent);
-		
+		if(hasPhotos)
+		{
+			Globals.currentPhoto = photoList.get(position);
+			
+			//Display the group page for the selected group
+			Intent intent = new Intent(AlbumPhotosActivity.this, PhotoDisplayActivity.class);
+			startActivity(intent);
+		}
 	}
 }

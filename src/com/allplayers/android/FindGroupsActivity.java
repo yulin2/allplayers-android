@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class FindGroups extends Activity
+public class FindGroupsActivity extends Activity
 {
 	/** Called when the activity is first created. */
 	@Override

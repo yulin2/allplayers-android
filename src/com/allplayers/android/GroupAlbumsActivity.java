@@ -12,6 +12,7 @@ import android.widget.ListView;
 public class GroupAlbumsActivity  extends ListActivity
 {
 	private ArrayList<AlbumData> albumList;
+	private boolean hasAlbums = false;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -34,10 +35,12 @@ public class GroupAlbumsActivity  extends ListActivity
 				values[i] = albumList.get(i).getTitle();
 			}
 			
+			hasAlbums = true;
 		}
 		else
 		{
 			values = new String[]{"No albums to display"};
+			hasAlbums = false;
 		}
 		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -50,10 +53,13 @@ public class GroupAlbumsActivity  extends ListActivity
 	{
 		super.onListItemClick(l, v, position, id);
 		
-		Globals.currentAlbum = albumList.get(position);
-		
-		//Display the group page for the selected group
-		Intent intent = new Intent(GroupAlbumsActivity.this, AlbumPhotosActivity.class);
-		startActivity(intent);
+		if(hasAlbums)
+		{
+			Globals.currentAlbum = albumList.get(position);
+			
+			//Display the group page for the selected group
+			Intent intent = new Intent(GroupAlbumsActivity.this, AlbumPhotosActivity.class);
+			startActivity(intent);
+		}
 	}
 }

@@ -13,7 +13,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="FindGroups" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity android:name="FindGroupsActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
         <!-- <activity android:name="Login" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
           replaced the FirstScreen page with Login (moved search groups to Login) -->
          <activity android:name="MainScreen" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
