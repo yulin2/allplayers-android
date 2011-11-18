@@ -1,13 +1,11 @@
 package com.allplayers.android;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class FindGroupsActivity extends Activity
 {
@@ -19,31 +17,57 @@ public class FindGroupsActivity extends Activity
 		setContentView(R.layout.findgroups);
 		
 		final Button logOnButton = (Button) findViewById(R.id.searchGroupsButton);
-        logOnButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-            	EditText searchEditText = (EditText)findViewById(R.id.searchGroupsField);
-            	String search = searchEditText.getText().toString();
-            	
-            	String jsonResult = APCI_RestServices.searchGroups(search);
-            	
-            	GroupsMap groups = new GroupsMap(jsonResult);
-        		ArrayList<GroupData> groupList = groups.getGroupData();
-        		
-        		String result = "";
-        		
-        		if(!groupList.isEmpty())
-        		{
-        			for(int i = 0; i < groupList.size(); i++)
-        			{
-        				result += groupList.get(i).getTitle();
-        			}
-        		}
+		logOnButton.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v)
+			{
+				EditText searchEditText = (EditText)findViewById(R.id.searchGroupsField);
+				String search = searchEditText.getText().toString().trim();
+				EditText zipcodeEditText = (EditText)findViewById(R.id.searchGroupsZipcodeField);
+				String zipcodeString = zipcodeEditText.getText().toString().trim();
+				EditText distanceEditText = (EditText)findViewById(R.id.searchGroupsDistanceField);
+				String distanceString = distanceEditText.getText().toString().trim();
 				
-				TextView resultView = (TextView)findViewById(R.id.searchGroupsResults);
-				resultView.setText(result);
-            }
-        });
+				int zipcode = 0;
+				int distance = 10;
+				
+				if(zipcodeString.length() == 5)
+				{
+					for(int i = 0; i < 5; i++)
+					{
+						if(!Character.isDigit(zipcodeString.charAt(i)))
+						{
+							break;
+						}
+						else if(i == 4)
+						{
+							zipcode = Integer.parseInt(zipcodeString);
+						}
+					}
+				}
+				
+				if(distanceString.length() >= 1)
+				{
+					for(int i = 0; i < distanceString.length(); i++)
+					{
+						if(!Character.isDigit(distanceString.charAt(i)))
+						{
+							break;
+						}
+						else if(i == distanceString.length() - 1)
+						{
+							distance = Integer.parseInt(distanceString);
+						}
+					}
+				}
+				
+				Globals.search = search;
+				Globals.zipcode = zipcode;
+				Globals.distance = distance;
+				
+				Intent intent = new Intent(FindGroupsActivity.this, SearchGroupsListActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 }

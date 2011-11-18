@@ -13,7 +13,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="FindGroupsActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
         <!-- <activity android:name="Login" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
           replaced the FirstScreen page with Login (moved search groups to Login) -->
          <activity android:name="MainScreen" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
@@ -22,6 +21,11 @@
         <activity android:name="EventsActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
         <activity android:name="AccountActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		
+		<!-- Start Find Groups Activities -->
+		<activity android:name="FindGroupsActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity android:name="SearchGroupsListActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <!-- End Find Groups Activities -->
+        
 		<!-- Start Group Activities -->
 		<activity android:name="GroupsActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="GroupPageActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>

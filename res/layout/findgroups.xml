@@ -10,6 +10,18 @@
       android:id="@+id/searchGroupsField" 
       android:layout_width="match_parent">
     </EditText>
+    <EditText 
+      android:layout_height="wrap_content" 
+      android:inputType="textMultiLine" 
+      android:id="@+id/searchGroupsZipcodeField" 
+      android:layout_width="match_parent">
+    </EditText>
+    <EditText 
+      android:layout_height="wrap_content" 
+      android:inputType="textMultiLine" 
+      android:id="@+id/searchGroupsDistanceField" 
+      android:layout_width="match_parent">
+    </EditText>
     <Button 
       android:id="@+id/searchGroupsButton" 
       android:layout_height="wrap_content" 

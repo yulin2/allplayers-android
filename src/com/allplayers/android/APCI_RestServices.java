@@ -115,9 +115,10 @@ public class APCI_RestServices
 		return makeAuthenticatedPost("https://www.allplayers.com/?q=api/v1/rest/", contents);
 	}
 	
-	public static String searchGroups(String search)
+	public static String searchGroups(String search, int zipcode, int distance)
 	{
-		return makeUnauthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups.json&search=\"" + search + "\"");
+		return makeUnauthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups.json&search=\"" + search + "\"" +
+				"&distance[postal_code]="+ zipcode + "&distance[search_distance]=" + distance + "&distance[search_units]=mile");
 	}
 	
 	public static String getUserGroups()

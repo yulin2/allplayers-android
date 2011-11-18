@@ -3,8 +3,10 @@ package com.allplayers.android;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.SimpleCursorAdapter;
 
 public class GroupEventsActivity extends ListActivity
 {
@@ -35,10 +37,17 @@ public class GroupEventsActivity extends ListActivity
 		}
 		else
 		{
-			values = new String[]{"No members to display"};
+			values = new String[]{"No events to display"};
 		}
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+		/*Cursor cursor = null;
+		int[] to = new int[]{}; //Which fields to insert the data into
+		
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, 
+				android.R.layout.simple_list_item_2, cursor, values, to);
+		setListAdapter(adapter);*/
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
 				android.R.layout.simple_list_item_1, values);
 		setListAdapter(adapter);
 	}
