@@ -1,9 +1,8 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
-
 import android.app.ListActivity;
-import android.content.Intent;
+//import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,6 +13,7 @@ public class MailInbox extends ListActivity
 	
 	private ArrayList<MessageData> messageList;
 	private boolean hasMessages;
+	private String[] values;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -24,9 +24,9 @@ public class MailInbox extends ListActivity
 		String jsonResult = APCI_RestServices.getUserInbox();
 		
 		MessagesMap messages = new MessagesMap(jsonResult);
-		messageList = messages.getMessageData();
+		ArrayList<MessageData> messageList = messages.getMessageData();
 		
-		String[] values;
+		//String[] values;
 		
 		if(messageList.isEmpty())
 		{
@@ -34,7 +34,7 @@ public class MailInbox extends ListActivity
 		}else{
 			hasMessages = true;
 		}
-		
+
 		if(hasMessages)
 		{
 			values = new String[messageList.size()];

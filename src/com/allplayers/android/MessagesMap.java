@@ -14,6 +14,7 @@ public class MessagesMap
 		try
 		{
 			JSONArray jsonArray = new JSONArray(jsonResult);
+			//JSONObject jsonObject = new
 			
 			if(jsonArray.length() > 0)
 			{
