@@ -5,43 +5,28 @@ import org.json.JSONObject;
 
 public class MessageData
 {
-/*  ["uuid",
-	 "title",
-	 "description",
-	 "location",
-	 "activity_level",
-	 "list_in_directory",
-	 "active",
-	 "registration_fees_enabled",
-	 "approved_for_payment",
-	 "accept_amex",
-	 "payee_uuid",
-	 "approved_for_idverify",
-	 "group_mates_enabled",
-	 "comments",
-	 "parent_approval_enabled",
-	 "sort_order",
-	 "override_default_group_permissions",
-	 "primary_color",
-	 "secondary_color",
-	 "node_status",
-	 "logo",
-	 "uri",
-	 "url",
-	 "groups_above_uuid"]*/
+/*  ["thread_id",
+	 "subject",
+	 "last_updated",
+	 "is_new" -> 0 or 1,
+	 "message_count",
+	 "last_message_sender",
+	 "last_message_sender_uuid",
+	 "last_message_body",
+	 "uri"]*/
 	
-	private String uuid;
-	private String title;
-	private String description;
+	private String thread_id;
+	private String subject;
+	private String is_new;
 	
 	public MessageData(String jsonResult)
 	{
 		try
 		{
-			JSONObject groupObject = new JSONObject(jsonResult);
-			uuid = groupObject.getString("uuid");
-			title = groupObject.getString("title");
-			description = groupObject.getString("description");
+			JSONObject messageObject = new JSONObject(jsonResult);
+			thread_id = messageObject.getString("thread_id");
+			subject = messageObject.getString("subject");
+			is_new = messageObject.getString("is_new");
 		}
 		catch(JSONException ex)
 		{
@@ -49,18 +34,18 @@ public class MessageData
 		}
 	}
 	
-	public String getUUID()
+	public String getThreadID()
 	{
-		return uuid;
+		return thread_id;
 	}
 	
-	public String getTitle()
+	public String getSubject()
 	{
-		return title;
+		return subject;
 	}
 	
-	public String getDescription()
+	public String getNew()
 	{
-		return description;
+		return is_new;
 	}
 }
