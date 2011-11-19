@@ -31,7 +31,7 @@ public class MainScreen extends TabActivity
 		
 		// Do the same for the other tabs
 		intent = new Intent().setClass(this, MailActivity.class);
-		spec = tabHost.newTabSpec("mail").setIndicator("Mail", 
+		spec = tabHost.newTabSpec("mail").setIndicator("Messages", 
 				res.getDrawable(R.drawable.ic_tab_mail)).setContent(intent);
 		tabHost.addTab(spec);
 		
