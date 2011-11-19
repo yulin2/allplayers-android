@@ -45,6 +45,6 @@ public class MainScreen extends TabActivity
 				res.getDrawable(R.drawable.ic_tab_events)).setContent(intent);
 		tabHost.addTab(spec);
 		
-		tabHost.setCurrentTab(1);
+		tabHost.setCurrentTab(0);
 	}
 }
