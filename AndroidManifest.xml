@@ -38,8 +38,7 @@
 		
 		<!-- Myles added Mail related activities below here -->
 		<activity android:name="MailInbox" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="MailCreate" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name="MailSent" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="MessageSent" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<!-- Myles added Mail related activities above here -->
 		
 		

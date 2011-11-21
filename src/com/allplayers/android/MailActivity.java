@@ -40,10 +40,10 @@ public class MailActivity extends ListActivity
 		}
 		else if(position == 1)
 		{
-			//Intent intent = new Intent(MailActivity.this, MailSent.class);
-			//startActivity(intent);
+			Intent intent = new Intent(MailActivity.this, MessageSent.class);
+			startActivity(intent);
 			
-			Toast.makeText(this, "You clicked \"Sent\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the MailSent.class activity
+			//Toast.makeText(this, "You clicked \"Sent\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the MailSent.class activity
 		}
 	}
 	

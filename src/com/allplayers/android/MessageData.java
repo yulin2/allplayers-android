@@ -19,6 +19,7 @@ public class MessageData
 	private String subject;
 	private String is_new;
 	private String last_message_sender;
+	private String last_message_body;
 	
 	public MessageData(String jsonResult)
 	{
@@ -29,6 +30,7 @@ public class MessageData
 			subject = messageObject.getString("subject");
 			is_new = messageObject.getString("is_new");
 			last_message_sender = messageObject.getString("last_message_sender");
+			last_message_body = messageObject.getString("last_message_body");
 		}
 		catch(JSONException ex)
 		{
@@ -39,6 +41,11 @@ public class MessageData
 	public String getThreadID()
 	{
 		return thread_id;
+	}
+	
+	public String getMessageBody()
+	{
+		return last_message_body;
 	}
 	
 	public String getLastSender()
