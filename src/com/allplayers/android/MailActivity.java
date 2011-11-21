@@ -19,7 +19,7 @@ public class MailActivity extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		String[] values = new String[] { "Create New", "Inbox", "Sent"};
+		String[] values = new String[] { "Inbox", "Sent"};
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, values);
 		setListAdapter(adapter);
@@ -31,19 +31,12 @@ public class MailActivity extends ListActivity
 		
 		if(position == 0)
 		{
-			//Intent intent = new Intent(MailActivity.this, MailCreate.class);
-			//startActivity(intent);
-			
-			Toast.makeText(this, "You clicked \"Create New\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the CreateNewMail.class activity
-		}
-		else if(position == 1)
-		{
 			Intent intent = new Intent(MailActivity.this, MailInbox.class);
 			startActivity(intent);
 			
 			//Toast.makeText(this, "You clicked \"Inbox\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the MailInbox.class activity
 		}
-		else if(position == 2)
+		else if(position == 1)
 		{
 			//Intent intent = new Intent(MailActivity.this, MailSent.class);
 			//startActivity(intent);
