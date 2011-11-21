@@ -11,11 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MessageViewSingle extends Activity
+public class MessageReply extends Activity
 {
 	/** called when the activity is first created. */
 	@Override
@@ -23,7 +24,7 @@ public class MessageViewSingle extends Activity
 	{
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.viewsinglemessage);
+		setContentView(R.layout.replymessage);
 		
 		String jsonResult = Globals.currentMessage;
 		int messageLoc = Globals.currentMessageLoc;
@@ -35,6 +36,7 @@ public class MessageViewSingle extends Activity
 		String sender = messageList.get(messageLoc).getLastSender();
 		String date = messageList.get(messageLoc).getDate();
 		String body = messageList.get(messageLoc).getMessageBody();
+		
 		
 		final TextView subjectText = (TextView)findViewById(R.id.subjectText);
 		subjectText.setText("This is the Subject.");
@@ -48,18 +50,31 @@ public class MessageViewSingle extends Activity
 		dateText.setText("This is the Date last sent.");
 		dateText.setText("Last Message: " + new Date(Integer.parseInt(date)));
 		
-		final TextView bodyText = (TextView)findViewById(R.id.bodyText);
-		bodyText.setText("This is the body text.");
-		bodyText.setText(body);
-		bodyText.setMovementMethod(LinkMovementMethod.getInstance());
 		
-		final Button replyButton = (Button)findViewById(R.id.replyButton);
+		final EditText bodyField = (EditText)findViewById(R.id.bodyField);
+		bodyField.setText("This is the Body text.");
+		bodyField.setText("\n"+
+							"\n" +
+							"------------" +
+							"\n" +
+							body);
+
+		final Button sendButton = (Button)findViewById(R.id.sendButton);
 		
-        replyButton.setOnClickListener(new View.OnClickListener()
+        sendButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
-            	startActivity(new Intent(MessageViewSingle.this, MessageReply.class));
+            	//send the message here
+            	//
+            	//need to ask for clarification on what gets sent
+            	//
+            	//
+            	
+            	Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
+            	toast.show();
+            	
+            	finish();
             }
         });
 	}

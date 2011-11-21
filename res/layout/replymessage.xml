@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+<TextView android:text=""
+android:id="@+id/subjectText"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent"
+android:textSize="30px"
+android:textColor="#FFFFFF"
+android:textStyle="bold">
+</TextView>
+
+<TextView android:text=""
+android:id="@+id/senderText"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent">
+</TextView>
+
+<TextView android:text=""
+android:id="@+id/dateText"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent">
+</TextView>
+
+<!-- The TextView below is serving as a Horizontal Ruler between the Subject and the Body -->
+<TextView android:layout_width="fill_parent"
+android:layout_height="2dip"
+android:background="#313431" />
+
+<EditText android:id="@+id/bodyField" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="" android:textSize="18sp" android:gravity="top" android:layout_weight="1"></EditText>
+
+<Button android:id="@+id/sendButton" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Send" android:gravity="center" android:layout_weight="0"></Button>
+
+
+</LinearLayout>
