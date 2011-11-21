@@ -3,7 +3,6 @@ package com.allplayers.android;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -99,6 +99,29 @@ public class APCI_RestServices
 		}
 	}
 	
+	public static String putMessage(int threadId, String type)
+	{
+		String[][] contents = new String[1][2];
+		contents[0][0] = "id";
+		contents[0][1] = "" + threadId;
+		//Type: thread or message (default = thread)
+		
+		return makeAuthenticatedDelete("https://www.allplayers.com/?q=api/v1/rest/messages.json", contents);
+	}
+	
+	public static String putMessage(int threadId, int status, String type)
+	{
+		String[][] contents = new String[2][2];
+		contents[0][0] = "id";
+		contents[0][1] = "" + threadId;
+		//Status: 1=unread, 0=read
+		contents[1][0] = "status";
+		contents[1][1] = "" + status;
+		//Type: thread or message (default = thread)
+		
+		return makeAuthenticatedPut("https://www.allplayers.com/?q=api/v1/rest/messages.json", contents);
+	}
+	
 	public static String validateLogin(String username, String password)
 	{
 		String[][] contents = new String[2][2];
@@ -110,9 +133,15 @@ public class APCI_RestServices
 		return makeAuthenticatedPost("https://www.allplayers.com/?q=api/v1/rest/users/login.json", contents);
 	}
 	
-	public static String postMessage(String[][] contents)
+	public static String postMessage(int threadId, String body)
 	{
-		return makeAuthenticatedPost("https://www.allplayers.com/?q=api/v1/rest/", contents);
+		String[][] contents = new String[2][2];
+		contents[0][0] = "thread_id";
+		contents[0][1] = "" + threadId;
+		contents[1][0] = "body";
+		contents[1][1] = body;
+		
+		return makeAuthenticatedPost("https://www.allplayers.com/?q=api/v1/rest/messages.json", contents);
 	}
 	
 	public static String searchGroups(String search, int zipcode, int distance)
@@ -229,6 +258,126 @@ public class APCI_RestServices
 			{
 				result += line;
 			}
+			
+			return result;
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex);
+			return ex.toString();
+		}
+	}
+	
+	private static String makeAuthenticatedDelete(String urlString, String[][] contents)
+	{
+		//Make and return from authenticated post call
+		try
+		{
+			HttpURLConnection connection;
+			DataOutputStream printout;
+			BufferedReader input;
+			
+			URL url = new URL(urlString);
+			connection = (HttpURLConnection)url.openConnection();
+			
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setUseCaches(false);
+			connection.setRequestMethod("DELETE");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			
+			printout = new DataOutputStream(connection.getOutputStream());
+			
+			//Send POST output.
+			String content = "";
+			if(contents.length > 0)
+			{
+				for(int i = 0; i < contents.length; i++)
+				{
+					if(i > 0)
+					{
+						content += "&";
+					}
+					
+					content += contents[i][0] + "=" + URLEncoder.encode(contents[i][1], "UTF-8");
+				}
+			}
+			
+			printout.writeBytes(content);
+			printout.flush();
+			printout.close();
+			
+			//Get response data.
+			input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String str;
+			
+			String result = "";
+			while((str = input.readLine()) != null)
+			{
+				result += str;
+			}
+			
+			input.close();
+			
+			return result;
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex);
+			return ex.toString();
+		}
+	}
+	
+	private static String makeAuthenticatedPut(String urlString, String[][] contents)
+	{
+		//Make and return from authenticated post call
+		try
+		{
+			HttpURLConnection connection;
+			DataOutputStream printout;
+			BufferedReader input;
+			
+			URL url = new URL(urlString);
+			connection = (HttpURLConnection)url.openConnection();
+			
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setUseCaches(false);
+			connection.setRequestMethod("PUT");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			
+			printout = new DataOutputStream(connection.getOutputStream());
+			
+			//Send POST output.
+			String content = "";
+			if(contents.length > 0)
+			{
+				for(int i = 0; i < contents.length; i++)
+				{
+					if(i > 0)
+					{
+						content += "&";
+					}
+					
+					content += contents[i][0] + "=" + URLEncoder.encode(contents[i][1], "UTF-8");
+				}
+			}
+			
+			printout.writeBytes(content);
+			printout.flush();
+			printout.close();
+			
+			//Get response data.
+			input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String str;
+			
+			String result = "";
+			while((str = input.readLine()) != null)
+			{
+				result += str;
+			}
+			
+			input.close();
 			
 			return result;
 		}
