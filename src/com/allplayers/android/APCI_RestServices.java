@@ -99,14 +99,14 @@ public class APCI_RestServices
 		}
 	}
 	
-	public static String putMessage(int threadId, String type)
+	public static String deleteMessage(int threadId, String type)
 	{
 		String[][] contents = new String[1][2];
 		contents[0][0] = "id";
 		contents[0][1] = "" + threadId;
 		//Type: thread or message (default = thread)
 		
-		return makeAuthenticatedDelete("https://www.allplayers.com/?q=api/v1/rest/messages.json", contents);
+		return makeAuthenticatedDelete("https://www.allplayers.com/?q=api/v1/rest/messages" + threadId + ".json", contents);
 	}
 	
 	public static String putMessage(int threadId, int status, String type)
@@ -119,7 +119,7 @@ public class APCI_RestServices
 		contents[1][1] = "" + status;
 		//Type: thread or message (default = thread)
 		
-		return makeAuthenticatedPut("https://www.allplayers.com/?q=api/v1/rest/messages.json", contents);
+		return makeAuthenticatedPut("https://www.allplayers.com/?q=api/v1/rest/messages/" + threadId + ".json", contents);
 	}
 	
 	public static String validateLogin(String username, String password)
