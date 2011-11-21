@@ -1,12 +1,15 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.app.ListActivity;
 //import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 public class MailInbox extends ListActivity
 {
@@ -14,6 +17,8 @@ public class MailInbox extends ListActivity
 	private ArrayList<MessageData> messageList;
 	private boolean hasMessages;
 	private String[] values;
+	
+	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -23,10 +28,10 @@ public class MailInbox extends ListActivity
 		
 		String jsonResult = APCI_RestServices.getUserInbox();
 		
+		HashMap<String, String> map;
+		
 		MessagesMap messages = new MessagesMap(jsonResult);
 		ArrayList<MessageData> messageList = messages.getMessageData();
-		
-		//String[] values;
 		
 		if(messageList.isEmpty())
 		{
@@ -37,18 +42,26 @@ public class MailInbox extends ListActivity
 
 		if(hasMessages)
 		{
-			values = new String[messageList.size()];
+			//values = new String[messageList.size()];
 			
 			for(int i = 0; i < messageList.size(); i++)
 			{
-				values[i] = messageList.get(i).getSubject();
+				map = new HashMap<String, String>();
+				map.put("line1", messageList.get(i).getSubject());
+				map.put("line2", "Last sent from: " + messageList.get(i).getLastSender());
+				list.add(map);
+				//values[i] = messageList.get(i).getSubject();
 			}
 		}else{
 			values = new String[]{"You have no messages."};
 		}
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, values);
+
+		String[] from = { "line1", "line2" };
+
+		int[] to = { android.R.id.text1, android.R.id.text2 };
+
+		SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
 		setListAdapter(adapter);
 	}
 
