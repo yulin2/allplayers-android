@@ -3,6 +3,8 @@ package com.allplayers.android;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONException;
+
 import android.app.ListActivity;
 import android.content.Intent;
 //import android.content.Intent;
@@ -16,7 +18,8 @@ public class MessageInbox extends ListActivity
 {
 	
 	private ArrayList<MessageData> messageList;
-	private boolean hasMessages;
+	private boolean hasMessages = false;
+	private String jsonResult = "";
 	
 	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
 	
@@ -26,7 +29,7 @@ public class MessageInbox extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		String jsonResult = APCI_RestServices.getUserInbox();
+		jsonResult = APCI_RestServices.getUserInbox();
 		
 		HashMap<String, String> map;
 		
@@ -73,16 +76,15 @@ public class MessageInbox extends ListActivity
 	{
 		super.onListItemClick(l, v, position, id);
 		
-		Intent intent = new Intent(MessageInbox.this, MessageViewSingle.class);
-		startActivity(intent);
-		
-		//if(hasMessages)
-		//{
-		//	Globals.currentGroup = groupList.get(position);
+		if(hasMessages)
+		{
+
+			Globals.currentMessage = jsonResult;
+			Globals.currentMessageLoc = position;
+
 			
-			//Display the group page for the selected group
-		//	Intent intent = new Intent(GroupsActivity.this, GroupPageActivity.class);
-		//	startActivity(intent);
-		//}
+			Intent intent = new Intent(MessageInbox.this, MessageViewSingle.class);
+			startActivity(intent);
+		}
 	}
 }

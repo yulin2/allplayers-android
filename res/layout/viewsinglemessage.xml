@@ -8,13 +8,32 @@ android:id="@+id/subjectText"
 android:layout_height="wrap_content"
 android:layout_width="fill_parent"
 android:textSize="30px"
+android:textColor="#FFFFFF"
 android:textStyle="bold">
 </TextView>
 
 <TextView android:text=""
-android:id="@+id/bodyText"
+android:id="@+id/senderText"
 android:layout_height="wrap_content"
 android:layout_width="fill_parent">
+</TextView>
+
+<TextView android:text=""
+android:id="@+id/dateText"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent">
+</TextView>
+
+<!-- The TextView below is serving as a Horizontal Ruler between the Subject and the Body -->
+<TextView android:layout_width="fill_parent"
+android:layout_height="2dip"
+android:background="#313431" />
+
+<TextView android:text=""
+android:id="@+id/bodyText"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent"
+android:autoLink="web">
 </TextView>
 </LinearLayout>
 

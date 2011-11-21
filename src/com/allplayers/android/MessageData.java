@@ -15,11 +15,17 @@ public class MessageData
 	 "last_message_body",
 	 "uri"]*/
 	
-	private String thread_id;
-	private String subject;
-	private String is_new;
-	private String last_message_sender;
-	private String last_message_body;
+	private String thread_id = "";
+	private String subject = "";
+	private String is_new = "";
+	private String last_message_sender = "";
+	private String last_message_body = "";
+	private String last_updated = "";
+	
+	public MessageData()
+	{
+		
+	}
 	
 	public MessageData(String jsonResult)
 	{
@@ -31,11 +37,17 @@ public class MessageData
 			is_new = messageObject.getString("is_new");
 			last_message_sender = messageObject.getString("last_message_sender");
 			last_message_body = messageObject.getString("last_message_body");
+			last_updated = messageObject.getString("last_updated");
 		}
 		catch(JSONException ex)
 		{
 			System.out.println(ex);
 		}
+	}
+	
+	public String getDate()
+	{
+		return last_updated;
 	}
 	
 	public String getThreadID()

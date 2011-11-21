@@ -21,6 +21,9 @@ public class Globals
 	public static AlbumData currentAlbum = new AlbumData();
 	public static PhotoData currentPhoto = new PhotoData();
 	
+	public static String currentMessage;
+	public static int currentMessageLoc;
+	
 	public static String search = "";
 	public static int zipcode = 00000;
 	public static int distance = 10;
