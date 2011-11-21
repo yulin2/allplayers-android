@@ -51,7 +51,12 @@ public class MessageInbox extends ListActivity
 			{
 				map = new HashMap<String, String>();
 				map.put("line1", messageList.get(i).getSubject());
-				map.put("line2", "Last sent from: " + messageList.get(i).getLastSender());
+				
+				if(Integer.parseInt(messageList.get(i).getNew()) == 1)
+					map.put("line2", "Unread");
+				else
+					map.put("line2", "Read");
+					
 				list.add(map);
 				//values[i] = messageList.get(i).getSubject();
 			}

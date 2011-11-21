@@ -18,6 +18,10 @@ import org.json.JSONObject;
 
 public class MessageReply extends Activity
 {
+	
+	private String threadID;
+	private String body;
+	
 	/** called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -35,7 +39,8 @@ public class MessageReply extends Activity
 		String subject = messageList.get(messageLoc).getSubject();
 		String sender = messageList.get(messageLoc).getLastSender();
 		String date = messageList.get(messageLoc).getDate();
-		String body = messageList.get(messageLoc).getMessageBody();
+		body = messageList.get(messageLoc).getMessageBody();
+		threadID = messageList.get(messageLoc).getThreadID();
 		
 		
 		final TextView subjectText = (TextView)findViewById(R.id.subjectText);
@@ -70,6 +75,8 @@ public class MessageReply extends Activity
             	//need to ask for clarification on what gets sent
             	//
             	//
+            	
+            	APCI_RestServices.postMessage(Integer.parseInt(threadID), body);
             	
             	Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
             	toast.show();

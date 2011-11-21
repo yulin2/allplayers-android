@@ -35,6 +35,13 @@ public class MessageViewSingle extends Activity
 		String sender = messageList.get(messageLoc).getLastSender();
 		String date = messageList.get(messageLoc).getDate();
 		String body = messageList.get(messageLoc).getMessageBody();
+		int threadID = Integer.parseInt(messageList.get(messageLoc).getThreadID());
+		int isNew = Integer.parseInt(messageList.get(messageLoc).getNew());
+		
+		if(isNew == 1)
+		{
+			APCI_RestServices.putMessage(threadID, 0, "");
+		}
 		
 		final TextView subjectText = (TextView)findViewById(R.id.subjectText);
 		subjectText.setText("This is the Subject.");
