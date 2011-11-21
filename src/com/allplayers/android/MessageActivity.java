@@ -35,15 +35,11 @@ public class MessageActivity extends ListActivity
 		{
 			Intent intent = new Intent(MessageActivity.this, MessageInbox.class);
 			startActivity(intent);
-			
-			//Toast.makeText(this, "You clicked \"Inbox\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the MailInbox.class activity
 		}
 		else if(position == 1)
 		{
 			Intent intent = new Intent(MessageActivity.this, MessageSent.class);
 			startActivity(intent);
-			
-			//Toast.makeText(this, "You clicked \"Sent\".", Toast.LENGTH_SHORT).show(); //this is where we would send them to the MailSent.class activity
 		}
 	}
 	

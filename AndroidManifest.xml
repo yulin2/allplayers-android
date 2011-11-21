@@ -36,10 +36,11 @@
 		<activity android:name="PhotoDisplayActivity" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<!-- End Group Activities -->
 		
-		<!-- Myles added Mail related activities below here -->
+		<!-- Start Message Activities -->
 		<activity android:name="MessageInbox" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name="MessageSent" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<!-- Myles added Mail related activities above here -->
+		<activity android:name="MessageViewSingle" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<!-- End Message Activities -->
 		
 		
     </application>

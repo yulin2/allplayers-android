@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.ListActivity;
+import android.content.Intent;
 //import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -71,6 +72,9 @@ public class MessageInbox extends ListActivity
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
 		super.onListItemClick(l, v, position, id);
+		
+		Intent intent = new Intent(MessageInbox.this, MessageViewSingle.class);
+		startActivity(intent);
 		
 		//if(hasMessages)
 		//{

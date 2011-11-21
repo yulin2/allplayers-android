@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="top" android:layout_weight="0">
+<TextView android:text=""
+android:id="@+id/subjectText"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent"
+android:textSize="30px"
+android:textStyle="bold">
+</TextView>
+
+<TextView android:text=""
+android:id="@+id/bodyText"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent">
+</TextView>
+</LinearLayout>
+
+    
+<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="bottom" android:layout_weight="1">
+<Button android:id="@+id/replyButton" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Reply" android:gravity="center" android:layout_weight="0"></Button>
+</LinearLayout>
+
+</LinearLayout>
