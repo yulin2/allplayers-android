@@ -16,7 +16,6 @@ public class MessageSent extends ListActivity
 	
 	private ArrayList<MessageData> messageList;
 	private boolean hasMessages;
-	private String[] values;
 	
 	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
 	
@@ -53,7 +52,10 @@ public class MessageSent extends ListActivity
 				//values[i] = messageList.get(i).getSubject();
 			}
 		}else{
-			values = new String[]{"You have no messages."};
+			map = new HashMap<String, String>();
+			map.put("line1", "You have no sent messages.");
+			map.put("line2", "");
+			list.add(map);
 		}
 		
 
