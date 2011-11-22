@@ -101,22 +101,19 @@ public class APCI_RestServices
 	
 	public static String deleteMessage(int threadId, String type)
 	{
-		String[][] contents = new String[1][2];
-		contents[0][0] = "id";
-		contents[0][1] = "" + threadId;
+		//String[][] contents = new String[1][2];
 		//Type: thread or message (default = thread)
 		
-		return makeAuthenticatedDelete("https://www.allplayers.com/?q=api/v1/rest/messages" + threadId + ".json", contents);
+		return makeAuthenticatedDelete("https://www.allplayers.com/?q=api/v1/rest/messages/" + threadId + ".json");
 	}
 	
+	//Change read/unread status
 	public static String putMessage(int threadId, int status, String type)
 	{
-		String[][] contents = new String[2][2];
-		contents[0][0] = "id";
-		contents[0][1] = "" + threadId;
+		String[][] contents = new String[1][2];
 		//Status: 1=unread, 0=read
-		contents[1][0] = "status";
-		contents[1][1] = "" + status;
+		contents[0][0] = "status";
+		contents[0][1] = "" + status;
 		//Type: thread or message (default = thread)
 		
 		return makeAuthenticatedPut("https://www.allplayers.com/?q=api/v1/rest/messages/" + threadId + ".json", contents);
@@ -268,58 +265,25 @@ public class APCI_RestServices
 		}
 	}
 	
-	private static String makeAuthenticatedDelete(String urlString, String[][] contents)
+	private static String makeAuthenticatedDelete(String urlString)
 	{
-		//Make and return from authenticated post call
+		if(!isLoggedIn())
+		{
+			return "You are not logged in";
+		}
+		
+		//Make and return from authenticated delete call
 		try
 		{
-			HttpURLConnection connection;
-			DataOutputStream printout;
-			BufferedReader input;
-			
 			URL url = new URL(urlString);
-			connection = (HttpURLConnection)url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			
-			connection.setDoInput(true);
 			connection.setDoOutput(true);
-			connection.setUseCaches(false);
 			connection.setRequestMethod("DELETE");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.connect();
 			
-			printout = new DataOutputStream(connection.getOutputStream());
-			
-			//Send POST output.
-			String content = "";
-			if(contents.length > 0)
-			{
-				for(int i = 0; i < contents.length; i++)
-				{
-					if(i > 0)
-					{
-						content += "&";
-					}
-					
-					content += contents[i][0] + "=" + URLEncoder.encode(contents[i][1], "UTF-8");
-				}
-			}
-			
-			printout.writeBytes(content);
-			printout.flush();
-			printout.close();
-			
-			//Get response data.
-			input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String str;
-			
-			String result = "";
-			while((str = input.readLine()) != null)
-			{
-				result += str;
-			}
-			
-			input.close();
-			
-			return result;
+			return "done";
 		}
 		catch(Exception ex)
 		{
@@ -330,25 +294,26 @@ public class APCI_RestServices
 	
 	private static String makeAuthenticatedPut(String urlString, String[][] contents)
 	{
-		//Make and return from authenticated post call
+		if(!isLoggedIn())
+		{
+			return "You are not logged in";
+		}
+		
+		//Make and return from authenticated put call
 		try
 		{
-			HttpURLConnection connection;
-			DataOutputStream printout;
-			BufferedReader input;
-			
 			URL url = new URL(urlString);
-			connection = (HttpURLConnection)url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			
-			connection.setDoInput(true);
 			connection.setDoOutput(true);
-			connection.setUseCaches(false);
+			connection.setDoInput(true);
 			connection.setRequestMethod("PUT");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.connect();
 			
-			printout = new DataOutputStream(connection.getOutputStream());
+			DataOutputStream printout = new DataOutputStream(connection.getOutputStream());
 			
-			//Send POST output.
+			//Send PUT output.
 			String content = "";
 			if(contents.length > 0)
 			{
@@ -367,19 +332,7 @@ public class APCI_RestServices
 			printout.flush();
 			printout.close();
 			
-			//Get response data.
-			input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String str;
-			
-			String result = "";
-			while((str = input.readLine()) != null)
-			{
-				result += str;
-			}
-			
-			input.close();
-			
-			return result;
+			return "done";
 		}
 		catch(Exception ex)
 		{
@@ -420,12 +373,8 @@ public class APCI_RestServices
 		//Make and return from authenticated post call
 		try
 		{
-			HttpURLConnection connection;
-			DataOutputStream printout;
-			BufferedReader input;
-			
 			URL url = new URL(urlString);
-			connection = (HttpURLConnection)url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -439,7 +388,7 @@ public class APCI_RestServices
 				connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
 			}
 			
-			printout = new DataOutputStream(connection.getOutputStream());
+			DataOutputStream printout = new DataOutputStream(connection.getOutputStream());
 			
 			//Send POST output.
 			String content = "";
@@ -461,7 +410,7 @@ public class APCI_RestServices
 			printout.close();
 			
 			//Get response data.
-			input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String str;
 			
 			String result = "";
