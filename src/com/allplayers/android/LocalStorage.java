@@ -1,84 +1,126 @@
 package com.allplayers.android;
 
+import java.io.*;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteStatement;
-import android.util.Log;
- 
-import java.util.ArrayList;
-import java.util.List;
- 
+
+
+//Local Storage for JSON Strings
+//
+//Example Usage:
+//LocalStorage.writeInbox(this.getBaseContext(), jsonResult);
+//LocalStorage.readInbox(this.getBaseContext()); <---Returns a String
+//
+//
+//writeInbox(Context, String)
+//readInbox(Context)
+//
+//writeUserGroups(Context, String)
+//readUserGroups(Context)
+//
+//writeUserGroupMembers(Context, String)
+//readUserGroupMembers(Context)
+//
+//Will add more as we implement this functionality into main code
+//
+
 public class LocalStorage
 {
-	private static final String DATABASE_NAME = "AllPlayers.db";
-	private static final int DATABASE_VERSION = 1;
-	private static final String TABLE_NAME = "userCredentials";
- 
-	private Context context;
-	private SQLiteDatabase db;
- 
-	private SQLiteStatement insertStmt;
-	private static final String INSERT = "insert into " + TABLE_NAME + "(name) values (?)";
- 
-	public LocalStorage(Context context)
-	{
-		this.context = context;
-		OpenHelper openHelper = new OpenHelper(this.context);
-		this.db = openHelper.getWritableDatabase();
-		this.insertStmt = this.db.compileStatement(INSERT);
-	}
- 
-	public long insert(String name) 
-	{
-		this.insertStmt.bindString(1, name);
-		return this.insertStmt.executeInsert();
-	}
- 
+	protected static Context mContext;
+	private static String writeString;
 
-	public void deleteAll() 
+	public static void writeInbox(Context c, String write)
 	{
-		this.db.delete(TABLE_NAME, null, null);
+		writeFile(c, write, "Inbox");
 	}
- 
-	public List<String> selectAll()
+	public static String readInbox(Context c)
 	{
-		List<String> list = new ArrayList<String>();
-		Cursor cursor = this.db.query(TABLE_NAME, new String[] { "name" }, null, null, null, null, "name desc");
-		if (cursor.moveToFirst()) 
-		{
-			do
-			{
-				list.add(cursor.getString(0)); 
-			} while (cursor.moveToNext());
-		}
-		if (cursor != null && !cursor.isClosed())
-		{
-			cursor.close();
-		}
-		return list;
+		String returnValue = readFile(c, "Inbox");
+		return returnValue;
 	}
- 
-	private static class OpenHelper extends SQLiteOpenHelper
+	
+	
+	public static void writeUserGroups(Context c, String write)
 	{
-		OpenHelper(Context context)
+		writeFile(c, write, "UserGroups");
+	}
+	public static String readUserGroups(Context c)
+	{
+		String returnValue = readFile(c, "UserGroups");
+		return returnValue;
+	}
+	
+	
+	public static void writeUserGroupMembers(Context c, String write)
+	{
+		writeFile(c, write, "UserGroupMembers");
+	}
+	public static String readUserGroupMembers(Context c)
+	{
+		String returnValue = readFile(c, "UserGroupMembers");
+		return returnValue;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public static void writeFile(Context c, String write, String fileName)
+	{
+		mContext = c;
+		writeString = write;
+		
+		try 
 		{
-			super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		}
- 
-		@Override
-		public void onCreate(SQLiteDatabase db) 
+			writeString = write;
+			
+			FileOutputStream fOut = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
+			OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+			osw.write(writeString);
+
+			osw.flush();
+			osw.close();
+		} 
+		catch (IOException ioe) 
 		{
-			db.execSQL("CREATE TABLE " + TABLE_NAME + "(id INTEGER PRIMARY KEY, name TEXT)");
+			ioe.printStackTrace();
 		}
- 
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-		{
-			Log.w("Example", "Upgrading database, this will drop tables and recreate.");
-			db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-			onCreate(db);
-		}
+				  
+	}
+	
+	public static String readFile(Context c, String fileName)
+	{
+		mContext = c;
+		String data = "";
+		FileInputStream fis;
+		
+	    try {
+	        fis = mContext.openFileInput(fileName);
+	        
+	        InputStreamReader isr = new InputStreamReader(fis);
+	        
+	        BufferedReader br = new BufferedReader(isr);
+	        
+	        data = br.readLine();
+	        
+	        isr.close();
+	        br.close();
+	        
+	        return data;
+	        
+	    }
+	    catch (FileNotFoundException fnfe)
+	    {
+	    	fnfe.printStackTrace();
+	    }
+	    catch (IOException ioe)
+	    {
+	    	ioe.printStackTrace();
+	    }
+		
+		return data;		  
 	}
 }
