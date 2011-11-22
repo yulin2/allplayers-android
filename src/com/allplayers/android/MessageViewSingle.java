@@ -53,7 +53,7 @@ public class MessageViewSingle extends Activity
 		
 		final TextView dateText = (TextView)findViewById(R.id.dateText);
 		dateText.setText("This is the Date last sent.");
-		dateText.setText("Last Message: " + new Date(Integer.parseInt(date)));
+		dateText.setText("Last Message: " + new Date(Long.parseLong(date) * 1000));
 		
 		final TextView bodyText = (TextView)findViewById(R.id.bodyText);
 		bodyText.setText("This is the body text.");

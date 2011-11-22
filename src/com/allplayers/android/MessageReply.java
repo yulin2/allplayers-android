@@ -54,7 +54,7 @@ public class MessageReply extends Activity
 		
 		final TextView dateText = (TextView)findViewById(R.id.dateText);
 		dateText.setText("This is the Date last sent.");
-		dateText.setText("Last Message: " + new Date(Integer.parseInt(date) * 1000));
+		dateText.setText("Last Message: " + new Date(Long.parseLong(date) * 1000));
 		
 		
 		final EditText bodyField = (EditText)findViewById(R.id.bodyField);
