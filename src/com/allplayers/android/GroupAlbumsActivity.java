@@ -57,7 +57,7 @@ public class GroupAlbumsActivity  extends ListActivity
 		{
 			Globals.currentAlbum = albumList.get(position);
 			
-			//Display the group page for the selected group
+			//Display the photos for the selected album
 			Intent intent = new Intent(GroupAlbumsActivity.this, AlbumPhotosActivity.class);
 			startActivity(intent);
 		}

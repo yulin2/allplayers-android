@@ -1,16 +1,20 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.ListActivity;
-import android.database.Cursor;
+//import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.SimpleCursorAdapter;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 public class GroupEventsActivity extends ListActivity
 {
 	private ArrayList<EventData> eventsList;
+	private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+	private boolean hasEvents = false;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -22,33 +26,47 @@ public class GroupEventsActivity extends ListActivity
 		
 		EventsMap events = new EventsMap(jsonResult);
 		eventsList = events.getEventData();
-		
-		String[] values;
+		HashMap<String, String> map;
 		
 		if(!eventsList.isEmpty())
 		{
-			values = new String[eventsList.size()];
-			
 			for(int i = 0; i < eventsList.size(); i++)
 			{
-				values[i] = eventsList.get(i).getTitle();
+				map = new HashMap<String, String>();
+				map.put("line1", eventsList.get(i).getTitle());
+				map.put("line2", eventsList.get(i).getStart());
+				list.add(map);
 			}
 			
+			hasEvents = true;
 		}
 		else
 		{
-			values = new String[]{"No events to display"};
+			map = new HashMap<String, String>();
+			map.put("line1", "No events to display.");
+			map.put("line2", "");
+			list.add(map);
+			hasEvents = false;
 		}
 		
-		/*Cursor cursor = null;
-		int[] to = new int[]{}; //Which fields to insert the data into
-		
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, 
-				android.R.layout.simple_list_item_2, cursor, values, to);
-		setListAdapter(adapter);*/
-		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
-				android.R.layout.simple_list_item_1, values);
+		String[] from = {"line1", "line2"};
+
+		int[] to = {android.R.id.text1, android.R.id.text2};
+
+		SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
 		setListAdapter(adapter);
+	}
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id)
+	{
+		super.onListItemClick(l, v, position, id);
+		
+		if(hasEvents)
+		{
+			//Globals.currentEvent = eventsList.get(position);
+			//Intent intent = new Intent(GroupEventsActivity.this, EventDisplayActivity.class); //Can be used to display map or full details
+			//startActivity(intent);
+		}
 	}
 }

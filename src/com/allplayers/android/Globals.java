@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,9 @@ public class Globals
 	public static GroupData currentGroup = new GroupData();
 	public static AlbumData currentAlbum = new AlbumData();
 	public static PhotoData currentPhoto = new PhotoData();
+	public static EventData currentEvent = new EventData();
+	
+	public static ArrayList<GroupData> groupList = new ArrayList<GroupData>();
 	
 	public static String currentMessage;
 	public static int currentMessageLoc;

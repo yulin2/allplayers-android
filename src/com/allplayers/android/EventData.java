@@ -1,7 +1,5 @@
 package com.allplayers.android;
 
-import java.sql.Timestamp;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,8 +9,8 @@ public class EventData
 	private String title = "";
 	private String description = "";
 	private String category = "";
-	private Timestamp start = null;
-	private Timestamp end = null;
+	private String start = null;
+	private String end = null;
 	
 	public EventData()
 	{
@@ -28,8 +26,15 @@ public class EventData
 			title = eventObject.getString("title");
 			description = eventObject.getString("description");
 			category = eventObject.getString("category");
-			//start = Timestamp.valueOf(eventObject.getString("start"));
-			//end = Timestamp.valueOf(eventObject.getString("end"));
+			start = eventObject.getString("start");
+			end = eventObject.getString("end");
+			
+			//Get rid of the 'T' in start and end
+			int separator = start.indexOf("T");
+			start = start.substring(0, separator) + " " + start.substring(separator + 1);
+			
+			separator = end.indexOf("T");
+			end = end.substring(0, separator) + " " + end.substring(separator + 1);
 		}
 		catch(JSONException ex)
 		{
@@ -57,12 +62,12 @@ public class EventData
 		return category;
 	}
 	
-	public Timestamp getStart()
+	public String getStart()
 	{
 		return start;
 	}
 	
-	public Timestamp getEnd()
+	public String getEnd()
 	{
 		return end;
 	}

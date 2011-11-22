@@ -20,10 +20,14 @@ public class GroupsActivity extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		String jsonResult = APCI_RestServices.getUserGroups();
-		
-		GroupsMap groups = new GroupsMap(jsonResult);
-		groupList = groups.getGroupData();
+		if(Globals.groupList.isEmpty())
+		{
+			String jsonResult = APCI_RestServices.getUserGroups();
+			
+			GroupsMap groups = new GroupsMap(jsonResult);
+			groupList = groups.getGroupData();
+			Globals.groupList = groupList;
+		}
 		
 		String[] values;
 		
