@@ -16,7 +16,7 @@ public class MessageActivity extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		String[] values = new String[] { "Inbox", "Sent"};
+		String[] values = new String[] { "Inbox", "Sent" };
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
 		setListAdapter(adapter);
 	}

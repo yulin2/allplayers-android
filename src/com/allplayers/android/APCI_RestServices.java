@@ -282,7 +282,6 @@ public class APCI_RestServices
 			connection.setRequestMethod("DELETE");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
-			connection.connect();
 			
 			return "done";
 		}

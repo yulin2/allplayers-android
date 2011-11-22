@@ -22,11 +22,9 @@ public class Globals
 	public static AlbumData currentAlbum = new AlbumData();
 	public static PhotoData currentPhoto = new PhotoData();
 	public static EventData currentEvent = new EventData();
+	public static MessageData currentMessage = new MessageData();
 	
 	public static ArrayList<GroupData> groupList = new ArrayList<GroupData>();
-	
-	public static String currentMessage;
-	public static int currentMessageLoc;
 	
 	public static String search = "";
 	public static int zipcode = 00000;

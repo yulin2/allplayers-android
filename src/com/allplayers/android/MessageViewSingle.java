@@ -1,6 +1,5 @@
 package com.allplayers.android;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.Activity;
@@ -21,18 +20,14 @@ public class MessageViewSingle extends Activity
 
 		setContentView(R.layout.viewsinglemessage);
 		
-		String jsonResult = Globals.currentMessage;
-		int messageLoc = Globals.currentMessageLoc;
+		MessageData message = Globals.currentMessage;
 		
-		MessagesMap messages = new MessagesMap(jsonResult);
-		ArrayList<MessageData> messageList = messages.getMessageData();
-		
-		String subject = messageList.get(messageLoc).getSubject();
-		String sender = messageList.get(messageLoc).getLastSender();
-		String date = messageList.get(messageLoc).getDate();
-		String body = messageList.get(messageLoc).getMessageBody();
-		int threadID = Integer.parseInt(messageList.get(messageLoc).getThreadID());
-		int isNew = Integer.parseInt(messageList.get(messageLoc).getNew());
+		String subject = message.getSubject();
+		String sender = message.getLastSender();
+		String date = message.getDate();
+		String body = message.getMessageBody();
+		int threadID = Integer.parseInt(message.getThreadID());
+		int isNew = Integer.parseInt(message.getNew());
 		
 		if(isNew == 1)
 		{

@@ -1,6 +1,5 @@
 package com.allplayers.android;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.Activity;
@@ -26,18 +25,13 @@ public class MessageReply extends Activity
 
 		setContentView(R.layout.replymessage);
 		
-		String jsonResult = Globals.currentMessage;
-		int messageLoc = Globals.currentMessageLoc;
+		MessageData message = Globals.currentMessage;
 		
-		MessagesMap messages = new MessagesMap(jsonResult);
-		ArrayList<MessageData> messageList = messages.getMessageData();
-		
-		String subject = messageList.get(messageLoc).getSubject();
-		String sender = messageList.get(messageLoc).getLastSender();
-		String date = messageList.get(messageLoc).getDate();
-		body = messageList.get(messageLoc).getMessageBody();
-		threadID = messageList.get(messageLoc).getThreadID();
-		
+		String subject = message.getSubject();
+		String sender = message.getLastSender();
+		String date = message.getDate();
+		body = message.getMessageBody();
+		threadID = message.getThreadID();
 		
 		final TextView subjectText = (TextView)findViewById(R.id.subjectText);
 		subjectText.setText("This is the Subject.");

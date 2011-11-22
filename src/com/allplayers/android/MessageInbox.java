@@ -75,8 +75,9 @@ public class MessageInbox extends ListActivity
 		
 		if(hasMessages)
 		{
-			Globals.currentMessage = jsonResult;
-			Globals.currentMessageLoc = position;
+			//Globals.currentMessage = jsonResult;
+			//Globals.currentMessageLoc = position;
+			Globals.currentMessage = messageList.get(position);
 
 			Intent intent = new Intent(MessageInbox.this, MessageViewSingle.class);
 			startActivity(intent);
