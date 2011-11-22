@@ -281,6 +281,7 @@ public class APCI_RestServices
 			connection.setDoOutput(true);
 			connection.setRequestMethod("DELETE");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
 			connection.connect();
 			
 			return "done";
@@ -309,7 +310,7 @@ public class APCI_RestServices
 			connection.setDoInput(true);
 			connection.setRequestMethod("PUT");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			connection.connect();
+			connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
 			
 			DataOutputStream printout = new DataOutputStream(connection.getOutputStream());
 			
