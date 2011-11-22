@@ -50,7 +50,6 @@ public class APCI_RestServices
 		catch (Exception ex)
 		{
 		}
-		//Now you can access an https URL without having the certificate in the truststore
 	}
 	
 	public static boolean isLoggedIn()
@@ -489,11 +488,11 @@ public class APCI_RestServices
 				
 				if(cookieValue.startsWith("SESS"))
 				{
-				session_cookie = cookieValue;
+					session_cookie = cookieValue;
 				}
 				else if(cookieValue.startsWith("CHOCOLATECHIP"))
 				{
-				chocolatechip_cookie = cookieValue;
+					chocolatechip_cookie = cookieValue;
 				}
 			}
 		}
