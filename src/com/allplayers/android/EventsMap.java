@@ -51,6 +51,11 @@ private ArrayList<EventData> events = new ArrayList<EventData>();
 					
 					Calendar currentDate = Calendar.getInstance();
 					
+					//If you want to also include events that have already happened for the current day, uncomment the below code
+					//currentDate.set(Calendar.HOUR_OF_DAY, 0);
+					//currentDate.set(Calendar.MINUTE, 0);
+					//currentDate.set(Calendar.SECOND, 0);
+					
 					if(currentDate.before(eventEnd))
 					{
 						events.add(event);
