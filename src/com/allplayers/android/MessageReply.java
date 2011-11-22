@@ -21,6 +21,7 @@ public class MessageReply extends Activity
 	
 	private String threadID;
 	private String body;
+	private String sendBody;
 	
 	/** called when the activity is first created. */
 	@Override
@@ -53,7 +54,7 @@ public class MessageReply extends Activity
 		
 		final TextView dateText = (TextView)findViewById(R.id.dateText);
 		dateText.setText("This is the Date last sent.");
-		dateText.setText("Last Message: " + new Date(Integer.parseInt(date)));
+		dateText.setText("Last Message: " + new Date(Integer.parseInt(date) * 1000));
 		
 		
 		final EditText bodyField = (EditText)findViewById(R.id.bodyField);
@@ -70,13 +71,9 @@ public class MessageReply extends Activity
         {
             public void onClick(View v)
             {
-            	//send the message here
-            	//
-            	//need to ask for clarification on what gets sent
-            	//
-            	//
+            	sendBody = bodyField.getText().toString();
             	
-            	APCI_RestServices.postMessage(Integer.parseInt(threadID), body);
+            	APCI_RestServices.postMessage(Integer.parseInt(threadID), sendBody);
             	
             	Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
             	toast.show();
