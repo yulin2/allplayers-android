@@ -33,13 +33,21 @@ public class MessagesMap
 		}
 	}
 	
-	private static String[] getNames( JSONObject jo ) {
+	private static String[] getNames(JSONObject jo) 
+	{
 		int length = jo.length();
-		if (length == 0) return null;
-		Iterator iterator = jo.keys();
+		
+		if (length == 0)
+		{
+			return null;
+		}
+		
+		Iterator<?> iterator = jo.keys();
 		String[] names = new String[length];
 		int i = 0;
-		while (iterator.hasNext()) {
+		
+		while (iterator.hasNext())
+		{
 			names[i] = (String)iterator.next();
 			i += 1;
 		}

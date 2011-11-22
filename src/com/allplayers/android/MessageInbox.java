@@ -3,14 +3,10 @@ package com.allplayers.android;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.json.JSONException;
-
 import android.app.ListActivity;
 import android.content.Intent;
-//import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -34,18 +30,11 @@ public class MessageInbox extends ListActivity
 		HashMap<String, String> map;
 		
 		MessagesMap messages = new MessagesMap(jsonResult);
-		ArrayList<MessageData> messageList = messages.getMessageData();
-		
-		if(messageList.isEmpty())
-		{
-			hasMessages = false;
-		}else{
-			hasMessages = true;
-		}
+		messageList = messages.getMessageData();
 
-		if(hasMessages)
+		if(!messageList.isEmpty())
 		{
-			//values = new String[messageList.size()];
+			hasMessages = true;
 			
 			for(int i = 0; i < messageList.size(); i++)
 			{
@@ -58,9 +47,12 @@ public class MessageInbox extends ListActivity
 					map.put("line2", "Read");
 					
 				list.add(map);
-				//values[i] = messageList.get(i).getSubject();
 			}
-		}else{
+		}
+		else
+		{
+			hasMessages = false;
+			
 			map = new HashMap<String, String>();
 			map.put("line1", "You have no new messages.");
 			map.put("line2", "");
@@ -83,11 +75,9 @@ public class MessageInbox extends ListActivity
 		
 		if(hasMessages)
 		{
-
 			Globals.currentMessage = jsonResult;
 			Globals.currentMessageLoc = position;
 
-			
 			Intent intent = new Intent(MessageInbox.this, MessageViewSingle.class);
 			startActivity(intent);
 		}

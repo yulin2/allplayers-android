@@ -5,10 +5,8 @@ import java.util.HashMap;
 
 import android.app.ListActivity;
 import android.content.Intent;
-//import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -32,18 +30,11 @@ public class MessageSent extends ListActivity
 		HashMap<String, String> map;
 		
 		MessagesMap messages = new MessagesMap(jsonResult);
-		ArrayList<MessageData> messageList = messages.getMessageData();
+		messageList = messages.getMessageData();
 		
-		if(messageList.isEmpty())
+		if(!messageList.isEmpty())
 		{
-			hasMessages = false;
-		}else{
 			hasMessages = true;
-		}
-
-		if(hasMessages)
-		{
-			//values = new String[messageList.size()];
 			
 			for(int i = 0; i < messageList.size(); i++)
 			{
@@ -51,16 +42,18 @@ public class MessageSent extends ListActivity
 				map.put("line1", messageList.get(i).getSubject());
 				map.put("line2", "Last sent from: " + messageList.get(i).getLastSender());
 				list.add(map);
-				//values[i] = messageList.get(i).getSubject();
 			}
-		}else{
+		}
+		else
+		{
+			hasMessages = false;
+			
 			map = new HashMap<String, String>();
 			map.put("line1", "You have no sent messages.");
 			map.put("line2", "");
 			list.add(map);
 		}
 		
-
 		String[] from = { "line1", "line2" };
 
 		int[] to = { android.R.id.text1, android.R.id.text2 };
@@ -76,11 +69,9 @@ public class MessageSent extends ListActivity
 		
 		if(hasMessages)
 		{
-
 			Globals.currentMessage = jsonResult;
 			Globals.currentMessageLoc = position;
 
-			
 			Intent intent = new Intent(MessageSent.this, MessageViewSingle.class);
 			startActivity(intent);
 		}
