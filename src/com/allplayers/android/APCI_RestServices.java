@@ -164,7 +164,7 @@ public class APCI_RestServices
 	
 	public static String getUserEvents()
 	{
-		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/events.json");
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/events/upcoming.json");
 	}
 	
 	public static String getGroupInformationByGroupId(String group_uuid)
@@ -179,7 +179,7 @@ public class APCI_RestServices
 	
 	public static String getGroupEventsByGroupId(String group_uuid)
 	{
-		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/events.json");
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/events/upcoming.json");
 	}
 	
 	public static String getGroupMembersByGroupId(String group_uuid)

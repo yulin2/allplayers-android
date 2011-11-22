@@ -1,7 +1,7 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+//import java.util.Calendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,8 +21,9 @@ private ArrayList<EventData> events = new ArrayList<EventData>();
 				for(int i = 0; i < jsonResult.length(); i++)
 				{
 					EventData event = new EventData(jsonArray.getString(i));
+					events.add(event);
 					
-					String end = event.getEnd();
+					/*String end = event.getEnd();
 					
 					int separator = end.indexOf("-");
 					int year = Integer.parseInt(end.substring(0, separator));
@@ -59,7 +60,7 @@ private ArrayList<EventData> events = new ArrayList<EventData>();
 					if(currentDate.before(eventEnd))
 					{
 						events.add(event);
-					}
+					}*/
 				}
 			}
 		}
