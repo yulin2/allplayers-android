@@ -220,9 +220,9 @@ public class APCI_RestServices
 		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages.json&box=sent");
 	}
 	
-	public static String getUserMessageByMessageId(String message_id)
+	public static String getUserMessagesByThreadId(String thread_id)
 	{
-		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages/" + message_id + ".json");
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages/" + thread_id + ".json");
 	}
 	
 	public static String getEventByEventId(String event_id)
