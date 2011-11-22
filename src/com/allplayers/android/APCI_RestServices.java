@@ -18,8 +18,8 @@ import org.json.JSONObject;
 public class APCI_RestServices
 {
 	public static String user_id = "";
-	public static String session_cookie = ""; //first session cookie
-	public static String chocolatechip_cookie = ""; //second cookie
+	private static String session_cookie = ""; //first session cookie
+	private static String chocolatechip_cookie = ""; //second cookie
 	
 	public APCI_RestServices()
 	{
@@ -454,37 +454,7 @@ public class APCI_RestServices
 				//parse cookie
 				String[] fields = headerValue.split(";\\s*");
 				
-				//Only cookieValue is used for now
 				String cookieValue = fields[0];
-				//String expires = null;
-				//String path = null;
-				//String domain = null;
-				//boolean secure = false;
-				
-				//Parse each field
-				/*for(int j=1; j<fields.length; j++)
-				{
-					if("secure".equalsIgnoreCase(fields[j]))
-					{
-						//secure = true;
-					}
-					else if(fields[j].indexOf('=') > 0)
-					{
-						String[] f = fields[j].split("=");
-						if("expires".equalsIgnoreCase(f[0]))
-						{
-							//expires = f[1];
-						}
-						else if("domain".equalsIgnoreCase(f[0]))
-						{
-							//domain = f[1];
-						}
-						else if("path".equalsIgnoreCase(f[0]))
-						{
-							//path = f[1];
-						}
-					}
-				}*/
 				
 				if(cookieValue.startsWith("SESS"))
 				{

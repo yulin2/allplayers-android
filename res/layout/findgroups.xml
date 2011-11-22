@@ -4,37 +4,40 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-    <EditText 
-      android:layout_height="wrap_content" 
-      android:inputType="textMultiLine" 
-      android:id="@+id/searchGroupsField" 
-      android:layout_width="match_parent">
-    </EditText>
-    <EditText 
-      android:layout_height="wrap_content" 
-      android:inputType="textMultiLine" 
-      android:id="@+id/searchGroupsZipcodeField" 
-      android:layout_width="match_parent">
-    </EditText>
-    <EditText 
-      android:layout_height="wrap_content" 
-      android:inputType="textMultiLine" 
-      android:id="@+id/searchGroupsDistanceField" 
-      android:layout_width="match_parent">
-    </EditText>
-    <Button 
-      android:id="@+id/searchGroupsButton" 
-      android:layout_height="wrap_content" 
-      android:text="Search Groups" 
-      android:layout_width="match_parent">
-    </Button>
-    <ScrollView android:layout_width="match_parent" android:id="@+id/searchScroll" android:layout_height="match_parent">
-        <TextView
-          android:editable="false"
-          android:text=""
-          android:id="@+id/searchGroupsResults"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
-        </TextView>
-    </ScrollView>
+	<EditText 
+	  android:layout_height="wrap_content" 
+	  android:inputType="textMultiLine" 
+	  android:id="@+id/searchGroupsField" 
+	  android:layout_width="match_parent">
+	</EditText>
+	<EditText 
+	  android:layout_height="wrap_content" 
+	  android:inputType="textMultiLine" 
+	  android:id="@+id/searchGroupsZipcodeField" 
+	  android:layout_width="match_parent">
+	</EditText>
+	<EditText 
+	  android:layout_height="wrap_content" 
+	  android:inputType="textMultiLine" 
+	  android:id="@+id/searchGroupsDistanceField" 
+	  android:layout_width="match_parent">
+	</EditText>
+	<Button 
+	  android:id="@+id/searchGroupsButton" 
+	  android:layout_height="wrap_content" 
+	  android:text="Search Groups" 
+	  android:layout_width="match_parent">
+	</Button>
+	<ScrollView 
+	  android:layout_width="match_parent" 
+	  android:id="@+id/searchScroll" 
+	  android:layout_height="match_parent">
+		<TextView
+		  android:editable="false"
+		  android:text=""
+		  android:id="@+id/searchGroupsResults"
+		  android:layout_width="match_parent"
+		  android:layout_height="match_parent">
+		</TextView>
+	</ScrollView>
 </LinearLayout>

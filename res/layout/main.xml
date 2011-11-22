@@ -1,15 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+<LinearLayout 
+  xmlns:android="http://schemas.android.com/apk/res/android" 
+  android:orientation="vertical" 
+  android:layout_width="fill_parent" 
+  android:layout_height="fill_parent">
 
 <!-- the following ImageView holds the AllPlayers logo -->
-<ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:layout_weight="1"></ImageView>
 
-<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_weight="0">
-<EditText android:id="@+id/usernameField" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="" android:textSize="18sp" android:gravity="center" android:layout_weight="0"></EditText>
-<EditText android:id="@+id/passwordField" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="" android:textSize="18sp" android:gravity="center" android:password="true" android:layout_weight="0"></EditText>
-<Button android:id="@+id/loginButton" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Login!" android:gravity="center" android:layout_weight="0"></Button>
-<Button android:id="@+id/findGroupsButton" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Search Groups" android:gravity="center" android:layout_weight="0"></Button>
-</LinearLayout>
+	<ImageView 
+	  android:layout_width="wrap_content" 
+	  android:layout_height="wrap_content" 
+	  android:gravity="center" 
+	  android:layout_weight="1">
+	</ImageView>
+
+	<LinearLayout 
+	  android:layout_width="fill_parent" 
+	  android:layout_height="wrap_content" 
+	  android:orientation="vertical" 
+	  android:gravity="center" 
+	  android:layout_weight="0">
+		<EditText 
+		  android:id="@+id/usernameField" 
+		  android:layout_width="fill_parent" 
+		  android:layout_height="wrap_content" 
+		  android:text="" 
+		  android:textSize="18sp" 
+		  android:gravity="center" 
+		  android:layout_weight="0">
+		</EditText>
+		<EditText 
+		  android:id="@+id/passwordField" 
+		  android:layout_width="fill_parent" 
+		  android:layout_height="wrap_content" 
+		  android:text="" 
+		  android:textSize="18sp" 
+		  android:gravity="center" 
+		  android:password="true" 
+		  android:layout_weight="0">
+		</EditText>
+		<Button 
+		  android:id="@+id/loginButton" 
+		  android:layout_width="fill_parent" 
+		  android:layout_height="wrap_content" 
+		  android:text="Login!" 
+		  android:gravity="center" 
+		  android:layout_weight="0">
+		</Button>
+		<Button 
+		  android:id="@+id/findGroupsButton" 
+		  android:layout_width="fill_parent" 
+		  android:layout_height="wrap_content" 
+		  android:text="Search Groups" 
+		  android:gravity="center" 
+		  android:layout_weight="0">
+		</Button>
+	</LinearLayout>
 
 </LinearLayout>
