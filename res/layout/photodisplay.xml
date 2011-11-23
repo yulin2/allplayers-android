@@ -4,9 +4,11 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-	<Gallery
-	  android:id="@+id/photoGallery"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content">
-	</Gallery>
+	<ImageView
+	  android:id="@+id/fullPhotoDisplay"
+	  android:layout_width="match_parent"
+	  android:layout_height="match_parent"
+	  android:layout_gravity="center"
+	  android:scaleType="centerInside">
+	</ImageView>
 </LinearLayout>
