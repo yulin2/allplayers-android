@@ -22,6 +22,9 @@ public class GroupPageActivity extends Activity
 		String title = group.getTitle();
 		String desc = group.getDescription();
 		String logoURL = group.getLogo();
+		String uuid = group.getUUID();
+		
+		boolean isMember = isMember(uuid);
 		
 		Bitmap logo = Globals.getRemoteImage(logoURL);
 		
@@ -57,5 +60,33 @@ public class GroupPageActivity extends Activity
             	startActivity(new Intent(GroupPageActivity.this, GroupAlbumsActivity.class));
             }
         });
+        
+        if(isMember)
+        {
+    		groupMembersButton.setVisibility(View.VISIBLE);
+            groupEventsButton.setVisibility(View.VISIBLE);
+            groupPhotosButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+    		groupMembersButton.setVisibility(View.GONE);
+            groupEventsButton.setVisibility(View.GONE);
+            groupPhotosButton.setVisibility(View.GONE);
+        }
+	}
+	
+	private boolean isMember(String group_uuid)
+	{
+		String jsonResult = APCI_RestServices.getGroupMembersByGroupId(group_uuid);
+		System.out.print(jsonResult);
+		
+		//If a result is not returned, the user is not an authenticated group member
+		if(jsonResult.trim().equals("null") || jsonResult.trim().equals("error") || 
+				jsonResult.equals("You are not logged in"))
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }

@@ -260,7 +260,7 @@ public class APCI_RestServices
 		catch(Exception ex)
 		{
 			System.out.println(ex);
-			return ex.toString();
+			return "error";
 		}
 	}
 	
