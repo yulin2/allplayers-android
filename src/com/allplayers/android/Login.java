@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,9 +54,8 @@ public class Login extends Activity
 				{
 					System.out.println(ex);
 					
-					TextView tv = new TextView(Login.this);
-					tv.setText("Invalid Login");
-					setContentView(tv);
+					Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
+					invalidLogin.show();
 				}
             }
         });
