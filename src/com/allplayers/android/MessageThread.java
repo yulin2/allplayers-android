@@ -36,9 +36,15 @@ public class MessageThread extends ListActivity
 
 		HashMap<String, String> map;
 		
-		MessagesMap messages = new MessagesMap(jsonResult);
-		messageList = messages.getMessageData();
-
+		
+		
+		map = new HashMap<String, String>();
+		map.put("line1", "This is here for testing purpose");
+		map.put("line2", "It will be taken away soon");
+		list.add(map);
+		//MessagesMap messages = new MessagesMap(jsonResult);
+		//messageList = messages.getMessageData();
+/*
 		if(!messageList.isEmpty())
 		{
 			hasMessages = true;
@@ -66,7 +72,7 @@ public class MessageThread extends ListActivity
 			list.add(map);
 		}
 		
-
+*/
 		String[] from = { "line1", "line2" };
 
 		int[] to = { android.R.id.text1, android.R.id.text2 };
@@ -79,7 +85,7 @@ public class MessageThread extends ListActivity
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
 		super.onListItemClick(l, v, position, id);
-		
+		/*
 		if(hasMessages)
 		{
 			//Globals.currentMessage = jsonResult;
@@ -88,6 +94,6 @@ public class MessageThread extends ListActivity
 
 			Intent intent = new Intent(MessageThread.this, MessageViewSingle.class);
 			startActivity(intent);
-		}
+		}*/
 	}
 }
