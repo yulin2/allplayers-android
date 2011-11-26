@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-public class MessageInbox extends ListActivity
+public class MessageThread extends ListActivity
 {
 	
 	private ArrayList<MessageData> messageList;
@@ -25,12 +25,15 @@ public class MessageInbox extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		jsonResult = APCI_RestServices.getUserInbox();
+		//jsonResult = APCI_RestServices.getUserInbox();
 		
-		//LocalStorage.writeFile(this.getBaseContext(), jsonResult);
+		MessageData message = Globals.currentMessage;
+		String threadID = message.getThreadID();
 		
-		//System.out.println(LocalStorage.readFile(this.getBaseContext()));
+		jsonResult = APCI_RestServices.getUserMessagesByThreadId(threadID);
 		
+		System.out.println(jsonResult);
+
 		HashMap<String, String> map;
 		
 		MessagesMap messages = new MessagesMap(jsonResult);
@@ -81,9 +84,9 @@ public class MessageInbox extends ListActivity
 		{
 			//Globals.currentMessage = jsonResult;
 			//Globals.currentMessageLoc = position;
-			Globals.currentMessage = messageList.get(position);
+			//Globals.currentMessage = messageList.get(position);
 
-			Intent intent = new Intent(MessageInbox.this, MessageThread.class);
+			Intent intent = new Intent(MessageThread.this, MessageViewSingle.class);
 			startActivity(intent);
 		}
 	}
