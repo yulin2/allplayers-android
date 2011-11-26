@@ -6,13 +6,12 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 
 public class GroupAlbumsActivity  extends ListActivity
 {
 	private ArrayList<AlbumData> albumList;
-	private boolean hasAlbums = false;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -24,27 +23,8 @@ public class GroupAlbumsActivity  extends ListActivity
 		AlbumsMap albums = new AlbumsMap(jsonResult);
 		albumList = albums.getAlbumData();
 		
-		String[] values;
-		
-		if(!albumList.isEmpty())
-		{
-			values = new String[albumList.size()];
-			
-			for(int i = 0; i < albumList.size(); i++)
-			{
-				values[i] = albumList.get(i).getTitle();
-			}
-			
-			hasAlbums = true;
-		}
-		else
-		{
-			values = new String[]{"No albums to display"};
-			hasAlbums = false;
-		}
-		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, values);
+		//Create a customized ArrayAdapter
+		AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
 		setListAdapter(adapter);
 	}
 	
@@ -53,7 +33,7 @@ public class GroupAlbumsActivity  extends ListActivity
 	{
 		super.onListItemClick(l, v, position, id);
 		
-		if(hasAlbums)
+		if(!albumList.isEmpty())
 		{
 			Globals.currentAlbum = albumList.get(position);
 			

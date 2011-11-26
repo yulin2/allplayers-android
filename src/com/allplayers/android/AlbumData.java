@@ -1,7 +1,5 @@
 package com.allplayers.android;
 
-//import java.sql.Timestamp;
-
 import java.sql.Timestamp;
 
 import org.json.JSONException;
@@ -14,6 +12,7 @@ public class AlbumData
 	private String description = "";
 	private int photoCount = 0;
 	private Timestamp modifiedDate = null;
+	private String coverPhoto = "";
 	
 	public AlbumData()
 	{
@@ -30,6 +29,7 @@ public class AlbumData
 			description = albumObject.getString("description");
 			photoCount = albumObject.getInt("photo_count");
 			modifiedDate = new Timestamp(Long.parseLong(albumObject.getString("modified_date")) * 1000);
+			coverPhoto = albumObject.getString("rep_photo");
 		}
 		catch(JSONException ex)
 		{
@@ -65,5 +65,10 @@ public class AlbumData
 	public String getModifiedDateString()
 	{
 		return modifiedDate.toString();
+	}
+	
+	public String getCoverPhoto()
+	{
+		return coverPhoto;
 	}
 }
