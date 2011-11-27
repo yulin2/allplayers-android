@@ -29,7 +29,7 @@ public class MessageReply extends Activity
 		
 		String subject = message.getSubject();
 		String sender = message.getLastSender();
-		String date = message.getDate();
+		Date date = message.getDate();
 		body = message.getMessageBody();
 		threadID = message.getThreadID();
 		
@@ -43,7 +43,7 @@ public class MessageReply extends Activity
 		
 		final TextView dateText = (TextView)findViewById(R.id.dateText);
 		dateText.setText("This is the Date last sent.");
-		dateText.setText("Last Message: " + new Date(Long.parseLong(date) * 1000));
+		dateText.setText("Last Message: " + date);
 		
 		
 		final EditText bodyField = (EditText)findViewById(R.id.bodyField);

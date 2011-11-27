@@ -24,7 +24,7 @@ public class MessageViewSingle extends Activity
 		
 		String subject = message.getSubject();
 		String sender = message.getLastSender();
-		String date = message.getDate();
+		Date date = message.getDate();
 		String body = message.getMessageBody();
 		int threadID = Integer.parseInt(message.getThreadID());
 		int isNew = Integer.parseInt(message.getNew());
@@ -44,7 +44,7 @@ public class MessageViewSingle extends Activity
 		
 		final TextView dateText = (TextView)findViewById(R.id.dateText);
 		dateText.setText("This is the Date last sent.");
-		dateText.setText("Last Message: " + new Date(Long.parseLong(date) * 1000));
+		dateText.setText("Last Message: " + date);
 		
 		final TextView bodyText = (TextView)findViewById(R.id.bodyText);
 		bodyText.setText("This is the body text.");
