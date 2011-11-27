@@ -28,6 +28,10 @@ public class GroupsActivity extends ListActivity
 			groupList = groups.getGroupData();
 			Globals.groupList = groupList;
 		}
+		else
+		{
+			groupList = Globals.groupList;
+		}
 		
 		String[] values;
 		
