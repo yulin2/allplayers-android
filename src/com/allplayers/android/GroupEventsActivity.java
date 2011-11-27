@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.ListActivity;
-//import android.content.Intent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -64,9 +64,9 @@ public class GroupEventsActivity extends ListActivity
 		
 		if(hasEvents)
 		{
-			//Globals.currentEvent = eventsList.get(position);
-			//Intent intent = new Intent(GroupEventsActivity.this, EventDisplayActivity.class); //Can be used to display map or full details
-			//startActivity(intent);
+			Globals.currentEvent = eventsList.get(position);
+			Intent intent = new Intent(GroupEventsActivity.this, EventDisplayActivity.class); //Can be used to display map or full details
+			startActivity(intent);
 		}
 	}
 }

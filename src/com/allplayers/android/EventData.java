@@ -9,8 +9,10 @@ public class EventData
 	private String title = "";
 	private String description = "";
 	private String category = "";
-	private String start = null;
-	private String end = null;
+	private String start = "";
+	private String end = "";
+	private String longitude = "";
+	private String latitude = "";
 	
 	public EventData()
 	{
@@ -35,10 +37,13 @@ public class EventData
 			
 			separator = end.indexOf("T");
 			end = end.substring(0, separator) + " " + end.substring(separator + 1);
+			
+			latitude = eventObject.getJSONObject("resource").getJSONObject("location").getString("latitude");
+			longitude = eventObject.getJSONObject("resource").getJSONObject("location").getString("longitude");
 		}
 		catch(JSONException ex)
 		{
-			System.out.println(ex);
+			System.out.println("EventData/" + ex);
 		}
 	}
 	
@@ -70,5 +75,15 @@ public class EventData
 	public String getEnd()
 	{
 		return end;
+	}
+	
+	public String getLatitude()
+	{
+		return latitude;
+	}
+	
+	public String getLongitude()
+	{
+		return longitude;
 	}
 }

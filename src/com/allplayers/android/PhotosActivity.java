@@ -6,6 +6,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class PhotosActivity  extends ListActivity
@@ -52,9 +53,19 @@ public class PhotosActivity  extends ListActivity
 			}
 		}
 		
-		//Create a customized ArrayAdapter
-		AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
-		setListAdapter(adapter);
+		if(albumList.isEmpty())
+		{
+			String[] values = new String[]{"no albums to display"};
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1, values);
+			setListAdapter(adapter);
+		}
+		else
+		{
+			//Create a customized ArrayAdapter
+			AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
+			setListAdapter(adapter);
+		}
 	}
 	
 	@Override
