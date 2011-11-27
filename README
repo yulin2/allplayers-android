@@ -1,0 +1,20 @@
+AllPlayers.com Android Application
+
+How to build and run the application in Eclipse:
+Option 1 (The Git repository has not been pulled, yet):
+	1.	Open Eclipse.
+	2.	Navigate to File > Import.
+	3.	Select "Projects from Git" from the Git folder.
+	4.	Click "Next".
+	5.	Click "Clone".
+	6.	Type the project repository location into the URI box (located on GitHub.com project home page).
+	7.	Click "Next".
+	8.	Make sure "master" is checked. Then click "Next".
+	9.	Select a local destination for the project.
+	10.	Click "Finish".
+	11.	Click "Next".
+	12.	Select "Import Existing Projects" and then click "Next".
+	13.	
+
+Option 2 (The Git repository has already been pulled):
+	1.	s
