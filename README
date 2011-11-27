@@ -1,7 +1,7 @@
 AllPlayers.com Android Application
 
 How to build and run the application in Eclipse:
-Option 1 (The Git repository has not been pulled, yet):
+Option 1 (the Git repository has not been pulled, yet):
 	1.	Open Eclipse.
 	2.	Navigate to File > Import.
 	3.	Select "Projects from Git" from the Git folder.
@@ -16,5 +16,13 @@ Option 1 (The Git repository has not been pulled, yet):
 	12.	Select "Import Existing Projects" and then click "Next".
 	13.	
 
-Option 2 (The Git repository has already been pulled):
+Option 2 (the Git repository has already been pulled):
 	1.	s
+
+
+How Mapper/Data classes work:
+With JSON Results (current method):
+	After a call has been made to the APCI_RestServices class, the JSON result is passed to the appropriate mapper class, i.e. a list of events is passed to EventsMap, a list of groups is passed to GroupsMap, etc. The mapper class then splits the JSON result (a JSONArray in most cases) into Data classes. Each Data class extracts the necessary data out of the JSONObject that it is passed. These Data objects can be easily used to store and return information for the application. For example, after a call is made to APCI_RestServices that returns all of the current user's groups, the result will be passed into GroupsMap where it will be parsed as a JSONArray. For each group in the JSONArray, a new GroupData object will be created. The GroupData object stores a particular group's uuid, name, description, etc. Other functions, such as the groups tab display can now use the Data objects to quickly fill the tab with a list of group names and display detailed information when a group is chosen (GroupPageActivity).
+
+With SQLite (future method):
+	
