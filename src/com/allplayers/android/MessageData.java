@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -62,7 +64,7 @@ public class MessageData
 		return date;
 	}
 	
-	public String getDateString()
+	public String getTimestampString()
 	{
 		return last_updated;
 	}
@@ -70,6 +72,37 @@ public class MessageData
 	public Date getDate()
 	{
 		return updatedDate;
+	}
+	
+	public String getDateString()
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(updatedDate);
+		
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		int month = calendar.get(Calendar.MONTH) + 1; //because calendar uses 0-11 instead of 1-12
+		int year = calendar.get(Calendar.YEAR);
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
+		String AmPm = "AM";
+		
+		if(hour >= 12)
+		{
+			AmPm = "PM";
+			
+			if(hour > 12)
+			{
+				hour = hour - 12;
+			}
+		}
+		else if(hour == 0)
+		{
+			hour = 12;
+		}
+		
+		DecimalFormat df = new DecimalFormat("00");
+		
+		return "" + df.format(month) + "/" + df.format(day) + "/" + year + " " + df.format(hour) + ":" + df.format(minute) + AmPm;
 	}
 	
 	public String getThreadID()

@@ -1,7 +1,5 @@
 package com.allplayers.android;
 
-import java.util.Date;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +22,7 @@ public class MessageViewSingle extends Activity
 		
 		String subject = message.getSubject();
 		String sender = message.getLastSender();
-		Date date = message.getDate();
+		String date = message.getDateString();
 		String body = message.getMessageBody();
 		int threadID = Integer.parseInt(message.getThreadID());
 		int isNew = Integer.parseInt(message.getNew());

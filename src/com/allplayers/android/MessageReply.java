@@ -1,7 +1,5 @@
 package com.allplayers.android;
 
-import java.util.Date;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,7 +27,7 @@ public class MessageReply extends Activity
 		
 		String subject = message.getSubject();
 		String sender = message.getLastSender();
-		Date date = message.getDate();
+		String date = message.getDateString();
 		body = message.getMessageBody();
 		threadID = message.getThreadID();
 		

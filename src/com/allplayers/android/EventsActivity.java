@@ -35,7 +35,7 @@ public class EventsActivity extends ListActivity
 				map = new HashMap<String, String>();
 				map.put("line1", eventsList.get(i).getTitle());
 				
-				String start = eventsList.get(i).getStartDate().toString();
+				String start = eventsList.get(i).getStartDateString();
 				map.put("line2", start);
 				list.add(map);
 			}
