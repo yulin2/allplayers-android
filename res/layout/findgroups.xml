@@ -4,40 +4,77 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-	<EditText
+	
+	<TableLayout	
+	  android:layout_width="fill_parent"
 	  android:layout_height="wrap_content"
-	  android:inputType="textMultiLine"
-	  android:id="@+id/searchGroupsField"
-	  android:layout_width="match_parent">
-	</EditText>
-	<EditText
-	  android:layout_height="wrap_content"
-	  android:inputType="textMultiLine"
-	  android:id="@+id/searchGroupsZipcodeField"
-	  android:layout_width="match_parent">
-	</EditText>
-	<EditText
-	  android:layout_height="wrap_content"
-	  android:inputType="textMultiLine"
-	  android:id="@+id/searchGroupsDistanceField"
-	  android:layout_width="match_parent">
-	</EditText>
+	  android:orientation="vertical"
+	  android:gravity="center"
+	  android:layout_weight="0"
+	  android:paddingLeft="5px"
+	  android:paddingRight="5px"
+	  android:paddingTop="10px"
+	  android:paddingBottom="0px">
+	    <TableRow>   
+	        <TextView
+			  android:id="@+id/groupLabel"
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:text="Keywords:     "
+			  android:textSize="14sp"
+			  android:gravity="center_vertical"
+			  android:layout_weight="0">
+			</TextView>
+			<EditText
+			  android:layout_height="wrap_content"
+			  android:inputType="textMultiLine"
+			  android:id="@+id/searchGroupsField"
+			  android:layout_width="match_parent"
+			  android:layout_weight="1">
+			</EditText>
+		</TableRow>
+		<TableRow>  
+	        <TextView
+			  android:id="@+id/zipcodeLabel"
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:text="Zip Code:     "
+			  android:textSize="14sp"
+			  android:gravity="center_vertical"
+			  android:layout_weight="0">
+			</TextView> 
+			<EditText
+			  android:layout_height="wrap_content"
+			  android:inputType="textMultiLine"
+			  android:id="@+id/searchGroupsZipcodeField"
+			  android:layout_width="match_parent"
+			  android:layout_weight="1">
+			</EditText>
+		</TableRow> 
+		<TableRow>  
+	        <TextView
+			  android:id="@+id/distanceLabel"
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:text="Distance:     "
+			  android:textSize="14sp"
+			  android:gravity="center_vertical"
+			  android:layout_weight="0">
+			</TextView>
+			<EditText
+			  android:layout_height="wrap_content"
+			  android:inputType="textMultiLine"
+			  android:id="@+id/searchGroupsDistanceField"
+			  android:layout_width="match_parent"
+			  android:layout_weight="1">
+			</EditText>	
+		</TableRow> 
+	</TableLayout>
+	
 	<Button
 	  android:id="@+id/searchGroupsButton"
 	  android:layout_height="wrap_content"
 	  android:text="Search Groups"
 	  android:layout_width="match_parent">
 	</Button>
-	<ScrollView
-	  android:layout_width="match_parent"
-	  android:id="@+id/searchScroll"
-	  android:layout_height="match_parent">
-		<TextView
-		  android:editable="false"
-		  android:text=""
-		  android:id="@+id/searchGroupsResults"
-		  android:layout_width="match_parent"
-		  android:layout_height="match_parent">
-		</TextView>
-	</ScrollView>
 </LinearLayout>

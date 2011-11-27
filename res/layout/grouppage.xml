@@ -9,14 +9,23 @@
 	  android:layout_width="match_parent"
 	  android:layout_height="wrap_content"
 	  android:layout_gravity="center"
-	  android:scaleType="centerInside">
+	  android:scaleType="centerInside"
+	  android:layout_weight="0"
+	  android:paddingLeft="5px"
+	  android:paddingRight="5px"
+	  android:paddingTop="20px"
+	  android:paddingBottom="10px">
 	</ImageView>
 	<TextView
 	  android:editable="false"
 	  android:text=""
 	  android:id="@+id/groupDetails"
 	  android:layout_width="match_parent"
-	  android:layout_height="wrap_content">
+	  android:layout_height="wrap_content"
+	  android:paddingLeft="5px"
+	  android:paddingRight="5px"
+	  android:paddingTop="5px"
+	  android:paddingBottom="5px">
 	</TextView>
 	<Button
 	  android:id="@+id/groupMembersButton"
