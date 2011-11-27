@@ -34,7 +34,9 @@ public class GroupEventsActivity extends ListActivity
 			{
 				map = new HashMap<String, String>();
 				map.put("line1", eventsList.get(i).getTitle());
-				map.put("line2", eventsList.get(i).getStart());
+				
+				String start = eventsList.get(i).getStartDate().toString();
+				map.put("line2", start);
 				list.add(map);
 			}
 			
