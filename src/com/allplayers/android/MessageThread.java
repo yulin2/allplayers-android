@@ -13,7 +13,7 @@ import android.widget.SimpleAdapter;
 public class MessageThread extends ListActivity
 {
 	
-	private ArrayList<MessageData> messageList;
+	private ArrayList<MessageThreadData> messageThreadList;
 	private boolean hasMessages = false;
 	private String jsonResult = "";
 	
@@ -36,29 +36,18 @@ public class MessageThread extends ListActivity
 
 		HashMap<String, String> map;
 		
-		
-		
-		map = new HashMap<String, String>();
-		map.put("line1", "This is here for testing purpose");
-		map.put("line2", "It will be taken away soon");
-		list.add(map);
-		//MessagesMap messages = new MessagesMap(jsonResult);
-		//messageList = messages.getMessageData();
-/*
-		if(!messageList.isEmpty())
+		MessageThreadMap messages = new MessageThreadMap(jsonResult);
+		messageThreadList = messages.getMessageThreadData();
+
+		if(!messageThreadList.isEmpty())
 		{
 			hasMessages = true;
 			
-			for(int i = 0; i < messageList.size(); i++)
+			for(int i = 0; i < messageThreadList.size(); i++)
 			{
 				map = new HashMap<String, String>();
-				map.put("line1", messageList.get(i).getSubject());
-				
-				if(Integer.parseInt(messageList.get(i).getNew()) == 1)
-					map.put("line2", "Unread");
-				else
-					map.put("line2", "Read");
-					
+				map.put("line1", messageThreadList.get(i).getMessageBody());
+				map.put("line2", "From: " + messageThreadList.get(i).getSenderName() + " - " + messageThreadList.get(i).getDateString());
 				list.add(map);
 			}
 		}
@@ -72,7 +61,6 @@ public class MessageThread extends ListActivity
 			list.add(map);
 		}
 		
-*/
 		String[] from = { "line1", "line2" };
 
 		int[] to = { android.R.id.text1, android.R.id.text2 };
@@ -85,15 +73,11 @@ public class MessageThread extends ListActivity
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
 		super.onListItemClick(l, v, position, id);
-		/*
+		
 		if(hasMessages)
 		{
-			//Globals.currentMessage = jsonResult;
-			//Globals.currentMessageLoc = position;
-			//Globals.currentMessage = messageList.get(position);
-
-			Intent intent = new Intent(MessageThread.this, MessageViewSingle.class);
+			Intent intent = new Intent(MessageThread.this, MessageReply.class);
 			startActivity(intent);
-		}*/
+		}
 	}
 }

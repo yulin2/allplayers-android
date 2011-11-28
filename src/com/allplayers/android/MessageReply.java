@@ -12,7 +12,6 @@ public class MessageReply extends Activity
 {
 	
 	private String threadID;
-	private String body;
 	private String sendBody;
 	
 	/** called when the activity is first created. */
@@ -28,7 +27,6 @@ public class MessageReply extends Activity
 		String subject = message.getSubject();
 		String sender = message.getLastSender();
 		String date = message.getDateString();
-		body = message.getMessageBody();
 		threadID = message.getThreadID();
 		
 		final TextView subjectText = (TextView)findViewById(R.id.subjectText);
@@ -46,11 +44,7 @@ public class MessageReply extends Activity
 		
 		final EditText bodyField = (EditText)findViewById(R.id.bodyField);
 		bodyField.setText("This is the Body text.");
-		bodyField.setText("\n"+
-							"\n" +
-							"------------" +
-							"\n" +
-							body);
+		bodyField.setText("");
 
 		final Button sendButton = (Button)findViewById(R.id.sendButton);
 		

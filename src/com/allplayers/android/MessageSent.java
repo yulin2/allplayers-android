@@ -73,7 +73,8 @@ public class MessageSent extends ListActivity
 			//Globals.currentMessageLoc = position;
 			Globals.currentMessage = messageList.get(position);
 
-			Intent intent = new Intent(MessageSent.this, MessageViewSingle.class);
+			//Intent intent = new Intent(MessageSent.this, MessageViewSingle.class);
+			Intent intent = new Intent(MessageSent.this, MessageThread.class);
 			startActivity(intent);
 		}
 	}
