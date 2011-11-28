@@ -32,7 +32,7 @@ public class PhotosMap
 			}
 			catch(JSONException ex)
 			{
-				System.out.println(ex);
+				System.err.println("PhotosMap/" + ex);
 			}
 		}
 	}

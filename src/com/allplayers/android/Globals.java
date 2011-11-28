@@ -49,4 +49,19 @@ public class Globals
 		
 		return null;
 	}
+	
+	public static void reset()
+	{
+		currentGroup = new GroupData();
+		currentAlbum = new AlbumData();
+		currentPhoto = new PhotoData();
+		currentEvent = new EventData();
+		currentMessage = new MessageData();
+		
+		groupList = new ArrayList<GroupData>();
+		
+		search = "";
+		zipcode = 00000;
+		distance = 10;
+	}
 }

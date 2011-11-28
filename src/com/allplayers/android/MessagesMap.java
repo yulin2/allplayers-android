@@ -29,7 +29,7 @@ public class MessagesMap
 		}
 		catch(JSONException ex)
 		{
-			System.out.println(ex);
+			System.err.println("MessagesMap/" + ex);
 		}
 	}
 	

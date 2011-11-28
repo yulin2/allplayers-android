@@ -16,21 +16,64 @@ public class GroupMemberData
 	
 	public GroupMemberData(String jsonResult)
 	{
+		JSONObject memberObject = null;
+		
 		try
 		{
-			JSONObject memberObject = new JSONObject(jsonResult);
+			memberObject = new JSONObject(jsonResult);
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("GroupMemberData/memberObject/" + ex);
+		}
+		
+		try
+		{
 			uuid = memberObject.getString("uuid");
-			String fname = memberObject.getString("fname");
-			String lname = memberObject.getString("lname");
-			//To fix names that are all lowercase
-			name = fname.substring(0,1).toUpperCase() + fname.substring(1).toLowerCase() + " " + 
-					lname.substring(0,1).toUpperCase() + lname.substring(1).toLowerCase();
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("GroupMemberData/uuid/" + ex);
+		}
+		
+		String fname = null;
+		String lname = null;
+		
+		try
+		{
+			fname = memberObject.getString("fname");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("GroupMemberData/fname/" + ex);
+		}
 			
+		try
+		{
+			lname = memberObject.getString("lname");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("GroupMemberData/lname/" + ex);
+		}
+
+		//To fix names that are all lowercase
+		if(fname != null && !fname.equals("null"))
+		{
+			name = fname.substring(0,1).toUpperCase() + fname.substring(1).toLowerCase();
+		}
+		if(lname != null && !lname.equals("null"))
+		{
+			name += lname.substring(0,1).toUpperCase() + lname.substring(1).toLowerCase();
+		}
+		
+		try
+		{
 			picture = memberObject.getString("picture");
 		}
 		catch(JSONException ex)
 		{
-			System.out.println("GroupMemberData/memberObject/" + ex);
+			System.err.println("GroupMemberData/picture/" + ex);
 		}
 	}
 	

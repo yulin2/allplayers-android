@@ -12,7 +12,6 @@ import android.widget.SimpleAdapter;
 
 public class MessageThread extends ListActivity
 {
-	
 	private ArrayList<MessageThreadData> messageThreadList;
 	private boolean hasMessages = false;
 	private String jsonResult = "";
@@ -31,8 +30,6 @@ public class MessageThread extends ListActivity
 		String threadID = message.getThreadID();
 		
 		jsonResult = APCI_RestServices.getUserMessagesByThreadId(threadID);
-		
-		System.out.println(jsonResult);
 
 		HashMap<String, String> map;
 		

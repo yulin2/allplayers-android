@@ -47,8 +47,9 @@ public class APCI_RestServices
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 		}
-		catch (Exception ex)
+		catch(Exception ex)
 		{
+			System.err.println("APCI_RestServices/constructor/" + ex);
 		}
 	}
 	
@@ -93,7 +94,7 @@ public class APCI_RestServices
 		}
 		catch(Exception ex)
 		{
-			System.out.println(ex);
+			System.err.println("APCI_RestServices/isLoggedIn/" + ex);
 			return false;
 		}
 	}
@@ -259,7 +260,7 @@ public class APCI_RestServices
 		}
 		catch(Exception ex)
 		{
-			System.out.println(ex);
+			System.err.println("APCI_RestServices/makeAuthenticatedGet/" + ex);
 			return "error";
 		}
 	}
@@ -286,7 +287,7 @@ public class APCI_RestServices
 		}
 		catch(Exception ex)
 		{
-			System.out.println(ex);
+			System.err.println("APCI_RestServices/makeAuthenticatedDelete/" + ex);
 			return ex.toString();
 		}
 	}
@@ -335,7 +336,7 @@ public class APCI_RestServices
 		}
 		catch(Exception ex)
 		{
-			System.out.println(ex);
+			System.err.println("APCI_RestServices/makeAuthenticatedPut/" + ex);
 			return ex.toString();
 		}
 	}
@@ -362,7 +363,7 @@ public class APCI_RestServices
 		}
 		catch(Exception ex)
 		{
-			System.out.println(ex);
+			System.err.println("APCI_RestServices/makeUnauthenticatedGet/" + ex);
 			return ex.toString();
 		}
 	}
@@ -430,7 +431,7 @@ public class APCI_RestServices
 		}
 		catch(Exception ex)
 		{
-			System.out.println(ex);
+			System.err.println("APCI_RestServices/makeAuthenticatedPost/" + ex);
 			return ex.toString();
 		}
 	}
@@ -470,7 +471,9 @@ public class APCI_RestServices
 	
 	public static void logOut()
 	{
+		user_id = "";
 		session_cookie = "";
 		chocolatechip_cookie = "";
+		Globals.reset();
 	}
 }

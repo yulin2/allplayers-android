@@ -29,7 +29,7 @@ public class MessageThreadMap
 		}
 		catch(JSONException ex)
 		{
-			System.out.println(ex);
+			System.err.println("MessageThreadMap/" + ex);
 		}
 	}
 	

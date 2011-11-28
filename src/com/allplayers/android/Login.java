@@ -21,17 +21,6 @@ public class Login extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		/**
-		final Button findGroupsButton = (Button)findViewById(R.id.findGroupsButton);
-        findGroupsButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-            	startActivity(new Intent(Login.this, FindGroupsActivity.class));
-            }
-        });
-        */
-		
 		final Button button = (Button)findViewById(R.id.loginButton);
         button.setOnClickListener(new View.OnClickListener()
         {
@@ -56,7 +45,7 @@ public class Login extends Activity
 				}
 				catch(JSONException ex)
 				{
-					System.out.println(ex);
+					System.err.println("Login/user_id/" + ex);
 					
 					Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
 					invalidLogin.show();

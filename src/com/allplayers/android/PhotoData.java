@@ -19,20 +19,71 @@ public class PhotoData
 	
 	public PhotoData(String jsonResult)
 	{
+		JSONObject photoObject = null;
+		
 		try
 		{
-			JSONObject photoObject = new JSONObject(jsonResult);
+			photoObject = new JSONObject(jsonResult);
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("PhotoData/photoObject/" + ex);
+		}
+		
+		try
+		{
 			uuid = photoObject.getString("uuid");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("PhotoData/uuid/" + ex);
+		}
+		
+		try
+		{
 			groupUUID = photoObject.getString("group_uuid");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("PhotoData/groupUUID/" + ex);
+		}
+		
+		try
+		{
 			title = photoObject.getString("title");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("PhotoData/title/" + ex);
+		}
+		
+		try
+		{
 			description = photoObject.getString("description");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("PhotoData/description/" + ex);
+		}
+		
+		try
+		{
 			photoFull = photoObject.getString("photo_full");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("PhotoData/photoFull/" + ex);
+		}
+		
+		try
+		{
 			photoThumb = photoObject.getString("photo_thumb");
 		}
 		catch(JSONException ex)
 		{
-			System.out.println(ex);
+			System.err.println("PhotoData/photoThumb/" + ex);
 		}
+		
 	}
 	
 	public String getUUID()

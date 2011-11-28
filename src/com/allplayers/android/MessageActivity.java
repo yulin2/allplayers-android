@@ -7,7 +7,6 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -33,8 +32,6 @@ public class MessageActivity extends ListActivity
 		
 		HashMap<String, String> map;
 		
-		
-		
 		if(!messageList.isEmpty())
 		{
 			for(int i = 0; i < messageList.size(); i++)
@@ -43,12 +40,8 @@ public class MessageActivity extends ListActivity
 				{
 					numUnread++;
 				}
-
 			}
 		}
-		
-		
-		
 		
 		map = new HashMap<String, String>();
 		map.put("line1", "Inbox");
@@ -88,5 +81,4 @@ public class MessageActivity extends ListActivity
 			startActivity(intent);
 		}
 	}
-	
 }

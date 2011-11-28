@@ -12,7 +12,6 @@ import android.widget.SimpleAdapter;
 
 public class MessageSent extends ListActivity
 {
-	
 	private ArrayList<MessageData> messageList;
 	private boolean hasMessages;
 	private String jsonResult = "";

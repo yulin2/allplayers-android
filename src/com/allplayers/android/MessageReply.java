@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 public class MessageReply extends Activity
 {
-	
 	private String threadID;
 	private String sendBody;
 	
