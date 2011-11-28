@@ -71,6 +71,37 @@ public class EventData
 		return date;
 	}
 	
+	public String getDateString(Date date)
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		int month = calendar.get(Calendar.MONTH) + 1; //because calendar uses 0-11 instead of 1-12
+		int year = calendar.get(Calendar.YEAR);
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
+		String AmPm = "AM";
+		
+		if(hour >= 12)
+		{
+			AmPm = "PM";
+			
+			if(hour > 12)
+			{
+				hour = hour - 12;
+			}
+		}
+		else if(hour == 0)
+		{
+			hour = 12;
+		}
+		
+		DecimalFormat df = new DecimalFormat("00");
+		
+		return "" + df.format(month) + "/" + df.format(day) + "/" + year + " " + df.format(hour) + ":" + df.format(minute) + AmPm;
+	}
+	
 	public String getUUID()
 	{
 		return uuid;
@@ -103,33 +134,7 @@ public class EventData
 	
 	public String getStartDateString()
 	{
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(startDate);
-		
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		int month = calendar.get(Calendar.MONTH) + 1; //because calendar uses 0-11 instead of 1-12
-		int year = calendar.get(Calendar.YEAR);
-		int hour = calendar.get(Calendar.HOUR_OF_DAY);
-		int minute = calendar.get(Calendar.MINUTE);
-		String AmPm = "AM";
-		
-		if(hour >= 12)
-		{
-			AmPm = "PM";
-			
-			if(hour > 12)
-			{
-				hour = hour - 12;
-			}
-		}
-		else if(hour == 0)
-		{
-			hour = 12;
-		}
-		
-		DecimalFormat df = new DecimalFormat("00");
-		
-		return "" + df.format(month) + "/" + df.format(day) + "/" + year + " " + df.format(hour) + ":" + df.format(minute) + AmPm;
+		return getDateString(startDate);
 	}
 	
 	public String getEnd()
@@ -140,6 +145,11 @@ public class EventData
 	public Date getEndDate()
 	{
 		return endDate;
+	}
+	
+	public String getEndDateString()
+	{
+		return getDateString(endDate);
 	}
 	
 	public String getLatitude()

@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
-import java.sql.Timestamp;
+import java.util.Date;
+import java.util.TimeZone;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +12,7 @@ public class AlbumData
 	private String title = "";
 	private String description = "";
 	private int photoCount = 0;
-	private Timestamp modifiedDate = null;
+	private Date modifiedDate = null;
 	private String coverPhoto = "";
 	
 	public AlbumData()
@@ -21,20 +22,80 @@ public class AlbumData
 	
 	public AlbumData(String jsonResult)
 	{
+		JSONObject albumObject = null;
+		
 		try
 		{
-			JSONObject albumObject = new JSONObject(jsonResult);
+			albumObject = new JSONObject(jsonResult);
+		}
+		catch(JSONException ex)
+		{
+			System.out.println("AlbumData/albumObject/" + ex);
+		}
+		
+		try
+		{
 			uuid = albumObject.getString("uuid");
+		}
+		catch(JSONException ex)
+		{
+			System.out.println("AlbumData/uuid/" + ex);
+		}
+		
+		try
+		{
 			title = albumObject.getString("title");
+		}
+		catch(JSONException ex)
+		{
+			System.out.println("AlbumData/title/" + ex);
+		}
+		
+		try
+		{
 			description = albumObject.getString("description");
+		}
+		catch(JSONException ex)
+		{
+			System.out.println("AlbumData/description/" + ex);
+		}
+			
+		try
+		{
 			photoCount = albumObject.getInt("photo_count");
-			modifiedDate = new Timestamp(Long.parseLong(albumObject.getString("modified_date")) * 1000);
+		}
+		catch(JSONException ex)
+		{
+			System.out.println("AlbumData/photoCount/" + ex);
+		}
+			
+		try
+		{
+			modifiedDate = parseTimestamp(albumObject.getString("modified_date") + "000"); //to change seconds to milliseconds
+		}
+		catch(JSONException ex)
+		{
+			System.out.println("AlbumData/modifiedDate/" + ex);
+		}
+		
+		try
+		{
 			coverPhoto = albumObject.getString("rep_photo");
 		}
 		catch(JSONException ex)
 		{
-			System.out.println(ex);
+			System.out.println("AlbumData/coverPhoto/" + ex);
 		}
+	}
+	
+	private Date parseTimestamp(String timestamp)
+	{
+		Date date = new Date(Long.parseLong(timestamp));
+		
+		TimeZone timezone = TimeZone.getDefault();
+		int offset = timezone.getOffset(date.getTime());
+		date = new Date(date.getTime() + offset);
+		return date;
 	}
 	
 	public String getUUID()
@@ -57,7 +118,7 @@ public class AlbumData
 		return photoCount;
 	}
 	
-	public Timestamp getModifedDate()
+	public Date getModifedDate()
 	{
 		return modifiedDate;
 	}
