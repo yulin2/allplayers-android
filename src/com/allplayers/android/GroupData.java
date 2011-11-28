@@ -5,31 +5,6 @@ import org.json.JSONObject;
 
 public class GroupData
 {
-/*  ["uuid",
-	 "title",
-	 "description",
-	 "location",
-	 "activity_level",
-	 "list_in_directory",
-	 "active",
-	 "registration_fees_enabled",
-	 "approved_for_payment",
-	 "accept_amex",
-	 "payee_uuid",
-	 "approved_for_idverify",
-	 "group_mates_enabled",
-	 "comments",
-	 "parent_approval_enabled",
-	 "sort_order",
-	 "override_default_group_permissions",
-	 "primary_color",
-	 "secondary_color",
-	 "node_status",
-	 "logo",
-	 "uri",
-	 "url",
-	 "groups_above_uuid"]*/
-	
 	private String uuid = "";
 	private String title = "";
 	private String description = "";
@@ -42,17 +17,51 @@ public class GroupData
 	
 	public GroupData(String jsonResult)
 	{
+		JSONObject groupObject = null;
+		
 		try
 		{
-			JSONObject groupObject = new JSONObject(jsonResult);
+			groupObject = new JSONObject(jsonResult);
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("GroupData/groupObject/" + ex);
+		}
+		
+		try
+		{
 			uuid = groupObject.getString("uuid");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("GroupData/uuid/" + ex);
+		}
+		
+		try
+		{
 			title = groupObject.getString("title");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("GroupData/title/" + ex);
+		}
+		
+		try
+		{
 			description = groupObject.getString("description");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("GroupData/description/" + ex);
+		}
+		
+		try
+		{
 			logo = groupObject.getString("logo");
 		}
 		catch(JSONException ex)
 		{
-			System.out.println(ex);
+			System.err.println("GroupData/logo/" + ex);
 		}
 	}
 	

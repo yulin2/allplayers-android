@@ -42,8 +42,9 @@ public class Globals
 			bis.close();
 			return bm;
 		}
-		catch(IOException e)
+		catch(IOException ex)
 		{
+			System.err.println("Globals/getRemoteImage/" + ex);
 		}
 		
 		return null;

@@ -25,7 +25,7 @@ public class AlbumsMap
 		}
 		catch(JSONException ex)
 		{
-			System.out.println(ex);
+			System.err.println("AlbumsMap/" + ex);
 		}
 	}
 	

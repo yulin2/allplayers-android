@@ -78,7 +78,6 @@ public class GroupPageActivity extends Activity
 	private boolean isMember(String group_uuid)
 	{
 		String jsonResult = APCI_RestServices.getGroupMembersByGroupId(group_uuid);
-		System.out.print(jsonResult);
 		
 		//If a result is not returned, the user is not an authenticated group member
 		if(jsonResult.trim().equals("null") || jsonResult.trim().equals("error") || 

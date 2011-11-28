@@ -25,7 +25,7 @@ public class GroupsMap
 		}
 		catch(JSONException ex)
 		{
-			System.out.println(ex);
+			System.err.println("GroupsMap/" + ex);
 		}
 	}
 	

@@ -31,33 +31,88 @@ public class EventData
 	
 	public EventData(String jsonResult)
 	{
+		JSONObject eventObject = null;
+		
 		try
 		{
-			JSONObject eventObject = new JSONObject(jsonResult);
+			eventObject = new JSONObject(jsonResult);
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("EventData/eventObject" + ex);
+		}
+		
+		try
+		{
 			uuid = eventObject.getString("uuid");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("EventData/uuid" + ex);
+		}
+		
+		try
+		{
 			title = eventObject.getString("title");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("EventData/title" + ex);
+		}
+		
+		try
+		{
 			description = eventObject.getString("description");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("EventData/description" + ex);
+		}
+		
+		try
+		{
 			category = eventObject.getString("category");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("EventData/category" + ex);
+		}
+		try
+		{
 			start = eventObject.getString("start");
-			end = eventObject.getString("end");
-			
 			startDate = parseDatetime(start);
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("EventData/start" + ex);
+		}
+		try
+		{
+			end = eventObject.getString("end");
 			endDate = parseDatetime(end);
-			
-			//Get rid of the 'T' in start and end
-			int separator = start.indexOf("T");
-			start = start.substring(0, separator) + " " + start.substring(separator + 1);
-			
-			separator = end.indexOf("T");
-			end = end.substring(0, separator) + " " + end.substring(separator + 1);
-			
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("EventData/end" + ex);
+		}
+		
+		try
+		{
 			latitude = eventObject.getJSONObject("resource").getJSONObject("location").getString("latitude");
+		}
+		catch(JSONException ex)
+		{
+			System.err.println("EventData/latitude" + ex);
+		}
+		try
+		{
 			longitude = eventObject.getJSONObject("resource").getJSONObject("location").getString("longitude");
 		}
 		catch(JSONException ex)
 		{
-			System.out.println("EventData/" + ex);
+			System.err.println("EventData/longitude" + ex);
 		}
+		
 	}
 	
 	private Date parseDatetime(String datetime)

@@ -25,7 +25,7 @@ private ArrayList<GroupMemberData> members = new ArrayList<GroupMemberData>();
 		}
 		catch(JSONException ex)
 		{
-			System.out.println(ex);
+			System.err.println("GroupMembersMap/" + ex);
 		}
 	}
 	

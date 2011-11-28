@@ -27,7 +27,7 @@ private ArrayList<EventData> events = new ArrayList<EventData>();
 		}
 		catch(JSONException ex)
 		{
-			System.out.println("EventsMap/" + ex);
+			System.err.println("EventsMap/" + ex);
 		}
 	}
 	

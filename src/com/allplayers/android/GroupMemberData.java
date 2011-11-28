@@ -30,7 +30,7 @@ public class GroupMemberData
 		}
 		catch(JSONException ex)
 		{
-			System.out.println(ex);
+			System.out.println("GroupMemberData/memberObject/" + ex);
 		}
 	}
 	

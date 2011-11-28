@@ -30,7 +30,7 @@ public class AlbumData
 		}
 		catch(JSONException ex)
 		{
-			System.out.println("AlbumData/albumObject/" + ex);
+			System.err.println("AlbumData/albumObject/" + ex);
 		}
 		
 		try
@@ -39,7 +39,7 @@ public class AlbumData
 		}
 		catch(JSONException ex)
 		{
-			System.out.println("AlbumData/uuid/" + ex);
+			System.err.println("AlbumData/uuid/" + ex);
 		}
 		
 		try
@@ -48,7 +48,7 @@ public class AlbumData
 		}
 		catch(JSONException ex)
 		{
-			System.out.println("AlbumData/title/" + ex);
+			System.err.println("AlbumData/title/" + ex);
 		}
 		
 		try
@@ -57,7 +57,7 @@ public class AlbumData
 		}
 		catch(JSONException ex)
 		{
-			System.out.println("AlbumData/description/" + ex);
+			System.err.println("AlbumData/description/" + ex);
 		}
 			
 		try
@@ -66,7 +66,7 @@ public class AlbumData
 		}
 		catch(JSONException ex)
 		{
-			System.out.println("AlbumData/photoCount/" + ex);
+			System.err.println("AlbumData/photoCount/" + ex);
 		}
 			
 		try
@@ -75,7 +75,7 @@ public class AlbumData
 		}
 		catch(JSONException ex)
 		{
-			System.out.println("AlbumData/modifiedDate/" + ex);
+			System.err.println("AlbumData/modifiedDate/" + ex);
 		}
 		
 		try
@@ -84,7 +84,7 @@ public class AlbumData
 		}
 		catch(JSONException ex)
 		{
-			System.out.println("AlbumData/coverPhoto/" + ex);
+			System.err.println("AlbumData/coverPhoto/" + ex);
 		}
 	}
 	
