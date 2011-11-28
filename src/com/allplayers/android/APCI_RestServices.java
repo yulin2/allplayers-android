@@ -467,4 +467,10 @@ public class APCI_RestServices
 			}
 		}
 	}
+	
+	public static void logOut()
+	{
+		session_cookie = "";
+		chocolatechip_cookie = "";
+	}
 }

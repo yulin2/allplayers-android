@@ -76,7 +76,7 @@ public class GroupsActivity extends ListActivity
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event)
 	{
-		if(keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU)
+		if(keyCode == KeyEvent.KEYCODE_SEARCH)
 		{
 			startActivity(new Intent(GroupsActivity.this, FindGroupsActivity.class));
 		}

@@ -4,6 +4,9 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TabHost;
 
 public class MainScreen extends TabActivity
@@ -46,5 +49,29 @@ public class MainScreen extends TabActivity
 		tabHost.addTab(spec);
 		
 		tabHost.setCurrentTab(0);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.logoutmenu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+	    switch (item.getItemId())
+	    {
+	    	case R.id.logOut:
+	    		System.out.println("logout pressed");
+	    		APCI_RestServices.logOut();
+	    		startActivity(new Intent(MainScreen.this, Login.class));
+	    		finish();
+	    		return true;
+	    	default:
+	    		return super.onOptionsItemSelected(item);
+	    }
 	}
 }

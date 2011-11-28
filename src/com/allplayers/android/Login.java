@@ -52,6 +52,7 @@ public class Login extends Activity
 					
 					Intent intent = new Intent(Login.this, MainScreen.class);
 					startActivity(intent);
+					finish();
 				}
 				catch(JSONException ex)
 				{
@@ -65,7 +66,7 @@ public class Login extends Activity
 	}
 	
 	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event)
+	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		if(keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU)
 		{
