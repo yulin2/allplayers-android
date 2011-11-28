@@ -32,7 +32,7 @@ public class GroupPageActivity extends Activity
 		imView.setImageBitmap(logo);
 		
 		TextView groupInfo = (TextView)findViewById(R.id.groupDetails);
-		groupInfo.setText("Title: " + title + "\nDescription: " + desc);
+		groupInfo.setText("Title: " + title + "\n\nDescription: " + desc);
 		
 		final Button groupMembersButton = (Button)findViewById(R.id.groupMembersButton);
 		groupMembersButton.setOnClickListener(new View.OnClickListener()
