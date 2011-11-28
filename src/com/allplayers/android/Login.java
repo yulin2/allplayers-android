@@ -63,16 +63,15 @@ public class Login extends Activity
             }
         });
 	}
-	@Override
-    public boolean onKeyUp(int keyCode, KeyEvent event)
-    {
-        if (keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU)
-        {
-        	startActivity(new Intent(Login.this, FindGroupsActivity.class));
-        }
-            
-        // TODO Auto-generated method stub
-        return super.onKeyUp(keyCode, event);
-    }
 	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event)
+	{
+		if(keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU)
+		{
+			startActivity(new Intent(Login.this, FindGroupsActivity.class));
+		}
+		
+		return super.onKeyUp(keyCode, event);
+	}
 }

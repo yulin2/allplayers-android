@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -70,5 +71,16 @@ public class GroupsActivity extends ListActivity
 			Intent intent = new Intent(GroupsActivity.this, GroupPageActivity.class);
 			startActivity(intent);
 		}
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event)
+	{
+		if(keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU)
+		{
+			startActivity(new Intent(GroupsActivity.this, FindGroupsActivity.class));
+		}
+		
+		return super.onKeyUp(keyCode, event);
 	}
 }
