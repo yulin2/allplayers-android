@@ -25,12 +25,11 @@ public class MessageInbox extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		jsonResult = APCI_RestServices.getUserInbox();
+		//jsonResult = APCI_RestServices.getUserInbox();
+		Bundle bundle = this.getIntent().getExtras();
+		jsonResult = bundle.getString("inboxJSON");
 		
-		//LocalStorage.writeFile(this.getBaseContext(), jsonResult);
-		
-		//System.out.println(LocalStorage.readFile(this.getBaseContext()));
-		
+
 		HashMap<String, String> map;
 		
 		MessagesMap messages = new MessagesMap(jsonResult);
