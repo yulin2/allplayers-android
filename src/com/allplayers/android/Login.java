@@ -3,6 +3,7 @@ package com.allplayers.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ public class Login extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
+		/**
 		final Button findGroupsButton = (Button)findViewById(R.id.findGroupsButton);
         findGroupsButton.setOnClickListener(new View.OnClickListener()
         {
@@ -28,6 +30,7 @@ public class Login extends Activity
             	startActivity(new Intent(Login.this, FindGroupsActivity.class));
             }
         });
+        */
 		
 		final Button button = (Button)findViewById(R.id.loginButton);
         button.setOnClickListener(new View.OnClickListener()
@@ -60,4 +63,16 @@ public class Login extends Activity
             }
         });
 	}
+	@Override
+    public boolean onKeyUp(int keyCode, KeyEvent event)
+    {
+        if (keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU)
+        {
+        	startActivity(new Intent(Login.this, FindGroupsActivity.class));
+        }
+            
+        // TODO Auto-generated method stub
+        return super.onKeyUp(keyCode, event);
+    }
+	
 }

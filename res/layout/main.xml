@@ -83,7 +83,7 @@
 	  android:layout_weight="0">
 	</Button>
 	
-	<!-- Change to be activated by the physical search button -->
+	<!-- Change to be activated by the physical search button 
 	<Button
 	  android:id="@+id/findGroupsButton"
 	  android:layout_width="fill_parent"
@@ -92,5 +92,6 @@
 	  android:gravity="center"
 	  android:layout_weight="0">
 	</Button>
+	-->
 
 </LinearLayout>
