@@ -1,14 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/relativeLayout1"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+	<Button
+	  android:id="@+id/previousPhotosButton"
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content"
+	  android:layout_alignParentLeft="true"
+	  android:layout_alignParentRight="true"
+	  android:layout_alignParentTop="true" 
+	  android:text="Previous"
+	  android:textSize="14sp"
+	  android:textColor="#FFFFFF"
+	  android:background="#000000" 
+	  android:paddingLeft="5px"
+	  android:paddingRight="5px"
+	  android:paddingTop="10px"
+	  android:paddingBottom="10px">
+	</Button>
+
 	<ImageView
 	  android:id="@+id/fullPhotoDisplay"
-	  android:layout_width="match_parent"
-	  android:layout_height="match_parent"
-	  android:layout_gravity="center"
-	  android:scaleType="centerInside">
-	</ImageView>
-</LinearLayout>
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content"
+	  android:layout_above="@+id/previousPhotosButton"
+	  android:layout_below="@+id/nextPhotosButton"
+	  android:layout_centerHorizontal="true"
+	  android:src="@drawable/allplayers_logo"/>
+
+	<Button
+	  android:id="@+id/nextPhotosButton"
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content"
+	  android:layout_alignParentBottom="true"
+	  android:layout_alignParentLeft="true"
+	  android:layout_alignParentRight="true"
+	  android:text="Next" 
+	  android:textSize="14sp"       
+	  android:textColor="#FFFFFF"
+	  android:background="#000000"
+	  android:paddingLeft="5px"
+	  android:paddingRight="5px"
+	  android:paddingTop="10px"
+	  android:paddingBottom="10px"/>
+
+</RelativeLayout>

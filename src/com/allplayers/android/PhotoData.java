@@ -11,6 +11,8 @@ public class PhotoData extends DataObject
 	private String description = "";
 	private String photoFull = "";
 	private String photoThumb = "";
+	private PhotoData previousPhoto = null;
+	private PhotoData nextPhoto = null;
 	
 	public PhotoData()
 	{
@@ -119,5 +121,26 @@ public class PhotoData extends DataObject
 	public String getPhotoThumb()
 	{
 		return photoThumb;
+	}
+
+	//Link Photos
+	public void setPreviousPhoto(PhotoData p)
+	{
+		previousPhoto = p;
+	}
+
+	public void setNextPhoto(PhotoData p)
+	{
+		nextPhoto = p;
+	}
+	
+	public PhotoData previousPhoto()
+	{
+		return previousPhoto;
+	}
+
+	public PhotoData nextPhoto()
+	{
+		return nextPhoto;
 	}
 }

@@ -19,6 +19,8 @@ public class PhotosMap
 				
 				if(jsonArray.length() > 0)
 				{
+					int numPhotos = 0;
+					
 					for(int i = 0; i < jsonResult.length(); i++)
 					{
 						PhotoData photo = new PhotoData(jsonArray.getString(i));
@@ -27,7 +29,14 @@ public class PhotosMap
 						{
 							if(Globals.isUnique(photo, photos))
 							{
+								if(numPhotos > 0)
+								{
+									photo.setPreviousPhoto(photos.get(numPhotos - 1));
+									photos.get(numPhotos - 1).setNextPhoto(photo);
+								}
+								
 								photos.add(photo);
+								numPhotos++;
 							}
 						}
 					}
