@@ -42,16 +42,17 @@ public class Globals
 	{
 		try
 		{
-			/*URL url = new URL(urlString);
+			URL url = new URL(urlString);
 			final URLConnection conn = url.openConnection();
 			conn.connect();
 			final BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
 			final Bitmap bm = BitmapFactory.decodeStream(bis);
 			bis.close();
-			return bm;*/
+			return bm;
 			
 			//Supposedly fixes images not displaying
-			HttpGet httpRequest = null;
+			//Did not work
+			/*HttpGet httpRequest = null;
 			
 			try
 			{
@@ -67,7 +68,7 @@ public class Globals
 			HttpEntity entity = response.getEntity();
 			BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
 			InputStream instream = bufHttpEntity.getContent();
-			return BitmapFactory.decodeStream(instream);
+			return BitmapFactory.decodeStream(instream);*/
 		}
 		catch(IOException ex)
 		{
