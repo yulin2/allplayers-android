@@ -35,6 +35,8 @@ public class MessageThread extends ListActivity
 		String threadID = message.getThreadID();
 		threadIDInt = Integer.parseInt(threadID);
 		
+		APCI_RestServices.putMessage(threadIDInt, 0, "");
+		
 		jsonResult = APCI_RestServices.getUserMessagesByThreadId(threadID);
 
 		HashMap<String, String> map;
