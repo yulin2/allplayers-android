@@ -31,8 +31,6 @@ public class MessageThread extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		//jsonResult = APCI_RestServices.getUserInbox();
-		
 		MessageData message = Globals.currentMessage;
 		String threadID = message.getThreadID();
 		threadIDInt = Integer.parseInt(threadID);
@@ -91,7 +89,9 @@ public class MessageThread extends ListActivity
 		
 		if(hasMessages)
 		{
-			Intent intent = new Intent(MessageThread.this, MessageReply.class);
+			Globals.currentMessageThread = messageThreadList.get(position);
+			
+			Intent intent = new Intent(MessageThread.this, MessageViewSingle.class);
 			startActivity(intent);
 		}
 	}

@@ -18,19 +18,12 @@ public class MessageViewSingle extends Activity
 
 		setContentView(R.layout.viewsinglemessage);
 		
-		MessageData message = Globals.currentMessage;
+		MessageThreadData messageThreadList = Globals.currentMessageThread;
 		
-		String subject = message.getSubject();
-		String sender = message.getLastSender();
-		String date = message.getDateString();
-		String body = message.getMessageBody();
-		int threadID = Integer.parseInt(message.getThreadID());
-		int isNew = Integer.parseInt(message.getNew());
-		
-		if(isNew == 1)
-		{
-			APCI_RestServices.putMessage(threadID, 0, "");
-		}
+		String subject = messageThreadList.getSubject();
+		String sender = messageThreadList.getSenderName();
+		String date = messageThreadList.getDateString();
+		String body = messageThreadList.getMessageBody();
 		
 		final TextView subjectText = (TextView)findViewById(R.id.subjectText);
 		subjectText.setText("This is the Subject.");
@@ -42,7 +35,7 @@ public class MessageViewSingle extends Activity
 		
 		final TextView dateText = (TextView)findViewById(R.id.dateText);
 		dateText.setText("This is the Date last sent.");
-		dateText.setText("Last Message: " + date);
+		dateText.setText("" + date);
 		
 		final TextView bodyText = (TextView)findViewById(R.id.bodyText);
 		bodyText.setText("This is the body text.");

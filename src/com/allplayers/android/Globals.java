@@ -23,6 +23,7 @@ public class Globals
 	public static PhotoData currentPhoto = new PhotoData();
 	public static EventData currentEvent = new EventData();
 	public static MessageData currentMessage = new MessageData();
+	public static MessageThreadData currentMessageThread = new MessageThreadData();
 	
 	public static ArrayList<GroupData> groupList = new ArrayList<GroupData>();
 	
