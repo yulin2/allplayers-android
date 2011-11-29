@@ -8,7 +8,7 @@ import java.util.TimeZone;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MessageData
+public class MessageData extends DataObject
 {
 	private String thread_id = "";
 	private String subject = "";
@@ -145,6 +145,11 @@ public class MessageData
 	}
 	
 	public String getThreadID()
+	{
+		return thread_id;
+	}
+	
+	public String getId()
 	{
 		return thread_id;
 	}

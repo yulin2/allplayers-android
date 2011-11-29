@@ -10,7 +10,7 @@ import java.util.TimeZone;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class EventData
+public class EventData extends DataObject
 {
 	private String uuid = "";
 	private String title = "";
@@ -158,6 +158,11 @@ public class EventData
 	}
 	
 	public String getUUID()
+	{
+		return uuid;
+	}
+	
+	public String getId()
 	{
 		return uuid;
 	}

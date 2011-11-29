@@ -19,7 +19,12 @@ public class AlbumsMap
 			{
 				for(int i = 0; i < jsonResult.length(); i++)
 				{
-					albums.add(new AlbumData(jsonArray.getString(i)));
+					AlbumData album = new AlbumData(jsonArray.getString(i));
+					
+					if(Globals.isUnique(album, albums))
+					{
+						albums.add(album);
+					}
 				}
 			}
 		}

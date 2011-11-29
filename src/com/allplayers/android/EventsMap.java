@@ -21,7 +21,11 @@ private ArrayList<EventData> events = new ArrayList<EventData>();
 				for(int i = 0; i < jsonResult.length(); i++)
 				{
 					EventData event = new EventData(jsonArray.getString(i));
-					events.add(event);
+
+					if(Globals.isUnique(event, events))
+					{
+						events.add(event);
+					}
 				}
 			}
 		}

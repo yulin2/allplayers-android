@@ -19,7 +19,12 @@ private ArrayList<GroupMemberData> members = new ArrayList<GroupMemberData>();
 			{
 				for(int i = 0; i < jsonResult.length(); i++)
 				{
-					members.add(new GroupMemberData(jsonArray.getString(i)));
+					GroupMemberData member = new GroupMemberData(jsonArray.getString(i));
+					
+					if(Globals.isUnique(member, members))
+					{
+						members.add(member);
+					}
 				}
 			}
 		}

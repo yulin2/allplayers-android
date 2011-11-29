@@ -23,7 +23,12 @@ public class MessagesMap
 			{
 				for(int i = 0; i < names.length; i++)
 				{
-					mail.add(new MessageData(jsonObject.getString(names[i])));
+					MessageData message = new MessageData(jsonObject.getString(names[i]));
+					
+					if(Globals.isUnique(message, mail))
+					{
+						mail.add(message);
+					}
 				}
 			}
 		}

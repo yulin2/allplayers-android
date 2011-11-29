@@ -3,7 +3,7 @@ package com.allplayers.android;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GroupData
+public class GroupData extends DataObject
 {
 	private String uuid = "";
 	private String title = "";
@@ -66,6 +66,11 @@ public class GroupData
 	}
 	
 	public String getUUID()
+	{
+		return uuid;
+	}
+	
+	public String getId()
 	{
 		return uuid;
 	}

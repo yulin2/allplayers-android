@@ -50,6 +50,24 @@ public class Globals
 		return null;
 	}
 	
+	public static boolean isUnique(DataObject data, ArrayList<? extends DataObject> list)
+	{
+		if(!list.isEmpty())
+		{
+			for(int i = 0; i < list.size(); i++)
+			{
+				DataObject object = list.get(i);
+				
+				if(object.getId().equals(data.getId()))
+				{
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	public static void reset()
 	{
 		currentGroup = new GroupData();

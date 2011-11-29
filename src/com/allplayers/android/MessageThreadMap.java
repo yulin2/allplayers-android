@@ -23,7 +23,12 @@ public class MessageThreadMap
 			{
 				for(int i = 0; i < names.length; i++)
 				{
-					mail.add(new MessageThreadData(jsonObject.getString(names[i])));
+					MessageThreadData message = new MessageThreadData(jsonObject.getString(names[i]));
+					
+					if(Globals.isUnique(message, mail))
+					{
+						mail.add(message);
+					}
 				}
 			}
 		}

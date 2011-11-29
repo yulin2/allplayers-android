@@ -6,7 +6,7 @@ import java.util.TimeZone;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AlbumData
+public class AlbumData extends DataObject
 {
 	private String uuid = "";
 	private String title = "";
@@ -99,6 +99,11 @@ public class AlbumData
 	}
 	
 	public String getUUID()
+	{
+		return uuid;
+	}
+	
+	public String getId()
 	{
 		return uuid;
 	}

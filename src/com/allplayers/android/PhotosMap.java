@@ -21,11 +21,14 @@ public class PhotosMap
 				{
 					for(int i = 0; i < jsonResult.length(); i++)
 					{
-						PhotoData pd = new PhotoData(jsonArray.getString(i));
+						PhotoData photo = new PhotoData(jsonArray.getString(i));
 						
-						if(pd.getPhotoFull() != null && !pd.getPhotoFull().trim().equals(""))
+						if(photo.getPhotoFull() != null && !photo.getPhotoFull().trim().equals(""))
 						{
-							photos.add(pd);
+							if(Globals.isUnique(photo, photos))
+							{
+								photos.add(photo);
+							}
 						}
 					}
 				}

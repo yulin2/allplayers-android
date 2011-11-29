@@ -3,7 +3,7 @@ package com.allplayers.android;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GroupMemberData
+public class GroupMemberData extends DataObject
 {
 	private String uuid = "";
 	private String name = "";
@@ -64,6 +64,12 @@ public class GroupMemberData
 		}
 		if(lname != null && !lname.equals("null"))
 		{
+			//If a first name has been added already
+			if(!name.equals(""))
+			{
+				name += " ";
+			}
+			
 			name += lname.substring(0,1).toUpperCase() + lname.substring(1).toLowerCase();
 		}
 		
@@ -78,6 +84,11 @@ public class GroupMemberData
 	}
 	
 	public String getUUID()
+	{
+		return uuid;
+	}
+	
+	public String getId()
 	{
 		return uuid;
 	}

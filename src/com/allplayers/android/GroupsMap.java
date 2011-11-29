@@ -19,7 +19,12 @@ public class GroupsMap
 			{
 				for(int i = 0; i < jsonResult.length(); i++)
 				{
-					groups.add(new GroupData(jsonArray.getString(i)));
+					GroupData group = new GroupData(jsonArray.getString(i));
+					
+					if(Globals.isUnique(group, groups))
+					{
+						groups.add(group);
+					}
 				}
 			}
 		}
