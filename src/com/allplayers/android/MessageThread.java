@@ -1,6 +1,8 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import android.app.ListActivity;
@@ -19,6 +21,7 @@ public class MessageThread extends ListActivity
 	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
 	
 	/** Called when the activity is first created. */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -36,6 +39,16 @@ public class MessageThread extends ListActivity
 		MessageThreadMap messages = new MessageThreadMap(jsonResult);
 		messageThreadList = messages.getMessageThreadData();
 
+		Collections.sort(messageThreadList, new Comparator(){
+			 
+            public int compare(Object o1, Object o2) {
+                MessageThreadData m1 = (MessageThreadData) o1;
+                MessageThreadData m2 = (MessageThreadData) o2;
+               return m1.getTimestampString().compareToIgnoreCase(m2.getTimestampString());
+            }
+ 
+        });
+		
 		if(!messageThreadList.isEmpty())
 		{
 			hasMessages = true;
