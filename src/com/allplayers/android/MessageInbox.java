@@ -1,30 +1,32 @@
 package com.allplayers.android;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.List;
 
-public class MessageInbox extends ListActivity
+public class MessageInbox extends Activity 
 {
+	
 	private ArrayList<MessageData> messageList;
-	private boolean hasMessages = false;
 	private String jsonResult = "";
+	private boolean hasMessages = false;
 	
-	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
-	
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) 
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.inboxlist);
 
-		try
+        try
 		{
 			Bundle bundle = this.getIntent().getExtras();
 			jsonResult = bundle.getString("inboxJSON");
@@ -37,61 +39,43 @@ public class MessageInbox extends ListActivity
 		{
 			jsonResult = APCI_RestServices.getUserInbox();
 		}
-
-		HashMap<String, String> map;
-		
-		MessagesMap messages = new MessagesMap(jsonResult);
+        
+        MessagesMap messages = new MessagesMap(jsonResult);
 		messageList = messages.getMessageData();
 
-		if(!messageList.isEmpty())
+		Collections.reverse(messageList);
+		
+        ListView list = (ListView) findViewById(R.id.customListView);
+        list.setClickable(true);
+        
+        if(!messageList.isEmpty())
 		{
 			hasMessages = true;
-			
-			for(int i = 0; i < messageList.size(); i++)
-			{
-				map = new HashMap<String, String>();
-				map.put("line1", messageList.get(i).getSubject());
-				
-				if(Integer.parseInt(messageList.get(i).getNew()) == 1)
-					map.put("line2", "Unread");
-				else
-					map.put("line2", "Read");
-					
-				list.add(map);
-			}
 		}
-		else
+        else
 		{
 			hasMessages = false;
-			
-			map = new HashMap<String, String>();
-			map.put("line1", "You have no new messages.");
-			map.put("line2", "");
-			list.add(map);
 		}
-		
 
-		String[] from = { "line1", "line2" };
+        final List<MessageData> messageList2 = messageList;
+        MessageAdapter adapter = new MessageAdapter(this, messageList2);
 
-		int[] to = { android.R.id.text1, android.R.id.text2 };
+        list.setOnItemClickListener(new OnItemClickListener()
+        {
 
-		SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
-		setListAdapter(adapter);
-	}
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long index) 
+            {
+            	if(hasMessages)
+        		{
+        			Globals.currentMessage = messageList.get(position);
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id)
-	{
-		super.onListItemClick(l, v, position, id);
-		
-		if(hasMessages)
-		{
-			//Globals.currentMessage = jsonResult;
-			//Globals.currentMessageLoc = position;
-			Globals.currentMessage = messageList.get(position);
+        			Intent intent = new Intent(MessageInbox.this, MessageThread.class);
+        			startActivity(intent);
+        		}
+            }
+        });
 
-			Intent intent = new Intent(MessageInbox.this, MessageThread.class);
-			startActivity(intent);
-		}
-	}
+        list.setAdapter(adapter);
+    }
+
 }

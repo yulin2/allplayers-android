@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+    <LinearLayout
+          	android:orientation="horizontal"
+  	android:layout_width="fill_parent"
+  	android:layout_weight="1"
+  	android:gravity="top"
+  	android:layout_height="wrap_content">
+	<TextView
+		android:id="@+id/senderName"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="SenderName"
+		android:textSize="21sp"
+		android:gravity="left"
+		android:layout_weight="2">
+	</TextView>
+	<TextView
+		android:id="@+id/date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Date"
+		android:textSize="14sp"
+		android:gravity="right"
+		android:layout_weight="1">
+	</TextView>
+	
+	    </LinearLayout>
+	    
+        <LinearLayout
+          	android:orientation="horizontal"
+  	android:layout_width="fill_parent"
+  	android:layout_weight="1"
+  	android:gravity="center"
+  	android:layout_height="wrap_content">
+        
+	<TextView
+		android:id="@+id/subject"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Subject"
+		android:textSize="16sp"
+		android:gravity="left"
+		android:lines="1"
+    		android:singleLine="true"
+    		android:maxLines="1"
+		android:layout_weight="1">
+	</TextView>
+	</LinearLayout>
+	    <LinearLayout
+          	android:orientation="horizontal"
+  	android:layout_width="fill_parent"
+  	android:layout_weight="1"
+  	android:gravity="bottom"
+  	android:layout_height="wrap_content">
+	<TextView
+		android:id="@+id/body"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:ellipsize="end"
+		android:text="body"
+    		android:lines="1"
+    		android:singleLine="true"
+    		android:maxLines="1"
+		android:textSize="12sp"
+		android:gravity="left"
+		android:layout_weight="1">
+	</TextView>
+	</LinearLayout>
+
+</LinearLayout>

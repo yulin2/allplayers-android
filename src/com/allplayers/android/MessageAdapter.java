@@ -4,40 +4,62 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class MessageAdapter extends ArrayAdapter<String>
+import java.util.List;
+
+public class MessageAdapter extends BaseAdapter
 {
-	private final Context context;
-	private final String[] senderNames;
-	private final String[] dates;
-	private final String[] subjects;
-	private final String[] msgCounts;
+    private Context context;
 
-	public MessageAdapter(Context context, String[] senderNames, String[] dates, String[] subjects, String[] msgCounts) 
-	{
-		super(context, R.layout.custominbox, senderNames);
-		this.context = context;
-		this.senderNames = senderNames;
-		this.dates = dates;
-		this.subjects = subjects;
-		this.msgCounts = msgCounts;
-	}
+    private List<MessageData> messageDataList;
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) 
-	{
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView = inflater.inflate(R.layout.custominbox, parent, false);
-		
-		TextView senderName = (TextView) rowView.findViewById(R.id.senderName);
-		TextView date = (TextView) rowView.findViewById(R.id.date);
-		TextView subject = (TextView) rowView.findViewById(R.id.subject);
-		TextView msgCount = (TextView) rowView.findViewById(R.id.msgCount);
+    public MessageAdapter(Context context, List<MessageData> listMessageData) 
+    {
+        this.context = context;
+        messageDataList = listMessageData;
+    }
 
-		//textView.setText(values[position]);
 
-		return rowView;
-	}
+    public View getView(int position, View convertView, ViewGroup viewGroup) 
+    {
+        MessageData entry = messageDataList.get(position);
+        if (convertView == null) 
+        {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.inboxrow, null);
+        }
+        TextView senderName = (TextView) convertView.findViewById(R.id.senderName);
+        senderName.setText(entry.getLastSender());
+
+        TextView date = (TextView) convertView.findViewById(R.id.date);
+        date.setText(entry.getDateString());
+
+        TextView subject = (TextView) convertView.findViewById(R.id.subject);
+        subject.setText(entry.getSubject());
+        
+		TextView body = (TextView) convertView.findViewById(R.id.body);
+        body.setText(entry.getMessageBody());
+
+        return convertView;
+    }
+
+
+    public int getCount() 
+    {
+        return messageDataList.size();
+    }
+
+    public Object getItem(int position) 
+    {
+        return messageDataList.get(position);
+    }
+
+    public long getItemId(int position) 
+    {
+        return position;
+    }
+
 }
