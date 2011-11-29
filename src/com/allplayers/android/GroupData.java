@@ -58,6 +58,7 @@ public class GroupData extends DataObject
 		try
 		{
 			logo = groupObject.getString("logo");
+			logo = logo.replace("imagecache/profile_small/", "");
 		}
 		catch(JSONException ex)
 		{
