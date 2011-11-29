@@ -1,10 +1,10 @@
 package com.allplayers.android;
 
-import java.util.Date;
-import java.util.TimeZone;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
+import java.util.TimeZone;
 
 public class AlbumData extends DataObject
 {

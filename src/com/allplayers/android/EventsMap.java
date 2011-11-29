@@ -1,10 +1,9 @@
 package com.allplayers.android;
 
-import java.util.ArrayList;
-//import java.util.Calendar;
-
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.util.ArrayList;
 
 public class EventsMap
 {

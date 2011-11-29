@@ -1,13 +1,13 @@
 package com.allplayers.android;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 /* This class is used for storing global variables across activities.
  * Also, update timestamps should be kept to avoid making too many unnecessary calls, such as the 

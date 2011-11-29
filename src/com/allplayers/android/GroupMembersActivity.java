@@ -1,10 +1,10 @@
 package com.allplayers.android;
 
-import java.util.ArrayList;
-
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
 
 public class GroupMembersActivity extends ListActivity
 {

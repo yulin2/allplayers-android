@@ -1,12 +1,12 @@
 package com.allplayers.android;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MessageThreadData extends DataObject
 {

@@ -1,13 +1,13 @@
 package com.allplayers.android;
 
-import java.util.ArrayList;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class AlbumPhotosActivity extends ListActivity
 {

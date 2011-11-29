@@ -1,12 +1,12 @@
 package com.allplayers.android;
 
+import android.os.Bundle;
+import android.widget.TextView;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-
-import android.os.Bundle;
-import android.widget.TextView;
 
 public class EventDisplayActivity extends MapActivity
 {
