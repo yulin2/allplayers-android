@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -11,12 +12,16 @@ import android.widget.TabHost;
 
 public class MainScreen extends TabActivity
 {
+	private Context context;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.inapplayout);
+		
+		context = this.getBaseContext();
 		
 		Resources res = getResources(); // Resource object to get Drawables, this will be little icons for each one
 		TabHost tabHost = getTabHost();  // The activity TabHost
@@ -67,6 +72,7 @@ public class MainScreen extends TabActivity
 	    	case R.id.logOut:
 		{
 	    		APCI_RestServices.logOut();
+	    		LocalStorage.writePassword(context, "");
 	    		startActivity(new Intent(MainScreen.this, Login.class));
 	    		finish();
 	    		return true;

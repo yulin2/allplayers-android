@@ -2,6 +2,8 @@ package com.allplayers.android;
 
 import android.content.Context;
 
+import org.jasypt.util.text.BasicTextEncryptor;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,6 +36,30 @@ public class LocalStorage
 	protected static Context mContext;
 	private static String writeString;
 
+	public static void writeUserName(Context c, String write)
+	{
+		writeFile(c, write, "UserName");
+	}
+	public static String readUserName(Context c)
+	{
+		String returnValue = readFile(c, "UserName");
+		return returnValue;
+	}
+	
+	public static void writePassword(Context c, String write)
+	{
+		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+		textEncryptor.setPassword("C47F3F767ED97B9CDC73A3A35C0DFCF75FC4F9AF323EC40C8F9986FF9F40A61C");
+		String encryptedPassword = textEncryptor.encrypt(write);
+		
+		writeFile(c, encryptedPassword, "Password");
+	}
+	public static String readPassword(Context c)
+	{
+		String returnValue = readFile(c, "Password");
+		return returnValue;
+	}
+	
 	public static void writeInbox(Context c, String write)
 	{
 		writeFile(c, write, "Inbox");
@@ -111,6 +137,7 @@ public class LocalStorage
 		catch(FileNotFoundException fnfe)
 		{
 			fnfe.printStackTrace();
+			return "";
 		}
 		catch(IOException ioe)
 		{

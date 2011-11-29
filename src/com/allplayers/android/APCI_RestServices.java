@@ -1,5 +1,6 @@
 package com.allplayers.android;
 
+import org.jasypt.util.text.BasicTextEncryptor;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -121,11 +122,15 @@ public class APCI_RestServices
 	
 	public static String validateLogin(String username, String password)
 	{
+		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+		textEncryptor.setPassword("C47F3F767ED97B9CDC73A3A35C0DFCF75FC4F9AF323EC40C8F9986FF9F40A61C");
+		String unencryptedPassword = textEncryptor.decrypt(password);
+		
 		String[][] contents = new String[2][2];
 		contents[0][0] = "username";
 		contents[0][1] = username;
 		contents[1][0] = "password";
-		contents[1][1] = password;
+		contents[1][1] = unencryptedPassword;
 		
 		return makeAuthenticatedPost("https://www.allplayers.com/?q=api/v1/rest/users/login.json", contents);
 	}
