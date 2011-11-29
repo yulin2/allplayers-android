@@ -23,11 +23,20 @@ public class MessageInbox extends ListActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
+		try
+		{
+			Bundle bundle = this.getIntent().getExtras();
+			jsonResult = bundle.getString("inboxJSON");
+		}
+		catch(Throwable t)
+		{
+		}
 		
-		//jsonResult = APCI_RestServices.getUserInbox();
-		Bundle bundle = this.getIntent().getExtras();
-		jsonResult = bundle.getString("inboxJSON");
-		
+		if(jsonResult.equals(""))
+		{
+			jsonResult = APCI_RestServices.getUserInbox();
+		}
 
 		HashMap<String, String> map;
 		

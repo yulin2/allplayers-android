@@ -3,6 +3,9 @@ package com.allplayers.android;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -17,6 +20,7 @@ public class MessageThread extends ListActivity
 	private ArrayList<MessageThreadData> messageThreadList;
 	private boolean hasMessages = false;
 	private String jsonResult = "";
+	private int threadIDInt;
 	
 	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
 	
@@ -31,6 +35,7 @@ public class MessageThread extends ListActivity
 		
 		MessageData message = Globals.currentMessage;
 		String threadID = message.getThreadID();
+		threadIDInt = Integer.parseInt(threadID);
 		
 		jsonResult = APCI_RestServices.getUserMessagesByThreadId(threadID);
 
@@ -89,5 +94,34 @@ public class MessageThread extends ListActivity
 			Intent intent = new Intent(MessageThread.this, MessageReply.class);
 			startActivity(intent);
 		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.markreadmenu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+	    switch (item.getItemId())
+	    {
+	    	case R.id.reply:
+		{
+	    		startActivity(new Intent(MessageThread.this, MessageReply.class));
+	    		return true;
+		}
+	    	case R.id.markRead:
+		{
+				APCI_RestServices.putMessage(threadIDInt, 1, "");
+				startActivity(new Intent(MessageThread.this, MessageInbox.class));
+		    	finish();
+		    	return true;
+		}
+	    	default:	return super.onOptionsItemSelected(item);
+	    }
 	}
 }
