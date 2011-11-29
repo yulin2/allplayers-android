@@ -51,12 +51,12 @@ public class MessageViewSingle extends Activity
 		
 		final Button replyButton = (Button)findViewById(R.id.replyButton);
 		
-        replyButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-            	startActivity(new Intent(MessageViewSingle.this, MessageReply.class));
-            }
-        });
+		replyButton.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v)
+			{
+				startActivity(new Intent(MessageViewSingle.this, MessageReply.class));
+			}
+		});
 	}
 }

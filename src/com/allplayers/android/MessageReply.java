@@ -47,19 +47,19 @@ public class MessageReply extends Activity
 
 		final Button sendButton = (Button)findViewById(R.id.sendButton);
 		
-        sendButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-            	sendBody = bodyField.getText().toString();
-            	
-            	APCI_RestServices.postMessage(Integer.parseInt(threadID), sendBody);
-            	
-            	Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
-            	toast.show();
-            	
-            	finish();
-            }
-        });
+		sendButton.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v)
+			{
+				sendBody = bodyField.getText().toString();
+
+				APCI_RestServices.postMessage(Integer.parseInt(threadID), sendBody);
+
+				Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
+				toast.show();
+
+				finish();
+			}
+		});
 	}
 }

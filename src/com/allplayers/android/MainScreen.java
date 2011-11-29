@@ -65,13 +65,13 @@ public class MainScreen extends TabActivity
 	    switch (item.getItemId())
 	    {
 	    	case R.id.logOut:
-	    		System.out.println("logout pressed");
+		{
 	    		APCI_RestServices.logOut();
 	    		startActivity(new Intent(MainScreen.this, Login.class));
 	    		finish();
 	    		return true;
-	    	default:
-	    		return super.onOptionsItemSelected(item);
+		}
+	    	default:	return super.onOptionsItemSelected(item);
 	    }
 	}
 }

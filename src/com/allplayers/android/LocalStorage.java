@@ -37,8 +37,7 @@ public class LocalStorage
 		String returnValue = readFile(c, "Inbox");
 		return returnValue;
 	}
-	
-	
+
 	public static void writeUserGroups(Context c, String write)
 	{
 		writeFile(c, write, "UserGroups");
@@ -48,8 +47,7 @@ public class LocalStorage
 		String returnValue = readFile(c, "UserGroups");
 		return returnValue;
 	}
-	
-	
+
 	public static void writeUserGroupMembers(Context c, String write)
 	{
 		writeFile(c, write, "UserGroupMembers");
@@ -59,23 +57,16 @@ public class LocalStorage
 		String returnValue = readFile(c, "UserGroupMembers");
 		return returnValue;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 	public static void writeFile(Context c, String write, String fileName)
 	{
 		mContext = c;
 		writeString = write;
-		
+
 		try 
 		{
 			writeString = write;
-			
+
 			FileOutputStream fOut = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
 			OutputStreamWriter osw = new OutputStreamWriter(fOut); 
 
@@ -84,43 +75,42 @@ public class LocalStorage
 			osw.flush();
 			osw.close();
 		} 
-		catch (IOException ioe) 
+		catch(IOException ioe) 
 		{
 			ioe.printStackTrace();
-		}
-				  
+		}	  
 	}
-	
+
 	public static String readFile(Context c, String fileName)
 	{
 		mContext = c;
 		String data = "";
 		FileInputStream fis;
-		
-	    try {
-	        fis = mContext.openFileInput(fileName);
-	        
-	        InputStreamReader isr = new InputStreamReader(fis);
-	        
-	        BufferedReader br = new BufferedReader(isr);
-	        
-	        data = br.readLine();
-	        
-	        isr.close();
-	        br.close();
-	        
-	        return data;
-	        
-	    }
-	    catch (FileNotFoundException fnfe)
-	    {
-	    	fnfe.printStackTrace();
-	    }
-	    catch (IOException ioe)
-	    {
-	    	ioe.printStackTrace();
-	    }
-		
+
+		try
+		{
+			fis = mContext.openFileInput(fileName);
+
+			InputStreamReader isr = new InputStreamReader(fis);
+
+			BufferedReader br = new BufferedReader(isr);
+
+			data = br.readLine();
+
+			isr.close();
+			br.close();
+
+			return data;
+		}
+		catch(FileNotFoundException fnfe)
+		{
+			fnfe.printStackTrace();
+		}
+		catch(IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
+
 		return data;		  
 	}
 }

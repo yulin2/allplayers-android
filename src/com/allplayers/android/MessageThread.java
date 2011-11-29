@@ -39,15 +39,15 @@ public class MessageThread extends ListActivity
 		MessageThreadMap messages = new MessageThreadMap(jsonResult);
 		messageThreadList = messages.getMessageThreadData();
 
-		Collections.sort(messageThreadList, new Comparator(){
-			 
-            public int compare(Object o1, Object o2) {
-                MessageThreadData m1 = (MessageThreadData) o1;
-                MessageThreadData m2 = (MessageThreadData) o2;
-               return m1.getTimestampString().compareToIgnoreCase(m2.getTimestampString());
-            }
- 
-        });
+		Collections.sort(messageThreadList, new Comparator()
+		{
+			public int compare(Object o1, Object o2)
+			{
+				MessageThreadData m1 = (MessageThreadData) o1;
+				MessageThreadData m2 = (MessageThreadData) o2;
+				return m2.getTimestampString().compareToIgnoreCase(m1.getTimestampString());
+			}
+		});
 		
 		if(!messageThreadList.isEmpty())
 		{
