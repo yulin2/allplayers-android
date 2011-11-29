@@ -27,6 +27,7 @@ public class Login extends Activity
 		
 		context = this.getBaseContext();
 		
+		/**
 		if(!(LocalStorage.readUserName(context)).equals("") && !(LocalStorage.readPassword(context)).equals(""))
 		{
 			String result = APCI_RestServices.validateLogin(LocalStorage.readUserName(context), LocalStorage.readPassword(context));
@@ -47,7 +48,7 @@ public class Login extends Activity
 				Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
 				invalidLogin.show();
 			}
-		}
+		}*/
 		
 		final Button button = (Button)findViewById(R.id.loginButton);
 		button.setOnClickListener(new View.OnClickListener()
