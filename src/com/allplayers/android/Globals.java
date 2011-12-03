@@ -10,10 +10,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+//import java.io.BufferedInputStream; //used for first method of getting image
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+//import java.net.URLConnection; //used for first method of getting image
 import java.util.ArrayList;
 
 /* This class is used for storing global variables across activities.
@@ -42,17 +44,17 @@ public class Globals
 	{
 		try
 		{
-			URL url = new URL(urlString);
+			/*URL url = new URL(urlString);
 			final URLConnection conn = url.openConnection();
 			conn.connect();
 			final BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
 			final Bitmap bm = BitmapFactory.decodeStream(bis);
 			bis.close();
-			return bm;
+			return bm;*/
 			
 			//Supposedly fixes images not displaying
 			//Did not work
-			/*HttpGet httpRequest = null;
+			HttpGet httpRequest = null;
 			
 			try
 			{
@@ -68,7 +70,7 @@ public class Globals
 			HttpEntity entity = response.getEntity();
 			BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
 			InputStream instream = bufHttpEntity.getContent();
-			return BitmapFactory.decodeStream(instream);*/
+			return BitmapFactory.decodeStream(instream);
 		}
 		catch(IOException ex)
 		{
