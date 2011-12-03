@@ -1,21 +1,97 @@
 package com.allplayers.android;
 
-import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-public class GroupsActivity extends Activity
+import java.util.ArrayList;
+
+public class GroupsActivity extends ListActivity
 {
+	private ArrayList<GroupData> groupList;
+	private boolean hasGroups = false;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		
-		String result = APCI_RestServices.getUserGroups();
+		if(Globals.groupList.isEmpty())
+		{
+			String jsonResult = "";
+			
+			//check local storage
+			if(LocalStorage.getTimeSinceLastModification("UserGroups") / 1000 / 60 < 60) //more recent than 60 minutes
+			{
+				jsonResult = LocalStorage.readUserGroups(getBaseContext());
+			}
+			else
+			{
+				jsonResult = APCI_RestServices.getUserGroups();
+				LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
+			}
+			
+			GroupsMap groups = new GroupsMap(jsonResult);
+			groupList = groups.getGroupData();
+			Globals.groupList = groupList;
+		}
+		else
+		{
+			groupList = Globals.groupList;
+		}
 		
-		TextView tv = new TextView(this);
-		tv.setText("Groups Activity\n\n" + result);
-		setContentView(tv);
+		String[] values;
+		
+		if(!groupList.isEmpty())
+		{
+			values = new String[groupList.size()];
+			
+			for(int i = 0; i < groupList.size(); i++)
+			{
+				values[i] = groupList.get(i).getTitle();
+			}
+			
+			hasGroups = true;
+		}
+		else
+		{
+			values = new String[]{"no groups to display"};
+			hasGroups = false;
+		}
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, values);
+		setListAdapter(adapter);
+	}
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id)
+	{
+		super.onListItemClick(l, v, position, id);
+		
+		if(hasGroups)
+		{
+			Globals.currentGroup = groupList.get(position);
+			
+			//Display the group page for the selected group
+			Intent intent = new Intent(GroupsActivity.this, GroupPageActivity.class);
+			startActivity(intent);
+		}
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event)
+	{
+		if(keyCode == KeyEvent.KEYCODE_SEARCH)
+		{
+			startActivity(new Intent(GroupsActivity.this, FindGroupsActivity.class));
+		}
+		
+		return super.onKeyUp(keyCode, event);
 	}
 }

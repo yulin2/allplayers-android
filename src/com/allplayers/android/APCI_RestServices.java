@@ -1,5 +1,8 @@
 package com.allplayers.android;
 
+import org.jasypt.util.text.BasicTextEncryptor;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -13,11 +16,11 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.json.JSONObject;
-
 public class APCI_RestServices
 {
 	public static String user_id = "";
+	private static String session_cookie = ""; //first session cookie
+	private static String chocolatechip_cookie = ""; //second cookie
 	
 	public APCI_RestServices()
 	{
@@ -26,7 +29,7 @@ public class APCI_RestServices
 		{
 			public java.security.cert.X509Certificate[] getAcceptedIssuers()
 			{
-			return null;
+				return null;
 			}
 			
 			public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
@@ -45,32 +48,34 @@ public class APCI_RestServices
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 		}
-		catch (Exception ex)
+		catch(Exception ex)
 		{
+			System.err.println("APCI_RestServices/constructor/" + ex);
 		}
-		//Now you can access an https URL without having the certificate in the truststore
 	}
 	
-	public static String isLoggedIn()
+	public static boolean isLoggedIn()
 	{
 		if(user_id.equals(""))
 		{
-			//return false;
-			return "empty";
+			return false;
 		}
 		
 		//Check an authorized call
 		try
 		{
 			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + ".json");
-			URLConnection connection = url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setDoInput(true);
+			connection.addRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
+			//connection.addRequestProperty("Cookie", session_cookie);
 			InputStream inStream = connection.getInputStream();
 			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
 			String line = "";
+
 			String result = "";
-			
+
 			while((line = input.readLine()) != null)
 			{
 				result += line;
@@ -81,51 +86,336 @@ public class APCI_RestServices
 			
 			if(retrievedUUID.equals(user_id))
 			{
-				//return true;
-				return user_id;
+				return true;
 			}
-			else //this case should not occur
+			else //This case should not occur
 			{
-				//return false;
-				return retrievedUUID;
+				return false;
 			}
 		}
 		catch(Exception ex)
 		{
-			System.out.println(ex);
-			//return false;
-			return ex.toString();
+			System.err.println("APCI_RestServices/isLoggedIn/" + ex);
+			return false;
 		}
+	}
+	
+	public static String deleteMessage(int threadId, String type)
+	{
+		//String[][] contents = new String[1][2];
+		//Type: thread or message (default = thread)
+		
+		return makeAuthenticatedDelete("https://www.allplayers.com/?q=api/v1/rest/messages/" + threadId + ".json");
+	}
+	
+	//Change read/unread status
+	public static String putMessage(int threadId, int status, String type)
+	{
+		String[][] contents = new String[1][2];
+		//Status: 1=unread, 0=read
+		contents[0][0] = "status";
+		contents[0][1] = "" + status;
+		//Type: thread or message (default = thread)
+		
+		return makeAuthenticatedPut("https://www.allplayers.com/?q=api/v1/rest/messages/" + threadId + ".json", contents);
 	}
 	
 	public static String validateLogin(String username, String password)
 	{
-		//Log in
+		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+		textEncryptor.setPassword("C47F3F767ED97B9CDC73A3A35C0DFCF75FC4F9AF323EC40C8F9986FF9F40A61C");
+		String unencryptedPassword = textEncryptor.decrypt(password);
+		
+		String[][] contents = new String[2][2];
+		contents[0][0] = "username";
+		contents[0][1] = username;
+		contents[1][0] = "password";
+		contents[1][1] = unencryptedPassword;
+		
+		return makeAuthenticatedPost("https://www.allplayers.com/?q=api/v1/rest/users/login.json", contents);
+	}
+	
+	public static String postMessage(int threadId, String body)
+	{
+		String[][] contents = new String[2][2];
+		contents[0][0] = "thread_id";
+		contents[0][1] = "" + threadId;
+		contents[1][0] = "body";
+		contents[1][1] = body;
+		
+		return makeAuthenticatedPost("https://www.allplayers.com/?q=api/v1/rest/messages.json", contents);
+	}
+	
+	public static String searchGroups(String search, int zipcode, int distance)
+	{
+		return makeUnauthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups.json&search=\"" + search + "\"" +
+				"&distance[postal_code]="+ zipcode + "&distance[search_distance]=" + distance + "&distance[search_units]=mile");
+	}
+	
+	public static String getUserGroups()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/groups.json");
+	}
+	
+	public static String getUserFriends()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/friends.json");
+	}
+	
+	public static String getUserGroupmates()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/groupmates.json");
+	}
+	
+	public static String getUserEvents()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/" + user_id + "/events/upcoming.json");
+	}
+	
+	public static String getGroupInformationByGroupId(String group_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + ".json");
+	}
+	
+	public static String getGroupAlbumsByGroupId(String group_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/albums.json");
+	}
+	
+	public static String getGroupEventsByGroupId(String group_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/events/upcoming.json");
+	}
+	
+	public static String getGroupMembersByGroupId(String group_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/" + group_uuid + "/members.json");
+	}
+	
+	public static String getGroupPhotosByGroupId(String group_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/photos.json");
+	}
+	
+	public static String getAlbumByAlbumId(String album_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/" + album_uuid + ".json");
+	}
+	
+	public static String getAlbumPhotosByAlbumId(String album_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/" + album_uuid + "/photos.json");
+	}
+	
+	public static String getPhotoByPhotoId(String photo_uuid)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/photos/" + photo_uuid + ".json");
+	}
+	
+	public static String getUserInbox()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages.json&box=inbox");
+	}
+	
+	public static String getUserSentBox()
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages.json&box=sent");
+	}
+	
+	public static String getUserMessagesByThreadId(String thread_id)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages/" + thread_id + ".json");
+	}
+	
+	public static String getEventByEventId(String event_id)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/events/" + event_id + ".json");
+	}
+	
+	public static String getUserResourceByResourceId(String resource_id)
+	{
+		return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/resources/" + resource_id + ".json");
+	}
+	
+	private static String makeAuthenticatedGet(String urlString)
+	{
+		if(!isLoggedIn())
+		{
+			return "You are not logged in";
+		}
+		
+		//Make and return from authenticated get call
 		try
 		{
-			HttpURLConnection urlConn;
-			DataOutputStream printout;
-			BufferedReader input;
+			URL url = new URL(urlString);
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			connection.setDoInput(true);
+			connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
+			InputStream inStream = connection.getInputStream();
+			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/users/login.json");
-			urlConn = (HttpURLConnection)url.openConnection();
+			String line = "";
+			String result = "";
+			while((line = input.readLine()) != null)
+			{
+				result += line;
+			}
 			
-			urlConn.setDoInput(true);
-			urlConn.setDoOutput(true);
-			urlConn.setUseCaches(false);
-			urlConn.setRequestMethod("POST");
-			urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			return result;
+		}
+		catch(Exception ex)
+		{
+			System.err.println("APCI_RestServices/makeAuthenticatedGet/" + ex);
+			return "error";
+		}
+	}
+	
+	private static String makeAuthenticatedDelete(String urlString)
+	{
+		if(!isLoggedIn())
+		{
+			return "You are not logged in";
+		}
+		
+		//Make and return from authenticated delete call
+		try
+		{
+			URL url = new URL(urlString);
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			
-			printout = new DataOutputStream(urlConn.getOutputStream());
+			connection.setDoOutput(true);
+			connection.setRequestMethod("DELETE");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
+			
+			return "done";
+		}
+		catch(Exception ex)
+		{
+			System.err.println("APCI_RestServices/makeAuthenticatedDelete/" + ex);
+			return ex.toString();
+		}
+	}
+	
+	private static String makeAuthenticatedPut(String urlString, String[][] contents)
+	{
+		if(!isLoggedIn())
+		{
+			return "You are not logged in";
+		}
+		
+		//Make and return from authenticated put call
+		try
+		{
+			URL url = new URL(urlString);
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setRequestMethod("PUT");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
+			
+			DataOutputStream printout = new DataOutputStream(connection.getOutputStream());
+			
+			//Send PUT output.
+			String content = "";
+			if(contents.length > 0)
+			{
+				for(int i = 0; i < contents.length; i++)
+				{
+					if(i > 0)
+					{
+						content += "&";
+					}
+					
+					content += contents[i][0] + "=" + URLEncoder.encode(contents[i][1], "UTF-8");
+				}
+			}
+			
+			printout.writeBytes(content);
+			printout.flush();
+			printout.close();
+			
+			return "done";
+		}
+		catch(Exception ex)
+		{
+			System.err.println("APCI_RestServices/makeAuthenticatedPut/" + ex);
+			return ex.toString();
+		}
+	}
+	
+	private static String makeUnauthenticatedGet(String urlString)
+	{
+		//Make and return from unauthenticated get call
+		try
+		{
+			URL url = new URL(urlString);
+			URLConnection connection = url.openConnection();
+			connection.setDoInput(true);
+			InputStream inStream = connection.getInputStream();
+			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
+			
+			String line = "";
+			String result = "";
+			while((line = input.readLine()) != null)
+			{
+				result += line;
+			}
+			
+			return result;
+		}
+		catch(Exception ex)
+		{
+			System.err.println("APCI_RestServices/makeUnauthenticatedGet/" + ex);
+			return ex.toString();
+		}
+	}
+	
+	private static String makeAuthenticatedPost(String urlString, String[][] contents)
+	{
+		//Make and return from authenticated post call
+		try
+		{
+			URL url = new URL(urlString);
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setUseCaches(false);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			
+			//If not logging in, set the cookies in the header
+			if(!urlString.equals("https://www.allplayers.com/?q=api/v1/rest/users/login.json"))
+			{
+				connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
+			}
+			
+			DataOutputStream printout = new DataOutputStream(connection.getOutputStream());
 			
 			//Send POST output.
-			String content = "username=" + URLEncoder.encode(username, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8");
+			String content = "";
+			if(contents.length > 0)
+			{
+				for(int i = 0; i < contents.length; i++)
+				{
+					if(i > 0)
+					{
+						content += "&";
+					}
+					
+					content += contents[i][0] + "=" + URLEncoder.encode(contents[i][1], "UTF-8");
+				}
+			}
+			
 			printout.writeBytes(content);
 			printout.flush();
 			printout.close();
 			
 			//Get response data.
-			input = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+			BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String str;
 			
 			String result = "";
@@ -135,73 +425,60 @@ public class APCI_RestServices
 			}
 			
 			input.close();
-			return result;
-		}
-		catch(Exception ex)
-		{
-			System.out.println(ex);
-			return ex.toString();
-		}
-	}
-	
-	public static String searchGroups(String search)
-	{
-		//Return all groups that meet search requirement
-		try
-		{
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/groups.json&search=\"" + search + "\"");
-			URLConnection connection = url.openConnection();
-			connection.setDoInput(true);
-			InputStream inStream = connection.getInputStream();
-			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
 			
-			String line = "";
-			String result = "";
-			while((line = input.readLine()) != null)
+			//If logging in, store the cookies for future use
+			if(urlString.equals("https://www.allplayers.com/?q=api/v1/rest/users/login.json"))
 			{
-				result += line;
+				setCookies(connection);
 			}
 			
 			return result;
 		}
 		catch(Exception ex)
 		{
-			System.out.println(ex);
+			System.err.println("APCI_RestServices/makeAuthenticatedPost/" + ex);
 			return ex.toString();
 		}
 	}
-	
-	public static String getUserGroups()
+
+	private static void setCookies(HttpURLConnection connection)
 	{
-		/*if(!isLoggedIn())
+		//Get all cookies from the server
+		for(int i = 0; ; i++)
 		{
-			return "not logged in\n\n" + user_id;
-		}*/
-		
-		String test = isLoggedIn();
-		
-		//Return all groups that meet search requirement
-		try
-		{
-			URL url = new URL("https://www.allplayers.com/?q=api/v1/rest/user/" + user_id + "/groups.json");
-			URLConnection connection = url.openConnection();
-			connection.setDoInput(true);
-			InputStream inStream = connection.getInputStream();
-			BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
+			String headerName = connection.getHeaderFieldKey(i);
+			String headerValue = connection.getHeaderField(i);
 			
-			String line = "";
-			String result = "";
-			while((line = input.readLine()) != null)
+			if (headerName == null && headerValue == null)
 			{
-				result += line;
+				//No more headers
+				break;
 			}
 			
-			return test + "\n\n" + result;
+			if("Set-Cookie".equalsIgnoreCase(headerName))
+			{
+				//parse cookie
+				String[] fields = headerValue.split(";\\s*");
+				
+				String cookieValue = fields[0];
+				
+				if(cookieValue.startsWith("SESS"))
+				{
+					session_cookie = cookieValue;
+				}
+				else if(cookieValue.startsWith("CHOCOLATECHIP"))
+				{
+					chocolatechip_cookie = cookieValue;
+				}
+			}
 		}
-		catch(Exception ex)
-		{
-			System.out.println(ex);
-			return test + "\n\n" + ex.toString();
-		}
+	}
+	
+	public static void logOut()
+	{
+		user_id = "";
+		session_cookie = "";
+		chocolatechip_cookie = "";
+		Globals.reset();
 	}
 }

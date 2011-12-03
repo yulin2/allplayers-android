@@ -1,19 +1,27 @@
 package com.allplayers.android;
 
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TabHost;
 
 public class MainScreen extends TabActivity
 {
+	private Context context;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.inapplayout);
+		
+		context = this.getBaseContext();
 		
 		Resources res = getResources(); // Resource object to get Drawables, this will be little icons for each one
 		TabHost tabHost = getTabHost();  // The activity TabHost
@@ -30,9 +38,9 @@ public class MainScreen extends TabActivity
 		tabHost.addTab(spec);
 		
 		// Do the same for the other tabs
-		intent = new Intent().setClass(this, MailActivity.class);
-		spec = tabHost.newTabSpec("mail").setIndicator("Mail", 
-				res.getDrawable(R.drawable.ic_tab_mail)).setContent(intent);
+		intent = new Intent().setClass(this, MessageActivity.class);
+		spec = tabHost.newTabSpec("messages").setIndicator("Messages", 
+				res.getDrawable(R.drawable.ic_tab_messages)).setContent(intent);
 		tabHost.addTab(spec);
 		
 		intent = new Intent().setClass(this, PhotosActivity.class);
@@ -45,6 +53,31 @@ public class MainScreen extends TabActivity
 				res.getDrawable(R.drawable.ic_tab_events)).setContent(intent);
 		tabHost.addTab(spec);
 		
-		tabHost.setCurrentTab(1);
+		tabHost.setCurrentTab(0);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.logoutmenu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+	    switch (item.getItemId())
+	    {
+	    	case R.id.logOut:
+		{
+	    		APCI_RestServices.logOut();
+	    		LocalStorage.writePassword(context, "");
+	    		startActivity(new Intent(MainScreen.this, Login.class));
+	    		finish();
+	    		return true;
+		}
+	    	default:	return super.onOptionsItemSelected(item);
+	    }
 	}
 }

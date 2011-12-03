@@ -1,1 +1,41 @@
-Nothing here yet
+AllPlayers.com Android Application
+
+How to build and run the application in Eclipse:
+	1.	Open Eclipse.
+	2.	Make sure the Android SDK is set (http://developer.android.com/sdk/eclipse-adt.html#installing).
+	3.	Navigate to File > Import.
+	4.	Select "Projects from Git" from the Git folder.
+	5.	Click "Next".
+	
+	6.	If the project has not been cloned/pulled, yet:
+		a.	Click "Clone".
+		b.	Type (copy/paste) the project repository location into the URI box (located on GitHub.com project home page).
+		c.	Click "Next".
+		d.	Make sure "master" is checked. Then click "Next".
+		e.	Select a local destination for the project.
+		f.	Click "Finish".
+
+		If the project has already been pulled:
+		a.	Click "Add".
+		b.	Browse to the parent directory of the project.
+		c.	Click "Search".
+		d.	Select the allplayers-android project and click "Ok".
+
+	7.	Click "Next".
+	8.	Select "Import Existing Projects" and then click "Next".
+	9.	Click "Finish".
+	10.	Navigate to File > Clean and click "Ok".
+
+	11.	Make sure the project is set as the main project and click the green run arrow.
+	12.	Select "Run as Android Application".
+	13.	Create an AVD with the target as Google APIs - API level 8.
+	14.	At this point, you may have to re-run the application for it to use the new AVD.
+	15.	The AVD should be running and the application is installed.
+
+
+How Mapper/Data classes work:
+With JSON Results (current method):
+	After a call has been made to the APCI_RestServices class, the JSON result is passed to the appropriate mapper class, i.e. a list of events is passed to EventsMap, a list of groups is passed to GroupsMap, etc. The mapper class then splits the JSON result (a JSONArray in most cases) into Data classes. Each Data class extracts the necessary data out of the JSONObject that it is passed. These Data objects can be easily used to store and return information for the application. For example, after a call is made to APCI_RestServices that returns all of the current user's groups, the result will be passed into GroupsMap where it will be parsed as a JSONArray. For each group in the JSONArray, a new GroupData object will be created. The GroupData object stores a particular group's uuid, name, description, etc. Other functions, such as the groups tab display can now use the Data objects to quickly fill the tab with a list of group names and display detailed information when a group is chosen (GroupPageActivity).
+
+With SQLite (future method):
+	Calls to the REST services will occur less frequently. Data from the Mapper/Data classes will be placed into the SQLite tables for the application and retrieved when necessary. Whenever a new REST call does occur, the returned data will be matched against the data in the database, and the database will be updated. With this method, the application will not have as many long waits (caused by the REST calls) as it will store data locally.

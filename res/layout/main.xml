@@ -1,14 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="#002147">
 
 <!-- the following ImageView holds the AllPlayers logo -->
-<ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:layout_weight="1"></ImageView>
 
-<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_weight="0">
-<EditText android:id="@+id/usernameField" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="" android:textSize="18sp" android:gravity="center" android:layout_weight="0"></EditText>
-<EditText android:id="@+id/passwordField" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="" android:textSize="18sp" android:gravity="center" android:password="true" android:layout_weight="0"></EditText>
-<Button android:id="@+id/loginButton" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Login!" android:gravity="center" android:layout_weight="0"></Button>
-</LinearLayout>
+	<ImageView
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content"
+	  android:gravity="center"
+	  android:layout_weight="1"
+	  android:src="@drawable/allplayers_logo"
+	  android:paddingLeft="30px"
+	  android:paddingRight="30px"
+	  android:paddingTop="30px"
+	  android:paddingBottom="30px">
+	</ImageView>
+
+	<TableLayout
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  android:orientation="vertical"
+	  android:gravity="center"
+	  android:layout_weight="0"
+	  android:paddingLeft="5px"
+	  android:paddingRight="5px"
+	  android:paddingTop="0px"
+	  android:paddingBottom="0px">
+	  	<TableRow>
+		    <TextView
+			  android:id="@+id/usernameLabel"
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:text="Username:    "
+			  android:textSize="14sp"
+			  android:gravity="center_vertical"
+			  android:layout_weight="0">
+			</TextView>
+			<EditText
+			  android:id="@+id/usernameField"
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:text=""
+			  android:textSize="14sp"
+			  android:gravity="center"
+			  android:layout_weight="1">
+			</EditText>
+		</TableRow>		
+	  	<TableRow>
+		    <TextView
+			  android:id="@+id/passwordLabel"
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:text="Password:     "
+			  android:textSize="14sp"
+			  android:gravity="center_vertical"
+			  android:layout_weight="0">
+			</TextView>
+			<EditText
+			  android:id="@+id/passwordField"
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:text=""
+			  android:textSize="14sp"
+			  android:gravity="center"
+			  android:password="true"
+			  android:layout_weight="1">
+			</EditText>
+		</TableRow>		
+	</TableLayout>
+		
+	<Button
+	  android:id="@+id/loginButton"
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  android:text="Login!"
+	  android:gravity="center"
+	  android:layout_weight="0">
+	</Button>
+	
+	<!-- Change to be activated by the physical search button 
+	<Button
+	  android:id="@+id/findGroupsButton"
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  android:text="Search Groups"
+	  android:gravity="center"
+	  android:layout_weight="0">
+	</Button>
+	-->
 
 </LinearLayout>
