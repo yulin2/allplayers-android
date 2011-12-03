@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class AlbumPhotosActivity extends ListActivity
 {
 	private ArrayList<PhotoData> photoList;
-	private boolean hasPhotos = false;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -24,28 +23,20 @@ public class AlbumPhotosActivity extends ListActivity
 		PhotosMap photos = new PhotosMap(jsonResult);
 		photoList = photos.getPhotoData();
 		
-		String[] values;
-		
-		if(!photoList.isEmpty())
+		if(photoList.isEmpty())
 		{
-			values = new String[photoList.size()];
+			String[] values = new String[]{"no photos to display"};
 			
-			for(int i = 0; i < photoList.size(); i++)
-			{
-				values[i] = photoList.get(i).getTitle();
-			}
-			
-			hasPhotos = true;
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1, values);
+			setListAdapter(adapter);
 		}
 		else
 		{
-			values = new String[]{"no photos to display"};
-			hasPhotos = false;
+			//Create a customized ArrayAdapter
+			PhotoAdapter adapter = new PhotoAdapter(getApplicationContext(), R.layout.photolistitem, photoList);
+			setListAdapter(adapter);
 		}
-		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, values);
-		setListAdapter(adapter);
 	}
 	
 	@Override
@@ -53,7 +44,7 @@ public class AlbumPhotosActivity extends ListActivity
 	{
 		super.onListItemClick(l, v, position, id);
 		
-		if(hasPhotos)
+		if(!photoList.isEmpty())
 		{
 			Globals.currentPhoto = photoList.get(position);
 			
