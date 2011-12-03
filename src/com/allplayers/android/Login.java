@@ -27,7 +27,10 @@ public class Login extends Activity
 		
 		context = this.getBaseContext();
 		
-		if(!(LocalStorage.readUserName(context)).equals("") && !(LocalStorage.readPassword(context)).equals("") && LocalStorage.readUserName(context) != null && LocalStorage.readPassword(context) != null)
+		String storedUser = LocalStorage.readUserName(context);
+		String storedPassword = LocalStorage.readPassword(context);
+		
+		if(storedUser != null && !storedUser.equals("") && storedPassword != null && !storedPassword.equals(""))
 		{
 			String result = APCI_RestServices.validateLogin(LocalStorage.readUserName(context), LocalStorage.readPassword(context));
 
