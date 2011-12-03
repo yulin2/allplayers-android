@@ -23,7 +23,7 @@ public class EventDisplayActivity extends MapActivity
 		EventData event = Globals.currentEvent;
 		eventInfo.setText("Event Title: " + event.getTitle() + "\nDescription: " + 
 				event.getDescription() + "\nCategory: " + event.getCategory() + 
-				"\nStart: " + event.getStart() + "\nEnd: " + event.getEnd());
+				"\nStart: " + event.getStartDateString() + "\nEnd: " + event.getEndDateString());
 		
 		MapController mapController = map.getController();
 		String lat = event.getLatitude();
