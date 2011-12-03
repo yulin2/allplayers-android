@@ -23,7 +23,18 @@ public class GroupsActivity extends ListActivity
 		
 		if(Globals.groupList.isEmpty())
 		{
-			String jsonResult = APCI_RestServices.getUserGroups();
+			String jsonResult = "";
+			
+			//check local storage
+			if(LocalStorage.getTimeSinceLastModification("UserGroups") / 1000 / 60 < 60) //more recent than 60 minutes
+			{
+				jsonResult = LocalStorage.readUserGroups(getBaseContext());
+			}
+			else
+			{
+				jsonResult = APCI_RestServices.getUserGroups();
+				LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
+			}
 			
 			GroupsMap groups = new GroupsMap(jsonResult);
 			groupList = groups.getGroupData();

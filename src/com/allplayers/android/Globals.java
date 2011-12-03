@@ -26,7 +26,6 @@ import java.util.ArrayList;
  */
 public class Globals
 {
-	//public static ArrayList<GroupData> groupList = new ArrayList<GroupData>();
 	public static GroupData currentGroup = new GroupData();
 	public static AlbumData currentAlbum = new AlbumData();
 	public static PhotoData currentPhoto = new PhotoData();

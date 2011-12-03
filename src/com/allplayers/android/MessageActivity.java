@@ -25,7 +25,16 @@ public class MessageActivity extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		jsonResult = APCI_RestServices.getUserInbox();
+		//check local storage
+		if(LocalStorage.getTimeSinceLastModification("Inbox") / 1000 / 60 < 15) //more recent than 15 minutes
+		{
+			jsonResult = LocalStorage.readInbox(getBaseContext());
+		}
+		else
+		{
+			jsonResult = APCI_RestServices.getUserInbox();
+			LocalStorage.writeInbox(getBaseContext(), jsonResult, false);
+		}
 		
 		MessagesMap messages = new MessagesMap(jsonResult);
 		messageList = messages.getMessageData();

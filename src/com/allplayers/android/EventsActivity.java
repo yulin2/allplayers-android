@@ -22,7 +22,18 @@ public class EventsActivity extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		String jsonResult = APCI_RestServices.getUserEvents();
+		String jsonResult;
+		
+		//check local storage
+		if(LocalStorage.getTimeSinceLastModification("UserEvents") / 1000 / 60 < 10) //more recent than 10 minutes
+		{
+			jsonResult = LocalStorage.readUserEvents(getBaseContext());
+		}
+		else
+		{
+			jsonResult = APCI_RestServices.getUserEvents();
+			LocalStorage.writeUserEvents(getBaseContext(), jsonResult, false);
+		}
 		
 		EventsMap events = new EventsMap(jsonResult);
 		eventsList = events.getEventData();

@@ -24,7 +24,16 @@ public class MessageSent extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		jsonResult = APCI_RestServices.getUserSentBox();
+		//check local storage
+		if(LocalStorage.getTimeSinceLastModification("Sentbox") / 1000 / 60 < 15) //more recent than 15 minutes
+		{
+			jsonResult = LocalStorage.readSentbox(getBaseContext());
+		}
+		else
+		{
+			jsonResult = APCI_RestServices.getUserSentBox();
+			LocalStorage.writeSentbox(getBaseContext(), jsonResult, false);
+		}
 		
 		HashMap<String, String> map;
 		

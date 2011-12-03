@@ -19,28 +19,20 @@ public class PhotosActivity  extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		if(Globals.groupList.isEmpty())
-		{
-			String jsonResult = APCI_RestServices.getUserGroups();
-			
-			GroupsMap groups = new GroupsMap(jsonResult);
-			Globals.groupList = groups.getGroupData();
-		}
+		String jsonResult;
 		
-		ArrayList<GroupData> groupList = Globals.groupList;
-		
-		if(!groupList.isEmpty())
+		if(LocalStorage.getTimeSinceLastModification("UserAlbums") / 1000 / 60 < 60) //more recent than 60 minutes
 		{
-			String group_uuid;
-			String jsonResult;
 			AlbumsMap albums;
 			ArrayList<AlbumData> newAlbumList;
 			
-			for(int i = 0; i < groupList.size(); i++)
+			String storedAlbums = LocalStorage.readUserAlbums(getBaseContext());
+			
+			String[] storedAlbumsList = storedAlbums.split("\n");
+			
+			for(int i = 0; i < storedAlbumsList.length; i++)
 			{
-				group_uuid = groupList.get(i).getUUID();
-				jsonResult = APCI_RestServices.getGroupAlbumsByGroupId(group_uuid);
-				albums = new AlbumsMap(jsonResult);
+				albums = new AlbumsMap(storedAlbumsList[i]);
 				newAlbumList = albums.getAlbumData();
 				
 				if(!newAlbumList.isEmpty())
@@ -48,6 +40,50 @@ public class PhotosActivity  extends ListActivity
 					for(int j = 0; j < newAlbumList.size(); j++)
 					{
 						albumList.add(newAlbumList.get(j));
+					}
+				}
+			}
+		}
+		else
+		{
+			//check local storage
+			if(LocalStorage.getTimeSinceLastModification("UserGroups") / 1000 / 60 < 60) //more recent than 60 minutes
+			{
+				jsonResult = LocalStorage.readUserGroups(getBaseContext());
+			}
+			else
+			{
+				jsonResult = APCI_RestServices.getUserGroups();
+				LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
+			}
+			
+			GroupsMap groups = new GroupsMap(jsonResult);
+			Globals.groupList = groups.getGroupData();
+			
+			ArrayList<GroupData> groupList = Globals.groupList;
+			
+			if(!groupList.isEmpty())
+			{
+				String group_uuid;
+				AlbumsMap albums;
+				ArrayList<AlbumData> newAlbumList;
+				
+				LocalStorage.writeUserAlbums(getBaseContext(), "", true);
+				
+				for(int i = 0; i < groupList.size(); i++)
+				{
+					group_uuid = groupList.get(i).getUUID();
+					jsonResult = APCI_RestServices.getGroupAlbumsByGroupId(group_uuid);
+					LocalStorage.appendUserAlbums(getBaseContext(), jsonResult);
+					albums = new AlbumsMap(jsonResult);
+					newAlbumList = albums.getAlbumData();
+					
+					if(!newAlbumList.isEmpty())
+					{
+						for(int j = 0; j < newAlbumList.size(); j++)
+						{
+							albumList.add(newAlbumList.get(j));
+						}
 					}
 				}
 			}

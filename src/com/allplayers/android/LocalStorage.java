@@ -5,12 +5,14 @@ import android.content.Context;
 import org.jasypt.util.text.BasicTextEncryptor;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Calendar;
 
 //Local Storage for JSON Strings
 //
@@ -60,19 +62,66 @@ public class LocalStorage
 		return returnValue;
 	}
 	
-	public static void writeInbox(Context c, String write)
+	//If overwrite is true, the file will be written regardless of the last update timestamp
+	public static void writeInbox(Context c, String write, boolean overwrite)
 	{
-		writeFile(c, write, "Inbox");
+		if(overwrite)
+		{
+			writeFile(c, write, "Inbox");
+		}
+		else
+		{
+			long lastUpdate = getTimeSinceLastModification("Inbox");
+			
+			if(lastUpdate / 1000 / 60 > 15) //more than 15 minutes since last update
+			{
+				writeFile(c, write, "Inbox");
+			}
+		}
 	}
 	public static String readInbox(Context c)
 	{
 		String returnValue = readFile(c, "Inbox");
 		return returnValue;
 	}
-
-	public static void writeUserGroups(Context c, String write)
+	
+	public static void writeSentbox(Context c, String write, boolean overwrite)
 	{
-		writeFile(c, write, "UserGroups");
+		if(overwrite)
+		{
+			writeFile(c, write, "Sentbox");
+		}
+		else
+		{
+			long lastUpdate = getTimeSinceLastModification("Sentbox");
+			
+			if(lastUpdate / 1000 / 60 > 15) //more than 15 minutes since last update
+			{
+				writeFile(c, write, "Sentbox");
+			}
+		}
+	}
+	public static String readSentbox(Context c)
+	{
+		String returnValue = readFile(c, "Sentbox");
+		return returnValue;
+	}
+
+	public static void writeUserGroups(Context c, String write, boolean overwrite)
+	{
+		if(overwrite)
+		{
+			writeFile(c, write, "UserGroups");
+		}
+		else
+		{
+			long lastUpdate = getTimeSinceLastModification("UserGroups");
+			
+			if(lastUpdate / 1000 / 60 > 60) //more than 60 minutes since last update
+			{
+				writeFile(c, write, "UserGroups");
+			}
+		}
 	}
 	public static String readUserGroups(Context c)
 	{
@@ -80,16 +129,77 @@ public class LocalStorage
 		return returnValue;
 	}
 
-	public static void writeUserGroupMembers(Context c, String write)
+	public static void writeUserGroupMembers(Context c, String write, boolean overwrite)
 	{
-		writeFile(c, write, "UserGroupMembers");
+		if(overwrite)
+		{
+			writeFile(c, write, "UserGroupMembers");
+		}
+		else
+		{
+			long lastUpdate = getTimeSinceLastModification("UserGroupMembers");
+			
+			if(lastUpdate / 1000 / 60 > 60) //more than 60 minutes since last update
+			{
+				writeFile(c, write, "UserGroupMembers");
+			}
+		}
 	}
 	public static String readUserGroupMembers(Context c)
 	{
 		String returnValue = readFile(c, "UserGroupMembers");
 		return returnValue;
 	}
-
+	
+	public static void writeUserAlbums(Context c, String write, boolean overwrite)
+	{
+		if(overwrite)
+		{
+			writeFile(c, write, "UserAlbums");
+		}
+		else
+		{
+			long lastUpdate = getTimeSinceLastModification("UserAlbums");
+			
+			if(lastUpdate / 1000 / 60 > 60) //more than 60 minutes since last update
+			{
+				writeFile(c, write, "UserAlbums");
+			}
+		}
+	}
+	public static String readUserAlbums(Context c)
+	{
+		String returnValue = readFile(c, "UserAlbums");
+		return returnValue;
+	}
+	public static void appendUserAlbums(Context c, String write)
+	{
+		String returnValue = readFile(c, "UserAlbums");
+		writeUserAlbums(c, returnValue + "\n" + write, true);
+	}
+	
+	public static void writeUserEvents(Context c, String write, boolean overwrite)
+	{
+		if(overwrite)
+		{
+			writeFile(c, write, "UserEvents");
+		}
+		else
+		{
+			long lastUpdate = getTimeSinceLastModification("UserEvents");
+			
+			if(lastUpdate / 1000 / 60 > 10) //more than 10 minutes since last update
+			{
+				writeFile(c, write, "UserEvents");
+			}
+		}
+	}
+	public static String readUserEvents(Context c)
+	{
+		String returnValue = readFile(c, "UserEvents");
+		return returnValue;
+	}
+	
 	public static void writeFile(Context c, String write, String fileName)
 	{
 		mContext = c;
@@ -145,5 +255,21 @@ public class LocalStorage
 		}
 
 		return data;		  
+	}
+
+	public static long getTimeSinceLastModification(String filename)
+	{
+		File file = new File(filename);
+		
+		long modified = 0;
+		
+		if(file.exists())
+		{
+			modified = file.lastModified();
+		}
+		
+		long current = Calendar.getInstance().getTimeInMillis();
+		
+		return current - modified;
 	}
 }
