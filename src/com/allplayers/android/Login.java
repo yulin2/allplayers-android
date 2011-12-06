@@ -31,7 +31,7 @@ public class Login extends Activity
 		String storedPassword = LocalStorage.readPassword(context);
 		String storedSecretKey = LocalStorage.readSecretKey(context);
 		
-		if(storedSecretKey.equals("") || storedSecretKey == null)
+		if(storedSecretKey == null || storedSecretKey.equals(""))
 		{
 			LocalStorage.writeSecretKey(context);
 			storedSecretKey = LocalStorage.readSecretKey(context);
