@@ -239,7 +239,7 @@ public class APCI_RestServices
 	
 	private static String makeAuthenticatedGet(String urlString)
 	{
-		if(!isLoggedIn())
+		if(!isLoggedIn() && !isLoggedIn())
 		{
 			return "You are not logged in";
 		}
@@ -272,7 +272,7 @@ public class APCI_RestServices
 	
 	private static String makeAuthenticatedDelete(String urlString)
 	{
-		if(!isLoggedIn())
+		if(!isLoggedIn() && !isLoggedIn())
 		{
 			return "You are not logged in";
 		}
@@ -299,7 +299,7 @@ public class APCI_RestServices
 	
 	private static String makeAuthenticatedPut(String urlString, String[][] contents)
 	{
-		if(!isLoggedIn())
+		if(!isLoggedIn() && !isLoggedIn())
 		{
 			return "You are not logged in";
 		}
@@ -390,6 +390,11 @@ public class APCI_RestServices
 			//If not logging in, set the cookies in the header
 			if(!urlString.equals("https://www.allplayers.com/?q=api/v1/rest/users/login.json"))
 			{
+				if(!isLoggedIn() && !isLoggedIn())
+				{
+					return "You are not logged in";
+				}
+				
 				connection.setRequestProperty("Cookie", chocolatechip_cookie + ";" + session_cookie);
 			}
 			
