@@ -7,15 +7,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
 public class PhotoDisplayActivity extends Activity implements OnTouchListener
 {
-	private float downYValue;
-	private Button previousPhotoButton;
-	private Button nextPhotoButton;
+	float  downYValue;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -24,21 +21,8 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.photodisplay);
 		
-		previousPhotoButton = (Button)findViewById(R.id.previousPhotoButton);
-		nextPhotoButton = (Button)findViewById(R.id.nextPhotoButton);
-		
 		PhotoData photo = Globals.currentPhoto;
 		String photoUrl = photo.getPhotoFull();
-
-		//Check for nulls during picture load up
-		if(Globals.currentPhoto.previousPhoto() == null)
-		{
-			previousPhotoButton.setVisibility(View.INVISIBLE);
-		}
-		if(Globals.currentPhoto.nextPhoto() == null)
-		{
-			nextPhotoButton.setVisibility(View.INVISIBLE);
-		}
 		
 		Bitmap image = Globals.getRemoteImage(photoUrl);
 		
@@ -46,65 +30,6 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener
 		imView.setImageBitmap(image);
 		
 		imView.setOnTouchListener((OnTouchListener) this);
-		
-		previousPhotoButton.setOnClickListener(new View.OnClickListener()
-		{
-			public void onClick(View v)
-			{
-				//when clicked change
-				if(Globals.currentPhoto.previousPhoto() != null)
-				{
-					Globals.currentPhoto = Globals.currentPhoto.previousPhoto();
-				}
-				
-				PhotoData photo = Globals.currentPhoto;
-				String photoUrl = photo.getPhotoFull();
-				Bitmap image = Globals.getRemoteImage(photoUrl);
-				
-				ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
-				imView.setImageBitmap(image);
-				
-				//Check for nulls after button trigger
-				if(Globals.currentPhoto.previousPhoto() == null)
-				{
-					previousPhotoButton.setVisibility(View.INVISIBLE);
-				}
-				if(Globals.currentPhoto.nextPhoto() != null)
-				{
-					nextPhotoButton.setVisibility(View.VISIBLE);
-				}
-			}
-		});
-		
-		nextPhotoButton.setOnClickListener(new View.OnClickListener()
-		{
-			public void onClick(View v)
-			{
-				//when clicked change
-				if(Globals.currentPhoto.nextPhoto() != null)
-				{
-					Globals.currentPhoto = Globals.currentPhoto.nextPhoto();
-				}
-				
-				PhotoData photo = Globals.currentPhoto;
-				String photoUrl = photo.getPhotoFull();
-				Bitmap image = Globals.getRemoteImage(photoUrl);
-				
-				ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
-				imView.setImageBitmap(image);
-				
-				//Check for nulls after button trigger
-				if(Globals.currentPhoto.nextPhoto() == null)
-				{
-					nextPhotoButton.setVisibility(View.INVISIBLE);
-				}
-				if(Globals.currentPhoto.previousPhoto() != null)
-				{
-					previousPhotoButton.setVisibility(View.VISIBLE);
-				}
-			}
-		});
-		
 	}
 	
 	public boolean onTouch(View arg0, MotionEvent arg1)
@@ -113,17 +38,17 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener
 		{
 			case MotionEvent.ACTION_DOWN:
 			{
-				downYValue = arg1.getY();
+				downYValue = arg1.getX();
 				break;
 			}
-
+			
 			case MotionEvent.ACTION_UP:
 			{
-				float currentY = arg1.getY();
+				float currentX = arg1.getX();
 				
-				if(downYValue > currentY)
+				if(downYValue < currentX)
 				{
-					ViewFlipper slider = (ViewFlipper) findViewById(R.id.Slider);
+					ViewFlipper slider = (ViewFlipper)findViewById(R.id.Slider);
 					slider.setAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
 					slider.setAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
 					
@@ -139,19 +64,9 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener
 					
 					ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
 					imView.setImageBitmap(image);
-					
-					//Check for nulls after slide trigger
-					if(Globals.currentPhoto.previousPhoto() == null)
-					{
-						previousPhotoButton.setVisibility(View.INVISIBLE);
-					}
-					if(Globals.currentPhoto.nextPhoto() != null)
-					{
-						nextPhotoButton.setVisibility(View.VISIBLE);
-					}
 				}
-
-				if(downYValue < currentY)
+				
+				if (downYValue > currentX)
 				{
 					ViewFlipper slider = (ViewFlipper) findViewById(R.id.Slider);
 					slider.setAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
@@ -169,22 +84,12 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener
 					
 					ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
 					imView.setImageBitmap(image);
-					
-					//Check for nulls after slide trigger
-					if(Globals.currentPhoto.nextPhoto() == null)
-					{
-						nextPhotoButton.setVisibility(View.INVISIBLE);
-					}
-					if(Globals.currentPhoto.previousPhoto() != null)
-					{
-						previousPhotoButton.setVisibility(View.VISIBLE);
-					}
 				}
 				
 				break;
 			}
 		}
-
+		
 		return true;
 	}
 }
