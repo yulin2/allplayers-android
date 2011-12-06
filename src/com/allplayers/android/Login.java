@@ -29,6 +29,15 @@ public class Login extends Activity
 		
 		String storedUser = LocalStorage.readUserName(context);
 		String storedPassword = LocalStorage.readPassword(context);
+		String storedSecretKey = LocalStorage.readSecretKey(context);
+		
+		if(storedSecretKey.equals("") || storedSecretKey == null)
+		{
+			LocalStorage.writeSecretKey(context);
+			storedSecretKey = LocalStorage.readSecretKey(context);
+		}
+		
+		Globals.secretKey = storedSecretKey;
 		
 		if(storedUser != null && !storedUser.equals("") && storedPassword != null && !storedPassword.equals(""))
 		{
@@ -64,7 +73,7 @@ public class Login extends Activity
 				String password = passwordEditText.getText().toString();;
 
 				BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-				textEncryptor.setPassword("C47F3F767ED97B9CDC73A3A35C0DFCF75FC4F9AF323EC40C8F9986FF9F40A61C");
+				textEncryptor.setPassword(LocalStorage.readSecretKey(context));
 				String encryptedPassword = textEncryptor.encrypt(password);
 				
 				LocalStorage.writeUserName(context, username);

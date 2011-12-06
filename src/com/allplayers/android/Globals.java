@@ -24,6 +24,8 @@ import java.util.ArrayList;
  */
 public class Globals
 {
+	public static String secretKey;
+	
 	public static GroupData currentGroup = new GroupData();
 	public static AlbumData currentAlbum = new AlbumData();
 	public static PhotoData currentPhoto = new PhotoData();
