@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
@@ -32,15 +33,15 @@ public class EventDisplayActivity extends MapActivity
 		
 		if(lat.equals("") || lon.equals(""))
 		{
-			point = new GeoPoint(0,0);
+			map.setVisibility(View.INVISIBLE);
 		}
 		else
 		{
+			map.setVisibility(View.VISIBLE);
 			point = new GeoPoint((int)(Float.parseFloat(lat) * 1000000), (int)(Float.parseFloat(lon) * 1000000));
+			mapController.setCenter(point);
+			map.setStreetView(true);
 		}
-		
-		mapController.setCenter(point);
-		map.setStreetView(true);
 	}
 
 	@Override
