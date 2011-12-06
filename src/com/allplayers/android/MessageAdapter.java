@@ -44,13 +44,13 @@ public class MessageAdapter extends BaseAdapter
 		body.setText(entry.getMessageBody());
 		
 		ImageView unreadIcon = (ImageView) convertView.findViewById(R.id.unreadIcon);
-		if((entry.getNew()).equals("1"))
+		if(Integer.parseInt(entry.getNew()) == 0)
 		{
-			unreadIcon.setAlpha(1);
+			unreadIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.placeholder));
 		}
-		else if((entry.getNew()).equals("0"))
+		else
 		{
-			unreadIcon.setAlpha(0);
+			unreadIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.unread_message_icon));
 		}
 
 		return convertView;
