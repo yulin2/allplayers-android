@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -41,6 +42,16 @@ public class MessageAdapter extends BaseAdapter
 
 		TextView body = (TextView) convertView.findViewById(R.id.body);
 		body.setText(entry.getMessageBody());
+		
+		ImageView unreadIcon = (ImageView) convertView.findViewById(R.id.unreadIcon);
+		if((entry.getNew()).equals("1"))
+		{
+			unreadIcon.setAlpha(1);
+		}
+		else if((entry.getNew()).equals("0"))
+		{
+			unreadIcon.setAlpha(0);
+		}
 
 		return convertView;
 	}

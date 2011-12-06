@@ -41,7 +41,6 @@ public class LocalStorage
 
 	public static void writeSecretKey(Context c)
 	{
-		//writeFile(c, write, "UserName");
 		Random random = new Random();
 		String alphabet = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		String uniqueKey = "";
@@ -49,7 +48,6 @@ public class LocalStorage
 		{
 			uniqueKey = uniqueKey + alphabet.charAt(random.nextInt(alphabet.length()));
 		}
-		System.out.println(uniqueKey);
 		writeFile(c, uniqueKey, "SecretKey");
 	}
 	public static String readSecretKey(Context c)
