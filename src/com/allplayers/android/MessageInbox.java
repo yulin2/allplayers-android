@@ -14,19 +14,18 @@ import java.util.List;
 
 public class MessageInbox extends Activity 
 {
-	
 	private ArrayList<MessageData> messageList;
 	private String jsonResult = "";
 	private boolean hasMessages = false;
-	
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) 
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.inboxlist);
 
-        try
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) 
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.inboxlist);
+
+		try
 		{
 			Bundle bundle = this.getIntent().getExtras();
 			jsonResult = bundle.getString("inboxJSON");
@@ -34,48 +33,46 @@ public class MessageInbox extends Activity
 		catch(Throwable t)
 		{
 		}
-		
+
 		if(jsonResult.equals(""))
 		{
 			jsonResult = APCI_RestServices.getUserInbox();
 		}
-        
-        MessagesMap messages = new MessagesMap(jsonResult);
+
+		MessagesMap messages = new MessagesMap(jsonResult);
 		messageList = messages.getMessageData();
 
 		Collections.reverse(messageList);
-		
-        ListView list = (ListView) findViewById(R.id.customListView);
-        list.setClickable(true);
-        
-        if(!messageList.isEmpty())
+
+		ListView list = (ListView) findViewById(R.id.customListView);
+		list.setClickable(true);
+
+		if(!messageList.isEmpty())
 		{
 			hasMessages = true;
 		}
-        else
+		else
 		{
 			hasMessages = false;
 		}
 
-        final List<MessageData> messageList2 = messageList;
-        MessageAdapter adapter = new MessageAdapter(this, messageList2);
+		final List<MessageData> messageList2 = messageList;
+		MessageAdapter adapter = new MessageAdapter(this, messageList2);
 
-        list.setOnItemClickListener(new OnItemClickListener()
-        {
+		list.setOnItemClickListener(new OnItemClickListener()
+		{
+			public void onItemClick(AdapterView<?> arg0, View view, int position, long index) 
+			{
+				if(hasMessages)
+				{
+					Globals.currentMessage = messageList.get(position);
 
-            public void onItemClick(AdapterView<?> arg0, View view, int position, long index) 
-            {
-            	if(hasMessages)
-        		{
-        			Globals.currentMessage = messageList.get(position);
+					Intent intent = new Intent(MessageInbox.this, MessageThread.class);
+					startActivity(intent);
+				}
+			}
+		});
 
-        			Intent intent = new Intent(MessageInbox.this, MessageThread.class);
-        			startActivity(intent);
-        		}
-            }
-        });
-
-        list.setAdapter(adapter);
-    }
-
+		list.setAdapter(adapter);
+	}
 }

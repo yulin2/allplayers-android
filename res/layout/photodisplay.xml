@@ -1,57 +1,23 @@
-<RelativeLayout
+<LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:id="@+id/relativeLayout1"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" 
   android:layout_centerHorizontal="true">
 
-	<Button
-	  android:id="@+id/previousPhotoButton"
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:layout_alignParentLeft="true"
-	  android:layout_alignParentRight="true"
-	  android:layout_alignParentTop="true" 
-	  android:text="Previous"
-	  android:textSize="14sp"
-	  android:textColor="#FFFFFF"
-	  android:background="#000000" 
-	  android:paddingLeft="5px"
-	  android:paddingRight="5px"
-	  android:paddingTop="10px"
-	  android:paddingBottom="10px"/>
-
 	<ViewFlipper
 	  android:id="@+id/Slider"
 	  android:layout_width="fill_parent"
 	  android:layout_height="fill_parent"
-	  android:layout_below="@+id/previousPhotoButton"
 	  android:layout_centerHorizontal="true">
 
 		<ImageView
 		  android:id="@+id/fullPhotoDisplay"
 		  android:layout_width="match_parent"
-		  android:layout_height="match_parent"		    
-		  android:layout_above="@+id/nextPhotoButton"
+		  android:layout_height="match_parent"
 		  android:layout_centerHorizontal="true"
 		  android:src="@drawable/allplayers_logo"/>
 
 	</ViewFlipper>
 
-	<Button
-	  android:id="@+id/nextPhotoButton"
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:layout_alignParentBottom="true"
-	  android:layout_alignParentLeft="true"
-	  android:layout_alignParentRight="true"
-	  android:text="Next" 
-	  android:textSize="14sp"       
-	  android:textColor="#FFFFFF"
-	  android:background="#000000"
-	  android:paddingLeft="5px"
-	  android:paddingRight="5px"
-	  android:paddingTop="10px"
-	  android:paddingBottom="10px"/>
-
-</RelativeLayout>
+</LinearLayout>

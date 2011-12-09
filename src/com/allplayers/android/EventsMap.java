@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class EventsMap
 {
-private ArrayList<EventData> events = new ArrayList<EventData>();
+	private ArrayList<EventData> events = new ArrayList<EventData>();
 	
 	public EventsMap(String jsonResult)
 	{

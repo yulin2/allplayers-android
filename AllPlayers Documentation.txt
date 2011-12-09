@@ -1,0 +1,238 @@
+AllPlayers.com Android "Documentation"
+
+AllPlayers-Android
+	src
+		com.allplayers.android
+		
+			AccountActivity.java
+				AccountActivity is currently unused.  It was intended to be the activity where the user could modify their profile information.
+				
+			AlbumAdapter.java
+				AlbumAdapter is used to map a custom view (albumlistitem.xml) into its parent ListView.
+				AlbumAdapter is what allows each item in the Album List to display a thumbnail of the image contained.
+				
+			AlbumData.java
+				AlbumData is used as a simple way to handle data within an Album's JSON object.  It features GET calls for each item within the JSON Object.
+				
+			AlbumPhotosActivity.java
+				AlbumPhotosActivity is everything you see after you pick an album in the "Photos" tab.  It shows a detailed list of each photo in an album.
+				
+			AlbumsMap.java
+				AlbumsMap reads in the JSON Array of photo albums, and then breaks it up into an ArrayList that contains individual JSON Objects from that JSON Array.
+				
+			APCI_RestServices.java
+				APCI_RestServices handles all calls to the AllPlayers.com rest services.  This includes but is not limited to handling cookie storage to make a session persist, making authenticated and unauthenticated POST, GET, and PUT.
+				
+			DataObject.java
+				DataObject abstracts away the getID() function for certain objects.  DataObject is only used in Globals.java.
+				
+			EventData.java
+				EventData is used as a simple way to handle data within an Event's JSON object.  It features GET calls for each item within the JSON Object.
+				
+			EventDisplayActivity.java
+				EventDisplayActivity is the detailed information screen that is seen when a user clicks on an individual event in the "Events" tab.
+				
+			EventsActivity.java
+				EventsActivity is what is seen when a user clicks on the "Events" tab.  It displays a list of all upcoming events in chronological order.
+				
+			EventsMap.java
+				EventsMap reads in the JSON Array of user events, and then breaks it up into an ArrayList that contains individual JSON Objects from that JSON Array.
+				
+			FindGroupsActivity.java
+				FindGroupsActivity is seen after the user runs a search for groups.  It shows a list of the results of the group search.
+				
+			Globals.java
+				Globals is used as a temporary cache for passing objects between activities.  Anything written in Globals is deleted when the user closes the application.
+				
+			GroupAlbumsActivity.
+				GroupAlbumsActivity is seen when the user goes to the "Groups" tab, selects a group, and selects "Group Photos."  It shows a list of albums for a particular group, with a thumbnail on each list item.
+				
+			GroupData.java
+				GroupData is used as a simple way to handle data within a Group's JSON object.  It features GET calls for each item within the JSON Object.
+				
+			GroupEventsActivity.java
+				GroupEventsActivity is seen when the user goes to the "Groups" tab, selects a group, and selects "Group Events."  It shows a list of upcoming events for the selected group.
+				
+			GroupMemberData.java
+				GroupMemberData is used as a simple way to handle data within a Group Member's JSON object.  It features GET calls for each item within the JSON Object.
+				
+			GroupMembersActivity.java
+				GroupMembersActivity is seen when the user goes to the "Groups" tab, selects a group, and selects "Group Members."  It shows a list of all users within the selected group.
+				
+			GroupMembersMap.java
+				GroupMembersMap reads in the JSON Array of members of a particular group, and then breaks it up into an ArrayList that contains individual JSON Objects from that JSON Array.
+				
+			GroupPageActivity.java
+				GroupPageActivity is seen when the user selects a group in the "Groups" tab.  It displays detailed information about the group, and allows the user to view other group details such as members, events, and photos.
+				
+			GroupsActivity.java
+				GroupsActivity is seen when the user first logs in, or when the user presses the "Groups" tab.  It is a listview that holds all of the groups the logged in user is a member of.
+				
+			GroupsMap.java
+				GroupsMap reads in the JSON Array of groups that the user is a member of, and then breaks it up into an ArrayList that contains individual JSON Objects from that JSON Array.
+				
+			LocalStorage.java
+				LocalStorage is used to cache JSON Objects until they need to be fetched from the server again.  Each object is stored in a file that exists in the dedicated storage location for the application.  The username, password, and en/decryption secret key are also stored using LocalStorage.
+				
+			Login.java
+				Login is the first screen presented to the user upon first logging in.  When the login activity begins, it first checks to see if there is a stored user name and password.  If there is, it will bypass the login screen, allowing the user to use the app more quickly.  If there is no stored user name and password, or if the stored values are invalid, the user will be presented a classic login dialog.  Upon logging in, the login activity is destroyed, and the user is dropped into the main screen.
+				
+			MainScreen.java
+				MainScreen is the holder for the tabbed layout.  It initializes the 4 tabs, and then each tab has its own activity loaded within.  The activites that start are "GroupsActivity", "MessageActivity", "PhotosActivity", and "EventsActivity".
+				
+			MessageActivity.java
+				MessageActivity is seen when the user clicks on the "Messages" tab.  It lets the user select to go the their inbox, or their sent box.  The inbox selection includes a count of unread messages for user convenience.
+				
+			MessageAdapter.java
+				MessageAdapter is used to map a custom view (inboxrow.xml) into its parent ListView.
+				MessageAdapter makes the list of messages show detailed information such as an unread icon, the sender's name, the date of last message, the subject, and some of the body.
+				
+			MessageData.java
+				MessageData is used as a simple way to handle data within a message JSON object.  It features GET calls for each item within the JSON Object.
+				
+			MessageInbox.java
+				MessageInbox is activity seen when the user selects the "Inbox" item from the "Messages" tab.  It passes the JSON object of messages to the MessageAdapter to allow the inbox list to be specially populated.
+				
+			MessageReply.java
+				MessageReply is seen when the user goes to the "Messages" tab, selects "Inbox", selects a message, and chooses to reply to that message.  It allows the user to type a message into a text area, and reply with that message.
+				
+			MessageSent.java
+				MessageSent is seen when the user goes to the "Messages" tab and selects "Sent".  It shows a list of sent messages, and when clicked will show a thread of sent messages.
+				
+			MessagesMap.java
+				MessagesMap reads in the JSON Object of user messages, and then breaks it up into an ArrayList that contains individual JSON Objects from that JSON Object.
+				
+			MessageThread.java
+				MessageThread is seen when the user goes into their inbox or sent box, and selects a message.  It shows a list of all messages sent between users.  The user can click these messages to see more detailed information, or the user can press the "Menu" hardkey and choose to mark the message as unread, or to reply to the message.
+				
+			MessageThreadData.java
+				MessageThreadData is used as a simple way to handle data within a thread of messages JSON object.  It features GET calls for each item within the JSON Object.
+				
+			MessageThreadMap.java
+				MessageThreadMap reads in the JSON Object of messages in a single thread, and then breaks it up into an ArrayList that contains individual JSON Objects from that JSON Object.
+				
+			MessageViewSingle.java
+				MessageViewSingle is seen when a user enters their inbox, selects a message to enter a thread of messages, then selects a message within the thread.  It shows detailed information about that particular message, and has a "Reply" button available.
+				
+			PhotoAdapter.java
+				PhotoAdapter is used to map a custom view (photolistitem.xml) into its parent ListView.
+				PhotoAdapter is what allows each item in the Photo List to display a thumbnail of the image contained.
+				
+			PhotoData.java
+				PhotoData is used as a simple way to handle data within a photo JSON object.  It features GET calls for each item within the JSON Object.
+				
+			PhotoDisplayActivity.java
+				PhotoDisplayActivity is the fullscreen view of a photo in the "Photos" tab.  It allows the user to see images very clearly, and the user can swipe their finger across the screen to move on to the next or move back to the previous photo.
+				
+			PhotosActivity.java
+				PhotosActivity is what is seen when the user selects the "Photos" tab.  It shows a list of photo albums that the user belongs to, with a thumbnail on the side.  When selected, the AlbumPhotosActivity is started, showing a list of each photo within the selected album.
+				
+			PhotosMap.java
+				PhotosMap reads in the JSON Object of user photos, and then breaks it up into an ArrayList that contains individual JSON Objects from that JSON Object.
+				
+			SeachGroupsListActivity.java
+				SearchGroupsListActivity is seen when the user presses the "Search" hardkey on their device while at the login screen, or in the "Groups" tab.  It allows the user to enter a group name, the zip code, and the distance from that zip code in miles, and it then searches for relevant groups using FindGroupsActivity
+				
+	lib
+	
+		jasypt-1.8.jar
+			Jasypt is a library used for encryption of the user's stored password.  It greatly simplifies the process of encryption/decryption.  More info availabe at: http://www.jasypt.org/
+			
+		json-lib-2.4-jdk15.jar
+			I think this is currently unused.
+			
+	res
+		drawable
+		
+			allplayers_logo.png
+				This is the logo that is currently seen on the Login page.
+				
+			allplayers_logo2.png
+				This is the old logo that we were using.  It isn't the correct colors for our Login page.
+				
+			calendar.png
+				Unused icon
+				
+			ic_tab_events.xml
+			ic_tab_groups.xml
+			ic_tab_messages.xml
+			ic_tab_photos.xml
+				Used to define whether or not an icon is selected or unselected.
+				
+			launch_icon.png
+				AllPlayers.com logo used as the application icon as seen on the user's home screen and app drawer.
+				
+			placeholder.png
+				A transparent square used to hide the unread mail notification when it shouldn't be seen.
+				
+			tab_events.png
+				"Events" tab icon.
+				
+			tab_groups.png
+				"Groups" tab icon.
+				
+			tab_messages.png
+				"Messages" tab icon.
+				
+			tab_photos.png
+				"Photos" tab icon.
+				
+			unread_message_icon.png
+				Icon displayed next to messages that have not been marked as read.
+				
+		layout
+			
+			albumlistitem.xml
+				The layout used to make the thumbnail picture appear in the list view.
+				
+			eventdetail.xml
+				The layout used by the detailed event information screen.
+				
+			findgroups.xml
+				The layout used by the "Find Groups" screen that can be accessed by pressing the "Search" hardkey at login or while in the "Groups" tab.
+				
+			grouppage.xml
+				The layout used to show detailed information about a particular group.
+				
+			inapplayout.xml
+				The layout used to specify the tabs.
+				
+			inboxlist.xml
+				A listview that will hold the user messages inbox.
+				
+			inboxrow.xml
+				The custom layout of each item in the inboxlist.  Shows the extra detailed information such as sender name, date of last message, subject of message, some of the message body.
+				
+			main.xml
+				The layout of the Login screen.
+				
+			photodisplay.xml
+				An ImageView within a ViewFlipper, allows the user to swipe their finger over images to change between previous and next.
+				
+			photolistitem.xml
+				Similar to albumlistitem, the layout allows thumbnails to be shown in the list of photos within an album.
+				
+			replymessage.xml
+				The layout of the "Reply" screen, shows some information at the top such as recipient's name and date of last message, and has a text area as well as a "Reply" button.
+				
+			viewsinglemessage.xml
+				The layout of the detailed message view.  Shows detailed information about a single message within a thread.
+				
+		menu
+			
+			logoutmenu.xml
+				The layout of the "Log Out" menu that pops up when the user is on the main tab page and presses their "Menu" hardkey.
+				
+			markreadmenu.xml
+				The layout of the "Mark as Unread","Reply" menu that pops up when the user is viewing a thread of messages and presses their "Menu" hardkey.
+				
+		values
+			
+			strings.xml
+				Generated by default by Android SDK.  Unused.
+				
+	AndroidManifest.xml
+		Specifies UI specific features such as hidden status bar, hidden title bar, and other options.  ALL activities must be added to AndroidManifest before attempting to run, or the app will force close.
+		
+	README
+		Detailed instructions on how to build and run the application.

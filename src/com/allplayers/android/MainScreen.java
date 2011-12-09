@@ -59,25 +59,25 @@ public class MainScreen extends TabActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.logoutmenu, menu);
-	    return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.logoutmenu, menu);
+		return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-	    switch (item.getItemId())
-	    {
-	    	case R.id.logOut:
+		switch (item.getItemId())
 		{
-	    		APCI_RestServices.logOut();
-	    		LocalStorage.writePassword(context, "");
-	    		startActivity(new Intent(MainScreen.this, Login.class));
-	    		finish();
-	    		return true;
+			case R.id.logOut:
+			{
+				APCI_RestServices.logOut();
+				LocalStorage.writePassword(context, "");
+				startActivity(new Intent(MainScreen.this, Login.class));
+				finish();
+				return true;
+			}
+			default: return super.onOptionsItemSelected(item);
 		}
-	    	default:	return super.onOptionsItemSelected(item);
-	    }
 	}
 }

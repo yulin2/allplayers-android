@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
+import java.util.Random;
 
 //Local Storage for JSON Strings
 //
@@ -38,6 +39,23 @@ public class LocalStorage
 	protected static Context mContext;
 	private static String writeString;
 
+	public static void writeSecretKey(Context c)
+	{
+		Random random = new Random();
+		String alphabet = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String uniqueKey = "";
+		for(int i = 0; i < 50; i++)
+		{
+			uniqueKey = uniqueKey + alphabet.charAt(random.nextInt(alphabet.length()));
+		}
+		writeFile(c, uniqueKey, "SecretKey");
+	}
+	public static String readSecretKey(Context c)
+	{
+		String returnValue = readFile(c, "SecretKey");
+		return returnValue;
+	}
+	
 	public static void writeUserName(Context c, String write)
 	{
 		writeFile(c, write, "UserName");
@@ -51,7 +69,7 @@ public class LocalStorage
 	public static void writePassword(Context c, String write)
 	{
 		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-		textEncryptor.setPassword("C47F3F767ED97B9CDC73A3A35C0DFCF75FC4F9AF323EC40C8F9986FF9F40A61C");
+		textEncryptor.setPassword(LocalStorage.readSecretKey(c));
 		String encryptedPassword = textEncryptor.encrypt(write);
 		
 		writeFile(c, encryptedPassword, "Password");

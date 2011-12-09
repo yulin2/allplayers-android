@@ -109,21 +109,21 @@ public class MessageThread extends ListActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-	    switch (item.getItemId())
-	    {
-	    	case R.id.reply:
+		switch (item.getItemId())
 		{
-	    		startActivity(new Intent(MessageThread.this, MessageReply.class));
-	    		return true;
-		}
-	    	case R.id.markRead:
-		{
+			case R.id.reply:
+			{
+				startActivity(new Intent(MessageThread.this, MessageReply.class));
+				return true;
+			}
+			case R.id.markRead:
+			{
 				APCI_RestServices.putMessage(threadIDInt, 1, "");
 				startActivity(new Intent(MessageThread.this, MessageInbox.class));
-		    	finish();
-		    	return true;
+				finish();
+				return true;
+			}
+			default: return super.onOptionsItemSelected(item);
 		}
-	    	default:	return super.onOptionsItemSelected(item);
-	    }
 	}
 }

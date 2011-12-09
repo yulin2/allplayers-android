@@ -36,56 +36,56 @@ public class GroupPageActivity extends Activity
 		
 		final Button groupMembersButton = (Button)findViewById(R.id.groupMembersButton);
 		groupMembersButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-            	startActivity(new Intent(GroupPageActivity.this, GroupMembersActivity.class));
-            }
-        });
-        
-        final Button groupEventsButton = (Button)findViewById(R.id.groupEventsButton);
-        groupEventsButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-            	startActivity(new Intent(GroupPageActivity.this, GroupEventsActivity.class));
-            }
-        });
-        
-        final Button groupPhotosButton = (Button)findViewById(R.id.groupPhotosButton);
-        groupPhotosButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-            	startActivity(new Intent(GroupPageActivity.this, GroupAlbumsActivity.class));
-            }
-        });
-        
-        if(isMember)
-        {
-    		groupMembersButton.setVisibility(View.VISIBLE);
-            groupEventsButton.setVisibility(View.VISIBLE);
-            groupPhotosButton.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-    		groupMembersButton.setVisibility(View.GONE);
-            groupEventsButton.setVisibility(View.GONE);
-            groupPhotosButton.setVisibility(View.GONE);
-        }
+		{
+			public void onClick(View v)
+			{
+				startActivity(new Intent(GroupPageActivity.this, GroupMembersActivity.class));
+			}
+		});
+
+		final Button groupEventsButton = (Button)findViewById(R.id.groupEventsButton);
+		groupEventsButton.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v)
+			{
+				startActivity(new Intent(GroupPageActivity.this, GroupEventsActivity.class));
+			}
+		});
+
+		final Button groupPhotosButton = (Button)findViewById(R.id.groupPhotosButton);
+		groupPhotosButton.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v)
+			{
+				startActivity(new Intent(GroupPageActivity.this, GroupAlbumsActivity.class));
+			}
+		});
+
+		if(isMember)
+		{
+			groupMembersButton.setVisibility(View.VISIBLE);
+			groupEventsButton.setVisibility(View.VISIBLE);
+			groupPhotosButton.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			groupMembersButton.setVisibility(View.GONE);
+			groupEventsButton.setVisibility(View.GONE);
+			groupPhotosButton.setVisibility(View.GONE);
+		}
 	}
-	
+
 	private boolean isMember(String group_uuid)
 	{
 		String jsonResult = APCI_RestServices.getGroupMembersByGroupId(group_uuid);
-		
+
 		//If a result is not returned, the user is not an authenticated group member
 		if(jsonResult.trim().equals("null") || jsonResult.trim().equals("error") || 
-				jsonResult.equals("You are not logged in"))
+			jsonResult.equals("You are not logged in"))
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 }

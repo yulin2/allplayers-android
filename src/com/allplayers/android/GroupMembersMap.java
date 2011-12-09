@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class GroupMembersMap
 {
-private ArrayList<GroupMemberData> members = new ArrayList<GroupMemberData>();
+	private ArrayList<GroupMemberData> members = new ArrayList<GroupMemberData>();
 	
 	public GroupMembersMap(String jsonResult)
 	{
