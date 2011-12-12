@@ -1,5 +1,9 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.MessageData;
+import com.allplayers.objects.MessageThreadData;
+import com.allplayers.rest.APCI_RestServices;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.allplayers.android;
+package com.allplayers.objects;
 
 public abstract class DataObject
 {

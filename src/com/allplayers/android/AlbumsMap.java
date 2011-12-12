@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.AlbumData;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 

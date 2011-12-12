@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.*;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 

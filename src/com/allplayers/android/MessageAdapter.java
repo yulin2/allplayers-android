@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import com.allplayers.objects.MessageData;
+
 public class MessageAdapter extends BaseAdapter
 {
 	private Context context;

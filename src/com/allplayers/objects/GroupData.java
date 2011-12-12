@@ -1,4 +1,4 @@
-package com.allplayers.android;
+package com.allplayers.objects;
 
 import org.json.JSONException;
 import org.json.JSONObject;

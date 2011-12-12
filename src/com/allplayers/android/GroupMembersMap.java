@@ -3,6 +3,8 @@ package com.allplayers.android;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.allplayers.objects.GroupMemberData;
+
 import java.util.ArrayList;
 
 public class GroupMembersMap

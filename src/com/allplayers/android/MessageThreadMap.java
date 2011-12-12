@@ -3,6 +3,8 @@ package com.allplayers.android;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.allplayers.objects.MessageThreadData;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 

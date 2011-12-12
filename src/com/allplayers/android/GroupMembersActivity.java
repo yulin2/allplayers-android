@@ -1,5 +1,8 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.GroupMemberData;
+import com.allplayers.rest.APCI_RestServices;
+
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;

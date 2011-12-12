@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.AlbumData;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;

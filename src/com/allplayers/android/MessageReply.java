@@ -1,5 +1,8 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.MessageData;
+import com.allplayers.rest.APCI_RestServices;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;

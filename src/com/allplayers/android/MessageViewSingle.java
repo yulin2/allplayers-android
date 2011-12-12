@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.MessageThreadData;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

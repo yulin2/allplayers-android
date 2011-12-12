@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import com.allplayers.rest.APCI_RestServices;
+
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;

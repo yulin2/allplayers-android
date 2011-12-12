@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.PhotoData;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;

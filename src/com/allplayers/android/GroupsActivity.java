@@ -1,5 +1,8 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.GroupData;
+import com.allplayers.rest.APCI_RestServices;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;

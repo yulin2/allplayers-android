@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.EventData;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;

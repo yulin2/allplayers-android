@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.PhotoData;
+
 import java.util.ArrayList;
 import java.util.List;
 

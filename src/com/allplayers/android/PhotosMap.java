@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.PhotoData;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
