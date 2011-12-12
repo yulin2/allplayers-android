@@ -2,7 +2,7 @@ package com.allplayers.android;
 
 import com.allplayers.objects.EventData;
 
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -35,7 +35,7 @@ public class EventsActivity extends ListActivity
 		}
 		else
 		{
-			jsonResult = APCI_RestServices.getUserEvents();
+			jsonResult = RestApiV1.getUserEvents();
 			LocalStorage.writeUserEvents(getBaseContext(), jsonResult, false);
 		}
 		

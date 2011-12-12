@@ -2,7 +2,7 @@ package com.allplayers.android;
 
 import com.allplayers.objects.MessageData;
 import com.allplayers.objects.MessageThreadData;
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -39,9 +39,9 @@ public class MessageThread extends ListActivity
 		String threadID = message.getThreadID();
 		threadIDInt = Integer.parseInt(threadID);
 		
-		APCI_RestServices.putMessage(threadIDInt, 0, "");
+		RestApiV1.putMessage(threadIDInt, 0, "");
 		
-		jsonResult = APCI_RestServices.getUserMessagesByThreadId(threadID);
+		jsonResult = RestApiV1.getUserMessagesByThreadId(threadID);
 
 		HashMap<String, String> map;
 		
@@ -122,7 +122,7 @@ public class MessageThread extends ListActivity
 			}
 			case R.id.markRead:
 			{
-				APCI_RestServices.putMessage(threadIDInt, 1, "");
+				RestApiV1.putMessage(threadIDInt, 1, "");
 				startActivity(new Intent(MessageThread.this, MessageInbox.class));
 				finish();
 				return true;

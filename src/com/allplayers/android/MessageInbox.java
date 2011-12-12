@@ -1,7 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.MessageData;
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,7 +39,7 @@ public class MessageInbox extends Activity
 
 		if(jsonResult.equals(""))
 		{
-			jsonResult = APCI_RestServices.getUserInbox();
+			jsonResult = RestApiV1.getUserInbox();
 		}
 
 		MessagesMap messages = new MessagesMap(jsonResult);

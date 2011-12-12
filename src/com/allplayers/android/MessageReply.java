@@ -1,7 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.MessageData;
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -56,7 +56,7 @@ public class MessageReply extends Activity
 			{
 				sendBody = bodyField.getText().toString();
 
-				APCI_RestServices.postMessage(Integer.parseInt(threadID), sendBody);
+				RestApiV1.postMessage(Integer.parseInt(threadID), sendBody);
 
 				Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
 				toast.show();

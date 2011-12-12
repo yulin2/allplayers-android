@@ -1,6 +1,6 @@
 package com.allplayers.android;
 
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
 import android.content.Context;
@@ -43,12 +43,12 @@ public class Login extends Activity
 		
 		if(storedUser != null && !storedUser.equals("") && storedPassword != null && !storedPassword.equals(""))
 		{
-			String result = APCI_RestServices.validateLogin(LocalStorage.readUserName(context), LocalStorage.readPassword(context));
+			String result = RestApiV1.validateLogin(LocalStorage.readUserName(context), LocalStorage.readPassword(context));
 
 			try
 			{
 				JSONObject jsonResult = new JSONObject(result);
-				APCI_RestServices.user_id = jsonResult.getJSONObject("user").getString("uuid");
+				RestApiV1.user_id = jsonResult.getJSONObject("user").getString("uuid");
 
 				Intent intent = new Intent(Login.this, MainScreen.class);
 				startActivity(intent);
@@ -81,12 +81,12 @@ public class Login extends Activity
 				LocalStorage.writeUserName(context, username);
 				LocalStorage.writePassword(context, password);
 				
-				String result = APCI_RestServices.validateLogin(username, encryptedPassword);
+				String result = RestApiV1.validateLogin(username, encryptedPassword);
 
 				try
 				{
 					JSONObject jsonResult = new JSONObject(result);
-					APCI_RestServices.user_id = jsonResult.getJSONObject("user").getString("uuid");
+					RestApiV1.user_id = jsonResult.getJSONObject("user").getString("uuid");
 
 					Intent intent = new Intent(Login.this, MainScreen.class);
 					startActivity(intent);

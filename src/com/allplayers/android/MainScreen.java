@@ -1,6 +1,6 @@
 package com.allplayers.android;
 
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.TabActivity;
 import android.content.Context;
@@ -73,7 +73,7 @@ public class MainScreen extends TabActivity
 		{
 			case R.id.logOut:
 			{
-				APCI_RestServices.logOut();
+				RestApiV1.logOut();
 				LocalStorage.writePassword(context, "");
 				startActivity(new Intent(MainScreen.this, Login.class));
 				finish();

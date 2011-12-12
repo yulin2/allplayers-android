@@ -1,7 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.GroupData;
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -35,7 +35,7 @@ public class GroupsActivity extends ListActivity
 			}
 			else
 			{
-				jsonResult = APCI_RestServices.getUserGroups();
+				jsonResult = RestApiV1.getUserGroups();
 				LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
 			}
 			

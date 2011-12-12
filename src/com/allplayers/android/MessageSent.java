@@ -1,7 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.MessageData;
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -34,7 +34,7 @@ public class MessageSent extends ListActivity
 		}
 		else
 		{
-			jsonResult = APCI_RestServices.getUserSentBox();
+			jsonResult = RestApiV1.getUserSentBox();
 			LocalStorage.writeSentbox(getBaseContext(), jsonResult, false);
 		}
 		

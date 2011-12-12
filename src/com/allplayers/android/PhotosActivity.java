@@ -2,7 +2,7 @@ package com.allplayers.android;
 
 import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.GroupData;
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -57,7 +57,7 @@ public class PhotosActivity  extends ListActivity
 			}
 			else
 			{
-				jsonResult = APCI_RestServices.getUserGroups();
+				jsonResult = RestApiV1.getUserGroups();
 				LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
 			}
 			
@@ -77,7 +77,7 @@ public class PhotosActivity  extends ListActivity
 				for(int i = 0; i < groupList.size(); i++)
 				{
 					group_uuid = groupList.get(i).getUUID();
-					jsonResult = APCI_RestServices.getGroupAlbumsByGroupId(group_uuid);
+					jsonResult = RestApiV1.getGroupAlbumsByGroupId(group_uuid);
 					LocalStorage.appendUserAlbums(getBaseContext(), jsonResult);
 					albums = new AlbumsMap(jsonResult);
 					newAlbumList = albums.getAlbumData();

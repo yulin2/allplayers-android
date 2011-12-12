@@ -1,7 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.GroupData;
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -80,7 +80,7 @@ public class GroupPageActivity extends Activity
 
 	private boolean isMember(String group_uuid)
 	{
-		String jsonResult = APCI_RestServices.getGroupMembersByGroupId(group_uuid);
+		String jsonResult = RestApiV1.getGroupMembersByGroupId(group_uuid);
 
 		//If a result is not returned, the user is not an authenticated group member
 		if(jsonResult.trim().equals("null") || jsonResult.trim().equals("error") || 

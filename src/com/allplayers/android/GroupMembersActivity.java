@@ -1,7 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.GroupMemberData;
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ public class GroupMembersActivity extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		String jsonResult = APCI_RestServices.getGroupMembersByGroupId(Globals.currentGroup.getUUID());
+		String jsonResult = RestApiV1.getGroupMembersByGroupId(Globals.currentGroup.getUUID());
 		
 		GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
 		membersList = groupMembers.getGroupMemberData();

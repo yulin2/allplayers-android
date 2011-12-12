@@ -1,7 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.GroupData;
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -28,7 +28,7 @@ public class SearchGroupsListActivity extends ListActivity
 		int zipcode = Globals.zipcode;
 		int distance = Globals.distance;
 		
-		String jsonResult = APCI_RestServices.searchGroups(search, zipcode, distance);
+		String jsonResult = RestApiV1.searchGroups(search, zipcode, distance);
 		
 		GroupsMap groups = new GroupsMap(jsonResult);
 		groupList = groups.getGroupData();

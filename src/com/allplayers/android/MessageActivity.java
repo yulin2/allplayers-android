@@ -1,7 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.MessageData;
-import com.allplayers.rest.APCI_RestServices;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -35,7 +35,7 @@ public class MessageActivity extends ListActivity
 		}
 		else
 		{
-			jsonResult = APCI_RestServices.getUserInbox();
+			jsonResult = RestApiV1.getUserInbox();
 			LocalStorage.writeInbox(getBaseContext(), jsonResult, false);
 		}
 		

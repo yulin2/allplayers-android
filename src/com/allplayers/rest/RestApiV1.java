@@ -17,12 +17,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-public class APCI_RestServices {
+public class RestApiV1 {
 	public static String user_id = "";
 	private static String session_cookie = ""; // first session cookie
 	private static String chocolatechip_cookie = ""; // second cookie
 
-	public APCI_RestServices() {
+	public RestApiV1() {
 		// Create a trust manager that does not validate certificate chains
 		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
