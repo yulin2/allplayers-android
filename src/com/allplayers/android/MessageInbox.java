@@ -1,5 +1,8 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.MessageData;
+import com.allplayers.rest.RestApiV1;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,67 +15,55 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MessageInbox extends Activity 
-{
-	private ArrayList<MessageData> messageList;
-	private String jsonResult = "";
-	private boolean hasMessages = false;
+public class MessageInbox extends Activity {
+    private ArrayList<MessageData> messageList;
+    private String jsonResult = "";
+    private boolean hasMessages = false;
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.inboxlist);
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.inboxlist);
 
-		try
-		{
-			Bundle bundle = this.getIntent().getExtras();
-			jsonResult = bundle.getString("inboxJSON");
-		}
-		catch(Throwable t)
-		{
-		}
+        try {
+            Bundle bundle = this.getIntent().getExtras();
+            jsonResult = bundle.getString("inboxJSON");
+        } catch (Throwable t) {
+        }
 
-		if(jsonResult.equals(""))
-		{
-			jsonResult = APCI_RestServices.getUserInbox();
-		}
+        if (jsonResult.equals("")) {
+            jsonResult = RestApiV1.getUserInbox();
+        }
 
-		MessagesMap messages = new MessagesMap(jsonResult);
-		messageList = messages.getMessageData();
+        MessagesMap messages = new MessagesMap(jsonResult);
+        messageList = messages.getMessageData();
 
-		Collections.reverse(messageList);
+        Collections.reverse(messageList);
 
-		ListView list = (ListView) findViewById(R.id.customListView);
-		list.setClickable(true);
+        ListView list = (ListView) findViewById(R.id.customListView);
+        list.setClickable(true);
 
-		if(!messageList.isEmpty())
-		{
-			hasMessages = true;
-		}
-		else
-		{
-			hasMessages = false;
-		}
+        if (!messageList.isEmpty()) {
+            hasMessages = true;
+        } else {
+            hasMessages = false;
+        }
 
-		final List<MessageData> messageList2 = messageList;
-		MessageAdapter adapter = new MessageAdapter(this, messageList2);
+        final List<MessageData> messageList2 = messageList;
+        MessageAdapter adapter = new MessageAdapter(this, messageList2);
 
-		list.setOnItemClickListener(new OnItemClickListener()
-		{
-			public void onItemClick(AdapterView<?> arg0, View view, int position, long index) 
-			{
-				if(hasMessages)
-				{
-					Globals.currentMessage = messageList.get(position);
+        list.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+                if (hasMessages) {
+                    Globals.currentMessage = messageList.get(position);
 
-					Intent intent = new Intent(MessageInbox.this, MessageThread.class);
-					startActivity(intent);
-				}
-			}
-		});
+                    Intent intent = new Intent(MessageInbox.this, MessageThread.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
-		list.setAdapter(adapter);
-	}
+        list.setAdapter(adapter);
+    }
 }

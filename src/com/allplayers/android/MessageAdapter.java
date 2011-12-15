@@ -10,64 +10,56 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class MessageAdapter extends BaseAdapter
-{
-	private Context context;
+import com.allplayers.objects.MessageData;
 
-	private List<MessageData> messageDataList;
+public class MessageAdapter extends BaseAdapter {
+    private Context context;
 
-	public MessageAdapter(Context context, List<MessageData> listMessageData) 
-	{
-		this.context = context;
-		messageDataList = listMessageData;
-	}
+    private List<MessageData> messageDataList;
 
-	public View getView(int position, View convertView, ViewGroup viewGroup) 
-	{
-		MessageData entry = messageDataList.get(position);
-		if (convertView == null) 
-		{
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					convertView = inflater.inflate(R.layout.inboxrow, null);
-		}
-		TextView senderName = (TextView) convertView.findViewById(R.id.senderName);
-		senderName.setText(entry.getLastSender());
+    public MessageAdapter(Context context, List<MessageData> listMessageData) {
+        this.context = context;
+        messageDataList = listMessageData;
+    }
 
-		TextView date = (TextView) convertView.findViewById(R.id.date);
-		date.setText(entry.getDateString());
+    public View getView(int position, View convertView, ViewGroup viewGroup) {
+        MessageData entry = messageDataList.get(position);
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context
+                                      .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.inboxrow, null);
+        }
+        TextView senderName = (TextView) convertView.findViewById(R.id.senderName);
+        senderName.setText(entry.getLastSender());
 
-		TextView subject = (TextView) convertView.findViewById(R.id.subject);
-		subject.setText(entry.getSubject());
+        TextView date = (TextView) convertView.findViewById(R.id.date);
+        date.setText(entry.getDateString());
 
-		TextView body = (TextView) convertView.findViewById(R.id.body);
-		body.setText(entry.getMessageBody());
-		
-		ImageView unreadIcon = (ImageView) convertView.findViewById(R.id.unreadIcon);
-		if(Integer.parseInt(entry.getNew()) == 0)
-		{
-			unreadIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.placeholder));
-		}
-		else
-		{
-			unreadIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.unread_message_icon));
-		}
+        TextView subject = (TextView) convertView.findViewById(R.id.subject);
+        subject.setText(entry.getSubject());
 
-		return convertView;
-	}
+        TextView body = (TextView) convertView.findViewById(R.id.body);
+        body.setText(entry.getMessageBody());
 
-	public int getCount() 
-	{
-		return messageDataList.size();
-	}
+        ImageView unreadIcon = (ImageView) convertView.findViewById(R.id.unreadIcon);
+        if (Integer.parseInt(entry.getNew()) == 0) {
+            unreadIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.placeholder));
+        } else {
+            unreadIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.unread_message_icon));
+        }
 
-	public Object getItem(int position) 
-	{
-		return messageDataList.get(position);
-	}
+        return convertView;
+    }
 
-	public long getItemId(int position) 
-	{
-		return position;
-	}
+    public int getCount() {
+        return messageDataList.size();
+    }
+
+    public Object getItem(int position) {
+        return messageDataList.get(position);
+    }
+
+    public long getItemId(int position) {
+        return position;
+    }
 }
