@@ -16,101 +16,87 @@ import org.jasypt.util.text.BasicTextEncryptor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Login extends Activity
-{
-	private Context context;
-	
-	/** called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-		
-		context = this.getBaseContext();
-		
-		String storedUser = LocalStorage.readUserName(context);
-		String storedPassword = LocalStorage.readPassword(context);
-		String storedSecretKey = LocalStorage.readSecretKey(context);
-		
-		if(storedSecretKey == null || storedSecretKey.equals(""))
-		{
-			LocalStorage.writeSecretKey(context);
-			storedSecretKey = LocalStorage.readSecretKey(context);
-		}
-		
-		Globals.secretKey = storedSecretKey;
-		
-		if(storedUser != null && !storedUser.equals("") && storedPassword != null && !storedPassword.equals(""))
-		{
-			String result = RestApiV1.validateLogin(LocalStorage.readUserName(context), LocalStorage.readPassword(context));
+public class Login extends Activity {
+    private Context context;
 
-			try
-			{
-				JSONObject jsonResult = new JSONObject(result);
-				RestApiV1.user_id = jsonResult.getJSONObject("user").getString("uuid");
+    /** called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
 
-				Intent intent = new Intent(Login.this, MainScreen.class);
-				startActivity(intent);
-				finish();
-			}
-			catch(JSONException ex)
-			{
-				System.err.println("Login/user_id/" + ex);
+        context = this.getBaseContext();
 
-				Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
-				invalidLogin.show();
-			}
-		}
-		
-		final Button button = (Button)findViewById(R.id.loginButton);
-		button.setOnClickListener(new View.OnClickListener()
-		{
-			public void onClick(View v)
-			{
-				EditText usernameEditText = (EditText)findViewById(R.id.usernameField);     
-				EditText passwordEditText = (EditText)findViewById(R.id.passwordField);
+        String storedUser = LocalStorage.readUserName(context);
+        String storedPassword = LocalStorage.readPassword(context);
+        String storedSecretKey = LocalStorage.readSecretKey(context);
 
-				String username = usernameEditText.getText().toString();
-				String password = passwordEditText.getText().toString();;
+        if (storedSecretKey == null || storedSecretKey.equals("")) {
+            LocalStorage.writeSecretKey(context);
+            storedSecretKey = LocalStorage.readSecretKey(context);
+        }
 
-				BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-				textEncryptor.setPassword(LocalStorage.readSecretKey(context));
-				String encryptedPassword = textEncryptor.encrypt(password);
-				
-				LocalStorage.writeUserName(context, username);
-				LocalStorage.writePassword(context, password);
-				
-				String result = RestApiV1.validateLogin(username, encryptedPassword);
+        Globals.secretKey = storedSecretKey;
 
-				try
-				{
-					JSONObject jsonResult = new JSONObject(result);
-					RestApiV1.user_id = jsonResult.getJSONObject("user").getString("uuid");
+        if (storedUser != null && !storedUser.equals("") && storedPassword != null && !storedPassword.equals("")) {
+            String result = RestApiV1.validateLogin(LocalStorage.readUserName(context), LocalStorage.readPassword(context));
 
-					Intent intent = new Intent(Login.this, MainScreen.class);
-					startActivity(intent);
-					finish();
-				}
-				catch(JSONException ex)
-				{
-					System.err.println("Login/user_id/" + ex);
+            try {
+                JSONObject jsonResult = new JSONObject(result);
+                RestApiV1.user_id = jsonResult.getJSONObject("user").getString("uuid");
 
-					Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
-					invalidLogin.show();
-				}
-			}
-		});
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU)
-		{
-			startActivity(new Intent(Login.this, FindGroupsActivity.class));
-		}
-		
-		return super.onKeyUp(keyCode, event);
-	}
+                Intent intent = new Intent(Login.this, MainScreen.class);
+                startActivity(intent);
+                finish();
+            } catch (JSONException ex) {
+                System.err.println("Login/user_id/" + ex);
+
+                Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
+                invalidLogin.show();
+            }
+        }
+
+        final Button button = (Button)findViewById(R.id.loginButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                EditText usernameEditText = (EditText)findViewById(R.id.usernameField);
+                EditText passwordEditText = (EditText)findViewById(R.id.passwordField);
+
+                String username = usernameEditText.getText().toString();
+                String password = passwordEditText.getText().toString();;
+
+                BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+                textEncryptor.setPassword(LocalStorage.readSecretKey(context));
+                String encryptedPassword = textEncryptor.encrypt(password);
+
+                LocalStorage.writeUserName(context, username);
+                LocalStorage.writePassword(context, password);
+
+                String result = RestApiV1.validateLogin(username, encryptedPassword);
+
+                try {
+                    JSONObject jsonResult = new JSONObject(result);
+                    RestApiV1.user_id = jsonResult.getJSONObject("user").getString("uuid");
+
+                    Intent intent = new Intent(Login.this, MainScreen.class);
+                    startActivity(intent);
+                    finish();
+                } catch (JSONException ex) {
+                    System.err.println("Login/user_id/" + ex);
+
+                    Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
+                    invalidLogin.show();
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU) {
+            startActivity(new Intent(Login.this, FindGroupsActivity.class));
+        }
+
+        return super.onKeyUp(keyCode, event);
+    }
 }
