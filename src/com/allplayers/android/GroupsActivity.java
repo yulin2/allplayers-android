@@ -22,23 +22,18 @@ public class GroupsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (Globals.groupList.isEmpty()) {
-            String jsonResult = "";
+        String jsonResult = "";
 
-            //check local storage
-            if (LocalStorage.getTimeSinceLastModification("UserGroups") / 1000 / 60 < 60) { //more recent than 60 minutes
-                jsonResult = LocalStorage.readUserGroups(getBaseContext());
-            } else {
-                jsonResult = RestApiV1.getUserGroups();
-                LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
-            }
-
-            GroupsMap groups = new GroupsMap(jsonResult);
-            groupList = groups.getGroupData();
-            Globals.groupList = groupList;
+        //check local storage
+        if (LocalStorage.getTimeSinceLastModification("UserGroups") / 1000 / 60 < 60) { //more recent than 60 minutes
+            jsonResult = LocalStorage.readUserGroups(getBaseContext());
         } else {
-            groupList = Globals.groupList;
+            jsonResult = RestApiV1.getUserGroups();
+            LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
         }
+
+        GroupsMap groups = new GroupsMap(jsonResult);
+        groupList = groups.getGroupData();
 
         String[] values;
 

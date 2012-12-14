@@ -51,9 +51,7 @@ public class PhotosActivity  extends ListActivity {
             }
 
             GroupsMap groups = new GroupsMap(jsonResult);
-            Globals.groupList = groups.getGroupData();
-
-            ArrayList<GroupData> groupList = Globals.groupList;
+            ArrayList<GroupData> groupList = groups.getGroupData();
 
             if (!groupList.isEmpty()) {
                 String group_uuid;

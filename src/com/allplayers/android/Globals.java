@@ -17,7 +17,6 @@ public class Globals {
 
     public static MessageThreadData currentMessageThread = new MessageThreadData();
 
-    public static ArrayList<GroupData> groupList = new ArrayList<GroupData>();
 
     public static String search = "";
     public static int zipcode = 00000;
@@ -38,7 +37,6 @@ public class Globals {
     }
 
     public static void reset() {
-        groupList = new ArrayList<GroupData>();
 
         search = "";
         zipcode = 00000;
