@@ -3,7 +3,6 @@ package com.allplayers.rest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.allplayers.android.Globals;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -33,6 +32,7 @@ public class RestApiV1 {
     public static String user_id = "";
     private static String session_cookie = ""; // first session cookie
     private static String chocolatechip_cookie = ""; // second cookie
+    public static String secretKey;
 
     public RestApiV1() {
         // Create a trust manager that does not validate certificate chains
@@ -127,7 +127,7 @@ public class RestApiV1 {
 
     public static String validateLogin(String username, String password) {
         BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-        textEncryptor.setPassword(Globals.secretKey);
+        textEncryptor.setPassword(RestApiV1.secretKey);
         String unencryptedPassword = textEncryptor.decrypt(password);
 
         String[][] contents = new String[2][2];

@@ -13,8 +13,6 @@ import java.util.ArrayList;
  * Replace global data with database.
  */
 public class Globals {
-    public static String secretKey;
-
     public static boolean isUnique(DataObject data, ArrayList <? extends DataObject > list) {
         if (!list.isEmpty()) {
             for (int i = 0; i < list.size(); i++) {

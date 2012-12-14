@@ -36,7 +36,7 @@ public class Login extends Activity {
             storedSecretKey = LocalStorage.readSecretKey(context);
         }
 
-        Globals.secretKey = storedSecretKey;
+        RestApiV1.secretKey = storedSecretKey;
 
         if (storedUser != null && !storedUser.equals("") && storedPassword != null && !storedPassword.equals("")) {
             String result = RestApiV1.validateLogin(LocalStorage.readUserName(context), LocalStorage.readPassword(context));
