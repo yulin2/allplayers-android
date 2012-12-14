@@ -33,7 +33,7 @@ public class MessageThread extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MessageData message = Globals.currentMessage;
+        MessageData message = (new Router(this)).getIntentMessage();
         String threadID = message.getThreadID();
         threadIDInt = Integer.parseInt(threadID);
 

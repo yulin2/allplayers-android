@@ -3,6 +3,7 @@ package com.allplayers.android;
 import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.EventData;
 import com.allplayers.objects.GroupData;
+import com.allplayers.objects.MessageData;
 import com.allplayers.objects.PhotoData;
 
 import android.app.Activity;
@@ -22,18 +23,14 @@ public class Router {
 
     private static final String EXTRA_GROUP = INTENT_PREFIX + "GROUP";
 
+    private static final String EXTRA_MESSAGE = INTENT_PREFIX + "MESSAGE";
+
     private static final String EXTRA_PHOTO = INTENT_PREFIX + "PHOTO";
 
     private Activity mActivity;
 
     public Router(Activity activity) {
         mActivity = activity;
-    }
-
-    private Intent getGroupIntent(Class<?> cls, GroupData group) {
-        Intent intent = new Intent(mActivity, cls);
-        intent.putExtra(EXTRA_GROUP, group);
-        return intent;
     }
 
     private Intent getAlbumIntent(Class<?> cls, AlbumData album) {
@@ -45,6 +42,18 @@ public class Router {
     public Intent getEventDisplayActivityIntent(EventData event) {
         Intent intent = new Intent(mActivity, EventDisplayActivity.class);
         intent.putExtra(EXTRA_EVENT, event);
+        return intent;
+    }
+
+    private Intent getGroupIntent(Class<?> cls, GroupData group) {
+        Intent intent = new Intent(mActivity, cls);
+        intent.putExtra(EXTRA_GROUP, group);
+        return intent;
+    }
+
+    private Intent getMessageIntent(Class<?> cls, MessageData message) {
+        Intent intent = new Intent(mActivity, cls);
+        intent.putExtra(EXTRA_MESSAGE, message);
         return intent;
     }
 
@@ -68,6 +77,14 @@ public class Router {
         return getGroupIntent(GroupPageActivity.class, group);
     }
 
+    public Intent getMessagReplyIntent(MessageData message) {
+        return getMessageIntent(MessageReply.class, message);
+    }
+
+    public Intent getMessageThreadIntent(MessageData message) {
+        return getMessageIntent(MessageThread.class, message);
+    }
+
     public Intent getPhotoDisplayActivityIntent(PhotoData photo) {
         Intent intent = new Intent(mActivity, PhotoDisplayActivity.class);
         intent.putExtra(EXTRA_PHOTO, photo);
@@ -84,6 +101,10 @@ public class Router {
 
     public GroupData getIntentGroup() {
         return (GroupData) mActivity.getIntent().getSerializableExtra(EXTRA_GROUP);
+    }
+
+    public MessageData getIntentMessage() {
+        return (MessageData) mActivity.getIntent().getSerializableExtra(EXTRA_MESSAGE);
     }
 
     public PhotoData getIntentPhoto() {

@@ -56,9 +56,8 @@ public class MessageInbox extends Activity {
         list.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
                 if (hasMessages) {
-                    Globals.currentMessage = messageList.get(position);
-
-                    Intent intent = new Intent(MessageInbox.this, MessageThread.class);
+                    // Go to the message thread.
+                    Intent intent = (new Router(MessageInbox.this)).getMessageThreadIntent(messageList.get(position));
                     startActivity(intent);
                 }
             }

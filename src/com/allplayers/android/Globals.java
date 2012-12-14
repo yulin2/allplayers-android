@@ -15,7 +15,6 @@ import java.util.ArrayList;
 public class Globals {
     public static String secretKey;
 
-    public static MessageData currentMessage = new MessageData();
     public static MessageThreadData currentMessageThread = new MessageThreadData();
 
     public static ArrayList<GroupData> groupList = new ArrayList<GroupData>();
@@ -39,8 +38,6 @@ public class Globals {
     }
 
     public static void reset() {
-        currentMessage = new MessageData();
-
         groupList = new ArrayList<GroupData>();
 
         search = "";
