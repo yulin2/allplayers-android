@@ -3,6 +3,7 @@ package com.allplayers.android;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.allplayers.objects.DataObject;
 import com.allplayers.objects.MessageThreadData;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class MessageThreadMap {
                 for (int i = 0; i < names.length; i++) {
                     MessageThreadData message = new MessageThreadData(jsonObject.getString(names[i]));
 
-                    if (Globals.isUnique(message, mail)) {
+                    if (message.isNew(mail)) {
                         mail.add(message);
                     }
                 }
