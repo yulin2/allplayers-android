@@ -27,7 +27,7 @@ public class GroupPageActivity extends Activity {
 
         boolean isMember = isMember(uuid);
 
-        Bitmap logo = Globals.getRemoteImage(logoURL);
+        Bitmap logo = RestApiV1.getRemoteImage(logoURL);
 
         ImageView imView = (ImageView)findViewById(R.id.groupLogo);
         imView.setImageBitmap(logo);

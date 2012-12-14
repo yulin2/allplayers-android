@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.PhotoData;
+import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -24,7 +25,7 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
         PhotoData photo = Globals.currentPhoto;
         String photoUrl = photo.getPhotoFull();
 
-        Bitmap image = Globals.getRemoteImage(photoUrl);
+        Bitmap image = RestApiV1.getRemoteImage(photoUrl);
 
         ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
         imView.setImageBitmap(image);
@@ -54,7 +55,7 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
                 PhotoData photo = Globals.currentPhoto;
                 String photoUrl = photo.getPhotoFull();
-                Bitmap image = Globals.getRemoteImage(photoUrl);
+                Bitmap image = RestApiV1.getRemoteImage(photoUrl);
 
                 ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
                 imView.setImageBitmap(image);
@@ -72,7 +73,7 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
                 PhotoData photo = Globals.currentPhoto;
                 String photoUrl = photo.getPhotoFull();
-                Bitmap image = Globals.getRemoteImage(photoUrl);
+                Bitmap image = RestApiV1.getRemoteImage(photoUrl);
 
                 ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
                 imView.setImageBitmap(image);

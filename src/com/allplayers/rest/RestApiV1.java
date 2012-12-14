@@ -1,14 +1,26 @@
 package com.allplayers.rest;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.allplayers.android.Globals;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -464,4 +476,27 @@ public class RestApiV1 {
         chocolatechip_cookie = "";
         Globals.reset();
     }
+
+	public static Bitmap getRemoteImage(final String urlString) {
+		try {
+			HttpGet httpRequest = null;
+
+			try {
+				httpRequest = new HttpGet(new URL(urlString).toURI());
+			} catch (URISyntaxException ex) {
+				System.err.println("Globals/getRemoteImage/" + ex);
+			}
+
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpResponse response = httpclient.execute(httpRequest);
+			HttpEntity entity = response.getEntity();
+			BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+			InputStream instream = bufHttpEntity.getContent();
+			return BitmapFactory.decodeStream(instream);
+		} catch (IOException ex) {
+			System.err.println("Globals/getRemoteImage/" + ex);
+		}
+
+		return null;
+	}
 }

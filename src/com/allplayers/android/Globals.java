@@ -2,20 +2,8 @@ package com.allplayers.android;
 
 import com.allplayers.objects.*;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /* This class is used for storing global variables across activities.
@@ -39,29 +27,6 @@ public class Globals {
     public static String search = "";
     public static int zipcode = 00000;
     public static int distance = 10;
-
-    public static Bitmap getRemoteImage(final String urlString) {
-        try {
-            HttpGet httpRequest = null;
-
-            try {
-                httpRequest = new HttpGet(new URL(urlString).toURI());
-            } catch (URISyntaxException ex) {
-                System.err.println("Globals/getRemoteImage/" + ex);
-            }
-
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpResponse response = (HttpResponse)httpclient.execute(httpRequest);
-            HttpEntity entity = response.getEntity();
-            BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
-            InputStream instream = bufHttpEntity.getContent();
-            return BitmapFactory.decodeStream(instream);
-        } catch (IOException ex) {
-            System.err.println("Globals/getRemoteImage/" + ex);
-        }
-
-        return null;
-    }
 
     public static boolean isUnique(DataObject data, ArrayList <? extends DataObject > list) {
         if (!list.isEmpty()) {
