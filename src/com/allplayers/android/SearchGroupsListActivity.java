@@ -22,11 +22,12 @@ public class SearchGroupsListActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String search = Globals.search;
-        int zipcode = Globals.zipcode;
-        int distance = Globals.distance;
+        Router router = new Router(this);
+        String query = router.getIntentSearchQuery();
+        int zipcode = router.getIntentSearchZipcode();
+        int distance = router.getIntentSearchDistance();
 
-        String jsonResult = RestApiV1.searchGroups(search, zipcode, distance);
+        String jsonResult = RestApiV1.searchGroups(query, zipcode, distance);
 
         GroupsMap groups = new GroupsMap(jsonResult);
         groupList = groups.getGroupData();

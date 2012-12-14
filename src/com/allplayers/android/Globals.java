@@ -15,10 +15,6 @@ import java.util.ArrayList;
 public class Globals {
     public static String secretKey;
 
-    public static String search = "";
-    public static int zipcode = 00000;
-    public static int distance = 10;
-
     public static boolean isUnique(DataObject data, ArrayList <? extends DataObject > list) {
         if (!list.isEmpty()) {
             for (int i = 0; i < list.size(); i++) {
@@ -33,10 +29,4 @@ public class Globals {
         return true;
     }
 
-    public static void reset() {
-
-        search = "";
-        zipcode = 00000;
-        distance = 10;
-    }
 }

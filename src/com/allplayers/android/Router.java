@@ -9,6 +9,7 @@ import com.allplayers.objects.PhotoData;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 
 /**
  * Handle routing the user and data between activities by type matching
@@ -29,6 +30,12 @@ public class Router {
     private static final String EXTRA_MESSAGE_THREAD = INTENT_PREFIX + "MESSAGE_THREAD";
 
     private static final String EXTRA_PHOTO = INTENT_PREFIX + "PHOTO";
+
+    private static final String EXTRA_GROUP_SEARCH_QUERY = INTENT_PREFIX + "GROUP_SEARCH_QUERY";
+
+    private static final String EXTRA_GROUP_SEARCH_ZIPCODE = INTENT_PREFIX + "GROUP_SEARCH_ZIPCODE";
+
+    private static final String EXTRA_GROUP_SEARCH_DISTANCE = INTENT_PREFIX + "GROUP_SEARCH_DISTANCE";
 
     private Activity mActivity;
 
@@ -100,6 +107,14 @@ public class Router {
         return intent;
     }
 
+    public Intent getSearchGroupsListActivityIntent(String query, int zipcode, int distance) {
+        Intent intent = new Intent(mActivity, SearchGroupsListActivity.class);
+        intent.putExtra(EXTRA_GROUP_SEARCH_QUERY, query);
+        intent.putExtra(EXTRA_GROUP_SEARCH_ZIPCODE, zipcode);
+        intent.putExtra(EXTRA_GROUP_SEARCH_DISTANCE, distance);
+        return intent;
+    }
+
     public AlbumData getIntentAlbum() {
         return (AlbumData) mActivity.getIntent().getSerializableExtra(EXTRA_ALBUM);
     }
@@ -122,5 +137,17 @@ public class Router {
 
     public PhotoData getIntentPhoto() {
         return (PhotoData) mActivity.getIntent().getSerializableExtra(EXTRA_PHOTO);
+    }
+
+    public String getIntentSearchQuery() {
+        return mActivity.getIntent().getExtras().getString(EXTRA_GROUP_SEARCH_QUERY);
+    }
+
+    public int getIntentSearchZipcode() {
+        return mActivity.getIntent().getExtras().getInt(EXTRA_GROUP_SEARCH_ZIPCODE);
+    }
+
+    public int getIntentSearchDistance() {
+        return mActivity.getIntent().getExtras().getInt(EXTRA_GROUP_SEARCH_DISTANCE);
     }
 }

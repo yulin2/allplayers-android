@@ -474,7 +474,6 @@ public class RestApiV1 {
         user_id = "";
         session_cookie = "";
         chocolatechip_cookie = "";
-        Globals.reset();
     }
 
 	public static Bitmap getRemoteImage(final String urlString) {
