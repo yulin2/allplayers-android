@@ -65,10 +65,8 @@ public class GroupsActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (hasGroups) {
-            Globals.currentGroup = groupList.get(position);
-
             //Display the group page for the selected group
-            Intent intent = new Intent(GroupsActivity.this, GroupPageActivity.class);
+            Intent intent = (new Router(this)).getGroupPageActivityIntent(groupList.get(position));
             startActivity(intent);
         }
     }

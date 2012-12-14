@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.EventData;
+import com.allplayers.objects.GroupData;
 
 import com.allplayers.rest.RestApiV1;
 
@@ -24,7 +25,8 @@ public class GroupEventsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String jsonResult = RestApiV1.getGroupEventsByGroupId(Globals.currentGroup.getUUID());
+        GroupData group = (new Router(this)).getIntentGroup();
+        String jsonResult = RestApiV1.getGroupEventsByGroupId(group.getUUID());
 
         EventsMap events = new EventsMap(jsonResult);
         eventsList = events.getEventData();
