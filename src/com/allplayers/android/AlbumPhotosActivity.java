@@ -44,10 +44,8 @@ public class AlbumPhotosActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (!photoList.isEmpty()) {
-            Globals.currentPhoto = photoList.get(position);
-
-            //Display the group page for the selected group
-            Intent intent = new Intent(AlbumPhotosActivity.this, PhotoDisplayActivity.class);
+            // Display the group page for the selected group
+            Intent intent = (new Router(this)).getPhotoDisplayActivityIntent(photoList.get(position));
             startActivity(intent);
         }
     }
