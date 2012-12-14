@@ -1,11 +1,11 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.AlbumData;
+import com.allplayers.objects.EventData;
 import com.allplayers.objects.GroupData;
 import com.allplayers.objects.PhotoData;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 
 /**
@@ -17,6 +17,8 @@ public class Router {
     private static final String INTENT_PREFIX = "com.allplayers.android.";
 
     private static final String EXTRA_ALBUM = INTENT_PREFIX + "ALBUM";
+
+    private static final String EXTRA_EVENT = INTENT_PREFIX + "EVENT";
 
     private static final String EXTRA_GROUP = INTENT_PREFIX + "GROUP";
 
@@ -37,6 +39,12 @@ public class Router {
     private Intent getAlbumIntent(Class<?> cls, AlbumData album) {
         Intent intent = new Intent(mActivity, cls);
         intent.putExtra(EXTRA_ALBUM, album);
+        return intent;
+    }
+
+    public Intent getEventDisplayActivityIntent(EventData event) {
+        Intent intent = new Intent(mActivity, EventDisplayActivity.class);
+        intent.putExtra(EXTRA_EVENT, event);
         return intent;
     }
 
@@ -68,6 +76,10 @@ public class Router {
 
     public AlbumData getIntentAlbum() {
         return (AlbumData) mActivity.getIntent().getSerializableExtra(EXTRA_ALBUM);
+    }
+
+    public EventData getIntentEvent() {
+        return (EventData) mActivity.getIntent().getSerializableExtra(EXTRA_EVENT);
     }
 
     public GroupData getIntentGroup() {

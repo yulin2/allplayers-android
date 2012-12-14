@@ -15,7 +15,6 @@ import java.util.ArrayList;
 public class Globals {
     public static String secretKey;
 
-    public static EventData currentEvent = new EventData();
     public static MessageData currentMessage = new MessageData();
     public static MessageThreadData currentMessageThread = new MessageThreadData();
 
@@ -40,7 +39,6 @@ public class Globals {
     }
 
     public static void reset() {
-        currentEvent = new EventData();
         currentMessage = new MessageData();
 
         groupList = new ArrayList<GroupData>();

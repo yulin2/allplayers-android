@@ -64,8 +64,8 @@ public class GroupEventsActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (hasEvents) {
-            Globals.currentEvent = eventsList.get(position);
-            Intent intent = new Intent(GroupEventsActivity.this, EventDisplayActivity.class); //Can be used to display map or full details
+            // Can be used to display map or full details.
+            Intent intent = (new Router(this)).getEventDisplayActivityIntent(eventsList.get(position));
             startActivity(intent);
         }
     }
