@@ -45,10 +45,8 @@ public class GroupAlbumsActivity  extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (!albumList.isEmpty()) {
-            Globals.currentAlbum = albumList.get(position);
-
             //Display the photos for the selected album
-            Intent intent = new Intent(GroupAlbumsActivity.this, AlbumPhotosActivity.class);
+            Intent intent = (new Router(this)).getAlbumPhotosActivityIntent(albumList.get(position));
             startActivity(intent);
         }
     }

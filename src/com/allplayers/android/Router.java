@@ -1,5 +1,6 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.GroupData;
 
 import android.app.Activity;
@@ -14,6 +15,8 @@ public class Router {
 
     public static final String INTENT_PREFIX = "com.allplayers.android.";
 
+    public static final String EXTRA_ALBUM = INTENT_PREFIX + "ALBUM";
+
     public static final String EXTRA_GROUP = INTENT_PREFIX + "GROUP";
 
     private Activity mActivity;
@@ -26,6 +29,16 @@ public class Router {
         Intent intent = new Intent(mActivity, cls);
         intent.putExtra(EXTRA_GROUP, group);
         return intent;
+    }
+
+    private Intent getAlbumIntent(Class<?> cls, AlbumData album) {
+        Intent intent = new Intent(mActivity, cls);
+        intent.putExtra(EXTRA_ALBUM, album);
+        return intent;
+    }
+
+    public Intent getAlbumPhotosActivityIntent(AlbumData album) {
+        return getAlbumIntent(AlbumPhotosActivity.class, album);
     }
 
     public Intent getGroupAlbumsActivityIntent(GroupData group) {
@@ -42,6 +55,10 @@ public class Router {
 
     public Intent getGroupPageActivityIntent(GroupData group) {
         return getGroupIntent(GroupPageActivity.class, group);
+    }
+
+    public AlbumData getIntentAlbum() {
+        return (AlbumData) mActivity.getIntent().getSerializableExtra(EXTRA_ALBUM);
     }
 
     public GroupData getIntentGroup() {

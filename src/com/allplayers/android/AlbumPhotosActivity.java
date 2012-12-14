@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.rest.RestApiV1;
+import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.PhotoData;
 
 import android.app.ListActivity;
@@ -20,7 +21,8 @@ public class AlbumPhotosActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String jsonResult = RestApiV1.getAlbumPhotosByAlbumId(Globals.currentAlbum.getUUID());
+        AlbumData album = (new Router(this)).getIntentAlbum();
+        String jsonResult = RestApiV1.getAlbumPhotosByAlbumId(album.getUUID());
         PhotosMap photos = new PhotosMap(jsonResult);
         photoList = photos.getPhotoData();
 

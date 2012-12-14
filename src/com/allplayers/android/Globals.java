@@ -15,7 +15,6 @@ import java.util.ArrayList;
 public class Globals {
     public static String secretKey;
 
-    public static AlbumData currentAlbum = new AlbumData();
     public static PhotoData currentPhoto = new PhotoData();
     public static EventData currentEvent = new EventData();
     public static MessageData currentMessage = new MessageData();
@@ -42,7 +41,6 @@ public class Globals {
     }
 
     public static void reset() {
-        currentAlbum = new AlbumData();
         currentPhoto = new PhotoData();
         currentEvent = new EventData();
         currentMessage = new MessageData();
