@@ -22,32 +22,29 @@ public class Router {
         mActivity = activity;
     }
 
-    public Intent getGroupAlbumsActivityIntent(GroupData group) {
-        Intent intent = new Intent(mActivity, GroupEventsActivity.class);
+    private Intent getGroupIntent(Class<?> cls, GroupData group) {
+        Intent intent = new Intent(mActivity, cls);
         intent.putExtra(EXTRA_GROUP, group);
         return intent;
+    }
+
+    public Intent getGroupAlbumsActivityIntent(GroupData group) {
+        return getGroupIntent(GroupAlbumsActivity.class, group);
     }
 
     public Intent getGroupEventsActivityIntent(GroupData group) {
-        Intent intent = new Intent(mActivity, GroupEventsActivity.class);
-        intent.putExtra(EXTRA_GROUP, group);
-        return intent;
+        return getGroupIntent(GroupEventsActivity.class, group);
     }
 
     public Intent getGroupMembersActivityIntent(GroupData group) {
-        Intent intent = new Intent(mActivity, GroupMembersActivity.class);
-        intent.putExtra(EXTRA_GROUP, group);
-        return intent;
+        return getGroupIntent(GroupMembersActivity.class, group);
     }
 
     public Intent getGroupPageActivityIntent(GroupData group) {
-        Intent intent = new Intent(mActivity, GroupPageActivity.class);
-        intent.putExtra(EXTRA_GROUP, group);
-        return intent;
+        return getGroupIntent(GroupPageActivity.class, group);
     }
 
     public GroupData getIntentGroup() {
-        return (GroupData) mActivity.getIntent().getSerializableExtra(
-                EXTRA_GROUP);
+        return (GroupData) mActivity.getIntent().getSerializableExtra(EXTRA_GROUP);
     }
 }
