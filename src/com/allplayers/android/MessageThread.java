@@ -26,6 +26,7 @@ public class MessageThread extends ListActivity {
     private int threadIDInt;
 
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+    private MessageData message;
 
     /** Called when the activity is first created. */
     @SuppressWarnings( { "unchecked", "rawtypes" })
@@ -33,7 +34,7 @@ public class MessageThread extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MessageData message = (new Router(this)).getIntentMessage();
+        message = (new Router(this)).getIntentMessage();
         String threadID = message.getThreadID();
         threadIDInt = Integer.parseInt(threadID);
 
@@ -85,9 +86,7 @@ public class MessageThread extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (hasMessages) {
-            Globals.currentMessageThread = messageThreadList.get(position);
-
-            Intent intent = new Intent(MessageThread.this, MessageViewSingle.class);
+            Intent intent = (new Router(this)).getMessageViewSingleIntent(message, messageThreadList.get(position));
             startActivity(intent);
         }
     }
@@ -103,7 +102,8 @@ public class MessageThread extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.reply: {
-            startActivity(new Intent(MessageThread.this, MessageReply.class));
+            Intent intent = (new Router(this)).getMessagReplyIntent(message);
+            startActivity(intent);
             return true;
         }
         case R.id.markRead: {

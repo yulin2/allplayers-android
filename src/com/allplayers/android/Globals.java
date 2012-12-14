@@ -15,9 +15,6 @@ import java.util.ArrayList;
 public class Globals {
     public static String secretKey;
 
-    public static MessageThreadData currentMessageThread = new MessageThreadData();
-
-
     public static String search = "";
     public static int zipcode = 00000;
     public static int distance = 10;

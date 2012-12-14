@@ -4,6 +4,7 @@ import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.EventData;
 import com.allplayers.objects.GroupData;
 import com.allplayers.objects.MessageData;
+import com.allplayers.objects.MessageThreadData;
 import com.allplayers.objects.PhotoData;
 
 import android.app.Activity;
@@ -24,6 +25,8 @@ public class Router {
     private static final String EXTRA_GROUP = INTENT_PREFIX + "GROUP";
 
     private static final String EXTRA_MESSAGE = INTENT_PREFIX + "MESSAGE";
+
+    private static final String EXTRA_MESSAGE_THREAD = INTENT_PREFIX + "MESSAGE_THREAD";
 
     private static final String EXTRA_PHOTO = INTENT_PREFIX + "PHOTO";
 
@@ -85,6 +88,12 @@ public class Router {
         return getMessageIntent(MessageThread.class, message);
     }
 
+    public Intent getMessageViewSingleIntent(MessageData message, MessageThreadData thread) {
+        Intent intent = getMessageIntent(MessageViewSingle.class, message);
+        intent.putExtra(EXTRA_MESSAGE_THREAD, thread);
+        return intent;
+    }
+
     public Intent getPhotoDisplayActivityIntent(PhotoData photo) {
         Intent intent = new Intent(mActivity, PhotoDisplayActivity.class);
         intent.putExtra(EXTRA_PHOTO, photo);
@@ -105,6 +114,10 @@ public class Router {
 
     public MessageData getIntentMessage() {
         return (MessageData) mActivity.getIntent().getSerializableExtra(EXTRA_MESSAGE);
+    }
+
+    public MessageThreadData getIntentMessageThread() {
+        return (MessageThreadData) mActivity.getIntent().getSerializableExtra(EXTRA_MESSAGE_THREAD);
     }
 
     public PhotoData getIntentPhoto() {
