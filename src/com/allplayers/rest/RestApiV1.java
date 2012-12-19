@@ -476,26 +476,31 @@ public class RestApiV1 {
         chocolatechip_cookie = "";
     }
 
-	public static Bitmap getRemoteImage(final String urlString) {
-		try {
-			HttpGet httpRequest = null;
+    /**
+     * Get a Bitmap from a URL.
+     *
+     * TODO - Use same connection and cookies as REST requests.
+     */
+    public static Bitmap getRemoteImage(final String urlString) {
+        try {
+            HttpGet httpRequest = null;
 
-			try {
-				httpRequest = new HttpGet(new URL(urlString).toURI());
-			} catch (URISyntaxException ex) {
-				System.err.println("Globals/getRemoteImage/" + ex);
-			}
+            try {
+                httpRequest = new HttpGet(new URL(urlString).toURI());
+            } catch (URISyntaxException ex) {
+                System.err.println("RestApiV1/getRemoteImage/" + ex);
+            }
 
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpResponse response = httpclient.execute(httpRequest);
-			HttpEntity entity = response.getEntity();
-			BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
-			InputStream instream = bufHttpEntity.getContent();
-			return BitmapFactory.decodeStream(instream);
-		} catch (IOException ex) {
-			System.err.println("Globals/getRemoteImage/" + ex);
-		}
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpResponse response = httpclient.execute(httpRequest);
+            HttpEntity entity = response.getEntity();
+            BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+            InputStream instream = bufHttpEntity.getContent();
+            return BitmapFactory.decodeStream(instream);
+        } catch (IOException ex) {
+            System.err.println("RestApiV1/getRemoteImage/" + ex);
+        }
 
-		return null;
-	}
+        return null;
+    }
 }
