@@ -2,15 +2,12 @@ package com.allplayers.rest;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.jasypt.util.text.BasicTextEncryptor;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -18,6 +15,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -29,10 +28,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class RestApiV1 {
-    public static String user_id = "";
-    private static String session_cookie = ""; // first session cookie
-    private static String chocolatechip_cookie = ""; // second cookie
-    public static String secretKey;
+    private static String sCurrentUserUUID;
+    private static CookieHandler sCookieHandler = new CookieManager();
 
     public RestApiV1() {
         // Create a trust manager that does not validate certificate chains
@@ -60,10 +57,13 @@ public class RestApiV1 {
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/constructor/" + ex);
         }
+
+        // Install CookieHandler
+        CookieHandler.setDefault(sCookieHandler);
     }
 
     public static boolean isLoggedIn() {
-        if (user_id.equals("")) {
+        if (sCurrentUserUUID.equals("")) {
             return false;
         }
 
@@ -71,13 +71,10 @@ public class RestApiV1 {
         try {
             URL url = new URL(
                 "https://www.allplayers.com/?q=api/v1/rest/users/"
-                + user_id + ".json");
+                + sCurrentUserUUID + ".json");
             HttpURLConnection connection = (HttpURLConnection) url
                                            .openConnection();
             connection.setDoInput(true);
-            connection.addRequestProperty("Cookie", chocolatechip_cookie + ";"
-                                          + session_cookie);
-            // connection.addRequestProperty("Cookie", session_cookie);
             InputStream inStream = connection.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(
                         inStream));
@@ -93,7 +90,7 @@ public class RestApiV1 {
             JSONObject jsonResult = new JSONObject(result);
             String retrievedUUID = jsonResult.getString("uuid");
 
-            if (retrievedUUID.equals(user_id)) {
+            if (retrievedUUID.equals(sCurrentUserUUID)) {
                 return true;
             } else { // This case should not occur
                 return false;
@@ -125,16 +122,12 @@ public class RestApiV1 {
                    + threadId + ".json", contents);
     }
 
-    public static String validateLogin(String username, String password) {
-        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-        textEncryptor.setPassword(RestApiV1.secretKey);
-        String unencryptedPassword = textEncryptor.decrypt(password);
-
+    public String validateLogin(String username, String password) {
         String[][] contents = new String[2][2];
         contents[0][0] = "username";
         contents[0][1] = username;
         contents[1][0] = "password";
-        contents[1][1] = unencryptedPassword;
+        contents[1][1] = password;
 
         return makeAuthenticatedPost(
                    "https://www.allplayers.com/?q=api/v1/rest/users/login.json",
@@ -166,22 +159,22 @@ public class RestApiV1 {
 
     public static String getUserGroups() {
         return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
-                                    + user_id + "/groups.json");
+                                    + sCurrentUserUUID + "/groups.json");
     }
 
     public static String getUserFriends() {
         return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
-                                    + user_id + "/friends.json");
+                                    + sCurrentUserUUID + "/friends.json");
     }
 
     public static String getUserGroupmates() {
         return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
-                                    + user_id + "/groupmates.json");
+                                    + sCurrentUserUUID + "/groupmates.json");
     }
 
     public static String getUserEvents() {
         return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
-                                    + user_id + "/events/upcoming.json");
+                                    + sCurrentUserUUID + "/events/upcoming.json");
     }
 
     public static String getGroupInformationByGroupId(String group_uuid) {
@@ -247,7 +240,7 @@ public class RestApiV1 {
     }
 
     private static String makeAuthenticatedGet(String urlString) {
-        if (!isLoggedIn() && !isLoggedIn()) {
+        if (!isLoggedIn()) {
             return "You are not logged in";
         }
 
@@ -257,8 +250,6 @@ public class RestApiV1 {
             HttpURLConnection connection = (HttpURLConnection) url
                                            .openConnection();
             connection.setDoInput(true);
-            connection.setRequestProperty("Cookie", chocolatechip_cookie + ";"
-                                          + session_cookie);
             InputStream inStream = connection.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(
                         inStream));
@@ -277,7 +268,7 @@ public class RestApiV1 {
     }
 
     private static String makeAuthenticatedDelete(String urlString) {
-        if (!isLoggedIn() && !isLoggedIn()) {
+        if (!isLoggedIn()) {
             return "You are not logged in";
         }
 
@@ -291,8 +282,6 @@ public class RestApiV1 {
             connection.setRequestMethod("DELETE");
             connection.setRequestProperty("Content-Type",
                                           "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Cookie", chocolatechip_cookie + ";"
-                                          + session_cookie);
 
             return "done";
         } catch (Exception ex) {
@@ -304,7 +293,7 @@ public class RestApiV1 {
 
     private static String makeAuthenticatedPut(String urlString,
             String[][] contents) {
-        if (!isLoggedIn() && !isLoggedIn()) {
+        if (!isLoggedIn()) {
             return "You are not logged in";
         }
 
@@ -319,8 +308,6 @@ public class RestApiV1 {
             connection.setRequestMethod("PUT");
             connection.setRequestProperty("Content-Type",
                                           "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Cookie", chocolatechip_cookie + ";"
-                                          + session_cookie);
 
             DataOutputStream printout = new DataOutputStream(
                 connection.getOutputStream());
@@ -391,12 +378,9 @@ public class RestApiV1 {
             // If not logging in, set the cookies in the header
             if (!urlString
                     .equals("https://www.allplayers.com/?q=api/v1/rest/users/login.json")) {
-                if (!isLoggedIn() && !isLoggedIn()) {
+                if (!isLoggedIn()) {
                     return "You are not logged in";
                 }
-
-                connection.setRequestProperty("Cookie", chocolatechip_cookie
-                                              + ";" + session_cookie);
             }
 
             DataOutputStream printout = new DataOutputStream(
@@ -431,12 +415,6 @@ public class RestApiV1 {
 
             input.close();
 
-            // If logging in, store the cookies for future use
-            if (urlString
-                    .equals("https://www.allplayers.com/?q=api/v1/rest/users/login.json")) {
-                setCookies(connection);
-            }
-
             return result;
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/makeAuthenticatedPost/" + ex);
@@ -444,36 +422,9 @@ public class RestApiV1 {
         }
     }
 
-    private static void setCookies(HttpURLConnection connection) {
-        // Get all cookies from the server
-        for (int i = 0;; i++) {
-            String headerName = connection.getHeaderFieldKey(i);
-            String headerValue = connection.getHeaderField(i);
-
-            if (headerName == null && headerValue == null) {
-                // No more headers
-                break;
-            }
-
-            if ("Set-Cookie".equalsIgnoreCase(headerName)) {
-                // parse cookie
-                String[] fields = headerValue.split(";\\s*");
-
-                String cookieValue = fields[0];
-
-                if (cookieValue.startsWith("SESS")) {
-                    session_cookie = cookieValue;
-                } else if (cookieValue.startsWith("CHOCOLATECHIP")) {
-                    chocolatechip_cookie = cookieValue;
-                }
-            }
-        }
-    }
-
     public static void logOut() {
-        user_id = "";
-        session_cookie = "";
-        chocolatechip_cookie = "";
+        ((CookieManager) CookieHandler.getDefault()).getCookieStore().removeAll();
+        sCurrentUserUUID = "";
     }
 
     /**
@@ -502,5 +453,9 @@ public class RestApiV1 {
         }
 
         return null;
+    }
+
+    public void setCurrentUserUUID(String uuid) {
+        sCurrentUserUUID = uuid;
     }
 }
