@@ -59,7 +59,7 @@ public class MainScreen extends TabActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.logoutmenu, menu);
+        inflater.inflate(R.menu.defaultmenu, menu);
         return true;
     }
 
@@ -71,6 +71,10 @@ public class MainScreen extends TabActivity {
             LocalStorage.writePassword(context, "");
             startActivity(new Intent(MainScreen.this, Login.class));
             finish();
+            return true;
+        }
+        case R.id.search: {
+            startActivity(new Intent(MainScreen.this, FindGroupsActivity.class));
             return true;
         }
         default:

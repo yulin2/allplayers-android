@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.AlbumData;
+import com.allplayers.rest.RestApiV1;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -61,7 +62,7 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         String imageURL = album.getCoverPhoto();
 
         if (!imageURL.trim().equals("")) {
-            Bitmap bitmap = Globals.getRemoteImage(album.getCoverPhoto());
+            Bitmap bitmap = RestApiV1.getRemoteImage(album.getCoverPhoto());
             albumCoverPhoto.setImageBitmap(bitmap);
         }
 

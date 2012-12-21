@@ -19,7 +19,7 @@ public class GroupPageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grouppage);
 
-        GroupData group = Globals.currentGroup;
+        final GroupData group = (new Router(this)).getIntentGroup();
         String title = group.getTitle();
         String desc = group.getDescription();
         String logoURL = group.getLogo();
@@ -27,7 +27,7 @@ public class GroupPageActivity extends Activity {
 
         boolean isMember = isMember(uuid);
 
-        Bitmap logo = Globals.getRemoteImage(logoURL);
+        Bitmap logo = RestApiV1.getRemoteImage(logoURL);
 
         ImageView imView = (ImageView)findViewById(R.id.groupLogo);
         imView.setImageBitmap(logo);
@@ -38,21 +38,24 @@ public class GroupPageActivity extends Activity {
         final Button groupMembersButton = (Button)findViewById(R.id.groupMembersButton);
         groupMembersButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(GroupPageActivity.this, GroupMembersActivity.class));
+                Intent intent = (new Router(GroupPageActivity.this)).getGroupMembersActivityIntent(group);
+                startActivity(intent);
             }
         });
 
         final Button groupEventsButton = (Button)findViewById(R.id.groupEventsButton);
         groupEventsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(GroupPageActivity.this, GroupEventsActivity.class));
+                Intent intent = (new Router(GroupPageActivity.this)).getGroupEventsActivityIntent(group);
+                startActivity(intent);
             }
         });
 
         final Button groupPhotosButton = (Button)findViewById(R.id.groupPhotosButton);
         groupPhotosButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(GroupPageActivity.this, GroupAlbumsActivity.class));
+                Intent intent = (new Router(GroupPageActivity.this)).getGroupAlbumsActivityIntent(group);
+                startActivity(intent);
             }
         });
 

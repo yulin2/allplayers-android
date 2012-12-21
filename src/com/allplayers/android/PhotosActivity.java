@@ -51,9 +51,7 @@ public class PhotosActivity  extends ListActivity {
             }
 
             GroupsMap groups = new GroupsMap(jsonResult);
-            Globals.groupList = groups.getGroupData();
-
-            ArrayList<GroupData> groupList = Globals.groupList;
+            ArrayList<GroupData> groupList = groups.getGroupData();
 
             if (!groupList.isEmpty()) {
                 String group_uuid;
@@ -95,10 +93,8 @@ public class PhotosActivity  extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (!albumList.isEmpty()) {
-            Globals.currentAlbum = albumList.get(position);
-
-            //Display the photos for the selected album
-            Intent intent = new Intent(PhotosActivity.this, AlbumPhotosActivity.class);
+            // Display the photos for the selected album
+            Intent intent = (new Router(this)).getAlbumPhotosActivityIntent(albumList.get(position));
             startActivity(intent);
         }
     }

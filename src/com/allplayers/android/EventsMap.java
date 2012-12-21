@@ -1,5 +1,6 @@
 package com.allplayers.android;
 
+import com.allplayers.objects.DataObject;
 import com.allplayers.objects.EventData;
 
 import org.json.JSONArray;
@@ -18,7 +19,7 @@ public class EventsMap {
                 for (int i = 0; i < jsonResult.length(); i++) {
                     EventData event = new EventData(jsonArray.getString(i));
 
-                    if (Globals.isUnique(event, events)) {
+                    if (event.isNew(events)) {
                         events.add(event);
                     }
                 }

@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.PhotoData;
+import com.allplayers.rest.RestApiV1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class PhotoAdapter extends ArrayAdapter<PhotoData> {
         String imageURL = photo.getPhotoThumb();
 
         if (!imageURL.trim().equals("")) {
-            Bitmap bitmap = Globals.getRemoteImage(photo.getPhotoThumb());
+            Bitmap bitmap = RestApiV1.getRemoteImage(photo.getPhotoThumb());
             photoImage.setImageBitmap(bitmap);
         }
 

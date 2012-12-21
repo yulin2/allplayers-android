@@ -11,6 +11,9 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 
+/**
+ * TODO If maps are missing on device image, this activity will crash.
+ */
 public class EventDisplayActivity extends MapActivity {
     /** Called when the activity is first created. */
     @Override
@@ -21,7 +24,7 @@ public class EventDisplayActivity extends MapActivity {
         TextView eventInfo = (TextView)findViewById(R.id.eventInfo);
         MapView map = (MapView)findViewById(R.id.eventMap);
 
-        EventData event = Globals.currentEvent;
+        EventData event =  (new Router(this)).getIntentEvent();
         eventInfo.setText("Event Title: " + event.getTitle() + "\nDescription: " +
                           event.getDescription() + "\nCategory: " + event.getCategory() +
                           "\nStart: " + event.getStartDateString() + "\nEnd: " + event.getEndDateString());

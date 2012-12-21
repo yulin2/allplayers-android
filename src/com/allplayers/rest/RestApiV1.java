@@ -1,14 +1,25 @@
 package com.allplayers.rest;
 
-import com.allplayers.android.Globals;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -21,6 +32,7 @@ public class RestApiV1 {
     public static String user_id = "";
     private static String session_cookie = ""; // first session cookie
     private static String chocolatechip_cookie = ""; // second cookie
+    public static String secretKey;
 
     public RestApiV1() {
         // Create a trust manager that does not validate certificate chains
@@ -115,7 +127,7 @@ public class RestApiV1 {
 
     public static String validateLogin(String username, String password) {
         BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-        textEncryptor.setPassword(Globals.secretKey);
+        textEncryptor.setPassword(RestApiV1.secretKey);
         String unencryptedPassword = textEncryptor.decrypt(password);
 
         String[][] contents = new String[2][2];
@@ -462,6 +474,33 @@ public class RestApiV1 {
         user_id = "";
         session_cookie = "";
         chocolatechip_cookie = "";
-        Globals.reset();
+    }
+
+    /**
+     * Get a Bitmap from a URL.
+     *
+     * TODO - Use same connection and cookies as REST requests.
+     */
+    public static Bitmap getRemoteImage(final String urlString) {
+        try {
+            HttpGet httpRequest = null;
+
+            try {
+                httpRequest = new HttpGet(new URL(urlString).toURI());
+            } catch (URISyntaxException ex) {
+                System.err.println("RestApiV1/getRemoteImage/" + ex);
+            }
+
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpResponse response = httpclient.execute(httpRequest);
+            HttpEntity entity = response.getEntity();
+            BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+            InputStream instream = bufHttpEntity.getContent();
+            return BitmapFactory.decodeStream(instream);
+        } catch (IOException ex) {
+            System.err.println("RestApiV1/getRemoteImage/" + ex);
+        }
+
+        return null;
     }
 }

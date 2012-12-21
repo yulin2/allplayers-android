@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.EventData;
+import com.allplayers.objects.GroupData;
 
 import com.allplayers.rest.RestApiV1;
 
@@ -24,7 +25,8 @@ public class GroupEventsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String jsonResult = RestApiV1.getGroupEventsByGroupId(Globals.currentGroup.getUUID());
+        GroupData group = (new Router(this)).getIntentGroup();
+        String jsonResult = RestApiV1.getGroupEventsByGroupId(group.getUUID());
 
         EventsMap events = new EventsMap(jsonResult);
         eventsList = events.getEventData();
@@ -62,8 +64,8 @@ public class GroupEventsActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (hasEvents) {
-            Globals.currentEvent = eventsList.get(position);
-            Intent intent = new Intent(GroupEventsActivity.this, EventDisplayActivity.class); //Can be used to display map or full details
+            // Can be used to display map or full details.
+            Intent intent = (new Router(this)).getEventDisplayActivityIntent(eventsList.get(position));
             startActivity(intent);
         }
     }

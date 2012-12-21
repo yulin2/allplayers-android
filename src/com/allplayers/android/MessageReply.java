@@ -22,7 +22,7 @@ public class MessageReply extends Activity {
 
         setContentView(R.layout.replymessage);
 
-        MessageData message = Globals.currentMessage;
+        MessageData message = (new Router(this)).getIntentMessage();
 
         String subject = message.getSubject();
         String sender = message.getLastSender();

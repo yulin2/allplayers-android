@@ -18,7 +18,7 @@ public class FindGroupsActivity extends Activity {
         logOnButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 EditText searchEditText = (EditText)findViewById(R.id.searchGroupsField);
-                String search = searchEditText.getText().toString().trim();
+                String query = searchEditText.getText().toString().trim();
                 EditText zipcodeEditText = (EditText)findViewById(R.id.searchGroupsZipcodeField);
                 String zipcodeString = zipcodeEditText.getText().toString().trim();
                 EditText distanceEditText = (EditText)findViewById(R.id.searchGroupsDistanceField);
@@ -47,11 +47,8 @@ public class FindGroupsActivity extends Activity {
                     }
                 }
 
-                Globals.search = search;
-                Globals.zipcode = zipcode;
-                Globals.distance = distance;
 
-                Intent intent = new Intent(FindGroupsActivity.this, SearchGroupsListActivity.class);
+                Intent intent = (new Router(FindGroupsActivity.this)).getSearchGroupsListActivityIntent(query, zipcode, distance);
                 startActivity(intent);
             }
         });

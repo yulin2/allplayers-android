@@ -3,6 +3,7 @@ package com.allplayers.android;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.allplayers.objects.DataObject;
 import com.allplayers.objects.GroupMemberData;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class GroupMembersMap {
                 for (int i = 0; i < jsonResult.length(); i++) {
                     GroupMemberData member = new GroupMemberData(jsonArray.getString(i));
 
-                    if (Globals.isUnique(member, members)) {
+                    if (member.isNew(members)) {
                         members.add(member);
                     }
                 }

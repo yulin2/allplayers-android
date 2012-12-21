@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import com.allplayers.objects.AlbumData;
+import com.allplayers.objects.GroupData;
 
 import com.allplayers.rest.RestApiV1;
 
@@ -21,7 +22,9 @@ public class GroupAlbumsActivity  extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String jsonResult = RestApiV1.getGroupAlbumsByGroupId(Globals.currentGroup.getUUID());
+        GroupData group = (new Router(this)).getIntentGroup();
+
+        String jsonResult = RestApiV1.getGroupAlbumsByGroupId(group.getUUID());
         AlbumsMap albums = new AlbumsMap(jsonResult);
         albumList = albums.getAlbumData();
 
@@ -42,10 +45,8 @@ public class GroupAlbumsActivity  extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (!albumList.isEmpty()) {
-            Globals.currentAlbum = albumList.get(position);
-
             //Display the photos for the selected album
-            Intent intent = new Intent(GroupAlbumsActivity.this, AlbumPhotosActivity.class);
+            Intent intent = (new Router(this)).getAlbumPhotosActivityIntent(albumList.get(position));
             startActivity(intent);
         }
     }

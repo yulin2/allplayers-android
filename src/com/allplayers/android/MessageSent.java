@@ -69,12 +69,8 @@ public class MessageSent extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (hasMessages) {
-            //Globals.currentMessage = jsonResult;
-            //Globals.currentMessageLoc = position;
-            Globals.currentMessage = messageList.get(position);
-
-            //Intent intent = new Intent(MessageSent.this, MessageViewSingle.class);
-            Intent intent = new Intent(MessageSent.this, MessageThread.class);
+            // Go to the message thread.
+            Intent intent = (new Router(MessageSent.this)).getMessageThreadIntent(messageList.get(position));
             startActivity(intent);
         }
     }
