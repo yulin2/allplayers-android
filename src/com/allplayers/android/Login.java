@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -16,18 +17,30 @@ import org.jasypt.util.text.BasicTextEncryptor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Initial activity to handle login.
+ *
+ * TODO: Replace with AccountManager, loading only as required when an account
+ * is needed.
+ */
 public class Login extends Activity {
+
     private Context context;
 
-    /** called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        // TODO - Temporarily disable StrictMode because all networking is
+        // currently in the UI thread. Android now throws exceptions when
+        // obvious IO happens in the UI thread, which is a good thing.
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
         context = this.getBaseContext();
 
-        String storedUser = LocalStorage.readUserName(context);
+        String storedEmail = LocalStorage.readUserName(context);
         String storedPassword = LocalStorage.readPassword(context);
         String storedSecretKey = LocalStorage.readSecretKey(context);
 
@@ -36,24 +49,11 @@ public class Login extends Activity {
             storedSecretKey = LocalStorage.readSecretKey(context);
         }
 
-        RestApiV1.secretKey = storedSecretKey;
-
-        if (storedUser != null && !storedUser.equals("") && storedPassword != null && !storedPassword.equals("")) {
-            String result = RestApiV1.validateLogin(LocalStorage.readUserName(context), LocalStorage.readPassword(context));
-
-            try {
-                JSONObject jsonResult = new JSONObject(result);
-                RestApiV1.user_id = jsonResult.getJSONObject("user").getString("uuid");
-
-                Intent intent = new Intent(Login.this, MainScreen.class);
-                startActivity(intent);
-                finish();
-            } catch (JSONException ex) {
-                System.err.println("Login/user_id/" + ex);
-
-                Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
-                invalidLogin.show();
-            }
+        if (storedEmail != null && !storedEmail.equals("") && storedPassword != null && !storedPassword.equals("")) {
+            BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+            textEncryptor.setPassword(storedSecretKey);
+            String unencryptedPassword = textEncryptor.decrypt(storedPassword);
+            attemptLogin(storedEmail, unencryptedPassword);
         }
 
         final Button button = (Button)findViewById(R.id.loginButton);
@@ -62,31 +62,17 @@ public class Login extends Activity {
                 EditText usernameEditText = (EditText)findViewById(R.id.usernameField);
                 EditText passwordEditText = (EditText)findViewById(R.id.passwordField);
 
-                String username = usernameEditText.getText().toString();
+                String email= usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();;
 
                 BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
                 textEncryptor.setPassword(LocalStorage.readSecretKey(context));
                 String encryptedPassword = textEncryptor.encrypt(password);
 
-                LocalStorage.writeUserName(context, username);
-                LocalStorage.writePassword(context, password);
+                LocalStorage.writeUserName(context, email);
+                LocalStorage.writePassword(context, encryptedPassword);
 
-                String result = RestApiV1.validateLogin(username, encryptedPassword);
-
-                try {
-                    JSONObject jsonResult = new JSONObject(result);
-                    RestApiV1.user_id = jsonResult.getJSONObject("user").getString("uuid");
-
-                    Intent intent = new Intent(Login.this, MainScreen.class);
-                    startActivity(intent);
-                    finish();
-                } catch (JSONException ex) {
-                    System.err.println("Login/user_id/" + ex);
-
-                    Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
-                    invalidLogin.show();
-                }
+                Login.this.attemptLogin(email, password);
             }
         });
     }
@@ -98,5 +84,26 @@ public class Login extends Activity {
         }
 
         return super.onKeyUp(keyCode, event);
+    }
+
+    /**
+     * Attempt a login, if successful, move to the real main activity.
+     */
+    private void attemptLogin(String email, String password) {
+        RestApiV1 client = new RestApiV1();
+        try {
+            String result = client.validateLogin(email, password);
+            JSONObject jsonResult = new JSONObject(result);
+            client.setCurrentUserUUID(jsonResult.getJSONObject("user").getString("uuid"));
+
+            Intent intent = new Intent(Login.this, MainScreen.class);
+            startActivity(intent);
+            finish();
+        } catch (JSONException ex) {
+            System.err.println("Login/user_id/" + ex);
+
+            Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
+            invalidLogin.show();
+        }
     }
 }
