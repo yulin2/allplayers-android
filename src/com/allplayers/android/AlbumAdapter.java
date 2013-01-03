@@ -68,8 +68,6 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         String imageURL = album.getCoverPhoto();
 
         if (!imageURL.trim().equals("")) {
-//            Bitmap bitmap = RestApiV1.getRemoteImage(album.getCoverPhoto());
-//            albumCoverPhoto.setImageBitmap(bitmap);
         	  CoverPhotoTask helper = new CoverPhotoTask();
         	  helper.execute(album);
         }
@@ -84,7 +82,6 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         	return RestApiV1.getRemoteImage(albums[0].getCoverPhoto());
         }
          
-        
  		protected void onPostExecute(Bitmap bitmap) {
  			albumCoverPhoto.setImageBitmap(bitmap);
      	}
