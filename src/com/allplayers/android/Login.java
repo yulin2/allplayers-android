@@ -98,17 +98,17 @@ public class Login extends Activity {
 	            Intent intent = new Intent(Login.this, MainScreen.class);
 	            startActivity(intent);
 	            finish();
-	            return false;
+	            return true;
 	        } catch (JSONException ex) {
 	            System.err.println("Login/user_id/" + ex);
-	            return true;
+	            return false;
 	        }
         }
        
-		protected void onPostExecute(Boolean exc) {
-			if(exc) {
+		protected void onPostExecute(Boolean ex) {
+			if(!ex) {
 				Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
-	        invalidLogin.show();
+				invalidLogin.show();
 			}
     	}
     }
