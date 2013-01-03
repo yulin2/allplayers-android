@@ -6,12 +6,17 @@ import com.allplayers.objects.PhotoData;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AlbumPhotosActivity extends ListActivity {
     private ArrayList<PhotoData> photoList;
@@ -20,12 +25,9 @@ public class AlbumPhotosActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         AlbumData album = (new Router(this)).getIntentAlbum();
-        String jsonResult = RestApiV1.getAlbumPhotosByAlbumId(album.getUUID());
-        PhotosMap photos = new PhotosMap(jsonResult);
-        photoList = photos.getPhotoData();
-
+        AlbumDataTask helper = new AlbumDataTask();
+        helper.execute(album);
         if (photoList.isEmpty()) {
             String[] values = new String[] {"no photos to display"};
 
@@ -49,4 +51,16 @@ public class AlbumPhotosActivity extends ListActivity {
             startActivity(intent);
         }
     }
+    
+    public class AlbumDataTask extends AsyncTask<AlbumData, Void, String> {
+    	 
+        protected String doInBackground(AlbumData... album) {
+        	return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID());
+        }
+        
+ 		protected void onPostExecute(String jsonResult) {
+ 			PhotosMap photos = new PhotosMap(jsonResult);
+ 	        photoList = photos.getPhotoData();
+     	}
+     }
 }
