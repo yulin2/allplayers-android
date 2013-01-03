@@ -4,16 +4,22 @@ import com.allplayers.objects.AlbumData;
 import com.allplayers.rest.RestApiV1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AlbumAdapter extends ArrayAdapter<AlbumData> {
     private ImageView albumCoverPhoto;
@@ -62,12 +68,25 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         String imageURL = album.getCoverPhoto();
 
         if (!imageURL.trim().equals("")) {
-            Bitmap bitmap = RestApiV1.getRemoteImage(album.getCoverPhoto());
-            albumCoverPhoto.setImageBitmap(bitmap);
+//            Bitmap bitmap = RestApiV1.getRemoteImage(album.getCoverPhoto());
+//            albumCoverPhoto.setImageBitmap(bitmap);
+        	  CoverPhotoTask helper = new CoverPhotoTask();
+        	  helper.execute(album);
         }
 
         //Set extra info
         albumExtraInfo.setText("");
         return row;
     }
+    public class CoverPhotoTask extends AsyncTask<AlbumData, Void, Bitmap> {
+    	 
+        protected Bitmap doInBackground(AlbumData... albums) {
+        	return RestApiV1.getRemoteImage(albums[0].getCoverPhoto());
+        }
+         
+        
+ 		protected void onPostExecute(Bitmap bitmap) {
+ 			albumCoverPhoto.setImageBitmap(bitmap);
+     	}
+     }
 }
