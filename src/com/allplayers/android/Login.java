@@ -28,8 +28,6 @@ public class Login extends Activity {
  
     private Context context;
     
-    
- 
     @Override
     public void onCreate(Bundle savedInstanceState) {
    
