@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -26,10 +27,18 @@ import org.json.JSONObject;
 public class Login extends Activity {
  
     private Context context;
+    
+    
  
     @Override
     public void onCreate(Bundle savedInstanceState) {
    
+    	// TODO - Temporarily disable StrictMode because all networking is
+        // currently in the UI thread. Android now throws exceptions when
+        // obvious IO happens in the UI thread, which is a good thing.
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
  
