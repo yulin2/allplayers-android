@@ -27,21 +27,6 @@ public class GroupAlbumsActivity  extends ListActivity {
         
         GetGroupAlbumsByGroupIdTask helper = new GetGroupAlbumsByGroupIdTask();
         helper.execute(group);
-        
-//        String jsonResult = RestApiV1.getGroupAlbumsByGroupId(group.getUUID());
-//        AlbumsMap albums = new AlbumsMap(jsonResult);
-//        albumList = albums.getAlbumData();
-//
-//        if (albumList.isEmpty()) {
-//            String[] values = new String[] {"no albums to display"};
-//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                    android.R.layout.simple_list_item_1, values);
-//            setListAdapter(adapter);
-//        } else {
-//            //Create a customized ArrayAdapter
-//            AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
-//            setListAdapter(adapter);
-//        }
     }
 
     @Override
