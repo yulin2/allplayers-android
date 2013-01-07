@@ -6,6 +6,7 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,7 +68,8 @@ public class MainScreen extends TabActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.logOut: {
-            RestApiV1.logOut();
+            LogOutTask helper = new LogOutTask();
+            helper.execute();
             LocalStorage.writePassword(context, "");
             startActivity(new Intent(MainScreen.this, Login.class));
             finish();
@@ -80,5 +82,12 @@ public class MainScreen extends TabActivity {
         default:
             return super.onOptionsItemSelected(item);
         }
+    }
+    
+    public class LogOutTask extends AsyncTask<Void, Void, Void> {
+    	protected Void doInBackground(Void... args) {
+    		RestApiV1.logOut();
+    		return null;
+    	}
     }
 }
