@@ -20,7 +20,7 @@ import java.util.List;
  
 import org.json.JSONException;
 import org.json.JSONObject;
- 
+
 public class AlbumAdapter extends ArrayAdapter<AlbumData> {
     private ImageView albumCoverPhoto;
     private TextView albumTitle;
@@ -68,15 +68,16 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         String imageURL = album.getCoverPhoto();
  
         if (!imageURL.trim().equals("")) {
-            CoverPhotoTask helper = new CoverPhotoTask();
-        	  helper.execute(album);
+        	GetRemoteImageTask helper = new GetRemoteImageTask();
+        	helper.execute(album);
         }
  
         //Set extra info
         albumExtraInfo.setText("");
         return row;
     }
-    public class CoverPhotoTask extends AsyncTask<AlbumData, Void, Bitmap> {
+    
+    public class GetRemoteImageTask extends AsyncTask<AlbumData, Void, Bitmap> {
     	 
         protected Bitmap doInBackground(AlbumData... albums) {
         	return RestApiV1.getRemoteImage(albums[0].getCoverPhoto());
@@ -85,5 +86,5 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
  		protected void onPostExecute(Bitmap bitmap) {
  			albumCoverPhoto.setImageBitmap(bitmap);
      	}
-     }
+     }    
 }

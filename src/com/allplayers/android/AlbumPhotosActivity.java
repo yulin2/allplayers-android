@@ -26,7 +26,8 @@ public class AlbumPhotosActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AlbumData album = (new Router(this)).getIntentAlbum();
-        AlbumDataTask helper = new AlbumDataTask();
+
+        GetAlbumPhotosByAlbumIdTask helper = new GetAlbumPhotosByAlbumIdTask();
         helper.execute(album);
     }
  
@@ -41,10 +42,11 @@ public class AlbumPhotosActivity extends ListActivity {
         }
     }
     
-    public class AlbumDataTask extends AsyncTask<AlbumData, Void, String> {
+
+    public class GetAlbumPhotosByAlbumIdTask extends AsyncTask<AlbumData, Void, String> {
        
         protected String doInBackground(AlbumData... album) {
-        	return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID());
+            return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID());
         }
         
  		protected void onPostExecute(String jsonResult) {
@@ -54,7 +56,7 @@ public class AlbumPhotosActivity extends ListActivity {
  	            String[] values = new String[] {"no photos to display"};
  	 
  	            ArrayAdapter<String> adapter = new ArrayAdapter<String>(AlbumPhotosActivity.this,
- 	                    android.R.layout.simple_list_item_1, values);
+ 	                android.R.layout.simple_list_item_1, values);
  	            setListAdapter(adapter);
  	        } else {
  	            //Create a customized ArrayAdapter

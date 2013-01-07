@@ -31,7 +31,8 @@ public class Login extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
    
-      // TODO - Temporarily disable StrictMode because all networking is
+
+    	// TODO - Temporarily disable StrictMode because all networking is
         // currently in the UI thread. Android now throws exceptions when
         // obvious IO happens in the UI thread, which is a good thing.
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -56,8 +57,8 @@ public class Login extends Activity {
             textEncryptor.setPassword(storedSecretKey);
             String unencryptedPassword = textEncryptor.decrypt(storedPassword);
             
-            AttemptLoginTask login = new AttemptLoginTask();
-            login.execute(storedEmail, unencryptedPassword);
+            AttemptLoginTask helper = new AttemptLoginTask();
+            helper.execute(storedEmail, unencryptedPassword);
         }
  
         final Button button = (Button)findViewById(R.id.loginButton);
@@ -76,8 +77,8 @@ public class Login extends Activity {
                 LocalStorage.writeUserName(context, email);
                 LocalStorage.writePassword(context, encryptedPassword);
  
-                AttemptLoginTask login = new AttemptLoginTask();
-                login.execute(email, password);
+                AttemptLoginTask helper = new AttemptLoginTask();
+                helper.execute(email, password);
             }
         });
     }
@@ -95,7 +96,7 @@ public class Login extends Activity {
      */ 
     public class AttemptLoginTask extends AsyncTask<String, Void, Boolean> {
  
-       protected Boolean doInBackground(String... strings) {
+        protected Boolean doInBackground(String... strings) {
             RestApiV1 client = new RestApiV1();
 			try {
 	            String result = client.validateLogin(strings[0], strings[1]);
