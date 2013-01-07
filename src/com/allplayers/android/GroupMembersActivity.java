@@ -34,22 +34,18 @@ public class GroupMembersActivity extends ListActivity {
  		protected void onPostExecute(String jsonResult) {
  			GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
  	        membersList = groupMembers.getGroupMemberData();
-
  	        String[] values;
-
  	        if (!membersList.isEmpty()) {
  	            values = new String[membersList.size()];
-
  	            for (int i = 0; i < membersList.size(); i++) {
  	                values[i] = membersList.get(i).getName();
  	            }
  	        } else {
  	            values = new String[] {"No members to display"};
  	        }
-
  	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupMembersActivity.this,
- 	                android.R.layout.simple_list_item_1, values);
+ 	            android.R.layout.simple_list_item_1, values);
  	        setListAdapter(adapter);
      	}
-     }
+    }
 }

@@ -82,7 +82,7 @@ public class GroupPageActivity extends Activity {
         return true;
     }
     
-  public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
+    public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
         
         protected Bitmap doInBackground(String... logoURL) {
         	return RestApiV1.getRemoteImage(logoURL[0]);
@@ -92,5 +92,5 @@ public class GroupPageActivity extends Activity {
  			ImageView imView = (ImageView)findViewById(R.id.groupLogo);
  	        imView.setImageBitmap(logo);
      	}
-     }
+    }
 }
