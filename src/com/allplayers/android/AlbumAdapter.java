@@ -22,7 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AlbumAdapter extends ArrayAdapter<AlbumData> {
-    private ImageView albumCoverPhoto;
+	private List<ImageView> coverPhotos = new ArrayList<ImageView>();
     private TextView albumTitle;
     private TextView albumExtraInfo;
     private List<AlbumData> albums = new ArrayList<AlbumData>();
@@ -53,14 +53,14 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         AlbumData album = getItem(position);
  
         //Get reference to ImageView
-        albumCoverPhoto = (ImageView)row.findViewById(R.id.albumCoverPhoto);
+        coverPhotos.add(position, (ImageView)row.findViewById(R.id.albumCoverPhoto));
  
         //Get reference to TextView - albumTitle
         albumTitle = (TextView)row.findViewById(R.id.albumTitle);
  
         //Get reference to TextView - albumExtraInfo
         albumExtraInfo = (TextView)row.findViewById(R.id.albumExtraInfo);
- 
+
         //Set album title
         albumTitle.setText(album.getTitle());
  
@@ -69,7 +69,7 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
  
         if (!imageURL.trim().equals("")) {
         	GetRemoteImageTask helper = new GetRemoteImageTask();
-        	helper.execute(album);
+            helper.execute(album,position);
         }
  
         //Set extra info
@@ -77,14 +77,16 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         return row;
     }
     
-    public class GetRemoteImageTask extends AsyncTask<AlbumData, Void, Bitmap> {
-    	 
-        protected Bitmap doInBackground(AlbumData... albums) {
-        	return RestApiV1.getRemoteImage(albums[0].getCoverPhoto());
+    public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
+        int row;
+        protected Bitmap doInBackground(Object... albums) {
+            this.row = (Integer)albums[1];
+            AlbumData album = (AlbumData)albums[0];
+            return RestApiV1.getRemoteImage(album.getCoverPhoto());
         }
          
  		protected void onPostExecute(Bitmap bitmap) {
- 			albumCoverPhoto.setImageBitmap(bitmap);
+		    coverPhotos.get(row).setImageBitmap(bitmap);
      	}
      }    
 }
