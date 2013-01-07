@@ -54,7 +54,6 @@ public class GroupEventsActivity extends ListActivity {
  			EventsMap events = new EventsMap(jsonResult);
  	        eventsList = events.getEventData();
  	        HashMap<String, String> map;
-
  	        if (!eventsList.isEmpty()) {
  	            for (int i = 0; i < eventsList.size(); i++) {
  	                map = new HashMap<String, String>();
@@ -64,8 +63,7 @@ public class GroupEventsActivity extends ListActivity {
  	                map.put("line2", start);
  	                list.add(map);
  	            }
-
- 	            hasEvents = true;
+ 	        hasEvents = true;
  	        } else {
  	            map = new HashMap<String, String>();
  	            map.put("line1", "No events to display.");
@@ -73,13 +71,10 @@ public class GroupEventsActivity extends ListActivity {
  	            list.add(map);
  	            hasEvents = false;
  	        }
-
  	        String[] from = {"line1", "line2"};
-
  	        int[] to = {android.R.id.text1, android.R.id.text2};
-
  	        SimpleAdapter adapter = new SimpleAdapter(GroupEventsActivity.this, list, android.R.layout.simple_list_item_2, from, to);
  	        setListAdapter(adapter);
      	}
-     }
+    }
 }

@@ -49,11 +49,10 @@ public class GroupAlbumsActivity  extends ListActivity {
  		protected void onPostExecute(String jsonResult) {
  	        AlbumsMap albums = new AlbumsMap(jsonResult);
  	        albumList = albums.getAlbumData();
-
  	        if (albumList.isEmpty()) {
  	            String[] values = new String[] {"no albums to display"};
  	            ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupAlbumsActivity.this,
- 	                    android.R.layout.simple_list_item_1, values);
+ 	                android.R.layout.simple_list_item_1, values);
  	            setListAdapter(adapter);
  	        } else {
  	            //Create a customized ArrayAdapter
@@ -61,5 +60,5 @@ public class GroupAlbumsActivity  extends ListActivity {
  	            setListAdapter(adapter);
  	        }
      	}
-     }
+    }
 }
