@@ -6,8 +6,10 @@ import com.allplayers.rest.RestApiV1;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,11 +29,9 @@ public class GroupPageActivity extends Activity {
 
         boolean isMember = isMember(uuid);
 
-        Bitmap logo = RestApiV1.getRemoteImage(logoURL);
-
-        ImageView imView = (ImageView)findViewById(R.id.groupLogo);
-        imView.setImageBitmap(logo);
-
+        GetRemoteImageTask helper = new GetRemoteImageTask();
+        helper.execute(logoURL);
+        
         TextView groupInfo = (TextView)findViewById(R.id.groupDetails);
         groupInfo.setText("Title: " + title + "\n\nDescription: " + desc);
 
@@ -81,4 +81,16 @@ public class GroupPageActivity extends Activity {
 
         return true;
     }
+    
+  public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
+        
+        protected Bitmap doInBackground(String... logoURL) {
+        	return RestApiV1.getRemoteImage(logoURL[0]);
+        }
+        
+ 		protected void onPostExecute(Bitmap logo) {
+ 			ImageView imView = (ImageView)findViewById(R.id.groupLogo);
+ 	        imView.setImageBitmap(logo);
+     	}
+     }
 }
