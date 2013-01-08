@@ -5,6 +5,7 @@ import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -29,12 +30,34 @@ public class MessageActivity extends ListActivity {
         //check local storage
         if (LocalStorage.getTimeSinceLastModification("Inbox") / 1000 / 60 < 15) { //more recent than 15 minutes
             jsonResult = LocalStorage.readInbox(getBaseContext());
+            populateInbox();
         } else {
-            jsonResult = RestApiV1.getUserInbox();
-            LocalStorage.writeInbox(getBaseContext(), jsonResult, false);
+        	GetUserInboxTask helper = new GetUserInboxTask();
+        	helper.execute();
         }
 
-        MessagesMap messages = new MessagesMap(jsonResult);
+        
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        if (position == 0) {
+            Bundle bundle = new Bundle();
+            bundle.putString("inboxJSON", jsonResult);
+
+            Intent intent = new Intent(MessageActivity.this, MessageInbox.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else if (position == 1) {
+            Intent intent = new Intent(MessageActivity.this, MessageSent.class);
+            startActivity(intent);
+        }
+    }
+    
+    protected void populateInbox() {
+    	MessagesMap messages = new MessagesMap(jsonResult);
         messageList = messages.getMessageData();
 
         HashMap<String, String> map;
@@ -65,21 +88,15 @@ public class MessageActivity extends ListActivity {
         SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
     }
-
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        if (position == 0) {
-            Bundle bundle = new Bundle();
-            bundle.putString("inboxJSON", jsonResult);
-
-            Intent intent = new Intent(MessageActivity.this, MessageInbox.class);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        } else if (position == 1) {
-            Intent intent = new Intent(MessageActivity.this, MessageSent.class);
-            startActivity(intent);
-        }
+    
+    public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
+    	protected String doInBackground(Void... args) {
+    		return RestApiV1.getUserInbox();
+    	}
+    	
+    	protected void onPostExecute(String jsonResult) {
+    		LocalStorage.writeInbox(getBaseContext(), jsonResult, false);
+    		populateInbox();
+    	}
     }
 }
