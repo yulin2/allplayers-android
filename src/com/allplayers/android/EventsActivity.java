@@ -34,8 +34,8 @@ public class EventsActivity extends ListActivity {
             setEventsMap();
         } else {
             //jsonResult = RestApiV1.getUserEvents();
-          GetUserEventsTask helper = new GetUserEventsTask();
-        	helper.execute();
+            GetUserEventsTask helper = new GetUserEventsTask();
+            helper.execute();
         }
     }
  
