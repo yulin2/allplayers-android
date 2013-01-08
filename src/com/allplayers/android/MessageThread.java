@@ -6,6 +6,7 @@ import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 public class MessageThread extends ListActivity {
     private ArrayList<MessageThreadData> messageThreadList;
@@ -38,9 +40,31 @@ public class MessageThread extends ListActivity {
         String threadID = message.getThreadID();
         threadIDInt = Integer.parseInt(threadID);
 
-        RestApiV1.putMessage(threadIDInt, 0, "");
-
-        jsonResult = RestApiV1.getUserMessagesByThreadId(threadID);
+        PutMessageTask putMessageTaskHelper = new PutMessageTask();
+        putMessageTaskHelper.execute(threadIDInt);
+        
+     // helper.get() necessary because the AsyncTask needs to finish before the main thread can continue. 
+    	try {
+    		putMessageTaskHelper.get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+    
+        
+        GetUserMessagesByThreadIdTask getUserMessagesByThreadIdTaskHelper = new GetUserMessagesByThreadIdTask();
+        getUserMessagesByThreadIdTaskHelper.execute(threadID);
+        
+     // helper.get() necessary because the AsyncTask needs to finish before the main thread can continue. 
+    	try {
+    		getUserMessagesByThreadIdTaskHelper.get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+    
 
         HashMap<String, String> map;
 
@@ -115,5 +139,19 @@ public class MessageThread extends ListActivity {
         default:
             return super.onOptionsItemSelected(item);
         }
+    }
+    
+    public class PutMessageTask extends AsyncTask<Integer, Void, Void> {
+    	protected Void doInBackground(Integer... threadIdInt) {
+    		RestApiV1.putMessage(threadIdInt[0], 0, "");
+    		return null;
+    	}
+    }
+    
+    public class GetUserMessagesByThreadIdTask extends AsyncTask<String, Void, Void> {
+    	protected Void doInBackground(String... threadID) {
+    		jsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
+    		return null;
+    	}
     }
 }
