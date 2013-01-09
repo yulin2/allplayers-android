@@ -32,11 +32,11 @@ public class MessageActivity extends ListActivity {
             jsonResult = LocalStorage.readInbox(getBaseContext());
             populateInbox();
         } else {
-        	GetUserInboxTask helper = new GetUserInboxTask();
-        	helper.execute();
+            GetUserInboxTask helper = new GetUserInboxTask();
+            helper.execute();
         }
 
-        
+
     }
 
     @Override
@@ -55,9 +55,9 @@ public class MessageActivity extends ListActivity {
             startActivity(intent);
         }
     }
-    
+
     protected void populateInbox() {
-    	MessagesMap messages = new MessagesMap(jsonResult);
+        MessagesMap messages = new MessagesMap(jsonResult);
         messageList = messages.getMessageData();
 
         HashMap<String, String> map;
@@ -88,15 +88,15 @@ public class MessageActivity extends ListActivity {
         SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
     }
-    
+
     public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
-    	protected String doInBackground(Void... args) {
-    		return RestApiV1.getUserInbox();
-    	}
-    	
-    	protected void onPostExecute(String jsonResult) {
-    		LocalStorage.writeInbox(getBaseContext(), jsonResult, false);
-    		populateInbox();
-    	}
+        protected String doInBackground(Void... args) {
+            return RestApiV1.getUserInbox();
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            LocalStorage.writeInbox(getBaseContext(), jsonResult, false);
+            populateInbox();
+        }
     }
 }

@@ -51,14 +51,14 @@ public class SearchGroupsListActivity extends ListActivity {
 
         return super.onKeyUp(keyCode, event);
     }
-    
+
     public class SearchGroupsTask extends AsyncTask<Object, Void, String> {
-    	protected String doInBackground(Object... args){
-    		return RestApiV1.searchGroups((String)args[0], (Integer)args[1], (Integer)args[2]);
-    	}
-    	
-    	protected void onPostExecute(String jsonResult) {
-    		GroupsMap groups = new GroupsMap(jsonResult);
+        protected String doInBackground(Object... args) {
+            return RestApiV1.searchGroups((String)args[0], (Integer)args[1], (Integer)args[2]);
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            GroupsMap groups = new GroupsMap(jsonResult);
             groupList = groups.getGroupData();
 
             String[] values;
@@ -77,8 +77,8 @@ public class SearchGroupsListActivity extends ListActivity {
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(SearchGroupsListActivity.this,
-                android.R.layout.simple_list_item_1, values);
+                    android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
-    	}
-    } 
+        }
+    }
 }

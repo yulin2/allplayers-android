@@ -31,9 +31,9 @@ public class GroupsActivity extends ListActivity {
             setGroupData();
         } else {
             //jsonResult = RestApiV1.getUserGroups();
-        	GetUserGroupsTask helper = new GetUserGroupsTask();
-        	helper.execute();
-        }        
+            GetUserGroupsTask helper = new GetUserGroupsTask();
+            helper.execute();
+        }
     }
 
     @Override
@@ -55,9 +55,9 @@ public class GroupsActivity extends ListActivity {
 
         return super.onKeyUp(keyCode, event);
     }
-    
+
     protected void setGroupData() {
-    	GroupsMap groups = new GroupsMap(jsonResult);
+        GroupsMap groups = new GroupsMap(jsonResult);
         groupList = groups.getGroupData();
 
         String[] values;
@@ -79,16 +79,16 @@ public class GroupsActivity extends ListActivity {
                 android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
     }
-    
+
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
-    	protected String doInBackground(Void... args) {
-        	return RestApiV1.getUserGroups();
+        protected String doInBackground(Void... args) {
+            return RestApiV1.getUserGroups();
         }
-        
+
         protected void onPostExecute(String jsonResult) {
-        	GroupsActivity.this.jsonResult = jsonResult;
+            GroupsActivity.this.jsonResult = jsonResult;
             LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
-        	setGroupData();
+            setGroupData();
         }
     }
 }

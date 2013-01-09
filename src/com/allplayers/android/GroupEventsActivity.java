@@ -28,7 +28,7 @@ public class GroupEventsActivity extends ListActivity {
         super.onCreate(savedInstanceState);
 
         GroupData group = (new Router(this)).getIntentGroup();
-        
+
         GetIntentGroupTask helper = new GetIntentGroupTask();
         helper.execute(group);
     }
@@ -43,38 +43,38 @@ public class GroupEventsActivity extends ListActivity {
             startActivity(intent);
         }
     }
-    
-    public class GetIntentGroupTask extends AsyncTask<GroupData, Void, String> {
-        
-        protected String doInBackground(GroupData... groups) {
-        	return RestApiV1.getGroupEventsByGroupId(groups[0].getUUID());
-        }
-        
- 		protected void onPostExecute(String jsonResult) {
- 			EventsMap events = new EventsMap(jsonResult);
- 	        eventsList = events.getEventData();
- 	        HashMap<String, String> map;
- 	        if (!eventsList.isEmpty()) {
- 	            for (int i = 0; i < eventsList.size(); i++) {
- 	                map = new HashMap<String, String>();
- 	                map.put("line1", eventsList.get(i).getTitle());
 
- 	                String start = eventsList.get(i).getStartDateString();
- 	                map.put("line2", start);
- 	                list.add(map);
- 	            }
- 	        hasEvents = true;
- 	        } else {
- 	            map = new HashMap<String, String>();
- 	            map.put("line1", "No events to display.");
- 	            map.put("line2", "");
- 	            list.add(map);
- 	            hasEvents = false;
- 	        }
- 	        String[] from = {"line1", "line2"};
- 	        int[] to = {android.R.id.text1, android.R.id.text2};
- 	        SimpleAdapter adapter = new SimpleAdapter(GroupEventsActivity.this, list, android.R.layout.simple_list_item_2, from, to);
- 	        setListAdapter(adapter);
-     	}
+    public class GetIntentGroupTask extends AsyncTask<GroupData, Void, String> {
+
+        protected String doInBackground(GroupData... groups) {
+            return RestApiV1.getGroupEventsByGroupId(groups[0].getUUID());
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            EventsMap events = new EventsMap(jsonResult);
+            eventsList = events.getEventData();
+            HashMap<String, String> map;
+            if (!eventsList.isEmpty()) {
+                for (int i = 0; i < eventsList.size(); i++) {
+                    map = new HashMap<String, String>();
+                    map.put("line1", eventsList.get(i).getTitle());
+
+                    String start = eventsList.get(i).getStartDateString();
+                    map.put("line2", start);
+                    list.add(map);
+                }
+                hasEvents = true;
+            } else {
+                map = new HashMap<String, String>();
+                map.put("line1", "No events to display.");
+                map.put("line2", "");
+                list.add(map);
+                hasEvents = false;
+            }
+            String[] from = {"line1", "line2"};
+            int[] to = {android.R.id.text1, android.R.id.text2};
+            SimpleAdapter adapter = new SimpleAdapter(GroupEventsActivity.this, list, android.R.layout.simple_list_item_2, from, to);
+            setListAdapter(adapter);
+        }
     }
 }

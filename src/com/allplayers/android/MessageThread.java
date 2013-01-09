@@ -38,7 +38,7 @@ public class MessageThread extends ListActivity {
 
         message = (new Router(this)).getIntentMessage();
         String threadID = message.getThreadID();
-        
+
         PutAndGetMessagesTask helper = new PutAndGetMessagesTask();
         helper.execute(threadID);
     }
@@ -78,54 +78,54 @@ public class MessageThread extends ListActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-      
+
     public class PutAndGetMessagesTask extends AsyncTask<String, Void, String> {
-    
-    	protected String doInBackground(String... threadID) {
-	        threadIDInt = Integer.parseInt(threadID[0]);
-	        RestApiV1.putMessage(threadIDInt, 0, "");
-	        jsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
-	        return jsonResult;
-    	}
-    
-	    protected void onPostExecute(String jsonResult) {
-	    	HashMap<String, String> map;
-	
-	        MessageThreadMap messages = new MessageThreadMap(jsonResult);
-	        messageThreadList = messages.getMessageThreadData();
-	
-	        Collections.sort(messageThreadList, new Comparator<Object>() {
-	            public int compare(Object o1, Object o2) {
-	                MessageThreadData m1 = (MessageThreadData) o1;
-	                MessageThreadData m2 = (MessageThreadData) o2;
-	                return m2.getTimestampString().compareToIgnoreCase(m1.getTimestampString());
-	            }
-	        });
-	
-	        if (!messageThreadList.isEmpty()) {
-	            hasMessages = true;
-	
-	            for (int i = 0; i < messageThreadList.size(); i++) {
-	                map = new HashMap<String, String>();
-	                map.put("line1", messageThreadList.get(i).getMessageBody());
-	                map.put("line2", "From: " + messageThreadList.get(i).getSenderName() + " - " + messageThreadList.get(i).getDateString());
-	                list.add(map);
-	            }
-	        } else {
-	            hasMessages = false;
-	
-	            map = new HashMap<String, String>();
-	            map.put("line1", "You have no new messages.");
-	            map.put("line2", "");
-	            list.add(map);
-	        }
-	
-	        String[] from = { "line1", "line2" };
-	
-	        int[] to = { android.R.id.text1, android.R.id.text2 };
-	
-	        SimpleAdapter adapter = new SimpleAdapter(MessageThread.this, list, android.R.layout.simple_list_item_2, from, to);
-	        setListAdapter(adapter);
-		}
+
+        protected String doInBackground(String... threadID) {
+            threadIDInt = Integer.parseInt(threadID[0]);
+            RestApiV1.putMessage(threadIDInt, 0, "");
+            jsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
+            return jsonResult;
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            HashMap<String, String> map;
+
+            MessageThreadMap messages = new MessageThreadMap(jsonResult);
+            messageThreadList = messages.getMessageThreadData();
+
+            Collections.sort(messageThreadList, new Comparator<Object>() {
+                public int compare(Object o1, Object o2) {
+                    MessageThreadData m1 = (MessageThreadData) o1;
+                    MessageThreadData m2 = (MessageThreadData) o2;
+                    return m2.getTimestampString().compareToIgnoreCase(m1.getTimestampString());
+                }
+            });
+
+            if (!messageThreadList.isEmpty()) {
+                hasMessages = true;
+
+                for (int i = 0; i < messageThreadList.size(); i++) {
+                    map = new HashMap<String, String>();
+                    map.put("line1", messageThreadList.get(i).getMessageBody());
+                    map.put("line2", "From: " + messageThreadList.get(i).getSenderName() + " - " + messageThreadList.get(i).getDateString());
+                    list.add(map);
+                }
+            } else {
+                hasMessages = false;
+
+                map = new HashMap<String, String>();
+                map.put("line1", "You have no new messages.");
+                map.put("line2", "");
+                list.add(map);
+            }
+
+            String[] from = { "line1", "line2" };
+
+            int[] to = { android.R.id.text1, android.R.id.text2 };
+
+            SimpleAdapter adapter = new SimpleAdapter(MessageThread.this, list, android.R.layout.simple_list_item_2, from, to);
+            setListAdapter(adapter);
+        }
     }
-} 
+}

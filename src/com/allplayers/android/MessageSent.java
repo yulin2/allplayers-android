@@ -60,9 +60,9 @@ public class MessageSent extends ListActivity {
 
             SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
             setListAdapter(adapter);
-        } else {    
+        } else {
             GetUserSentBoxTask helper = new GetUserSentBoxTask();
-        	helper.execute();
+            helper.execute();
         }
     }
 
@@ -76,43 +76,43 @@ public class MessageSent extends ListActivity {
             startActivity(intent);
         }
     }
-    
+
     public class GetUserSentBoxTask extends AsyncTask<Void, Void, String> {
-    	protected String doInBackground(Void... Args) {
-        	return RestApiV1.getUserSentBox();
-    	}
-    	
-    	protected void onPostExecute(String jsonResult) {
-    		LocalStorage.writeSentbox(getBaseContext(), jsonResult, false);
-    		HashMap<String, String> map;
+        protected String doInBackground(Void... Args) {
+            return RestApiV1.getUserSentBox();
+        }
 
-	        MessagesMap messages = new MessagesMap(jsonResult);
-	        messageList = messages.getMessageData();
+        protected void onPostExecute(String jsonResult) {
+            LocalStorage.writeSentbox(getBaseContext(), jsonResult, false);
+            HashMap<String, String> map;
 
-	        if (!messageList.isEmpty()) {
-	            hasMessages = true;
+            MessagesMap messages = new MessagesMap(jsonResult);
+            messageList = messages.getMessageData();
 
-	            for (int i = 0; i < messageList.size(); i++) {
-	                map = new HashMap<String, String>();
-	                map.put("line1", messageList.get(i).getSubject());
-	                map.put("line2", "Last sent from: " + messageList.get(i).getLastSender());
-	                list.add(map);
-	            }
-	        } else {
-	            hasMessages = false;
+            if (!messageList.isEmpty()) {
+                hasMessages = true;
 
-	            map = new HashMap<String, String>();
-	            map.put("line1", "You have no sent messages.");
-	            map.put("line2", "");
-	            list.add(map);
-	        }
+                for (int i = 0; i < messageList.size(); i++) {
+                    map = new HashMap<String, String>();
+                    map.put("line1", messageList.get(i).getSubject());
+                    map.put("line2", "Last sent from: " + messageList.get(i).getLastSender());
+                    list.add(map);
+                }
+            } else {
+                hasMessages = false;
 
-	        String[] from = { "line1", "line2" };
+                map = new HashMap<String, String>();
+                map.put("line1", "You have no sent messages.");
+                map.put("line2", "");
+                list.add(map);
+            }
 
-	        int[] to = { android.R.id.text1, android.R.id.text2 };
+            String[] from = { "line1", "line2" };
 
-	        SimpleAdapter adapter = new SimpleAdapter(MessageSent.this, list, android.R.layout.simple_list_item_2, from, to);
-	        setListAdapter(adapter);
-    	}
+            int[] to = { android.R.id.text1, android.R.id.text2 };
+
+            SimpleAdapter adapter = new SimpleAdapter(MessageSent.this, list, android.R.layout.simple_list_item_2, from, to);
+            setListAdapter(adapter);
+        }
     }
 }

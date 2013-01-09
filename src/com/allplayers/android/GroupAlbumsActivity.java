@@ -24,7 +24,7 @@ public class GroupAlbumsActivity  extends ListActivity {
         super.onCreate(savedInstanceState);
 
         GroupData group = (new Router(this)).getIntentGroup();
-        
+
         GetGroupAlbumsByGroupIdTask helper = new GetGroupAlbumsByGroupIdTask();
         helper.execute(group);
     }
@@ -39,26 +39,26 @@ public class GroupAlbumsActivity  extends ListActivity {
             startActivity(intent);
         }
     }
-    
+
     public class GetGroupAlbumsByGroupIdTask extends AsyncTask<GroupData, Void, String> {
-        
+
         protected String doInBackground(GroupData... groups) {
-        	return RestApiV1.getGroupAlbumsByGroupId(groups[0].getUUID());
+            return RestApiV1.getGroupAlbumsByGroupId(groups[0].getUUID());
         }
-        
- 		protected void onPostExecute(String jsonResult) {
- 	        AlbumsMap albums = new AlbumsMap(jsonResult);
- 	        albumList = albums.getAlbumData();
- 	        if (albumList.isEmpty()) {
- 	            String[] values = new String[] {"no albums to display"};
- 	            ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupAlbumsActivity.this,
- 	                android.R.layout.simple_list_item_1, values);
- 	            setListAdapter(adapter);
- 	        } else {
- 	            //Create a customized ArrayAdapter
- 	            AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
- 	            setListAdapter(adapter);
- 	        }
-     	}
+
+        protected void onPostExecute(String jsonResult) {
+            AlbumsMap albums = new AlbumsMap(jsonResult);
+            albumList = albums.getAlbumData();
+            if (albumList.isEmpty()) {
+                String[] values = new String[] {"no albums to display"};
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupAlbumsActivity.this,
+                        android.R.layout.simple_list_item_1, values);
+                setListAdapter(adapter);
+            } else {
+                //Create a customized ArrayAdapter
+                AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
+                setListAdapter(adapter);
+            }
+        }
     }
 }

@@ -63,25 +63,25 @@ public class PhotoAdapter extends ArrayAdapter<PhotoData> {
         String imageURL = photo.getPhotoThumb();
 
         if (!imageURL.trim().equals("")) {
-        	GetRemoteImageTask helper = new GetRemoteImageTask();
-        	helper.execute(photo, position);
+            GetRemoteImageTask helper = new GetRemoteImageTask();
+            helper.execute(photo, position);
         }
 
         //Set extra info
         photoExtraInfo.setText("");
         return row;
     }
-    
+
     public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
-    	int row;
-    	protected Bitmap doInBackground(Object... photos) {
-    		this.row = (Integer)photos[1];
-    		PhotoData photo = (PhotoData)photos[0];
-    		return RestApiV1.getRemoteImage(photo.getPhotoThumb());
-    	}
-    	
-    	protected void onPostExecute(Bitmap bitmap) {
-    		photoImage.get(row).setImageBitmap(bitmap);
-    	}
+        int row;
+        protected Bitmap doInBackground(Object... photos) {
+            this.row = (Integer)photos[1];
+            PhotoData photo = (PhotoData)photos[0];
+            return RestApiV1.getRemoteImage(photo.getPhotoThumb());
+        }
+
+        protected void onPostExecute(Bitmap bitmap) {
+            photoImage.get(row).setImageBitmap(bitmap);
+        }
     }
 }

@@ -60,7 +60,7 @@ public class LocalStorage {
         return returnValue;
     }
 
-    public static void writePassword(Context c, String write) {    	
+    public static void writePassword(Context c, String write) {
         writeFile(c, write, "Password");
     }
     public static String readPassword(Context c) {

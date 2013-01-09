@@ -35,45 +35,45 @@ public class MessageInbox extends Activity {
         }
 
         if (jsonResult.equals("")) {
-        	GetUserInboxTask helper = new GetUserInboxTask();
-        	helper.execute();
+            GetUserInboxTask helper = new GetUserInboxTask();
+            helper.execute();
         }
     }
-    
+
     public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
-    	protected String doInBackground(Void... Args) {
-        	return jsonResult = RestApiV1.getUserInbox();
-    	}
-    	
-    	protected void onPostExecute(String jsonResult) {
-    		 MessagesMap messages = new MessagesMap(jsonResult);
-    	        messageList = messages.getMessageData();
+        protected String doInBackground(Void... Args) {
+            return jsonResult = RestApiV1.getUserInbox();
+        }
 
-    	        Collections.reverse(messageList);
+        protected void onPostExecute(String jsonResult) {
+            MessagesMap messages = new MessagesMap(jsonResult);
+            messageList = messages.getMessageData();
 
-    	        ListView list = (ListView) findViewById(R.id.customListView);
-    	        list.setClickable(true);
+            Collections.reverse(messageList);
 
-    	        if (!messageList.isEmpty()) {
-    	            hasMessages = true;
-    	        } else {
-    	            hasMessages = false;
-    	        }
+            ListView list = (ListView) findViewById(R.id.customListView);
+            list.setClickable(true);
 
-    	        final List<MessageData> messageList2 = messageList;
-    	        MessageAdapter adapter = new MessageAdapter(MessageInbox.this, messageList2);
+            if (!messageList.isEmpty()) {
+                hasMessages = true;
+            } else {
+                hasMessages = false;
+            }
 
-    	        list.setOnItemClickListener(new OnItemClickListener() {
-    	            public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-    	                if (hasMessages) {
-    	                    // Go to the message thread.
-    	                    Intent intent = (new Router(MessageInbox.this)).getMessageThreadIntent(messageList.get(position));
-    	                    startActivity(intent);
-    	                }
-    	            }
-    	        });
+            final List<MessageData> messageList2 = messageList;
+            MessageAdapter adapter = new MessageAdapter(MessageInbox.this, messageList2);
 
-    	        list.setAdapter(adapter);
-    	}
+            list.setOnItemClickListener(new OnItemClickListener() {
+                public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+                    if (hasMessages) {
+                        // Go to the message thread.
+                        Intent intent = (new Router(MessageInbox.this)).getMessageThreadIntent(messageList.get(position));
+                        startActivity(intent);
+                    }
+                }
+            });
+
+            list.setAdapter(adapter);
+        }
     }
 }

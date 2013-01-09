@@ -83,11 +83,11 @@ public class MainScreen extends TabActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-    
+
     public class LogOutTask extends AsyncTask<Void, Void, Void> {
-    	protected Void doInBackground(Void... args) {
-    		RestApiV1.logOut();
-    		return null;
-    	}
+        protected Void doInBackground(Void... args) {
+            RestApiV1.logOut();
+            return null;
+        }
     }
 }

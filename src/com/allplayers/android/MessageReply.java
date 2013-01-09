@@ -58,17 +58,17 @@ public class MessageReply extends Activity {
 
                 Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
                 toast.show();
-                
+
                 finish();
             }
         });
     }
-    
+
     // I had to use an "Object" because you can only pass one variable "type" to execute().
     public class PostMessageTask extends AsyncTask<Object, Void, Void> {
-    	protected Void doInBackground(Object... args) {
-    		RestApiV1.postMessage((Integer)args[0], (String)args[1]);
-    		return null;
-    	}
+        protected Void doInBackground(Object... args) {
+            RestApiV1.postMessage((Integer)args[0], (String)args[1]);
+            return null;
+        }
     }
 }

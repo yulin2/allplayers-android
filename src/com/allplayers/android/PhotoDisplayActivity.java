@@ -32,7 +32,7 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
         mPhoto = (new Router(this)).getIntentPhoto();
         String photoUrl = mPhoto.getPhotoFull();
-        
+
         GetRemoteImageOnTouchTask helper = new GetRemoteImageOnTouchTask();
         helper.execute(photoUrl);
     }
@@ -59,7 +59,7 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
                 PhotoData photo = mPhoto;
                 String photoUrl = photo.getPhotoFull();
-                
+
                 GetRemoteImageTask helper = new GetRemoteImageTask();
                 helper.execute(photoUrl);
             }
@@ -87,29 +87,29 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
         return true;
     }
-    
+
     public class GetRemoteImageOnTouchTask extends AsyncTask<String, Void, Bitmap> {
-    	
-    	protected Bitmap doInBackground(String... photoUrl) {
-    		return RestApiV1.getRemoteImage(photoUrl[0]);
-    	}
-    	
-    	protected void onPostExecute(Bitmap image) {
-    		ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
+
+        protected Bitmap doInBackground(String... photoUrl) {
+            return RestApiV1.getRemoteImage(photoUrl[0]);
+        }
+
+        protected void onPostExecute(Bitmap image) {
+            ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
             imView.setImageBitmap(image);
             imView.setOnTouchListener((OnTouchListener) PhotoDisplayActivity.this);
-    	}
+        }
     }
 
     public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
-    	
-    	protected Bitmap doInBackground(String... photoUrl) {
-    		return RestApiV1.getRemoteImage(photoUrl[0]);
-    	}
-    	
-    	protected void onPostExecute(Bitmap image) {
-    		ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
+
+        protected Bitmap doInBackground(String... photoUrl) {
+            return RestApiV1.getRemoteImage(photoUrl[0]);
+        }
+
+        protected void onPostExecute(Bitmap image) {
+            ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
             imView.setImageBitmap(image);
-    	}
+        }
     }
-}  
+}

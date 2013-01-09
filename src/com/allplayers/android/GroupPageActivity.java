@@ -1,10 +1,10 @@
 package com.allplayers.android;
- 
+
 import java.util.concurrent.ExecutionException;
- 
+
 import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
- 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,66 +15,66 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
- 
+
 public class GroupPageActivity extends Activity {
-  GroupData group;
+    GroupData group;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	group = (new Router(this)).getIntentGroup();
+        group = (new Router(this)).getIntentGroup();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grouppage);
-        
+
         String logoURL = group.getLogo();
         String uuid = group.getUUID();
- 
+
         setButtonState(uuid);
- 
+
         GetRemoteImageTask helper = new GetRemoteImageTask();
         helper.execute(logoURL);
     }
- 
+
     private void setButtonState(String group_uuid) {
         GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
         helper.execute(group_uuid);
     }
-    
+
     public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
-        
+
         protected Bitmap doInBackground(String... logoURL) {
-        	return RestApiV1.getRemoteImage(logoURL[0]);
+            return RestApiV1.getRemoteImage(logoURL[0]);
         }
-        
- 		protected void onPostExecute(Bitmap logo) {
- 			ImageView imView = (ImageView)findViewById(R.id.groupLogo);
- 	        imView.setImageBitmap(logo);
-     	}
+
+        protected void onPostExecute(Bitmap logo) {
+            ImageView imView = (ImageView)findViewById(R.id.groupLogo);
+            imView.setImageBitmap(logo);
+        }
     }
-    
+
     public class GetGroupMembersByGroupIdTask extends AsyncTask<String, Void, String> {
-    	protected String doInBackground(String... group_uuid) {
-    		return RestApiV1.getGroupMembersByGroupId(group_uuid[0]);
-    	}
-    	
-    	protected void onPostExecute(String jsonResult) {
-    		boolean isMember;
-    		if (jsonResult.trim().equals("null") || jsonResult.trim().equals("error") ||
+        protected String doInBackground(String... group_uuid) {
+            return RestApiV1.getGroupMembersByGroupId(group_uuid[0]);
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            boolean isMember;
+            if (jsonResult.trim().equals("null") || jsonResult.trim().equals("error") ||
                     jsonResult.equals("You are not logged in")) {
-    			isMember = false;
+                isMember = false;
             }
             else {
-            	isMember = true;
+                isMember = true;
             }
-    		
-    		final Button groupMembersButton = (Button)findViewById(R.id.groupMembersButton);
-    		if(isMember) groupMembersButton.setVisibility(View.VISIBLE); 
+
+            final Button groupMembersButton = (Button)findViewById(R.id.groupMembersButton);
+            if(isMember) groupMembersButton.setVisibility(View.VISIBLE);
             groupMembersButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this)).getGroupMembersActivityIntent(group);
                     startActivity(intent);
                 }
             });
- 
+
             final Button groupEventsButton = (Button)findViewById(R.id.groupEventsButton);
             if(isMember) groupEventsButton.setVisibility(View.VISIBLE);
             groupEventsButton.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +83,7 @@ public class GroupPageActivity extends Activity {
                     startActivity(intent);
                 }
             });
- 
+
             final Button groupPhotosButton = (Button)findViewById(R.id.groupPhotosButton);
             if(isMember) groupPhotosButton.setVisibility(View.VISIBLE);
             groupPhotosButton.setOnClickListener(new View.OnClickListener() {
@@ -92,9 +92,9 @@ public class GroupPageActivity extends Activity {
                     startActivity(intent);
                 }
             });
-            
+
             TextView groupInfo = (TextView)findViewById(R.id.groupDetails);
             groupInfo.setText("Title: " + group.getTitle() + "\n\nDescription: " + group.getDescription());
-    	}
+        }
     }
 }

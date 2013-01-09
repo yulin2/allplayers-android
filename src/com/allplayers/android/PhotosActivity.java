@@ -49,8 +49,8 @@ public class PhotosActivity  extends ListActivity {
                 jsonResult = LocalStorage.readUserGroups(getBaseContext());
                 populateGroupAlbums(jsonResult);
             } else {
-            	GetUserGroupsTask helper = new GetUserGroupsTask();
-            	helper.execute();
+                GetUserGroupsTask helper = new GetUserGroupsTask();
+                helper.execute();
             }
         }
 
@@ -66,9 +66,9 @@ public class PhotosActivity  extends ListActivity {
             startActivity(intent);
         }
     }
-    
+
     protected void populateGroupAlbums(String jsonResult) {
-    	GroupsMap groups = new GroupsMap(jsonResult);
+        GroupsMap groups = new GroupsMap(jsonResult);
         ArrayList<GroupData> groupList = groups.getGroupData();
 
         if (!groupList.isEmpty()) {
@@ -83,29 +83,29 @@ public class PhotosActivity  extends ListActivity {
             }
         }
     }
-    
+
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
-    	
-    	protected String doInBackground(Void... args) {
-    		return RestApiV1.getUserGroups();
-    	}
-    	
-    	protected void onPostExecute(String jsonResult) {
+
+        protected String doInBackground(Void... args) {
+            return RestApiV1.getUserGroups();
+        }
+
+        protected void onPostExecute(String jsonResult) {
             LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
             populateGroupAlbums(jsonResult);
-    	}
+        }
     }
-    
+
     public class GetGroupAlbumsByGroupIdTask extends AsyncTask<String, Void, String> {
-    	
-    	protected String doInBackground(String... group_uuid) {
-    		return RestApiV1.getGroupAlbumsByGroupId(group_uuid[0]);
-    	}
-    	
-    	protected void onPostExecute(String jsonResult) {
-    		AlbumsMap albums;
+
+        protected String doInBackground(String... group_uuid) {
+            return RestApiV1.getGroupAlbumsByGroupId(group_uuid[0]);
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            AlbumsMap albums;
             ArrayList<AlbumData> newAlbumList;
-    		LocalStorage.appendUserAlbums(getBaseContext(), jsonResult);
+            LocalStorage.appendUserAlbums(getBaseContext(), jsonResult);
             albums = new AlbumsMap(jsonResult);
             newAlbumList = albums.getAlbumData();
 
@@ -121,10 +121,10 @@ public class PhotosActivity  extends ListActivity {
                 setListAdapter(adapter);
             } else {
                 //Create a customized ArrayAdapter
-            	// TODO Fix to use only one adapter and push new items into it.
+                // TODO Fix to use only one adapter and push new items into it.
                 AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
                 setListAdapter(adapter);
             }
-    	}
+        }
     }
 }
