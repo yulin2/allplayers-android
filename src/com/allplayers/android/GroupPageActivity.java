@@ -1,10 +1,10 @@
 package com.allplayers.android;
-
+ 
 import java.util.concurrent.ExecutionException;
-
+ 
 import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
-
+ 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,84 +15,28 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+ 
 public class GroupPageActivity extends Activity {
+  GroupData group;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	group = (new Router(this)).getIntentGroup();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grouppage);
-
-        final GroupData group = (new Router(this)).getIntentGroup();
-        String title = group.getTitle();
-        String desc = group.getDescription();
+        
         String logoURL = group.getLogo();
         String uuid = group.getUUID();
-
-        boolean isMember = isMember(uuid);
-
+ 
+        setButtonState(uuid);
+ 
         GetRemoteImageTask helper = new GetRemoteImageTask();
         helper.execute(logoURL);
-        
-        TextView groupInfo = (TextView)findViewById(R.id.groupDetails);
-        groupInfo.setText("Title: " + title + "\n\nDescription: " + desc);
-
-        final Button groupMembersButton = (Button)findViewById(R.id.groupMembersButton);
-        groupMembersButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = (new Router(GroupPageActivity.this)).getGroupMembersActivityIntent(group);
-                startActivity(intent);
-            }
-        });
-
-        final Button groupEventsButton = (Button)findViewById(R.id.groupEventsButton);
-        groupEventsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = (new Router(GroupPageActivity.this)).getGroupEventsActivityIntent(group);
-                startActivity(intent);
-            }
-        });
-
-        final Button groupPhotosButton = (Button)findViewById(R.id.groupPhotosButton);
-        groupPhotosButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = (new Router(GroupPageActivity.this)).getGroupAlbumsActivityIntent(group);
-                startActivity(intent);
-            }
-        });
-
-        if (isMember) {
-            groupMembersButton.setVisibility(View.VISIBLE);
-            groupEventsButton.setVisibility(View.VISIBLE);
-            groupPhotosButton.setVisibility(View.VISIBLE);
-        } else {
-            groupMembersButton.setVisibility(View.GONE);
-            groupEventsButton.setVisibility(View.GONE);
-            groupPhotosButton.setVisibility(View.GONE);
-        }
     }
-
-    private boolean isMember(String group_uuid) {
+ 
+    private void setButtonState(String group_uuid) {
         GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
         helper.execute(group_uuid);
-        String jsonResult;
-		try {
-			jsonResult = helper.get();
-		} catch (InterruptedException e) {
-			jsonResult = "error";
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			jsonResult = "error";
-			e.printStackTrace();
-		}
-
-        //If a result is not returned, the user is not an authenticated group member
-        if (jsonResult.trim().equals("null") || jsonResult.trim().equals("error") ||
-                jsonResult.equals("You are not logged in")) {
-            return false;
-        }
-
-        return true;
     }
     
     public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -110,6 +54,47 @@ public class GroupPageActivity extends Activity {
     public class GetGroupMembersByGroupIdTask extends AsyncTask<String, Void, String> {
     	protected String doInBackground(String... group_uuid) {
     		return RestApiV1.getGroupMembersByGroupId(group_uuid[0]);
+    	}
+    	
+    	protected void onPostExecute(String jsonResult) {
+    		boolean isMember;
+    		if (jsonResult.trim().equals("null") || jsonResult.trim().equals("error") ||
+                    jsonResult.equals("You are not logged in")) {
+    			isMember = false;
+            }
+            else {
+            	isMember = true;
+            }
+    		
+    		final Button groupMembersButton = (Button)findViewById(R.id.groupMembersButton);
+    		if(isMember) groupMembersButton.setVisibility(View.VISIBLE); 
+            groupMembersButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = (new Router(GroupPageActivity.this)).getGroupMembersActivityIntent(group);
+                    startActivity(intent);
+                }
+            });
+ 
+            final Button groupEventsButton = (Button)findViewById(R.id.groupEventsButton);
+            if(isMember) groupEventsButton.setVisibility(View.VISIBLE);
+            groupEventsButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = (new Router(GroupPageActivity.this)).getGroupEventsActivityIntent(group);
+                    startActivity(intent);
+                }
+            });
+ 
+            final Button groupPhotosButton = (Button)findViewById(R.id.groupPhotosButton);
+            if(isMember) groupPhotosButton.setVisibility(View.VISIBLE);
+            groupPhotosButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = (new Router(GroupPageActivity.this)).getGroupAlbumsActivityIntent(group);
+                    startActivity(intent);
+                }
+            });
+            
+            TextView groupInfo = (TextView)findViewById(R.id.groupDetails);
+            groupInfo.setText("Title: " + group.getTitle() + "\n\nDescription: " + group.getDescription());
     	}
     }
 }
