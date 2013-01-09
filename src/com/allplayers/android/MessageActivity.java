@@ -35,8 +35,6 @@ public class MessageActivity extends ListActivity {
             GetUserInboxTask helper = new GetUserInboxTask();
             helper.execute();
         }
-
-
     }
 
     @Override
@@ -56,6 +54,10 @@ public class MessageActivity extends ListActivity {
         }
     }
 
+    /**
+     * Uses the json result passed in, and populates the inbox of the
+     * user with the messages.
+     */
     protected void populateInbox() {
         MessagesMap messages = new MessagesMap(jsonResult);
         messageList = messages.getMessageData();

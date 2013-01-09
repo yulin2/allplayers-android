@@ -67,6 +67,11 @@ public class PhotosActivity  extends ListActivity {
         }
     }
 
+    /**
+     * Uses the json result passed in, and populates the UI with a list of albums from the
+     * user's groups.
+     * @param jsonResult
+     */
     protected void populateGroupAlbums(String jsonResult) {
         GroupsMap groups = new GroupsMap(jsonResult);
         ArrayList<GroupData> groupList = groups.getGroupData();
