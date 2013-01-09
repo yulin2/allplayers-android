@@ -34,6 +34,12 @@ public class GroupPageActivity extends Activity {
         helper.execute(logoURL);
     }
 
+    /**
+     * Checks if the user is a member of the group in order to determine if they should have
+     * access to the buttons provided to view members, events, and photos.
+     *
+     * @param group_uuid
+     */
     private void setButtonState(String group_uuid) {
         GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
         helper.execute(group_uuid);

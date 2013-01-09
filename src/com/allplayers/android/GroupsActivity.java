@@ -56,6 +56,7 @@ public class GroupsActivity extends ListActivity {
         return super.onKeyUp(keyCode, event);
     }
 
+    /** Populates the list of groups to display to the UI thread. */
     protected void setGroupData() {
         GroupsMap groups = new GroupsMap(jsonResult);
         groupList = groups.getGroupData();
