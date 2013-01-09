@@ -35,13 +35,6 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
         
         GetRemoteImageOnTouchTask helper = new GetRemoteImageOnTouchTask();
         helper.execute(photoUrl);
-//        try {
-//			helper.get();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		} catch (ExecutionException e) {
-//			e.printStackTrace();
-//		}
     }
 
     public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -133,4 +126,4 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
             imView.setImageBitmap(image);
     	}
     }
-}
+}  
