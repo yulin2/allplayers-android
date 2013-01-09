@@ -79,6 +79,7 @@ public class Login extends Activity {
  
                 AttemptLoginTask helper = new AttemptLoginTask();
                 helper.execute(email, password);
+
             }
         });
     }
