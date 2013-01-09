@@ -73,8 +73,6 @@ public class PhotosActivity  extends ListActivity {
 
         if (!groupList.isEmpty()) {
             String group_uuid;
-            AlbumsMap albums;
-            ArrayList<AlbumData> newAlbumList;
 
             LocalStorage.writeUserAlbums(getBaseContext(), "", true);
 
@@ -82,22 +80,6 @@ public class PhotosActivity  extends ListActivity {
                 group_uuid = groupList.get(i).getUUID();
                 GetGroupAlbumsByGroupIdTask helper = new GetGroupAlbumsByGroupIdTask();
                 helper.execute(group_uuid);
-                try {
-					jsonResult = helper.get();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
-				}
-                LocalStorage.appendUserAlbums(getBaseContext(), jsonResult);
-                albums = new AlbumsMap(jsonResult);
-                newAlbumList = albums.getAlbumData();
-
-                if (!newAlbumList.isEmpty()) {
-                    for (int j = 0; j < newAlbumList.size(); j++) {
-                        albumList.add(newAlbumList.get(j));
-                    }
-                }
             }
         }
     }
@@ -111,16 +93,6 @@ public class PhotosActivity  extends ListActivity {
     	protected void onPostExecute(String jsonResult) {
             LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
             populateGroupAlbums(jsonResult);
-            if (albumList.isEmpty()) {
-                String[] values = new String[] {"no albums to display"};
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(PhotosActivity.this,
-                        android.R.layout.simple_list_item_1, values);
-                setListAdapter(adapter);
-            } else {
-                //Create a customized ArrayAdapter
-                AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
-                setListAdapter(adapter);
-            }
     	}
     }
     
@@ -128,6 +100,31 @@ public class PhotosActivity  extends ListActivity {
     	
     	protected String doInBackground(String... group_uuid) {
     		return RestApiV1.getGroupAlbumsByGroupId(group_uuid[0]);
+    	}
+    	
+    	protected void onPostExecute(String jsonResult) {
+    		AlbumsMap albums;
+            ArrayList<AlbumData> newAlbumList;
+    		LocalStorage.appendUserAlbums(getBaseContext(), jsonResult);
+            albums = new AlbumsMap(jsonResult);
+            newAlbumList = albums.getAlbumData();
+
+            if (!newAlbumList.isEmpty()) {
+                for (int j = 0; j < newAlbumList.size(); j++) {
+                    albumList.add(newAlbumList.get(j));
+                }
+            }
+            if (albumList.isEmpty()) {
+                String[] values = new String[] {"no albums to display"};
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(PhotosActivity.this,
+                        android.R.layout.simple_list_item_1, values);
+                setListAdapter(adapter);
+            } else {
+                //Create a customized ArrayAdapter
+            	// TODO Fix to use only one adapter and push new items into it.
+                AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
+                setListAdapter(adapter);
+            }
     	}
     }
 }
