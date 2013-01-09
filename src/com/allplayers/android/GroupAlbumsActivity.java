@@ -40,6 +40,9 @@ public class GroupAlbumsActivity  extends ListActivity {
         }
     }
 
+    /*
+     * Gets the photo albums for a group by using the groups ID with a rest call.
+     */
     public class GetGroupAlbumsByGroupIdTask extends AsyncTask<GroupData, Void, String> {
 
         protected String doInBackground(GroupData... groups) {

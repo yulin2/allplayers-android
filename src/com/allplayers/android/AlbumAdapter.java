@@ -76,7 +76,10 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         albumExtraInfo.setText("");
         return row;
     }
-
+    
+    /*
+     * Gets an albums cover photo with a rest call.
+     */
     public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
         int row;
         protected Bitmap doInBackground(Object... albums) {

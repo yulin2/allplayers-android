@@ -49,6 +49,9 @@ public class EventsActivity extends ListActivity {
         }
     }
 
+    /*
+     * Populates a hash map with event information.
+     */
     protected void setEventsMap() {
         EventsMap events = new EventsMap(jsonResult);
         eventsList = events.getEventData();
@@ -80,7 +83,10 @@ public class EventsActivity extends ListActivity {
         SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
     }
-
+    
+    /*
+     * Gets event information for a user using a rest call.
+     */
     public class GetUserEventsTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {

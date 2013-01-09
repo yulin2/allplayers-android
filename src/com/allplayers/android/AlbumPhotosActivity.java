@@ -42,7 +42,9 @@ public class AlbumPhotosActivity extends ListActivity {
         }
     }
 
-
+    /*
+     * Gets the photos from an album specified by its album ID using a rest call.
+     */
     public class GetAlbumPhotosByAlbumIdTask extends AsyncTask<AlbumData, Void, String> {
 
         protected String doInBackground(AlbumData... album) {
