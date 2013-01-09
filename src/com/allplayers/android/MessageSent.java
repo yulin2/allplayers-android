@@ -31,50 +31,39 @@ public class MessageSent extends ListActivity {
         //check local storage
         if (LocalStorage.getTimeSinceLastModification("Sentbox") / 1000 / 60 < 15) { //more recent than 15 minutes
             jsonResult = LocalStorage.readSentbox(getBaseContext());
+            HashMap<String, String> map;
+
+            MessagesMap messages = new MessagesMap(jsonResult);
+            messageList = messages.getMessageData();
+
+            if (!messageList.isEmpty()) {
+                hasMessages = true;
+
+                for (int i = 0; i < messageList.size(); i++) {
+                    map = new HashMap<String, String>();
+                    map.put("line1", messageList.get(i).getSubject());
+                    map.put("line2", "Last sent from: " + messageList.get(i).getLastSender());
+                    list.add(map);
+                }
+            } else {
+                hasMessages = false;
+
+                map = new HashMap<String, String>();
+                map.put("line1", "You have no sent messages.");
+                map.put("line2", "");
+                list.add(map);
+            }
+
+            String[] from = { "line1", "line2" };
+
+            int[] to = { android.R.id.text1, android.R.id.text2 };
+
+            SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
+            setListAdapter(adapter);
         } else {    
             GetUserSentBoxTask helper = new GetUserSentBoxTask();
         	helper.execute();
-        	
-        	// helper.get() necessary because the AsyncTask needs to finish before the main thread can continue. 
-        	try {
-				helper.get();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
-            LocalStorage.writeSentbox(getBaseContext(), jsonResult, false);
         }
-
-        HashMap<String, String> map;
-
-        MessagesMap messages = new MessagesMap(jsonResult);
-        messageList = messages.getMessageData();
-
-        if (!messageList.isEmpty()) {
-            hasMessages = true;
-
-            for (int i = 0; i < messageList.size(); i++) {
-                map = new HashMap<String, String>();
-                map.put("line1", messageList.get(i).getSubject());
-                map.put("line2", "Last sent from: " + messageList.get(i).getLastSender());
-                list.add(map);
-            }
-        } else {
-            hasMessages = false;
-
-            map = new HashMap<String, String>();
-            map.put("line1", "You have no sent messages.");
-            map.put("line2", "");
-            list.add(map);
-        }
-
-        String[] from = { "line1", "line2" };
-
-        int[] to = { android.R.id.text1, android.R.id.text2 };
-
-        SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
-        setListAdapter(adapter);
     }
 
     @Override
@@ -88,10 +77,42 @@ public class MessageSent extends ListActivity {
         }
     }
     
-    public class GetUserSentBoxTask extends AsyncTask<Void, Void, Void> {
-    	protected Void doInBackground(Void... Args) {
-        	MessageSent.this.jsonResult = RestApiV1.getUserSentBox();
-        	return null;
+    public class GetUserSentBoxTask extends AsyncTask<Void, Void, String> {
+    	protected String doInBackground(Void... Args) {
+        	return RestApiV1.getUserSentBox();
+    	}
+    	
+    	protected void onPostExecute(String jsonResult) {
+    		LocalStorage.writeSentbox(getBaseContext(), jsonResult, false);
+    		HashMap<String, String> map;
+
+	        MessagesMap messages = new MessagesMap(jsonResult);
+	        messageList = messages.getMessageData();
+
+	        if (!messageList.isEmpty()) {
+	            hasMessages = true;
+
+	            for (int i = 0; i < messageList.size(); i++) {
+	                map = new HashMap<String, String>();
+	                map.put("line1", messageList.get(i).getSubject());
+	                map.put("line2", "Last sent from: " + messageList.get(i).getLastSender());
+	                list.add(map);
+	            }
+	        } else {
+	            hasMessages = false;
+
+	            map = new HashMap<String, String>();
+	            map.put("line1", "You have no sent messages.");
+	            map.put("line2", "");
+	            list.add(map);
+	        }
+
+	        String[] from = { "line1", "line2" };
+
+	        int[] to = { android.R.id.text1, android.R.id.text2 };
+
+	        SimpleAdapter adapter = new SimpleAdapter(MessageSent.this, list, android.R.layout.simple_list_item_2, from, to);
+	        setListAdapter(adapter);
     	}
     }
 }
