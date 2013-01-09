@@ -5,6 +5,7 @@ import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MessageInbox extends Activity {
     private ArrayList<MessageData> messageList;
@@ -33,7 +35,17 @@ public class MessageInbox extends Activity {
         }
 
         if (jsonResult.equals("")) {
-            jsonResult = RestApiV1.getUserInbox();
+        	GetUserInboxTask helper = new GetUserInboxTask();
+        	helper.execute();
+        	
+        	// helper.get() necessary because the AsyncTask needs to finish before the main thread can continue. 
+        	try {
+				helper.get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
         }
 
         MessagesMap messages = new MessagesMap(jsonResult);
@@ -64,5 +76,12 @@ public class MessageInbox extends Activity {
         });
 
         list.setAdapter(adapter);
+    }
+    
+    public class GetUserInboxTask extends AsyncTask<Void, Void, Void> {
+    	protected Void doInBackground(Void... Args) {
+        	MessageInbox.this.jsonResult = RestApiV1.getUserInbox();
+        	return null;
+    	}
     }
 }

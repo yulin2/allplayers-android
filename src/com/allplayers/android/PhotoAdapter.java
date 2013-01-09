@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class PhotoAdapter extends ArrayAdapter<PhotoData> {
-    private ImageView photoImage;
+    private List<ImageView> photoImage = new ArrayList<ImageView>();
     private TextView photoTitle;
     private TextView photoExtraInfo;
     private List<PhotoData> photos = new ArrayList<PhotoData>();
@@ -47,7 +48,7 @@ public class PhotoAdapter extends ArrayAdapter<PhotoData> {
         PhotoData photo = getItem(position);
 
         //Get reference to ImageView
-        photoImage = (ImageView)row.findViewById(R.id.photoImage);
+        photoImage.add(position, (ImageView)row.findViewById(R.id.photoImage));
 
         //Get reference to TextView - albumTitle
         photoTitle = (TextView)row.findViewById(R.id.photoTitle);
@@ -62,12 +63,25 @@ public class PhotoAdapter extends ArrayAdapter<PhotoData> {
         String imageURL = photo.getPhotoThumb();
 
         if (!imageURL.trim().equals("")) {
-            Bitmap bitmap = RestApiV1.getRemoteImage(photo.getPhotoThumb());
-            photoImage.setImageBitmap(bitmap);
+        	GetRemoteImageTask helper = new GetRemoteImageTask();
+        	helper.execute(photo, position);
         }
 
         //Set extra info
         photoExtraInfo.setText("");
         return row;
+    }
+    
+    public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
+    	int row;
+    	protected Bitmap doInBackground(Object... photos) {
+    		this.row = (Integer)photos[1];
+    		PhotoData photo = (PhotoData)photos[0];
+    		return RestApiV1.getRemoteImage(photo.getPhotoThumb());
+    	}
+    	
+    	protected void onPostExecute(Bitmap bitmap) {
+    		photoImage.get(row).setImageBitmap(bitmap);
+    	}
     }
 }

@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import java.util.concurrent.ExecutionException;
+
 import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
 
@@ -71,7 +73,18 @@ public class GroupPageActivity extends Activity {
     }
 
     private boolean isMember(String group_uuid) {
-        String jsonResult = RestApiV1.getGroupMembersByGroupId(group_uuid);
+        GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
+        helper.execute(group_uuid);
+        String jsonResult;
+		try {
+			jsonResult = helper.get();
+		} catch (InterruptedException e) {
+			jsonResult = "error";
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			jsonResult = "error";
+			e.printStackTrace();
+		}
 
         //If a result is not returned, the user is not an authenticated group member
         if (jsonResult.trim().equals("null") || jsonResult.trim().equals("error") ||
@@ -82,7 +95,7 @@ public class GroupPageActivity extends Activity {
         return true;
     }
     
-  public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
+    public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
         
         protected Bitmap doInBackground(String... logoURL) {
         	return RestApiV1.getRemoteImage(logoURL[0]);
@@ -92,5 +105,11 @@ public class GroupPageActivity extends Activity {
  			ImageView imView = (ImageView)findViewById(R.id.groupLogo);
  	        imView.setImageBitmap(logo);
      	}
-     }
+    }
+    
+    public class GetGroupMembersByGroupIdTask extends AsyncTask<String, Void, String> {
+    	protected String doInBackground(String... group_uuid) {
+    		return RestApiV1.getGroupMembersByGroupId(group_uuid[0]);
+    	}
+    }
 }

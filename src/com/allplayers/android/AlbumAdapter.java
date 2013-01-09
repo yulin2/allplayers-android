@@ -80,12 +80,13 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
     public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
         int row;
         protected Bitmap doInBackground(Object... albums) {
-            this.row = (Integer) albums[1];
-            return RestApiV1.getRemoteImage(( (AlbumData) albums[0]).getCoverPhoto());
+            this.row = (Integer)albums[1];
+            AlbumData album = (AlbumData)albums[0];
+            return RestApiV1.getRemoteImage(album.getCoverPhoto());
         }
          
  		protected void onPostExecute(Bitmap bitmap) {
 		    coverPhotos.get(row).setImageBitmap(bitmap);
      	}
-     }    
+    }    
 }
