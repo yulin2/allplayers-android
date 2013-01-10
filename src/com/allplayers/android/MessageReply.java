@@ -66,7 +66,7 @@ public class MessageReply extends Activity {
     /*
      * Posts a user's message using a rest call.
      * It was necessary to use an "Object" due to the fact that you cannot pass
-     * 		variables of different type into doIbBackground.
+     *      variables of different type into doIbBackground.
      */
     public class PostMessageTask extends AsyncTask<Object, Void, Void> {
         protected Void doInBackground(Object... args) {

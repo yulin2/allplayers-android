@@ -53,8 +53,8 @@ public class SearchGroupsListActivity extends ListActivity {
     }
 
     /*
-     * Searches for a group using a rest call and the user's specified 
-     * 		parameters.
+     * Searches for a group using a rest call and the user's specified
+     *      parameters.
      */
     public class SearchGroupsTask extends AsyncTask<Object, Void, String> {
         protected String doInBackground(Object... args) {

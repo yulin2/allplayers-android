@@ -43,7 +43,7 @@ public class GroupEventsActivity extends ListActivity {
             startActivity(intent);
         }
     }
-    
+
     /*
      * Gets a group's events using a rest call and places the data into a hash map.
      */

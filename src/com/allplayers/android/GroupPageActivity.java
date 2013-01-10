@@ -46,7 +46,7 @@ public class GroupPageActivity extends Activity {
     }
 
     /*
-     * Gets a remote image using a rest call and uses it in a view. 
+     * Gets a remote image using a rest call and uses it in a view.
      */
     public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
 
@@ -73,13 +73,12 @@ public class GroupPageActivity extends Activity {
             if (jsonResult.trim().equals("null") || jsonResult.trim().equals("error") ||
                     jsonResult.equals("You are not logged in")) {
                 isMember = false;
-            }
-            else {
+            } else {
                 isMember = true;
             }
 
             final Button groupMembersButton = (Button)findViewById(R.id.groupMembersButton);
-            if(isMember) groupMembersButton.setVisibility(View.VISIBLE);
+            if (isMember) groupMembersButton.setVisibility(View.VISIBLE);
             groupMembersButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this)).getGroupMembersActivityIntent(group);
@@ -88,7 +87,7 @@ public class GroupPageActivity extends Activity {
             });
 
             final Button groupEventsButton = (Button)findViewById(R.id.groupEventsButton);
-            if(isMember) groupEventsButton.setVisibility(View.VISIBLE);
+            if (isMember) groupEventsButton.setVisibility(View.VISIBLE);
             groupEventsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this)).getGroupEventsActivityIntent(group);
@@ -97,7 +96,7 @@ public class GroupPageActivity extends Activity {
             });
 
             final Button groupPhotosButton = (Button)findViewById(R.id.groupPhotosButton);
-            if(isMember) groupPhotosButton.setVisibility(View.VISIBLE);
+            if (isMember) groupPhotosButton.setVisibility(View.VISIBLE);
             groupPhotosButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this)).getGroupAlbumsActivityIntent(group);

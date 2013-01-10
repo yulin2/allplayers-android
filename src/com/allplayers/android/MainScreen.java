@@ -83,7 +83,7 @@ public class MainScreen extends TabActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-    
+
     /*
      * Logs the user out using a rest call.
      */
