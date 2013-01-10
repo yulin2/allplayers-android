@@ -28,7 +28,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class RestApiV1 {
-    private static String sCurrentUserUUID;
+    private static String sCurrentUserUUID = "";
     private static CookieHandler sCookieHandler = new CookieManager();
 
     public RestApiV1() {

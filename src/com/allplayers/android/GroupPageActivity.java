@@ -73,7 +73,7 @@ public class GroupPageActivity extends Activity {
 
         protected void onPostExecute(String jsonResult) {
             boolean isMember = false;
-
+            boolean isLoggedIn = RestApiV1.isLoggedIn();
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
             membersList = groupMembers.getGroupMemberData();
             String currentUUID = RestApiV1.getCurrentUserUUID();
@@ -85,7 +85,7 @@ public class GroupPageActivity extends Activity {
             }
 
             final Button groupMembersButton = (Button)findViewById(R.id.groupMembersButton);
-            if (isMember) groupMembersButton.setVisibility(View.VISIBLE);
+            if (isMember && isLoggedIn) groupMembersButton.setVisibility(View.VISIBLE);
             groupMembersButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this)).getGroupMembersActivityIntent(group);
@@ -94,7 +94,7 @@ public class GroupPageActivity extends Activity {
             });
 
             final Button groupEventsButton = (Button)findViewById(R.id.groupEventsButton);
-            if (isMember) groupEventsButton.setVisibility(View.VISIBLE);
+            if (isLoggedIn) groupEventsButton.setVisibility(View.VISIBLE);
             groupEventsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this)).getGroupEventsActivityIntent(group);
@@ -103,7 +103,7 @@ public class GroupPageActivity extends Activity {
             });
 
             final Button groupPhotosButton = (Button)findViewById(R.id.groupPhotosButton);
-            if (isMember) groupPhotosButton.setVisibility(View.VISIBLE);
+            if (isLoggedIn) groupPhotosButton.setVisibility(View.VISIBLE);
             groupPhotosButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this)).getGroupAlbumsActivityIntent(group);
