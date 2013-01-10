@@ -83,7 +83,10 @@ public class MainScreen extends TabActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
+    
+    /*
+     * Logs the user out using a rest call.
+     */
     public class LogOutTask extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... args) {
             RestApiV1.logOut();

@@ -91,6 +91,9 @@ public class MessageActivity extends ListActivity {
         setListAdapter(adapter);
     }
 
+    /*
+     * Fetches a user's inbox using a rest call.
+     */
     public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
             return RestApiV1.getUserInbox();

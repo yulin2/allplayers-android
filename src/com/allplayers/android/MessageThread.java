@@ -78,7 +78,7 @@ public class MessageThread extends ListActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
+    
     public class PutAndGetMessagesTask extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... threadID) {
@@ -88,6 +88,10 @@ public class MessageThread extends ListActivity {
             return jsonResult;
         }
 
+        /*
+         * Gets a user's sent and received messages and puts this data into the
+         * 		user's message thread.
+         */
         protected void onPostExecute(String jsonResult) {
             HashMap<String, String> map;
 

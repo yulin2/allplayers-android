@@ -40,6 +40,9 @@ public class MessageInbox extends Activity {
         }
     }
 
+    /*
+     * Fetches a user's inbox and populates a list with it.
+     */
     public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... Args) {
             return jsonResult = RestApiV1.getUserInbox();

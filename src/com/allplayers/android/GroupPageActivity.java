@@ -45,6 +45,9 @@ public class GroupPageActivity extends Activity {
         helper.execute(group_uuid);
     }
 
+    /*
+     * Gets a remote image using a rest call and uses it in a view. 
+     */
     public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
 
         protected Bitmap doInBackground(String... logoURL) {
@@ -57,6 +60,9 @@ public class GroupPageActivity extends Activity {
         }
     }
 
+    /*
+     * Checks if the user is a group member. If the user is a group member the group page interface is set up.
+     */
     public class GetGroupMembersByGroupIdTask extends AsyncTask<String, Void, String> {
         protected String doInBackground(String... group_uuid) {
             return RestApiV1.getGroupMembersByGroupId(group_uuid[0]);
