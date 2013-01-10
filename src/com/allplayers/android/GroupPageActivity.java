@@ -1,8 +1,10 @@
 package com.allplayers.android;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import com.allplayers.objects.GroupData;
+import com.allplayers.objects.GroupMemberData;
 import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 public class GroupPageActivity extends Activity {
     GroupData group;
+    private ArrayList<GroupMemberData> membersList;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,12 +72,16 @@ public class GroupPageActivity extends Activity {
         }
 
         protected void onPostExecute(String jsonResult) {
-            boolean isMember;
-            if (jsonResult.trim().equals("null") || jsonResult.trim().equals("error") ||
-                    jsonResult.equals("You are not logged in")) {
-                isMember = false;
-            } else {
-                isMember = true;
+            boolean isMember = false;
+
+            GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
+            membersList = groupMembers.getGroupMemberData();
+            String currentUUID = RestApiV1.getCurrentUserUUID();
+            for(int i = 0; i < membersList.size(); i++) {
+                if(membersList.get(i).getUUID().equals(currentUUID)) {
+                    isMember = true;
+                    break;
+                }
             }
 
             final Button groupMembersButton = (Button)findViewById(R.id.groupMembersButton);

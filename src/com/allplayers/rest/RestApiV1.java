@@ -458,4 +458,8 @@ public class RestApiV1 {
     public void setCurrentUserUUID(String uuid) {
         sCurrentUserUUID = uuid;
     }
+
+    public static String getCurrentUserUUID() {
+        return sCurrentUserUUID;
+    }
 }
