@@ -4,6 +4,7 @@ import com.allplayers.objects.MessageData;
 import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -52,7 +53,8 @@ public class MessageReply extends Activity {
             public void onClick(View v) {
                 sendBody = bodyField.getText().toString();
 
-                RestApiV1.postMessage(Integer.parseInt(threadID), sendBody);
+                PostMessageTask helper = new PostMessageTask();
+                helper.execute(Integer.parseInt(threadID), sendBody);
 
                 Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
                 toast.show();
@@ -60,5 +62,16 @@ public class MessageReply extends Activity {
                 finish();
             }
         });
+    }
+    /*
+     * Posts a user's message using a rest call.
+     * It was necessary to use an "Object" due to the fact that you cannot pass
+     *      variables of different type into doIbBackground.
+     */
+    public class PostMessageTask extends AsyncTask<Object, Void, Void> {
+        protected Void doInBackground(Object... args) {
+            RestApiV1.postMessage((Integer)args[0], (String)args[1]);
+            return null;
+        }
     }
 }

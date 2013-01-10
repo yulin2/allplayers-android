@@ -5,6 +5,7 @@ import com.allplayers.rest.RestApiV1;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.KeyEvent;
@@ -29,6 +30,8 @@ public class Login extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
         // TODO - Temporarily disable StrictMode because all networking is
         // currently in the UI thread. Android now throws exceptions when
         // obvious IO happens in the UI thread, which is a good thing.
@@ -53,7 +56,9 @@ public class Login extends Activity {
             BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
             textEncryptor.setPassword(storedSecretKey);
             String unencryptedPassword = textEncryptor.decrypt(storedPassword);
-            attemptLogin(storedEmail, unencryptedPassword);
+
+            AttemptLoginTask helper = new AttemptLoginTask();
+            helper.execute(storedEmail, unencryptedPassword);
         }
 
         final Button button = (Button)findViewById(R.id.loginButton);
@@ -62,7 +67,7 @@ public class Login extends Activity {
                 EditText usernameEditText = (EditText)findViewById(R.id.usernameField);
                 EditText passwordEditText = (EditText)findViewById(R.id.passwordField);
 
-                String email= usernameEditText.getText().toString();
+                String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();;
 
                 BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
@@ -72,7 +77,9 @@ public class Login extends Activity {
                 LocalStorage.writeUserName(context, email);
                 LocalStorage.writePassword(context, encryptedPassword);
 
-                Login.this.attemptLogin(email, password);
+                AttemptLoginTask helper = new AttemptLoginTask();
+                helper.execute(email, password);
+
             }
         });
     }
@@ -82,28 +89,36 @@ public class Login extends Activity {
         if (keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU) {
             startActivity(new Intent(Login.this, FindGroupsActivity.class));
         }
-
         return super.onKeyUp(keyCode, event);
     }
 
     /**
      * Attempt a login, if successful, move to the real main activity.
      */
-    private void attemptLogin(String email, String password) {
-        RestApiV1 client = new RestApiV1();
-        try {
-            String result = client.validateLogin(email, password);
-            JSONObject jsonResult = new JSONObject(result);
-            client.setCurrentUserUUID(jsonResult.getJSONObject("user").getString("uuid"));
+    public class AttemptLoginTask extends AsyncTask<String, Void, Boolean> {
 
-            Intent intent = new Intent(Login.this, MainScreen.class);
-            startActivity(intent);
-            finish();
-        } catch (JSONException ex) {
-            System.err.println("Login/user_id/" + ex);
+        protected Boolean doInBackground(String... strings) {
+            RestApiV1 client = new RestApiV1();
+            try {
+                String result = client.validateLogin(strings[0], strings[1]);
+                JSONObject jsonResult = new JSONObject(result);
+                client.setCurrentUserUUID(jsonResult.getJSONObject("user").getString("uuid"));
 
-            Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
-            invalidLogin.show();
+                Intent intent = new Intent(Login.this, MainScreen.class);
+                startActivity(intent);
+                finish();
+                return true;
+            } catch (JSONException ex) {
+                System.err.println("Login/user_id/" + ex);
+                return false;
+            }
+        }
+
+        protected void onPostExecute(Boolean ex) {
+            if (!ex) {
+                Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
+                invalidLogin.show();
+            }
         }
     }
 }

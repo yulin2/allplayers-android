@@ -4,19 +4,25 @@ import com.allplayers.objects.AlbumData;
 import com.allplayers.rest.RestApiV1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class AlbumAdapter extends ArrayAdapter<AlbumData> {
-    private ImageView albumCoverPhoto;
+    private List<ImageView> coverPhotos = new ArrayList<ImageView>();
     private TextView albumTitle;
     private TextView albumExtraInfo;
     private List<AlbumData> albums = new ArrayList<AlbumData>();
@@ -47,7 +53,7 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         AlbumData album = getItem(position);
 
         //Get reference to ImageView
-        albumCoverPhoto = (ImageView)row.findViewById(R.id.albumCoverPhoto);
+        coverPhotos.add(position, (ImageView)row.findViewById(R.id.albumCoverPhoto));
 
         //Get reference to TextView - albumTitle
         albumTitle = (TextView)row.findViewById(R.id.albumTitle);
@@ -62,12 +68,28 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         String imageURL = album.getCoverPhoto();
 
         if (!imageURL.trim().equals("")) {
-            Bitmap bitmap = RestApiV1.getRemoteImage(album.getCoverPhoto());
-            albumCoverPhoto.setImageBitmap(bitmap);
+            GetRemoteImageTask helper = new GetRemoteImageTask();
+            helper.execute(album, position);
         }
 
         //Set extra info
         albumExtraInfo.setText("");
         return row;
+    }
+
+    /*
+     * Gets an albums cover photo with a rest call.
+     */
+    public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
+        int row;
+        protected Bitmap doInBackground(Object... albums) {
+            this.row = (Integer)albums[1];
+            AlbumData album = (AlbumData)albums[0];
+            return RestApiV1.getRemoteImage(album.getCoverPhoto());
+        }
+
+        protected void onPostExecute(Bitmap bitmap) {
+            coverPhotos.get(row).setImageBitmap(bitmap);
+        }
     }
 }
