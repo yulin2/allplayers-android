@@ -2,6 +2,8 @@ package com.allplayers.android;
 
 import com.allplayers.rest.RestApiV1;
 
+import android.accounts.AccountManager;
+import android.accounts.Account;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -70,7 +72,11 @@ public class MainScreen extends TabActivity {
         case R.id.logOut: {
             LogOutTask helper = new LogOutTask();
             helper.execute();
-            LocalStorage.writePassword(context, "");
+            AccountManager manager = AccountManager.get(this.getBaseContext());
+            Account[] accounts = manager.getAccountsByType("com.allplayers.android");
+            if(accounts.length == 1) {
+                manager.removeAccount(accounts[0], null, null);
+            }
             startActivity(new Intent(MainScreen.this, Login.class));
             finish();
             return true;

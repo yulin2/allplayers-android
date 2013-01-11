@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.accounts.AccountManager;
+import android.accounts.Account;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.json.JSONException;
@@ -26,6 +28,7 @@ import org.json.JSONObject;
  */
 public class Login extends Activity {
 
+    AccountManager manager;
     private Context context;
 
     @Override
@@ -42,23 +45,28 @@ public class Login extends Activity {
         setContentView(R.layout.main);
 
         context = this.getBaseContext();
+        manager = AccountManager.get(context);
 
-        String storedEmail = LocalStorage.readUserName(context);
-        String storedPassword = LocalStorage.readPassword(context);
-        String storedSecretKey = LocalStorage.readSecretKey(context);
+        Account[] accounts = manager.getAccountsByType("com.allplayers.android");
+        // There should only be one allplayers type account in the device at once.
+        if(accounts.length == 1) {
+	        String storedEmail = accounts[0].name;
+	        String storedPassword = manager.getPassword(accounts[0]);
+	        String storedSecretKey = LocalStorage.readSecretKey(context);
 
-        if (storedSecretKey == null || storedSecretKey.equals("")) {
-            LocalStorage.writeSecretKey(context);
-            storedSecretKey = LocalStorage.readSecretKey(context);
-        }
+	        if (storedSecretKey == null || storedSecretKey.equals("")) {
+	            LocalStorage.writeSecretKey(context);
+	            storedSecretKey = LocalStorage.readSecretKey(context);
+	        }
 
-        if (storedEmail != null && !storedEmail.equals("") && storedPassword != null && !storedPassword.equals("")) {
-            BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-            textEncryptor.setPassword(storedSecretKey);
-            String unencryptedPassword = textEncryptor.decrypt(storedPassword);
+	        if (storedEmail != null && !storedEmail.equals("") && storedPassword != null && !storedPassword.equals("")) {
+	            BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+	            textEncryptor.setPassword(storedSecretKey);
+	            String unencryptedPassword = textEncryptor.decrypt(storedPassword);
 
-            AttemptLoginTask helper = new AttemptLoginTask();
-            helper.execute(storedEmail, unencryptedPassword);
+	            AttemptLoginTask helper = new AttemptLoginTask();
+	            helper.execute(storedEmail, unencryptedPassword);
+	        }
         }
 
         final Button button = (Button)findViewById(R.id.loginButton);
@@ -68,14 +76,7 @@ public class Login extends Activity {
                 EditText passwordEditText = (EditText)findViewById(R.id.passwordField);
 
                 String email = usernameEditText.getText().toString();
-                String password = passwordEditText.getText().toString();;
-
-                BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-                textEncryptor.setPassword(LocalStorage.readSecretKey(context));
-                String encryptedPassword = textEncryptor.encrypt(password);
-
-                LocalStorage.writeUserName(context, email);
-                LocalStorage.writePassword(context, encryptedPassword);
+                String password = passwordEditText.getText().toString();
 
                 AttemptLoginTask helper = new AttemptLoginTask();
                 helper.execute(email, password);
@@ -103,6 +104,14 @@ public class Login extends Activity {
                 String result = client.validateLogin(strings[0], strings[1]);
                 JSONObject jsonResult = new JSONObject(result);
                 client.setCurrentUserUUID(jsonResult.getJSONObject("user").getString("uuid"));
+
+                // If we get to this point, then we encrypt their password and add a new account.
+                BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+                textEncryptor.setPassword(LocalStorage.readSecretKey(context));
+                String encryptedPassword = textEncryptor.encrypt(strings[1]);
+
+                Account account = new Account(strings[0], "com.allplayers.android");
+                manager.addAccountExplicitly(account, encryptedPassword, null);
 
                 Intent intent = new Intent(Login.this, MainScreen.class);
                 startActivity(intent);
