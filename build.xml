@@ -6,13 +6,17 @@
 		<echo> astyle: Make source look like it's supposed to. Requires astyle.</echo>
 	</target>
 	<target name="astyle">
-		<exec executable="astyle" failonerror="true">
+		<exec executable="astyle" failonerror="true" outputproperty="astyle_out">
 			<arg
 				line="--style=java --indent=spaces=4 --brackets=attach --convert-tabs --unpad-paren --pad-header --pad-oper --suffix=none --recursive --lineend=linux 'src/com/allplayers/*.java'" />
 		</exec>
+		<echo>"${astyle_out}"</echo>
+		<condition property="astyle_changed">
+            <matches pattern="ormatted" string="${astyle_out}"/>
+        </condition>
+        <fail message="astyle reformatted the code, make sure to commit these changes." if="astyle_changed"/>
 	</target>
-	<target name="test">
-	    <antcall target="astyle"></antcall>
+	<target name="test" depends="astyle">
 	    <echo>Write some tests!</echo>
 	</target>
 </project>
