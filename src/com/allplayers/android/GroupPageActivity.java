@@ -77,8 +77,8 @@ public class GroupPageActivity extends Activity {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
             membersList = groupMembers.getGroupMemberData();
             String currentUUID = RestApiV1.getCurrentUserUUID();
-            for(int i = 0; i < membersList.size(); i++) {
-                if(membersList.get(i).getUUID().equals(currentUUID)) {
+            for (int i = 0; i < membersList.size(); i++) {
+                if (membersList.get(i).getUUID().equals(currentUUID)) {
                     isMember = true;
                     break;
                 }
