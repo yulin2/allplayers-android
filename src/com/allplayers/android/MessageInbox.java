@@ -37,8 +37,7 @@ public class MessageInbox extends Activity {
         if (jsonResult.equals("")) {
             GetUserInboxTask helper = new GetUserInboxTask();
             helper.execute();
-        }
-        else{
+        } else {
             populateInbox(jsonResult);
         }
     }
