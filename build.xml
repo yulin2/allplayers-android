@@ -8,7 +8,11 @@
 	<target name="astyle">
 		<exec executable="astyle" failonerror="true">
 			<arg
-				line="--style=java --indent=spaces=4 --brackets=attach --convert-tabs --unpad-paren --pad-header --pad-oper --suffix=none --recursive 'src/com/allplayers/*.java'" />
+				line="--style=java --indent=spaces=4 --brackets=attach --convert-tabs --unpad-paren --pad-header --pad-oper --suffix=none --recursive --lineend=linux 'src/com/allplayers/*.java'" />
 		</exec>
+	</target>
+	<target name="test">
+	    <antcall target="astyle"></antcall>
+	    <echo>Write some tests!</echo>
 	</target>
 </project>

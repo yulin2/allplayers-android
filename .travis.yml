@@ -1,0 +1,4 @@
+language: java
+before_install:
+  - sudo apt-get install astyle
+  - ant astyle | grep Formatted; [ $? == 1 ]
