@@ -151,7 +151,7 @@ public class RestApiV1 {
             if(search.length() != 0) {
                 searchTerms += ("&search=\"" + search + "\"");
             }
-            // As of right now, the input distance will only matter if a zipcode is given, 
+            // As of right now, the input distance will only matter if a zipcode is given,
             // so it is only considered in that case.
             // TODO Add in considering the distance as "Distance from my location"
             if(zipcode != 0) {
