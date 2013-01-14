@@ -99,18 +99,20 @@ public class Login extends Activity {
     public class AttemptLoginTask extends AsyncTask<String, Void, Boolean> {
 
         protected Boolean doInBackground(String... strings) {
+        	String email = strings[0];
+        	String pass = strings[1];
             RestApiV1 client = new RestApiV1();
             try {
-                String result = client.validateLogin(strings[0], strings[1]);
+                String result = client.validateLogin(email, pass);
                 JSONObject jsonResult = new JSONObject(result);
                 client.setCurrentUserUUID(jsonResult.getJSONObject("user").getString("uuid"));
 
                 // If we get to this point, then we encrypt their password and add a new account.
                 BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
                 textEncryptor.setPassword(LocalStorage.readSecretKey(context));
-                String encryptedPassword = textEncryptor.encrypt(strings[1]);
+                String encryptedPassword = textEncryptor.encrypt(pass);
 
-                Account account = new Account(strings[0], "com.allplayers.android");
+                Account account = new Account(email, "com.allplayers.android");
                 manager.addAccountExplicitly(account, encryptedPassword, null);
 
                 Intent intent = new Intent(Login.this, MainScreen.class);
