@@ -33,7 +33,7 @@ public class FindGroupsActivity extends Activity {
                 if (s.length() == 5) {
                     distanceEditText.setVisibility(View.VISIBLE);
                     distanceLabel.setVisibility(View.VISIBLE);
-                // If it changes back below 5 or above 5, then we make it disappear.
+                    // If it changes back below 5 or above 5, then we make it disappear.
                 } else {
                     distanceEditText.setVisibility(View.GONE);
                     distanceLabel.setVisibility(View.GONE);
