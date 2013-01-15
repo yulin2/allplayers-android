@@ -29,9 +29,11 @@ public class FindGroupsActivity extends Activity {
         zipcodeEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // We only want to show the distance field if the zipcode has a valid length of 5.
                 if (s.length() == 5) {
                     distanceEditText.setVisibility(View.VISIBLE);
                     distanceLabel.setVisibility(View.VISIBLE);
+                // If it changes back below 5 or above 5, then we make it disappear.
                 } else {
                     distanceEditText.setVisibility(View.GONE);
                     distanceLabel.setVisibility(View.GONE);
