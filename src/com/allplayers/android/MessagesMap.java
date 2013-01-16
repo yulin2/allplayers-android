@@ -9,11 +9,15 @@ import com.allplayers.objects.MessageData;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.google.gson.Gson;
+
 public class MessagesMap {
     private ArrayList<MessageData> mail = new ArrayList<MessageData>();
     private String[] names;
 
     public MessagesMap(String jsonResult) {
+    	Gson gson = new Gson();
+    	
         try {
             JSONObject jsonObject = new JSONObject(jsonResult);
 
@@ -21,7 +25,7 @@ public class MessagesMap {
 
             if (names.length > 0) {
                 for (int i = 0; i < names.length; i++) {
-                    MessageData message = new MessageData(jsonObject.getString(names[i]));
+                    MessageData message = gson.fromJson(jsonObject.getString(names[i]), MessageData.class);
 
                     if (message.isNew(mail)) {
                         mail.add(message);
