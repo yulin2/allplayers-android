@@ -20,7 +20,7 @@ public class MessageData extends DataObject {
     private Date updatedDate = null;
 
     public MessageData() {
-    	last_updated += "000"; //Converts to seconds.
+    	last_updated += "000"; //Converts to milliseconds.
     	updatedDate = parseTimestamp(last_updated);
         last_updated = Long.toString(updatedDate.getTime()); //update the string in case someone uses it
     }
