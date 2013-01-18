@@ -5,11 +5,11 @@ import org.json.JSONObject;
 
 public class PhotoData extends DataObject {
     private String uuid = "";
-    private String groupUUID = "";
+    private String group_uuid = "";
     private String title = "";
     private String description = "";
-    private String photoFull = "";
-    private String photoThumb = "";
+    private String photo_full = "";
+    private String photo_thumb = "";
     private PhotoData previousPhoto = null;
     private PhotoData nextPhoto = null;
 
@@ -33,7 +33,7 @@ public class PhotoData extends DataObject {
         }
 
         try {
-            groupUUID = photoObject.getString("group_uuid");
+            group_uuid = photoObject.getString("group_uuid");
         } catch (JSONException ex) {
             System.err.println("PhotoData/groupUUID/" + ex);
         }
@@ -51,13 +51,13 @@ public class PhotoData extends DataObject {
         }
 
         try {
-            photoFull = photoObject.getString("photo_full");
+            photo_full = photoObject.getString("photo_full");
         } catch (JSONException ex) {
             System.err.println("PhotoData/photoFull/" + ex);
         }
 
         try {
-            photoThumb = photoObject.getString("photo_thumb");
+            photo_thumb = photoObject.getString("photo_thumb");
         } catch (JSONException ex) {
             System.err.println("PhotoData/photoThumb/" + ex);
         }
@@ -73,7 +73,7 @@ public class PhotoData extends DataObject {
     }
 
     public String getGroupUUID() {
-        return groupUUID;
+        return group_uuid;
     }
 
     public String getTitle() {
@@ -85,11 +85,11 @@ public class PhotoData extends DataObject {
     }
 
     public String getPhotoFull() {
-        return photoFull;
+        return photo_full;
     }
 
     public String getPhotoThumb() {
-        return photoThumb;
+        return photo_thumb;
     }
 
     //Link Photos
