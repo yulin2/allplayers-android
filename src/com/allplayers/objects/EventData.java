@@ -20,69 +20,8 @@ public class EventData extends DataObject {
     private String longitude = "";
     private String latitude = "";
 
-    private Date startDate = null;
-    private Date endDate = null;
-
     public EventData() {
-
-    }
-
-    public EventData(String jsonResult) {
-        JSONObject eventObject = null;
-
-        try {
-            eventObject = new JSONObject(jsonResult);
-        } catch (JSONException ex) {
-            System.err.println("EventData/eventObject" + ex);
-        }
-
-        try {
-            uuid = eventObject.getString("uuid");
-        } catch (JSONException ex) {
-            System.err.println("EventData/uuid" + ex);
-        }
-
-        try {
-            title = eventObject.getString("title");
-        } catch (JSONException ex) {
-            System.err.println("EventData/title" + ex);
-        }
-
-        try {
-            description = eventObject.getString("description");
-        } catch (JSONException ex) {
-            System.err.println("EventData/description" + ex);
-        }
-
-        try {
-            category = eventObject.getString("category");
-        } catch (JSONException ex) {
-            System.err.println("EventData/category" + ex);
-        }
-        try {
-            start = eventObject.getString("start");
-            startDate = parseDatetime(start);
-        } catch (JSONException ex) {
-            System.err.println("EventData/start" + ex);
-        }
-        try {
-            end = eventObject.getString("end");
-            endDate = parseDatetime(end);
-        } catch (JSONException ex) {
-            System.err.println("EventData/end" + ex);
-        }
-
-        try {
-            latitude = eventObject.getJSONObject("resource").getJSONObject("location").getString("latitude");
-        } catch (JSONException ex) {
-            System.err.println("EventData/latitude" + ex);
-        }
-        try {
-            longitude = eventObject.getJSONObject("resource").getJSONObject("location").getString("longitude");
-        } catch (JSONException ex) {
-            System.err.println("EventData/longitude" + ex);
-        }
-
+    	
     }
 
     private Date parseDatetime(String datetime) {
@@ -146,11 +85,11 @@ public class EventData extends DataObject {
     }
 
     public Date getStartDate() {
-        return startDate;
+        return parseDatetime(start);
     }
 
     public String getStartDateString() {
-        return getDateString(startDate);
+        return getDateString(parseDatetime(start));
     }
 
     public String getEnd() {
@@ -158,11 +97,11 @@ public class EventData extends DataObject {
     }
 
     public Date getEndDate() {
-        return endDate;
+        return parseDatetime(end);
     }
 
     public String getEndDateString() {
-        return getDateString(endDate);
+        return getDateString(parseDatetime(end));
     }
 
     public String getLatitude() {
