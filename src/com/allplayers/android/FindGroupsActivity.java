@@ -3,25 +3,55 @@ package com.allplayers.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class FindGroupsActivity extends Activity {
+    EditText searchEditText;
+    EditText zipcodeEditText;
+    EditText distanceEditText;
+    TextView distanceLabel;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.findgroups);
+        searchEditText = (EditText)findViewById(R.id.searchGroupsField);
+        zipcodeEditText = (EditText)findViewById(R.id.searchGroupsZipcodeField);
+        distanceEditText = (EditText)findViewById(R.id.searchGroupsDistanceField);
+        distanceLabel = (TextView)findViewById(R.id.distanceLabel);
+
+        zipcodeEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // We only want to show the distance field if the zipcode has a valid length of 5.
+                if (s.length() == 5) {
+                    distanceEditText.setVisibility(View.VISIBLE);
+                    distanceLabel.setVisibility(View.VISIBLE);
+                    // If it changes back below 5 or above 5, then we make it disappear.
+                } else {
+                    distanceEditText.setVisibility(View.GONE);
+                    distanceLabel.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+        });
 
         final Button logOnButton = (Button) findViewById(R.id.searchGroupsButton);
         logOnButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                EditText searchEditText = (EditText)findViewById(R.id.searchGroupsField);
                 String query = searchEditText.getText().toString().trim();
-                EditText zipcodeEditText = (EditText)findViewById(R.id.searchGroupsZipcodeField);
                 String zipcodeString = zipcodeEditText.getText().toString().trim();
-                EditText distanceEditText = (EditText)findViewById(R.id.searchGroupsDistanceField);
                 String distanceString = distanceEditText.getText().toString().trim();
 
                 int zipcode = 0;

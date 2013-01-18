@@ -28,7 +28,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class RestApiV1 {
-    private static String sCurrentUserUUID;
+    private static String sCurrentUserUUID = "";
     private static CookieHandler sCookieHandler = new CookieManager();
 
     public RestApiV1() {
@@ -147,14 +147,20 @@ public class RestApiV1 {
     }
 
     public static String searchGroups(String search, int zipcode, int distance) {
-        return makeUnauthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups.json&search=\""
-                                      + search
-                                      + "\""
-                                      + "&distance[postal_code]="
-                                      + zipcode
-                                      + "&distance[search_distance]="
-                                      + distance
-                                      + "&distance[search_units]=mile");
+        String searchTerms = "https://www.allplayers.com/?q=api/v1/rest/groups.json";
+        if (search.length() != 0) {
+            searchTerms += ("&search=\"" + search + "\"");
+        }
+        // As of right now, the input distance will only matter if a zipcode is given,
+        // so it is only considered in that case.
+        // TODO Add in considering the distance as "Distance from my location"
+        if (zipcode != 0) {
+            searchTerms += ("&distance[postal_code]=" + zipcode
+                            + "&distance[search_distance]="
+                            + distance
+                            + "&distance[search_units]=mile");
+        }
+        return makeUnauthenticatedGet(searchTerms);
     }
 
     public static String getUserGroups() {
@@ -457,5 +463,9 @@ public class RestApiV1 {
 
     public void setCurrentUserUUID(String uuid) {
         sCurrentUserUUID = uuid;
+    }
+
+    public static String getCurrentUserUUID() {
+        return sCurrentUserUUID;
     }
 }

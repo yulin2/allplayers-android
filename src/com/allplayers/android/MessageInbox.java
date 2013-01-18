@@ -5,6 +5,7 @@ import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MessageInbox extends Activity {
     private ArrayList<MessageData> messageList;
@@ -33,10 +35,15 @@ public class MessageInbox extends Activity {
         }
 
         if (jsonResult.equals("")) {
-            jsonResult = RestApiV1.getUserInbox();
+            GetUserInboxTask helper = new GetUserInboxTask();
+            helper.execute();
+        } else {
+            populateInbox(jsonResult);
         }
+    }
 
-        MessagesMap messages = new MessagesMap(jsonResult);
+    public void populateInbox(String json) {
+        MessagesMap messages = new MessagesMap(json);
         messageList = messages.getMessageData();
 
         Collections.reverse(messageList);
@@ -51,7 +58,7 @@ public class MessageInbox extends Activity {
         }
 
         final List<MessageData> messageList2 = messageList;
-        MessageAdapter adapter = new MessageAdapter(this, messageList2);
+        MessageAdapter adapter = new MessageAdapter(MessageInbox.this, messageList2);
 
         list.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
@@ -64,5 +71,15 @@ public class MessageInbox extends Activity {
         });
 
         list.setAdapter(adapter);
+    }
+
+    public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
+        protected String doInBackground(Void... Args) {
+            return jsonResult = RestApiV1.getUserInbox();
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            populateInbox(jsonResult);
+        }
     }
 }
