@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import com.allplayers.objects.DataObject;
 import com.allplayers.objects.MessageThreadData;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,9 +20,11 @@ public class MessageThreadMap {
 
             names = getNames(jsonObject);
 
+            // Used to create MessageThreadData objects from json.
+            Gson gson = new Gson();
             if (names.length > 0) {
                 for (int i = 0; i < names.length; i++) {
-                    MessageThreadData message = new MessageThreadData(jsonObject.getString(names[i]));
+                	MessageThreadData message = gson.fromJson(jsonObject.getString(names[i]), MessageThreadData.class);
 
                     if (message.isNew(mail)) {
                         mail.add(message);

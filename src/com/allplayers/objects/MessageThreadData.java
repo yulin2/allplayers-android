@@ -20,67 +20,9 @@ public class MessageThreadData extends DataObject {
     private Date updatedDate = null;
 
     public MessageThreadData() {
-
-    }
-
-    public MessageThreadData(String jsonResult) {
-        JSONObject messageObject = null;
-
-        try {
-            messageObject = new JSONObject(jsonResult);
-        } catch (JSONException ex) {
-            System.err.println("MessageThreadData/messageObject/" + ex);
-        }
-
-        try {
-            mid = messageObject.getString("mid");
-        } catch (JSONException ex) {
-            System.err.println("MessageThreadData/mid/" + ex);
-        }
-
-        try {
-            subject = messageObject.getString("subject");
-        } catch (JSONException ex) {
-            System.err.println("MessageThreadData/subject/" + ex);
-        }
-
-        try {
-            body = messageObject.getString("body");
-        } catch (JSONException ex) {
-            System.err.println("MessageThreadData/body/" + ex);
-        }
-
-        try {
-            last_updated = messageObject.getString("timestamp") + "000"; //convert seconds to milliseconds
-            updatedDate = parseTimestamp(last_updated);
-            last_updated = Long.toString(updatedDate.getTime()); //update the string in case someone uses it
-        } catch (JSONException ex) {
-            System.err.println("MessageThreadData/last_updated/" + ex);
-        }
-
-        try {
-            is_new = messageObject.getString("is_new");
-        } catch (JSONException ex) {
-            System.err.println("MessageThreadData/is_new/" + ex);
-        }
-
-        try {
-            sender = messageObject.getString("sender");
-        } catch (JSONException ex) {
-            System.err.println("MessageThreadData/sender/" + ex);
-        }
-
-        try {
-            sender_uuid = messageObject.getString("sender_uuid");
-        } catch (JSONException ex) {
-            System.err.println("MessageThreadData/sender_uuid/" + ex);
-        }
-
-        try {
-            uri = messageObject.getString("uri");
-        } catch (JSONException ex) {
-            System.err.println("MessageThreadData/uri/" + ex);
-        }
+    	last_updated += "000"; //Converts to milliseconds.
+    	updatedDate = parseTimestamp(last_updated);
+        last_updated = Long.toString(updatedDate.getTime()); //update the string in case someone uses it
     }
 
     private Date parseTimestamp(String timestamp) {
