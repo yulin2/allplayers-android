@@ -23,11 +23,7 @@ public class PhotosMap {
                     // Used to create PhotoData objects from json.
                     Gson gson = new Gson(); 
                     for (int i = 0; i < jsonResult.length(); i++) {
-                        //PhotoData photo = new PhotoData(jsonArray.getString(i));
-                    	System.out.println(jsonArray.getString(i)); /////
                     	PhotoData photo = gson.fromJson(jsonArray.getString(i), PhotoData.class);
-                    	System.err.println("Oh hey you should look at this"); 
-                    	System.out.println(photo.getPhotoFull());
 
                         if (photo.getPhotoFull() != null && !photo.getPhotoFull().trim().equals("")) {
                             if (photo.isNew(photos)) {
