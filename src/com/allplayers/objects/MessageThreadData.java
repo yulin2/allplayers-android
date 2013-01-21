@@ -12,17 +12,24 @@ public class MessageThreadData extends DataObject {
     private String mid = "";
     private String subject = "";
     private String body = "";
-    private String last_updated = "";
+    private String timestamp;
     private String is_new = "";
     private String sender = "";
     private String sender_uuid = "";
     private String uri = "";
     private Date updatedDate = null;
+    private boolean variablesUpdated = false;
 
     public MessageThreadData() {
-    	last_updated += "000"; //Converts to milliseconds.
-    	updatedDate = parseTimestamp(last_updated);
-        last_updated = Long.toString(updatedDate.getTime()); //update the string in case someone uses it
+    	
+    }
+    
+    private void updateVariables() {
+    	
+    	timestamp += "000"; //Converts to milliseconds.
+    	updatedDate = parseTimestamp(timestamp);
+        timestamp = Long.toString(updatedDate.getTime()); //update the string in case someone uses it
+        variablesUpdated = true;
     }
 
     private Date parseTimestamp(String timestamp) {
@@ -35,15 +42,24 @@ public class MessageThreadData extends DataObject {
     }
 
     public String getTimestampString() {
-        return last_updated;
+    	if(!variablesUpdated) {
+    		updateVariables();
+    	}
+        return timestamp;
     }
 
     public Date getDate() {
+    	if(!variablesUpdated) {
+    		updateVariables();
+    	}
         return updatedDate;
     }
 
     public String getDateString() {
         Calendar calendar = Calendar.getInstance();
+        if(!variablesUpdated) {
+    		updateVariables();
+    	}
         calendar.setTime(updatedDate);
 
         int day = calendar.get(Calendar.DAY_OF_MONTH);

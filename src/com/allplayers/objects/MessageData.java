@@ -18,16 +18,21 @@ public class MessageData extends DataObject {
     private String last_message_body = "";
     private String last_updated = "";
     private Date updatedDate = null;
+    private boolean variablesUpdated = false;
 
     public MessageData() {
+
+    }
+
+    private void updateVariables() {
     	last_updated += "000"; //Converts to milliseconds.
     	updatedDate = parseTimestamp(last_updated);
         last_updated = Long.toString(updatedDate.getTime()); //update the string in case someone uses it
+        variablesUpdated = true;
     }
-
+    
     private Date parseTimestamp(String timestamp) {
         Date date = new Date(Long.parseLong(timestamp));
-
         TimeZone timezone = TimeZone.getDefault();
         int offset = timezone.getOffset(date.getTime());
         date = new Date(date.getTime() + offset);
@@ -35,15 +40,24 @@ public class MessageData extends DataObject {
     }
 
     public String getTimestampString() {
+    	if(!variablesUpdated) {
+    		updateVariables();
+    	}
         return last_updated;
     }
 
     public Date getDate() {
+    	if(!variablesUpdated) {
+    		updateVariables();
+    	}
         return updatedDate;
     }
 
     public String getDateString() {
         Calendar calendar = Calendar.getInstance();
+        if(!variablesUpdated) {
+    		updateVariables();
+    	}
         calendar.setTime(updatedDate);
 
         int day = calendar.get(Calendar.DAY_OF_MONTH);

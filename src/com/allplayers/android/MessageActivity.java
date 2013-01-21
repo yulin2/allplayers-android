@@ -65,7 +65,6 @@ public class MessageActivity extends ListActivity {
 
         if (!messageList.isEmpty()) {
             for (int i = 0; i < messageList.size(); i++) {
-                //System.out.println("Entry Number " + i + ": " + messageList.get(i).getNew());
                 if (Integer.parseInt(messageList.get(i).getNew()) > 0) {
                     numUnread++;
                 }
