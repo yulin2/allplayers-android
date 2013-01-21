@@ -14,15 +14,15 @@ public class AlbumsMap {
     private ArrayList<AlbumData> albums = new ArrayList<AlbumData>();
 
     public AlbumsMap(String jsonResult) {
-    	Gson gson = new Gson();
     	
+    	// Used to create AlbumData objects from json.
+    	Gson gson = new Gson();
         try {
             JSONArray jsonArray = new JSONArray(jsonResult);
 
             if (jsonArray.length() > 0) {
-                for (int i = 0; i < jsonResult.length(); i++) {
-                    AlbumData album = new AlbumData(jsonArray.getString(i));
-                    //AlbumData album = gson.fromJson(jsonArray.getString(i), AlbumData.class);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    AlbumData album = gson.fromJson(jsonArray.getString(i), AlbumData.class);
 
                     if (album.isNew(albums)) {
                         albums.add(album);
