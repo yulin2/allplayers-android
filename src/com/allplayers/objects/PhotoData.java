@@ -17,53 +17,6 @@ public class PhotoData extends DataObject {
 
     }
 
-    public PhotoData(String jsonResult) {
-        JSONObject photoObject = null;
-
-        try {
-            photoObject = new JSONObject(jsonResult);
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/photoObject/" + ex);
-        }
-
-        try {
-            uuid = photoObject.getString("uuid");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/uuid/" + ex);
-        }
-
-        try {
-            group_uuid = photoObject.getString("group_uuid");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/groupUUID/" + ex);
-        }
-
-        try {
-            title = photoObject.getString("title");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/title/" + ex);
-        }
-
-        try {
-            description = photoObject.getString("description");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/description/" + ex);
-        }
-
-        try {
-            photo_full = photoObject.getString("photo_full");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/photoFull/" + ex);
-        }
-
-        try {
-            photo_thumb = photoObject.getString("photo_thumb");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/photoThumb/" + ex);
-        }
-
-    }
-
     public String getUUID() {
         return uuid;
     }
