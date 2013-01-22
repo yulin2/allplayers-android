@@ -30,6 +30,7 @@ public class GroupsActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         groupList = new ArrayList<GroupData>();
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        setListAdapter(adapter);
 
         getListView().setOnScrollListener(new OnScrollListener() {
             private int visibleThreshold = 2;
@@ -86,13 +87,15 @@ public class GroupsActivity extends ListActivity {
     /** Populates the list of groups to display to the UI thread. */
     protected void updateGroupData() {
         if (!groupList.isEmpty()) {
-            // Counter to check if a full 10 new groups were loaded
+            // Counter to check if a full 10 new groups were loaded.
             int counter = 0;
+
             for (int i = currentAmountShown; i < groupList.size(); i++) {
                 adapter.add(groupList.get(currentAmountShown).getTitle());
                 currentAmountShown++;
                 counter++;
             }
+
             // If we did not load 10 groups, we are at the end of the list, so signal
             // not to try to load more groups.
             if (counter < 10) {
@@ -118,7 +121,6 @@ public class GroupsActivity extends ListActivity {
             LocalStorage.writeUserGroups(getBaseContext(), jsonResult, false);
             GroupsMap groups = new GroupsMap(jsonResult);
             groupList.addAll(groups.getGroupData());
-            setListAdapter(adapter);
             updateGroupData();
         }
     }
