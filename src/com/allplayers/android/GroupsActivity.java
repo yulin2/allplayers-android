@@ -34,12 +34,12 @@ public class GroupsActivity extends ListActivity {
         groupList = new ArrayList<GroupData>();
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
-        getListView().setOnScrollListener(new OnScrollListener(){
-        	private int visibleThreshold = 2;
+        getListView().setOnScrollListener(new OnScrollListener() {
+            private int visibleThreshold = 2;
             private int previousTotal = 0;
             private boolean loading = true;
-        	public void onScroll(AbsListView view, int firstVisibleItem,
-                    int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem,
+            int visibleItemCount, int totalItemCount) {
                 if (loading) {
                     if (totalItemCount > previousTotal) {
                         loading = false;
@@ -51,10 +51,10 @@ public class GroupsActivity extends ListActivity {
                     loading = true;
                 }
             }
-			@Override
-			public void onScrollStateChanged(AbsListView arg0, int arg1) {
-			}
-        	
+            @Override
+            public void onScrollStateChanged(AbsListView arg0, int arg1) {
+            }
+
         });
         //check local storage
         if (LocalStorage.getTimeSinceLastModification("UserGroups") / 1000 / 60 < 60) { //more recent than 60 minutes
@@ -99,7 +99,7 @@ public class GroupsActivity extends ListActivity {
             // If we did not load 10 groups, we are at the end of the list, so signal
             // not to try to load more groups.
             if (counter < 10) {
-            	loadMore = false;
+                loadMore = false;
             }
             hasGroups = true;
         } else {
