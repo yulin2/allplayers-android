@@ -22,11 +22,10 @@ import java.util.concurrent.ExecutionException;
 
 public class GroupsActivity extends ListActivity {
     private ArrayList<GroupData> groupList;
-    private boolean hasGroups = false;
+    private boolean hasGroups = false, loadMore = true;
     private String jsonResult;
     private int currentAmountShown = 0;
     ArrayAdapter<String> adapter;
-    Button loadMore;
 
     /** Called when the activity is first created. */
     @Override
@@ -35,17 +34,28 @@ public class GroupsActivity extends ListActivity {
         groupList = new ArrayList<GroupData>();
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
-        loadMore = new Button(this);
-        loadMore.setText("Load More");
-        loadMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GetUserGroupsTask helper = new GetUserGroupsTask();
-                helper.execute();
+        getListView().setOnScrollListener(new OnScrollListener(){
+        	private int visibleThreshold = 2;
+            private int previousTotal = 0;
+            private boolean loading = true;
+        	public void onScroll(AbsListView view, int firstVisibleItem,
+                    int visibleItemCount, int totalItemCount) {
+                if (loading) {
+                    if (totalItemCount > previousTotal) {
+                        loading = false;
+                        previousTotal = totalItemCount;
+                    }
+                }
+                if (loadMore && !loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                    new GetUserGroupsTask().execute();
+                    loading = true;
+                }
             }
+			@Override
+			public void onScrollStateChanged(AbsListView arg0, int arg1) {
+			}
+        	
         });
-        getListView().addFooterView(loadMore);
-
         //check local storage
         if (LocalStorage.getTimeSinceLastModification("UserGroups") / 1000 / 60 < 60) { //more recent than 60 minutes
             jsonResult = LocalStorage.readUserGroups(getBaseContext());
@@ -83,14 +93,13 @@ public class GroupsActivity extends ListActivity {
             int counter = 0;
             for (int i = currentAmountShown; i < groupList.size(); i++) {
                 adapter.add(groupList.get(currentAmountShown).getTitle());
-                adapter.notifyDataSetChanged();
                 currentAmountShown++;
                 counter++;
             }
-            // If we did not load 10 groups, we are at the end of the list, so remove the
-            // "Load More" button.
+            // If we did not load 10 groups, we are at the end of the list, so signal
+            // not to try to load more groups.
             if (counter < 10) {
-                loadMore.setVisibility(View.GONE);
+            	loadMore = false;
             }
             hasGroups = true;
         } else {
@@ -99,7 +108,7 @@ public class GroupsActivity extends ListActivity {
         }
     }
 
-    /*
+    /**
      * Fetches the groups a user belongs to and stores the data locally.
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
