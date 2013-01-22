@@ -169,8 +169,6 @@ public class RestApiV1 {
     }
 
     public static String getUserGroups(int offset) {
-        String search = "https://www.allplayers.com/?q=api/v1/rest/users/"
-                        + sCurrentUserUUID + "/groups.json?offset=" + offset;
         return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
                                     + sCurrentUserUUID + "/groups.json&offset=" + offset);
     }
