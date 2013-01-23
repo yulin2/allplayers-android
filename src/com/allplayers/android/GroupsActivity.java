@@ -67,8 +67,7 @@ public class GroupsActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
-        if (hasGroups) {
+        if (hasGroups && position < groupList.size()) {
             //Display the group page for the selected group
             Intent intent = (new Router(this)).getGroupPageActivityIntent(groupList.get(position));
             startActivity(intent);
@@ -87,9 +86,14 @@ public class GroupsActivity extends ListActivity {
     /** Populates the list of groups to display to the UI thread. */
     protected void updateGroupData() {
         if (!groupList.isEmpty()) {
+
+            // If the adapter is not empty, remove the "Loading more groups" message.
+            if (!adapter.isEmpty()) {
+                adapter.remove("LOADING MORE GROUPS...");
+            }
+
             // Counter to check if a full 10 new groups were loaded.
             int counter = 0;
-
             for (int i = currentAmountShown; i < groupList.size(); i++) {
                 adapter.add(groupList.get(currentAmountShown).getTitle());
                 currentAmountShown++;
@@ -101,6 +105,12 @@ public class GroupsActivity extends ListActivity {
             if (counter < 10) {
                 loadMore = false;
             }
+
+            // If there is more to load, add in an element at the bottom notifying we are loading more.
+            else {
+                adapter.add("LOADING MORE GROUPS...");
+            }
+
             hasGroups = true;
         } else {
             hasGroups = false;
