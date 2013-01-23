@@ -1,8 +1,5 @@
 package com.allplayers.objects;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.DecimalFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -112,11 +109,11 @@ public class EventData extends DataObject {
         return getDateString(parseDatetime(end));
     }
 
-    public String getLatitude() throws JSONException {
+    public String getLatitude() {
         return latitude;
     }
 
-    public String getLongitude() throws JSONException {
+    public String getLongitude() {
         return longitude;
     }
 }
