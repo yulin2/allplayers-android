@@ -24,6 +24,12 @@ public class EventsMap {
             if (jsonArray.length() > 0) {
                 for (int i = 0; i < jsonResult.length(); i++) {
                     EventData event = gson.fromJson(jsonArray.getString(i), EventData.class);
+                    try {
+                    	event.setLatitude(gson.fromJson(jsonArray.getJSONObject(i).getJSONObject("resource").getJSONObject("location").getString("latitude"), String.class));
+                    	event.setLongitude(gson.fromJson(jsonArray.getJSONObject(i).getJSONObject("resource").getJSONObject("location").getString("longitude"), String.class));
+                    } catch (JSONException ex) {
+                    	// If the latitude and longitude don't exist for the specified element then do not set them
+                    }
 
                     if (event.isNew(events)) {
                         events.add(event);

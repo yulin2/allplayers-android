@@ -1,5 +1,7 @@
 package com.allplayers.android;
 
+import org.json.JSONException;
+
 import com.allplayers.objects.EventData;
 
 import android.os.Bundle;
@@ -30,8 +32,18 @@ public class EventDisplayActivity extends MapActivity {
                           "\nStart: " + event.getStartDateString() + "\nEnd: " + event.getEndDateString());
 
         MapController mapController = map.getController();
-        String lat = event.getLatitude();
-        String lon = event.getLongitude();
+        String lat = "";
+		try {
+			lat = event.getLatitude();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+        String lon = "";
+		try {
+			lon = event.getLongitude();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
         GeoPoint point;
 
         if (lat.equals("") || lon.equals("")) {

@@ -59,6 +59,14 @@ public class EventData extends DataObject {
 
         return "" + df.format(month) + "/" + df.format(day) + "/" + year + " " + df.format(hour) + ":" + df.format(minute) + AmPm;
     }
+    
+    public void setLatitude(String newLatitude) {
+    	latitude = newLatitude;
+    }
+
+    public void setLongitude(String newLongitude) {
+    	longitude = newLongitude;
+    }
 
     public String getUUID() {
         return uuid;
@@ -104,11 +112,11 @@ public class EventData extends DataObject {
         return getDateString(parseDatetime(end));
     }
 
-    public String getLatitude() {
+    public String getLatitude() throws JSONException {
         return latitude;
     }
 
-    public String getLongitude() {
+    public String getLongitude() throws JSONException {
         return longitude;
     }
 }
