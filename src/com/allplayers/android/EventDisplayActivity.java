@@ -33,17 +33,17 @@ public class EventDisplayActivity extends MapActivity {
 
         MapController mapController = map.getController();
         String lat = "";
-		try {
-			lat = event.getLatitude();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+        try {
+            lat = event.getLatitude();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         String lon = "";
-		try {
-			lon = event.getLongitude();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+        try {
+            lon = event.getLongitude();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         GeoPoint point;
 
         if (lat.equals("") || lon.equals("")) {

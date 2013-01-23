@@ -21,13 +21,13 @@ public class MessageThreadData extends DataObject {
     private boolean variablesUpdated = false;
 
     public MessageThreadData() {
-    	
+
     }
-    
+
     private void updateVariables() {
-    	
-    	timestamp += "000"; //Converts to milliseconds.
-    	updatedDate = parseTimestamp(timestamp);
+
+        timestamp += "000"; //Converts to milliseconds.
+        updatedDate = parseTimestamp(timestamp);
         timestamp = Long.toString(updatedDate.getTime()); //update the string in case someone uses it
         variablesUpdated = true;
     }
@@ -42,24 +42,24 @@ public class MessageThreadData extends DataObject {
     }
 
     public String getTimestampString() {
-    	if(!variablesUpdated) {
-    		updateVariables();
-    	}
+        if (!variablesUpdated) {
+            updateVariables();
+        }
         return timestamp;
     }
 
     public Date getDate() {
-    	if(!variablesUpdated) {
-    		updateVariables();
-    	}
+        if (!variablesUpdated) {
+            updateVariables();
+        }
         return updatedDate;
     }
 
     public String getDateString() {
         Calendar calendar = Calendar.getInstance();
-        if(!variablesUpdated) {
-    		updateVariables();
-    	}
+        if (!variablesUpdated) {
+            updateVariables();
+        }
         calendar.setTime(updatedDate);
 
         int day = calendar.get(Calendar.DAY_OF_MONTH);

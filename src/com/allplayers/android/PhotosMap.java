@@ -19,11 +19,11 @@ public class PhotosMap {
 
                 if (jsonArray.length() > 0) {
                     int numPhotos = 0;
-                    
+
                     // Used to create PhotoData objects from json.
-                    Gson gson = new Gson(); 
+                    Gson gson = new Gson();
                     for (int i = 0; i < jsonResult.length(); i++) {
-                    	PhotoData photo = gson.fromJson(jsonArray.getString(i), PhotoData.class);
+                        PhotoData photo = gson.fromJson(jsonArray.getString(i), PhotoData.class);
 
                         if (photo.getPhotoFull() != null && !photo.getPhotoFull().trim().equals("")) {
                             if (photo.isNew(photos)) {

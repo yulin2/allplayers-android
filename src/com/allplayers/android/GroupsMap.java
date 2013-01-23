@@ -17,11 +17,11 @@ public class GroupsMap {
             JSONArray jsonArray = new JSONArray(jsonResult);
 
             if (jsonArray.length() > 0) {
-            	
-            	// Used to create GroupData objects from json.
-            	Gson gson = new Gson();
+
+                // Used to create GroupData objects from json.
+                Gson gson = new Gson();
                 for (int i = 0; i < jsonResult.length(); i++) {
-                	GroupData group = gson.fromJson(jsonArray.getString(i), GroupData.class);
+                    GroupData group = gson.fromJson(jsonArray.getString(i), GroupData.class);
 
                     if (group.isNew(groups)) {
                         groups.add(group);

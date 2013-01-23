@@ -14,9 +14,9 @@ public class AlbumsMap {
     private ArrayList<AlbumData> albums = new ArrayList<AlbumData>();
 
     public AlbumsMap(String jsonResult) {
-    	
-    	// Used to create AlbumData objects from json.
-    	Gson gson = new Gson();
+
+        // Used to create AlbumData objects from json.
+        Gson gson = new Gson();
         try {
             JSONArray jsonArray = new JSONArray(jsonResult);
 

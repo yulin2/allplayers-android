@@ -23,7 +23,7 @@ public class GroupMemberData extends DataObject {
     }
 
     public String getName() {
-    	 //To fix names that are all lowercase
+        //To fix names that are all lowercase
         if (fname != null && !fname.equals("null")) {
             name = fname.substring(0, 1).toUpperCase() + fname.substring(1).toLowerCase();
         }
@@ -34,7 +34,7 @@ public class GroupMemberData extends DataObject {
             }
             name += lname.substring(0, 1).toUpperCase() + lname.substring(1).toLowerCase();
         }
-        
+
         return name;
     }
 

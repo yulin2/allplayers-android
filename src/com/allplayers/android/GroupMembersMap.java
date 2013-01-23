@@ -17,11 +17,11 @@ public class GroupMembersMap {
             JSONArray jsonArray = new JSONArray(jsonResult);
 
             if (jsonArray.length() > 0) {
-            	
-            	// Used to create GroupMemberData objects from json.
-            	Gson gson = new Gson();
+
+                // Used to create GroupMemberData objects from json.
+                Gson gson = new Gson();
                 for (int i = 0; i < jsonResult.length(); i++) {
-                	GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
+                    GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
 
                     if (member.isNew(members)) {
                         members.add(member);

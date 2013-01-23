@@ -16,8 +16,8 @@ public class MessagesMap {
     private String[] names;
 
     public MessagesMap(String jsonResult) {
-    	Gson gson = new Gson();
-    	
+        Gson gson = new Gson();
+
         try {
             JSONObject jsonObject = new JSONObject(jsonResult);
 

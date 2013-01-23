@@ -21,7 +21,7 @@ public class EventData extends DataObject {
     private String latitude = "";
 
     public EventData() {
-    	
+
     }
 
     private Date parseDatetime(String datetime) {
@@ -59,13 +59,13 @@ public class EventData extends DataObject {
 
         return "" + df.format(month) + "/" + df.format(day) + "/" + year + " " + df.format(hour) + ":" + df.format(minute) + AmPm;
     }
-    
+
     public void setLatitude(String newLatitude) {
-    	latitude = newLatitude;
+        latitude = newLatitude;
     }
 
     public void setLongitude(String newLongitude) {
-    	longitude = newLongitude;
+        longitude = newLongitude;
     }
 
     public String getUUID() {

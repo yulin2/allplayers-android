@@ -24,7 +24,7 @@ public class MessageThreadMap {
             Gson gson = new Gson();
             if (names.length > 0) {
                 for (int i = 0; i < names.length; i++) {
-                	MessageThreadData message = gson.fromJson(jsonObject.getString(names[i]), MessageThreadData.class);
+                    MessageThreadData message = gson.fromJson(jsonObject.getString(names[i]), MessageThreadData.class);
 
                     if (message.isNew(mail)) {
                         mail.add(message);
