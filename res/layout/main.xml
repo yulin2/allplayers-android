@@ -48,6 +48,7 @@
 			  android:text=""
 			  android:textSize="14sp"
 			  android:gravity="center"
+			  android:inputType="textEmailAddress"
 			  android:layout_weight="1">
 			</EditText>
 		</TableRow>		
@@ -69,6 +70,7 @@
 			  android:textSize="14sp"
 			  android:gravity="center"
 			  android:password="true"
+			  android:inputType="textPassword"
 			  android:layout_weight="1">
 			</EditText>
 		</TableRow>		

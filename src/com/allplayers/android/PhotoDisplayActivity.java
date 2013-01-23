@@ -1,10 +1,13 @@
 package com.allplayers.android;
 
+import java.util.concurrent.ExecutionException;
+
 import com.allplayers.objects.PhotoData;
 import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,12 +33,8 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
         mPhoto = (new Router(this)).getIntentPhoto();
         String photoUrl = mPhoto.getPhotoFull();
 
-        Bitmap image = RestApiV1.getRemoteImage(photoUrl);
-
-        ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
-        imView.setImageBitmap(image);
-
-        imView.setOnTouchListener((OnTouchListener) this);
+        GetRemoteImageOnTouchTask helper = new GetRemoteImageOnTouchTask();
+        helper.execute(photoUrl);
     }
 
     public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -60,10 +59,9 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
                 PhotoData photo = mPhoto;
                 String photoUrl = photo.getPhotoFull();
-                Bitmap image = RestApiV1.getRemoteImage(photoUrl);
 
-                ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
-                imView.setImageBitmap(image);
+                GetRemoteImageTask helper = new GetRemoteImageTask();
+                helper.execute(photoUrl);
             }
 
             if (downYValue > currentX) {
@@ -78,10 +76,9 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
                 PhotoData photo = mPhoto;
                 String photoUrl = photo.getPhotoFull();
-                Bitmap image = RestApiV1.getRemoteImage(photoUrl);
 
-                ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
-                imView.setImageBitmap(image);
+                GetRemoteImageTask helper = new GetRemoteImageTask();
+                helper.execute(photoUrl);
             }
 
             break;
@@ -89,5 +86,36 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
         }
 
         return true;
+    }
+
+    /*
+     * Get's a user's image using a rest call and displays it.
+     */
+    public class GetRemoteImageOnTouchTask extends AsyncTask<String, Void, Bitmap> {
+
+        protected Bitmap doInBackground(String... photoUrl) {
+            return RestApiV1.getRemoteImage(photoUrl[0]);
+        }
+
+        protected void onPostExecute(Bitmap image) {
+            ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
+            imView.setImageBitmap(image);
+            imView.setOnTouchListener((OnTouchListener) PhotoDisplayActivity.this);
+        }
+    }
+
+    /*
+     * Get's a user's image using a rest call and displays it.
+     */
+    public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
+
+        protected Bitmap doInBackground(String... photoUrl) {
+            return RestApiV1.getRemoteImage(photoUrl[0]);
+        }
+
+        protected void onPostExecute(Bitmap image) {
+            ImageView imView = (ImageView)findViewById(R.id.fullPhotoDisplay);
+            imView.setImageBitmap(image);
+        }
     }
 }

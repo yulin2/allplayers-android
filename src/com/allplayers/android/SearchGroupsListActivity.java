@@ -5,6 +5,7 @@ import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,29 +28,8 @@ public class SearchGroupsListActivity extends ListActivity {
         int zipcode = router.getIntentSearchZipcode();
         int distance = router.getIntentSearchDistance();
 
-        String jsonResult = RestApiV1.searchGroups(query, zipcode, distance);
-
-        GroupsMap groups = new GroupsMap(jsonResult);
-        groupList = groups.getGroupData();
-
-        String[] values;
-
-        if (!groupList.isEmpty()) {
-            values = new String[groupList.size()];
-
-            for (int i = 0; i < groupList.size(); i++) {
-                values[i] = groupList.get(i).getTitle();
-            }
-
-            hasGroups = true;
-        } else {
-            values = new String[] {"no groups to display"};
-            hasGroups = false;
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, values);
-        setListAdapter(adapter);
+        SearchGroupsTask helper = new SearchGroupsTask();
+        helper.execute(query, zipcode, distance);
     }
 
     @Override
@@ -70,5 +50,39 @@ public class SearchGroupsListActivity extends ListActivity {
         }
 
         return super.onKeyUp(keyCode, event);
+    }
+
+    /*
+     * Searches for a group using a rest call and the user's specified
+     *      parameters.
+     */
+    public class SearchGroupsTask extends AsyncTask<Object, Void, String> {
+        protected String doInBackground(Object... args) {
+            return RestApiV1.searchGroups((String)args[0], (Integer)args[1], (Integer)args[2]);
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            GroupsMap groups = new GroupsMap(jsonResult);
+            groupList = groups.getGroupData();
+
+            String[] values;
+
+            if (!groupList.isEmpty()) {
+                values = new String[groupList.size()];
+
+                for (int i = 0; i < groupList.size(); i++) {
+                    values[i] = groupList.get(i).getTitle();
+                }
+
+                hasGroups = true;
+            } else {
+                values = new String[] {"no groups to display"};
+                hasGroups = false;
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(SearchGroupsListActivity.this,
+                    android.R.layout.simple_list_item_1, values);
+            setListAdapter(adapter);
+        }
     }
 }
