@@ -173,6 +173,11 @@ public class RestApiV1 {
                                     + sCurrentUserUUID + "/groups.json&offset=" + offset);
     }
 
+    public static String getUserGroups(int offset, int limit) {
+        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
+                                    + sCurrentUserUUID + "/groups.json&offset=" + offset + "&limit=" + limit);
+    }
+
     public static String getUserFriends() {
         return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
                                     + sCurrentUserUUID + "/friends.json");
@@ -258,10 +263,12 @@ public class RestApiV1 {
         // Make and return from authenticated get call
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             InputStream inStream = connection.getInputStream();
+            if (connection.getResponseCode() == 204) {
+                return "error";
+            }
             BufferedReader input = new BufferedReader(new InputStreamReader(
                         inStream));
 
@@ -351,9 +358,12 @@ public class RestApiV1 {
         // Make and return from unauthenticated get call
         try {
             URL url = new URL(urlString);
-            URLConnection connection = url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             InputStream inStream = connection.getInputStream();
+            if (connection.getResponseCode() == 204) {
+                return "error";
+            }
             BufferedReader input = new BufferedReader(new InputStreamReader(
                         inStream));
 
@@ -365,8 +375,7 @@ public class RestApiV1 {
 
             return result;
         } catch (Exception ex) {
-            System.err
-            .println("APCI_RestServices/makeUnauthenticatedGet/" + ex);
+            System.err.println("APCI_RestServices/makeUnauthenticatedGet/" + ex);
             return ex.toString();
         }
     }

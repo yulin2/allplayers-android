@@ -5,6 +5,7 @@ import com.allplayers.rest.RestApiV1;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -13,6 +14,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -21,8 +23,10 @@ public class GroupsActivity extends ListActivity {
     private ArrayList<GroupData> groupList;
     private boolean hasGroups = false, loadMore = true;
     private String jsonResult;
+    private int pageNumber = 0;
     private int currentAmountShown = 0;
-    ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapter;
+    private TextView loadingMore;
 
     /** Called when the activity is first created. */
     @Override
@@ -30,6 +34,13 @@ public class GroupsActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         groupList = new ArrayList<GroupData>();
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+
+        loadingMore = new TextView(this);
+        loadingMore.setTextColor(Color.WHITE);
+        loadingMore.setText("LOADING MORE GROUPS...");
+        loadingMore.setTextSize(20);
+
+        getListView().addFooterView(loadingMore);
         setListAdapter(adapter);
 
         getListView().setOnScrollListener(new OnScrollListener() {
@@ -87,12 +98,7 @@ public class GroupsActivity extends ListActivity {
     protected void updateGroupData() {
         if (!groupList.isEmpty()) {
 
-            // If the adapter is not empty, remove the "Loading more groups" message.
-            if (!adapter.isEmpty()) {
-                adapter.remove("LOADING MORE GROUPS...");
-            }
-
-            // Counter to check if a full 10 new groups were loaded.
+            // Counter to check if a full 8 new groups were loaded.
             int counter = 0;
             for (int i = currentAmountShown; i < groupList.size(); i++) {
                 adapter.add(groupList.get(currentAmountShown).getTitle());
@@ -100,18 +106,18 @@ public class GroupsActivity extends ListActivity {
                 counter++;
             }
 
-            // If we did not load 10 groups, we are at the end of the list, so signal
+            // If we did not load 8 groups, we are at the end of the list, so signal
             // not to try to load more groups.
-            if (counter < 10) {
+            if (counter < 8) {
                 loadMore = false;
-            }
-
-            // If there is more to load, add in an element at the bottom notifying we are loading more.
-            else {
-                adapter.add("LOADING MORE GROUPS...");
+                loadingMore.setVisibility(View.GONE);
             }
 
             hasGroups = true;
+            // Check for default of no groups to display.
+            if (adapter.getPosition("no groups to display") >= 0) {
+                adapter.remove("no groups to display");
+            }
         } else {
             hasGroups = false;
             adapter.add("no groups to display");
@@ -123,7 +129,7 @@ public class GroupsActivity extends ListActivity {
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(currentAmountShown);
+            return RestApiV1.getUserGroups(pageNumber++ * 8, 8);
         }
 
         protected void onPostExecute(String jsonResult) {
