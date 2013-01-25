@@ -108,7 +108,7 @@ public class GroupsActivity extends ListActivity {
 
             // If we did not load 8 groups, we are at the end of the list, so signal
             // not to try to load more groups.
-            if (counter < 8) {
+            if (counter < 5) {
                 loadMore = false;
                 loadingMore.setVisibility(View.GONE);
             }
@@ -129,7 +129,7 @@ public class GroupsActivity extends ListActivity {
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(pageNumber++ * 8, 8);
+            return RestApiV1.getUserGroups(pageNumber++ * 5, 5);
         }
 
         protected void onPostExecute(String jsonResult) {
