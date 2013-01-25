@@ -217,6 +217,17 @@ public class RestApiV1 {
                                     + album_uuid + "/photos.json");
     }
 
+    public static String getAlbumPhotosByAlbumId(String album_uuid, int offset) {
+        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/"
+                                    + album_uuid + "/photos.json&offset=" + offset);
+    }
+
+    public static String getAlbumPhotosByAlbumId(String album_uuid, int offset, int limit) {
+        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/"
+                                    + album_uuid + "/photos.json&offset=" + offset
+                                    + "&limit=" + limit);
+    }
+
     public static String getPhotoByPhotoId(String photo_uuid) {
         return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/photos/"
                                     + photo_uuid + ".json");

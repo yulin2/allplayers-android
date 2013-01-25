@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -20,13 +19,16 @@ import org.json.JSONObject;
 
 public class AlbumPhotosActivity extends ListActivity {
     private ArrayList<PhotoData> photoList;
+    private ArrayAdapter adapter = null;
+    private int currentPage;
+    private int currentAmountShown;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AlbumData album = (new Router(this)).getIntentAlbum();
-
+        photoList = new ArrayList<PhotoData>();
         GetAlbumPhotosByAlbumIdTask helper = new GetAlbumPhotosByAlbumIdTask();
         helper.execute(album);
     }
@@ -42,29 +44,42 @@ public class AlbumPhotosActivity extends ListActivity {
         }
     }
 
+    public void setAdapter() {
+        if (adapter == null) {
+            if (photoList.isEmpty()) {
+                String[] values = new String[] {"no photos to display"};
+
+                adapter = new ArrayAdapter<String>(AlbumPhotosActivity.this,
+                                                   android.R.layout.simple_list_item_1, values);
+                setListAdapter(adapter);
+            } else {
+                //Create a customized ArrayAdapter
+                adapter = new PhotoAdapter(getApplicationContext(), R.layout.photolistitem);
+                setListAdapter(adapter);
+            }
+        }
+    }
+
+    public void updateAlbumPhotos(String jsonResult) {
+        PhotosMap photos = new PhotosMap(jsonResult);
+        photoList.addAll(photos.getPhotoData());
+        setAdapter();
+        for (int i = currentAmountShown; i < photoList.size(); i++, currentAmountShown++) {
+            adapter.add(photoList.get(i));
+        }
+    }
+
     /*
      * Gets the photos from an album specified by its album ID using a rest call.
      */
     public class GetAlbumPhotosByAlbumIdTask extends AsyncTask<AlbumData, Void, String> {
 
         protected String doInBackground(AlbumData... album) {
-            return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID());
+            return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID(), currentPage++ * 5, 5);
         }
 
         protected void onPostExecute(String jsonResult) {
-            PhotosMap photos = new PhotosMap(jsonResult);
-            photoList = photos.getPhotoData();
-            if (photoList.isEmpty()) {
-                String[] values = new String[] {"no photos to display"};
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(AlbumPhotosActivity.this,
-                        android.R.layout.simple_list_item_1, values);
-                setListAdapter(adapter);
-            } else {
-                //Create a customized ArrayAdapter
-                PhotoAdapter adapter = new PhotoAdapter(getApplicationContext(), R.layout.photolistitem, photoList);
-                setListAdapter(adapter);
-            }
+            updateAlbumPhotos(jsonResult);
         }
     }
 }

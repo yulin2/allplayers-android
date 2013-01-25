@@ -27,6 +27,18 @@ public class PhotoAdapter extends ArrayAdapter<PhotoData> {
         this.photos = objects;
     }
 
+    public PhotoAdapter(Context context, int textViewResourceId) {
+        super(context, textViewResourceId);
+    }
+
+    public void add(PhotoData photo) {
+        photos.add(photo);
+    }
+
+    public void addAll(List<PhotoData> photoObjects) {
+        photos.addAll(photoObjects);
+    }
+
     public int getCount() {
         return photos.size();
     }
