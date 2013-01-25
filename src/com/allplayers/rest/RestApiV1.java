@@ -293,8 +293,7 @@ public class RestApiV1 {
         // Make and return from authenticated delete call
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setDoOutput(true);
             connection.setRequestMethod("DELETE");
@@ -318,8 +317,7 @@ public class RestApiV1 {
         // Make and return from authenticated put call
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setDoOutput(true);
             connection.setDoInput(true);
@@ -385,8 +383,7 @@ public class RestApiV1 {
         // Make and return from authenticated post call
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setDoInput(true);
             connection.setDoOutput(true);
