@@ -21,7 +21,7 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
     float  downYValue;
     private ViewFlipper slider;
     private ArrayList<ImageView> photos;
-    private int currentPhoto = 1;
+    private int currentPhotoIndex = 1;
 
     /**
      * The current photo displayed.
@@ -35,8 +35,6 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
         setContentView(R.layout.photodisplay);
 
         slider = (ViewFlipper)findViewById(R.id.Slider);
-        slider.setInAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
-        slider.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
 
         photos = new ArrayList<ImageView>();
         // Create ImageViews and set their on touch listeners.
@@ -75,15 +73,19 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
                 //change image
                 if (mPhoto.previousPhoto() != null) {
+                	slider.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left));
+                    slider.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_to_right));
+                	
                     mPhoto = mPhoto.previousPhoto();
-                    PhotoData photoToLoad = mPhoto.previousPhoto();
-                    GetRemoteImageTask helper = new GetRemoteImageTask();
+                    PhotoData photoToLoad = mPhoto.previousPhoto();                    
+                    int nextPhotoIndex = (currentPhotoIndex + 1) % 3;
+                    
                     if (mPhoto.previousPhoto() != null) {
-                        helper.execute(photoToLoad.getPhotoFull(), currentPhoto + 1);
+                        new GetRemoteImageTask().execute(photoToLoad.getPhotoFull(), nextPhotoIndex);
                     }
-                    currentPhoto--;
-                    if (currentPhoto == -1) currentPhoto = 2;
-                    slider.setDisplayedChild(currentPhoto);
+                    currentPhotoIndex--;
+                    if (currentPhotoIndex == -1) currentPhotoIndex = 2;
+                    slider.setDisplayedChild(currentPhotoIndex);
                 }
 
 
@@ -93,14 +95,20 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
                 //change image
                 if (mPhoto.nextPhoto() != null) {
+                	slider.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_from_right));
+                    slider.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_to_left));                	
+                	
                     mPhoto = mPhoto.nextPhoto();
+                    int nextPhotoIndex = currentPhotoIndex-1;
+                    if(nextPhotoIndex == -1) nextPhotoIndex = 2;
                     PhotoData photoToLoad = mPhoto.nextPhoto();
                     GetRemoteImageTask helper = new GetRemoteImageTask();
+                    
                     if (mPhoto.nextPhoto() != null)
-                        helper.execute(photoToLoad.getPhotoFull(), currentPhoto - 1);
-                    currentPhoto++;
-                    if (currentPhoto == 3) currentPhoto = 0;
-                    slider.setDisplayedChild(currentPhoto);
+                        helper.execute(photoToLoad.getPhotoFull(), nextPhotoIndex);
+                    
+                    currentPhotoIndex = (currentPhotoIndex+1) % 3;
+                    slider.setDisplayedChild(currentPhotoIndex);
                 }
             }
 
