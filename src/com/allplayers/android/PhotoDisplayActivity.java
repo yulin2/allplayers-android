@@ -73,13 +73,13 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
                 //change image
                 if (mPhoto.previousPhoto() != null) {
-                	slider.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left));
+                    slider.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left));
                     slider.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_to_right));
-                	
+
                     mPhoto = mPhoto.previousPhoto();
-                    PhotoData photoToLoad = mPhoto.previousPhoto();                    
+                    PhotoData photoToLoad = mPhoto.previousPhoto();
                     int nextPhotoIndex = (currentPhotoIndex + 1) % 3;
-                    
+
                     if (mPhoto.previousPhoto() != null) {
                         new GetRemoteImageTask().execute(photoToLoad.getPhotoFull(), nextPhotoIndex);
                     }
@@ -95,19 +95,19 @@ public class PhotoDisplayActivity extends Activity implements OnTouchListener {
 
                 //change image
                 if (mPhoto.nextPhoto() != null) {
-                	slider.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_from_right));
-                    slider.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_to_left));                	
-                	
+                    slider.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_from_right));
+                    slider.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_to_left));
+
                     mPhoto = mPhoto.nextPhoto();
-                    int nextPhotoIndex = currentPhotoIndex-1;
-                    if(nextPhotoIndex == -1) nextPhotoIndex = 2;
+                    int nextPhotoIndex = currentPhotoIndex - 1;
+                    if (nextPhotoIndex == -1) nextPhotoIndex = 2;
                     PhotoData photoToLoad = mPhoto.nextPhoto();
                     GetRemoteImageTask helper = new GetRemoteImageTask();
-                    
+
                     if (mPhoto.nextPhoto() != null)
                         helper.execute(photoToLoad.getPhotoFull(), nextPhotoIndex);
-                    
-                    currentPhotoIndex = (currentPhotoIndex+1) % 3;
+
+                    currentPhotoIndex = (currentPhotoIndex + 1) % 3;
                     slider.setDisplayedChild(currentPhotoIndex);
                 }
             }
