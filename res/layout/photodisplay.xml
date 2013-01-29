@@ -12,12 +12,26 @@
 	  android:layout_centerHorizontal="true">
 
 		<ImageView
-		  android:id="@+id/fullPhotoDisplay"
-		  android:layout_width="match_parent"
-		  android:layout_height="match_parent"
-		  android:layout_centerHorizontal="true"
-		  android:src="@drawable/solid_black"/>
-
+          android:id="@+id/firstPhoto"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_centerHorizontal="true"
+          android:src="@drawable/solid_black"/>
+		
+		<ImageView
+          android:id="@+id/secondPhoto"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_centerHorizontal="true"
+          android:src="@drawable/solid_black"/>
+		
+		<ImageView
+          android:id="@+id/thirdPhoto"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_centerHorizontal="true"
+          android:src="@drawable/solid_black"/>
+		
 	</ViewFlipper>
 
 </LinearLayout>
