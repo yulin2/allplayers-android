@@ -2,6 +2,8 @@ package com.allplayers.android;
 
 import com.allplayers.rest.RestApiV1;
 
+import android.app.Activity;
+import android.app.LocalActivityManager;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +30,7 @@ public class MainScreen extends TabActivity {
         TabHost tabHost = getTabHost();  // The activity TabHost
         TabHost.TabSpec spec;  // Reusable TabSpec for each tab
         Intent intent;  // Reusable Intent for each tab
+
 
         // Create an Intent to launch an Activity for the tab (to be reused)
         intent = new Intent().setClass(this, GroupsActivity.class); //set as GroupsActivity.class, this will be changed to
@@ -77,6 +80,19 @@ public class MainScreen extends TabActivity {
         }
         case R.id.search: {
             startActivity(new Intent(MainScreen.this, FindGroupsActivity.class));
+            return true;
+        }
+        case R.id.refresh: {
+            TabHost tabHost = getTabHost();
+            LocalActivityManager manager = getLocalActivityManager();
+            String currentTag = tabHost.getCurrentTabTag();
+            int currentIndex = tabHost.getCurrentTab();
+            int swapIndex = (currentIndex % 3) + 1;
+            Class <? extends Activity > currentClass = manager.getCurrentActivity().getClass();
+            manager.destroyActivity(currentTag, true);
+            manager.startActivity(currentTag, new Intent(this, currentClass));
+            tabHost.setCurrentTab(swapIndex);
+            tabHost.setCurrentTab(currentIndex);
             return true;
         }
         default:
