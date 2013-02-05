@@ -66,9 +66,6 @@ public class PhotoAdapter extends BaseAdapter {
 
         //Set cover photo icon
         String imageURL = photo.getPhotoThumb();
-        System.out.println("Getting image for position " + position + "\nAnd we are on currentImage = " + currentImage);
-        System.out.println(imageURL);
-
         if (!imageURL.trim().equals("")) {
             GetRemoteImageTask helper = new GetRemoteImageTask();
             helper.execute(photo, currentImage);

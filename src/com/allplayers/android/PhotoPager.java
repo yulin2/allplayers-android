@@ -10,6 +10,7 @@ import com.allplayers.rest.RestApiV1;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -50,13 +51,17 @@ public class PhotoPager extends Activity {
             while(temp.previousPhoto() != null) {
             	photos.add(0, temp.previousPhoto());
             	temp = temp.previousPhoto();
+            	System.out.println("Added a photo before.");
             }
+            int currentPhotoIndex = photos.size();
+            photos.add(item);
             temp = item;
             while(temp.nextPhoto() != null) {
             	photos.add(temp.nextPhoto());
             	temp = temp.nextPhoto();
+            	System.out.println("Added a photo after.");
             }
-            currentPhotoIndex = photos.indexOf(item);
+            
             mViewPager.setCurrentItem(currentPhotoIndex);
         }
 
@@ -87,10 +92,11 @@ public class PhotoPager extends Activity {
         
         @Override
         public Object instantiateItem(View collection, int position) {
-        	ImageView image = new ImageView(PhotoPager.this);
-        	((ViewPager) collection).addView(image, 0);
-        	new GetRemoteImageTask().execute(photos.get(position).getPhotoFull(), image);
-            return image;
+            ImageView image = new ImageView(PhotoPager.this);
+            images.add(position, image);
+            new GetRemoteImageTask().execute(photos.get(position).getPhotoFull(), position);
+            ((ViewPager) collection).addView(images.get(position),0);  
+            return images.get(position);
         }
         
         @Override
@@ -100,7 +106,7 @@ public class PhotoPager extends Activity {
         
         @Override
         public int getCount() {
-            return images.size();
+            return photos.size();
         }
 
         @Override
@@ -112,14 +118,14 @@ public class PhotoPager extends Activity {
          * Get's a user's image using a rest call and displays it.
          */
         public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
-        	ImageView imageView;
+        	int index;
             protected Bitmap doInBackground(Object... photoUrl) {
-            	imageView = (ImageView) photoUrl[1];
+            	index = (Integer) photoUrl[1];
                 return RestApiV1.getRemoteImage((String) photoUrl[0]);
             }
 
             protected void onPostExecute(Bitmap image) {
-            	imageView.setImageBitmap(image);
+            	images.get(index).setImageBitmap(image);
             }
         }
     }
