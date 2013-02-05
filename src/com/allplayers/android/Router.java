@@ -102,7 +102,7 @@ public class Router {
     }
 
     public Intent getPhotoDisplayActivityIntent(PhotoData photo) {
-        Intent intent = new Intent(mActivity, PhotoDisplayActivity.class);
+        Intent intent = new Intent(mActivity, PhotoPager.class);
         intent.putExtra(EXTRA_PHOTO, photo);
         return intent;
     }
