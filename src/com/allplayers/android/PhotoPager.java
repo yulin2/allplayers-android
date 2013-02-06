@@ -6,10 +6,8 @@ import java.util.List;
 import com.allplayers.objects.PhotoData;
 import com.allplayers.rest.RestApiV1;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;

@@ -5,27 +5,21 @@ import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.PhotoData;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.AdapterView;
 
 import java.util.ArrayList;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class AlbumPhotosActivity extends Activity {
     private ArrayList<PhotoData> photoList;
     private ArrayAdapter blankAdapter = null;
     private PhotoAdapter photoAdapter;
-    private int currentPage;
-    private int currentAmountShown;
     private GridView grid;
 
     /** Called when the activity is first created. */
@@ -68,11 +62,7 @@ public class AlbumPhotosActivity extends Activity {
         setAdapter();
         if (photoList.size() != 0) {
             photoAdapter.addAll(photoList);
-            currentAmountShown += photoList.size();
         }
-        /*for (int i = currentAmountShown; i < photoList.size(); i++, currentAmountShown++) {
-            photoAdapter.add(photoList.get(i));
-        }*/
     }
 
     /*
