@@ -24,18 +24,15 @@ public class PhotoAdapter extends BaseAdapter {
     private ImageView[] photoImage;
     private List<PhotoData> photos = new ArrayList<PhotoData>();
     private Context mContext;
-    private LruCache<String, Bitmap> mMemoryCache;
     private int numOfPhotosInAlbum = 0;
 
     public PhotoAdapter(Context context, List<PhotoData> objects) {
         mContext = context;
         this.photos = objects;
-        createCache();
     }
 
     public PhotoAdapter(Context context) {
         mContext = context;
-        createCache();
     }
 
     public void add(PhotoData photo) {
@@ -55,22 +52,6 @@ public class PhotoAdapter extends BaseAdapter {
 
     public PhotoData getItem(int index) {
         return photos.get(index);
-    }
-
-    public void createCache() {
-        final int maxMemory = (int)(Runtime.getRuntime().maxMemory() / 1024);
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 8;
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @SuppressLint("NewApi")
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                //System.out.println("Size is " +bitmap.getByteCount() / 1024);
-                return bitmap.getByteCount() / 1024;
-            }
-        };
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -111,7 +92,6 @@ public class PhotoAdapter extends BaseAdapter {
 
         protected void onPostExecute(Bitmap bitmap) {
             System.out.println("Loaded a new image");
-            mMemoryCache.put("albumPhoto" + row, bitmap);
             photoImage[row].setImageBitmap(bitmap);
         }
     }

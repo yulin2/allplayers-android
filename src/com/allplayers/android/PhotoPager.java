@@ -12,18 +12,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.util.LruCache;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 
 public class PhotoPager extends Activity {
-    private LruCache<String, Bitmap> mMemoryCache;
     private ViewPager mViewPager;
     private PhotoPagerAdapter photoAdapter;
     private PhotoData currentPhoto;
@@ -33,19 +28,6 @@ public class PhotoPager extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final int maxMemory = (int)(Runtime.getRuntime().maxMemory() / 1024);
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 8;
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @SuppressLint("NewApi")
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
 
         currentPhoto = (new Router(this)).getIntentPhoto();
         mViewPager = new ViewPager(this);
@@ -87,10 +69,7 @@ public class PhotoPager extends Activity {
         public Object instantiateItem(View collection, int position) {
             ImageView image = new ImageView(PhotoPager.this);
             image.setImageResource(R.drawable.loading_image);
-            images[position] = image;
-            Bitmap bm = mMemoryCache.get("photo" + position);
-            if (bm != null) {
-                images[position].setImageBitmap(bm);
+            if (images[position] != null) {
                 ((ViewPager) collection).addView(images[position], 0);
                 return images[position];
             }
@@ -126,7 +105,6 @@ public class PhotoPager extends Activity {
             }
 
             protected void onPostExecute(Bitmap image) {
-                mMemoryCache.put("photo" + index, image);
                 images[index].setImageBitmap(image);
             }
         }
