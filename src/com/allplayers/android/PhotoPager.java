@@ -9,6 +9,7 @@ import com.allplayers.rest.RestApiV1;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,13 +23,15 @@ public class PhotoPager extends Activity {
     private ViewPager mViewPager;
     private PhotoPagerAdapter photoAdapter;
     private PhotoData currentPhoto;
-    int currentPhotoIndex;
+    private int currentPhotoIndex;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            currentPhotoIndex = savedInstanceState.getInt("photoToStart");
+        }
         super.onCreate(savedInstanceState);
-
         currentPhoto = (new Router(this)).getIntentPhoto();
         mViewPager = new ViewPager(this);
         setContentView(mViewPager);
@@ -37,6 +40,10 @@ public class PhotoPager extends Activity {
         mViewPager.setCurrentItem(currentPhotoIndex);
     }
 
+    protected void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
+        icicle.putInt("photoToStart", currentPhotoIndex);
+    }
 
     public class PhotoPagerAdapter extends PagerAdapter {
         private Context mContext;
@@ -53,7 +60,9 @@ public class PhotoPager extends Activity {
                 temp = temp.previousPhoto();
                 System.out.println("Added a photo before.");
             }
-            currentPhotoIndex = photos.size();
+            if (currentPhotoIndex == 0) {
+                currentPhotoIndex = photos.size();
+            }
             photos.add(item);
             temp = item;
             while (temp.nextPhoto() != null) {
@@ -67,6 +76,7 @@ public class PhotoPager extends Activity {
 
         @Override
         public Object instantiateItem(View collection, int position) {
+            currentPhotoIndex = mViewPager.getCurrentItem();
             ImageView image = new ImageView(PhotoPager.this);
             image.setImageResource(R.drawable.loading_image);
             if (images[position] != null) {
