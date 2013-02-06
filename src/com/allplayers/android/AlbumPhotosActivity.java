@@ -66,8 +66,10 @@ public class AlbumPhotosActivity extends Activity {
         PhotosMap photos = new PhotosMap(jsonResult);
         photoList.addAll(photos.getPhotoData());
         setAdapter();
-        photoAdapter.addAll(photoList);
-        currentAmountShown += photoList.size();
+        if (photoList.size() != 0) {
+            photoAdapter.addAll(photoList);
+            currentAmountShown += photoList.size();
+        }
         /*for (int i = currentAmountShown; i < photoList.size(); i++, currentAmountShown++) {
             photoAdapter.add(photoList.get(i));
         }*/
