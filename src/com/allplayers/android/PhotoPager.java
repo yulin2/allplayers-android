@@ -18,6 +18,9 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 
 public class PhotoPager extends Activity {
     private LruCache<String, Bitmap> mMemoryCache;
@@ -83,6 +86,7 @@ public class PhotoPager extends Activity {
         @Override
         public Object instantiateItem(View collection, int position) {
             ImageView image = new ImageView(PhotoPager.this);
+            image.setImageResource(R.drawable.loading_image);
             images[position] = image;
             Bitmap bm = mMemoryCache.get("photo" + position);
             if (bm != null) {

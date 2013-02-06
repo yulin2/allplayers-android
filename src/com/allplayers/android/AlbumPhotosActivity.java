@@ -38,15 +38,14 @@ public class AlbumPhotosActivity extends Activity {
         grid = (GridView) findViewById(R.id.gridview);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                if (!photoList.isEmpty()) {
+                if (photoList.get(position) != null) {
                     // Display the group page for the selected group
                     Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoDisplayActivityIntent(photoList.get(position));
                     startActivity(intent);
                 }
             }
         });
-        GetAlbumPhotosByAlbumIdTask helper = new GetAlbumPhotosByAlbumIdTask();
-        helper.execute(album);
+        new GetAlbumPhotosByAlbumIdTask().execute(album);
     }
 
     public void setAdapter() {
@@ -67,9 +66,11 @@ public class AlbumPhotosActivity extends Activity {
         PhotosMap photos = new PhotosMap(jsonResult);
         photoList.addAll(photos.getPhotoData());
         setAdapter();
-        for (int i = currentAmountShown; i < photoList.size(); i++, currentAmountShown++) {
+        photoAdapter.addAll(photoList);
+        currentAmountShown += photoList.size();
+        /*for (int i = currentAmountShown; i < photoList.size(); i++, currentAmountShown++) {
             photoAdapter.add(photoList.get(i));
-        }
+        }*/
     }
 
     /*
