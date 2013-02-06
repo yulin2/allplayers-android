@@ -40,7 +40,7 @@ public class AlbumPhotosActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 if (photoList.get(position) != null) {
                     // Display the group page for the selected group
-                    Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoDisplayActivityIntent(photoList.get(position));
+                    Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoPagerActivityIntent(photoList.get(position));
                     startActivity(intent);
                 }
             }
