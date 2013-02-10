@@ -108,7 +108,7 @@ public class GroupsActivity extends ListActivity {
 
             // If we did not load 8 groups, we are at the end of the list, so signal
             // not to try to load more groups.
-            if (counter < 5) {
+            if (counter < 8) {
                 loadMore = false;
                 loadingMore.setVisibility(View.GONE);
             }
