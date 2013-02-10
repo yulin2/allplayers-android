@@ -40,6 +40,7 @@ public class PhotoPager extends Activity {
 
     protected void onSaveInstanceState(Bundle icicle) {
         super.onSaveInstanceState(icicle);
+        currentPhotoIndex = mViewPager.getCurrentItem();
         icicle.putInt("photoToStart", currentPhotoIndex);
     }
 
@@ -68,13 +69,11 @@ public class PhotoPager extends Activity {
                 temp = temp.nextPhoto();
                 System.out.println("Added a photo after.");
             }
-            System.out.println("Current Photo Index = " + currentPhotoIndex);
             images = new ImageView[photos.size()];
         }
 
         @Override
         public Object instantiateItem(View collection, int position) {
-            currentPhotoIndex = mViewPager.getCurrentItem();
             ImageView image = new ImageView(PhotoPager.this);
             image.setImageResource(R.drawable.loading_image);
             if (images[position] != null) {
