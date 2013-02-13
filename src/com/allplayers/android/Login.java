@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.accounts.AccountManager;
 import android.accounts.Account;
@@ -27,7 +28,11 @@ import org.json.JSONObject;
  * is needed.
  */
 public class Login extends Activity {
-
+    EditText usernameEditText;
+    EditText passwordEditText;
+    TextView passwordLabel;
+    TextView usernameLabel;
+    Button button;
     AccountManager manager;
     private Context context;
 
@@ -46,34 +51,43 @@ public class Login extends Activity {
 
         context = this.getBaseContext();
         manager = AccountManager.get(context);
+        button = (Button)findViewById(R.id.loginButton);
+        usernameEditText = (EditText)findViewById(R.id.usernameField);
+        passwordEditText = (EditText)findViewById(R.id.passwordField);
+        passwordLabel = (TextView)findViewById(R.id.passwordLabel);
+        usernameLabel = (TextView)findViewById(R.id.usernameLabel);
+
 
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
         // There should only be one allplayers type account in the device at once.
-        if(accounts.length == 1) {
-	        String storedEmail = accounts[0].name;
-	        String storedPassword = manager.getPassword(accounts[0]);
-	        String storedSecretKey = LocalStorage.readSecretKey(context);
+        if (accounts.length == 1) {
+            String storedEmail = accounts[0].name;
+            String storedPassword = manager.getPassword(accounts[0]);
+            String storedSecretKey = LocalStorage.readSecretKey(context);
 
-	        if (storedSecretKey == null || storedSecretKey.equals("")) {
-	            LocalStorage.writeSecretKey(context);
-	            storedSecretKey = LocalStorage.readSecretKey(context);
-	        }
+            if (storedSecretKey == null || storedSecretKey.equals("")) {
+                LocalStorage.writeSecretKey(context);
+                storedSecretKey = LocalStorage.readSecretKey(context);
+            }
 
-	        if (storedEmail != null && !storedEmail.equals("") && storedPassword != null && !storedPassword.equals("")) {
-	            BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-	            textEncryptor.setPassword(storedSecretKey);
-	            String unencryptedPassword = textEncryptor.decrypt(storedPassword);
+            if (storedEmail != null && !storedEmail.equals("") && storedPassword != null && !storedPassword.equals("")) {
+                BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+                textEncryptor.setPassword(storedSecretKey);
+                String unencryptedPassword = textEncryptor.decrypt(storedPassword);
 
-	            AttemptLoginTask helper = new AttemptLoginTask();
-	            helper.execute(storedEmail, unencryptedPassword);
-	        }
+                AttemptLoginTask helper = new AttemptLoginTask();
+                helper.execute(storedEmail, unencryptedPassword);
+            }
+        } else {
+            button.setVisibility(View.VISIBLE);
+            usernameEditText.setVisibility(View.VISIBLE);
+            passwordEditText.setVisibility(View.VISIBLE);
+            passwordLabel.setVisibility(View.VISIBLE);
+            usernameLabel.setVisibility(View.VISIBLE);
         }
 
-        final Button button = (Button)findViewById(R.id.loginButton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                EditText usernameEditText = (EditText)findViewById(R.id.usernameField);
-                EditText passwordEditText = (EditText)findViewById(R.id.passwordField);
 
                 String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
@@ -97,17 +111,38 @@ public class Login extends Activity {
      * Attempt a login, if successful, move to the real main activity.
      */
     public class AttemptLoginTask extends AsyncTask<String, Void, Boolean> {
-
+        /**
+         * @return
+         *  0 - Was not able to log in successfully.
+         *  1 - Was able to log a user back in.
+         *  2 - Was able to log a user in
+         */
         protected Boolean doInBackground(String... strings) {
-        	String email = strings[0];
-        	String pass = strings[1];
+            String email = strings[0];
+            String pass = strings[1];
+
             RestApiV1 client = new RestApiV1();
             try {
+                if (client.isLoggedIn()) {
+                    Intent intent = new Intent(Login.this, MainScreen.class);
+                    startActivity(intent);
+                    finish();
+                    return true;
+                }
+
+
                 String result = client.validateLogin(email, pass);
                 JSONObject jsonResult = new JSONObject(result);
                 client.setCurrentUserUUID(jsonResult.getJSONObject("user").getString("uuid"));
 
                 // If we get to this point, then we encrypt their password and add a new account.
+                String key = LocalStorage.readSecretKey(context);
+                if (key == null || key.equals("")) {
+                    LocalStorage.writeSecretKey(context);
+                    key = LocalStorage.readSecretKey(context);
+                    System.out.println("Stored Secret Key = " + key);
+                }
+
                 BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
                 textEncryptor.setPassword(LocalStorage.readSecretKey(context));
                 String encryptedPassword = textEncryptor.encrypt(pass);
@@ -125,11 +160,12 @@ public class Login extends Activity {
             }
         }
 
-        protected void onPostExecute(Boolean ex) {
+        protected void onPostExecute(boolean ex) {
             if (!ex) {
                 Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
                 invalidLogin.show();
             }
+
         }
     }
 }

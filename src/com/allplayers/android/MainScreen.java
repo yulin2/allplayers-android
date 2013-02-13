@@ -74,7 +74,7 @@ public class MainScreen extends TabActivity {
             helper.execute();
             AccountManager manager = AccountManager.get(this.getBaseContext());
             Account[] accounts = manager.getAccountsByType("com.allplayers.android");
-            if(accounts.length == 1) {
+            if (accounts.length == 1) {
                 manager.removeAccount(accounts[0], null, null);
             }
             startActivity(new Intent(MainScreen.this, Login.class));
