@@ -140,11 +140,10 @@ public class Login extends Activity {
                 if (key == null || key.equals("")) {
                     LocalStorage.writeSecretKey(context);
                     key = LocalStorage.readSecretKey(context);
-                    System.out.println("Stored Secret Key = " + key);
                 }
 
                 BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-                textEncryptor.setPassword(LocalStorage.readSecretKey(context));
+                textEncryptor.setPassword(key);
                 String encryptedPassword = textEncryptor.encrypt(pass);
 
                 Account account = new Account(email, "com.allplayers.android");
@@ -160,12 +159,11 @@ public class Login extends Activity {
             }
         }
 
-        protected void onPostExecute(boolean ex) {
+        protected void onPostExecute(Boolean ex) {
             if (!ex) {
                 Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
                 invalidLogin.show();
             }
-
         }
     }
 }

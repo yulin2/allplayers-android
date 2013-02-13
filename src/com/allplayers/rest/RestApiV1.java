@@ -63,7 +63,7 @@ public class RestApiV1 {
     }
 
     public static boolean isLoggedIn() {
-        if (sCurrentUserUUID.equals("")) {
+        if (sCurrentUserUUID.equals("") || sCurrentUserUUID.equals(null)) {
             return false;
         }
 
@@ -418,7 +418,7 @@ public class RestApiV1 {
             return result;
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/makeAuthenticatedPost/" + ex);
-            return ex.toString();
+            return "error";
         }
     }
 
