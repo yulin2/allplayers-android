@@ -27,6 +27,7 @@
 	  android:paddingBottom="0px">
 	  	<TableRow>
 		    <TextView
+		      android:visibility="gone"
 			  android:id="@+id/usernameLabel"
 			  android:layout_width="fill_parent"
 			  android:layout_height="fill_parent"
@@ -37,6 +38,7 @@
 			  android:layout_weight="0">
 			</TextView>
 			<EditText
+			  android:visibility="gone"
 			  android:id="@+id/usernameField"
 			  android:layout_width="fill_parent"
 			  android:layout_height="fill_parent"
@@ -50,6 +52,7 @@
 		</TableRow>		
 	  	<TableRow>
 		    <TextView
+              android:visibility="gone"
 			  android:id="@+id/passwordLabel"
 			  android:layout_width="fill_parent"
 			  android:layout_height="fill_parent"
@@ -60,6 +63,7 @@
 			  android:layout_weight="0">
 			</TextView>
 			<EditText
+			  android:visibility="gone"
 			  android:id="@+id/passwordField"
 			  android:layout_width="fill_parent"
 			  android:layout_height="fill_parent"
@@ -75,6 +79,7 @@
 	</TableLayout>
 		
 	<Button
+	  android:visibility="gone"
 	  android:id="@+id/loginButton"
 	  android:layout_width="fill_parent"
 	  android:layout_height="wrap_content"

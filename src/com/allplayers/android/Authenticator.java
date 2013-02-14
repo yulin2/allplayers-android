@@ -37,7 +37,7 @@ class Authenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
-            String authTokenType, String[] requiredFeatures, Bundle options) {
+                             String authTokenType, String[] requiredFeatures, Bundle options) {
         return null;
     }
 
@@ -53,8 +53,8 @@ class Authenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
-            String authTokenType, Bundle loginOptions) throws NetworkErrorException {
-    	return null;
+                               String authTokenType, Bundle loginOptions) throws NetworkErrorException {
+        return null;
     }
 
     @Override
@@ -69,7 +69,7 @@ class Authenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account,
-            String authTokenType, Bundle loginOptions) {
+                                    String authTokenType, Bundle loginOptions) {
         return null;
     }
 }
