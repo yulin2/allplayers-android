@@ -4,4 +4,6 @@
           android:title="Search" />
     <item android:id="@+id/logOut"
           android:title="Log Out" />
+    <item android:id="@+id/refresh"
+          android:title="Refresh" />
 </menu>

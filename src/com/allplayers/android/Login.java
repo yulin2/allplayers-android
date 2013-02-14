@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.accounts.AccountManager;
 import android.accounts.Account;
+import android.widget.Toast;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.json.JSONException;
@@ -34,6 +35,7 @@ public class Login extends Activity {
     TextView usernameLabel;
     Button button;
     AccountManager manager;
+
     private Context context;
 
     @Override

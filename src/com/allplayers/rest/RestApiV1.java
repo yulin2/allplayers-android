@@ -147,19 +147,35 @@ public class RestApiV1 {
     }
 
     public static String searchGroups(String search, int zipcode, int distance) {
-        return makeUnauthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups.json&search=\""
-                                      + search
-                                      + "\""
-                                      + "&distance[postal_code]="
-                                      + zipcode
-                                      + "&distance[search_distance]="
-                                      + distance
-                                      + "&distance[search_units]=mile");
+        String searchTerms = "https://www.allplayers.com/?q=api/v1/rest/groups.json";
+        if (search.length() != 0) {
+            searchTerms += ("&search=\"" + search + "\"");
+        }
+        // As of right now, the input distance will only matter if a zipcode is given,
+        // so it is only considered in that case.
+        // TODO Add in considering the distance as "Distance from my location"
+        if (zipcode != 0) {
+            searchTerms += ("&distance[postal_code]=" + zipcode
+                            + "&distance[search_distance]="
+                            + distance
+                            + "&distance[search_units]=mile");
+        }
+        return makeUnauthenticatedGet(searchTerms);
     }
 
     public static String getUserGroups() {
         return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
                                     + sCurrentUserUUID + "/groups.json");
+    }
+
+    public static String getUserGroups(int offset) {
+        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
+                                    + sCurrentUserUUID + "/groups.json&offset=" + offset);
+    }
+
+    public static String getUserGroups(int offset, int limit) {
+        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
+                                    + sCurrentUserUUID + "/groups.json&offset=" + offset + "&limit=" + limit);
     }
 
     public static String getUserFriends() {
@@ -247,10 +263,12 @@ public class RestApiV1 {
         // Make and return from authenticated get call
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             InputStream inStream = connection.getInputStream();
+            if (connection.getResponseCode() == 204) {
+                return "error";
+            }
             BufferedReader input = new BufferedReader(new InputStreamReader(
                         inStream));
 
@@ -275,8 +293,7 @@ public class RestApiV1 {
         // Make and return from authenticated delete call
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setDoOutput(true);
             connection.setRequestMethod("DELETE");
@@ -300,8 +317,7 @@ public class RestApiV1 {
         // Make and return from authenticated put call
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setDoOutput(true);
             connection.setDoInput(true);
@@ -340,9 +356,12 @@ public class RestApiV1 {
         // Make and return from unauthenticated get call
         try {
             URL url = new URL(urlString);
-            URLConnection connection = url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             InputStream inStream = connection.getInputStream();
+            if (connection.getResponseCode() == 204) {
+                return "error";
+            }
             BufferedReader input = new BufferedReader(new InputStreamReader(
                         inStream));
 
@@ -354,8 +373,7 @@ public class RestApiV1 {
 
             return result;
         } catch (Exception ex) {
-            System.err
-            .println("APCI_RestServices/makeUnauthenticatedGet/" + ex);
+            System.err.println("APCI_RestServices/makeUnauthenticatedGet/" + ex);
             return ex.toString();
         }
     }
@@ -365,8 +383,7 @@ public class RestApiV1 {
         // Make and return from authenticated post call
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -457,5 +474,9 @@ public class RestApiV1 {
 
     public void setCurrentUserUUID(String uuid) {
         sCurrentUserUUID = uuid;
+    }
+
+    public static String getCurrentUserUUID() {
+        return sCurrentUserUUID;
     }
 }
