@@ -118,15 +118,15 @@ public class Login extends Activity {
      * Attempt a login, if successful, move to the real main activity.
      */
     public class AttemptLoginTask extends AsyncTask<String, Void, Boolean> {
-    	
+
         /**
          * @return
          *  0 - Was not able to log in successfully.
          *  1 - Was able to log a user back in.
          *  2 - Was able to log a user in
          */
-        protected Boolean doInBackground(String... strings) { 	
-        	
+        protected Boolean doInBackground(String... strings) {
+
             String email = strings[0];
             String pass = strings[1];
 
@@ -169,7 +169,7 @@ public class Login extends Activity {
         }
 
         protected void onPostExecute(Boolean ex) {
-        	
+
             if (!ex) {
                 Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
                 invalidLogin.show();

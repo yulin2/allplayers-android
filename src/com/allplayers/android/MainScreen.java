@@ -19,17 +19,17 @@ import android.widget.TabHost;
 
 public class MainScreen extends TabActivity {
     private Context context;
-    
+
     private AccountManager accountManager;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         // Before anything, check if the user is logged in.
-                
+
         RestApiV1 client = new RestApiV1();
-        
+
         setContentView(R.layout.inapplayout);
 
         context = this.getBaseContext();
