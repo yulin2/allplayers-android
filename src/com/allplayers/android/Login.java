@@ -35,7 +35,7 @@ public class Login extends Activity {
     TextView passwordLabel;
     TextView usernameLabel;
     Button button;
-    ProgressBar progressSpinner;
+    static ProgressBar progressSpinner;
     AccountManager manager;
     private Context context;
 
@@ -119,14 +119,6 @@ public class Login extends Activity {
      */
     public class AttemptLoginTask extends AsyncTask<String, Void, Boolean> {
     	
-//    	public ProgressDialog dialog;
-    	
-    	protected void onPreExecute() {
-//    		dialog = new ProgressDialog(getBaseContext());
-//    		dialog.setMessage("Logging In");
-//    		dialog.show();
-    	}
-    	
         /**
          * @return
          *  0 - Was not able to log in successfully.
@@ -178,13 +170,10 @@ public class Login extends Activity {
 
         protected void onPostExecute(Boolean ex) {
         	
-//        	if (dialog.isShowing()) {
-//        		dialog.dismiss();
-//        	}
-        	
             if (!ex) {
                 Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
                 invalidLogin.show();
+                Login.progressSpinner.setVisibility(View.INVISIBLE);
             }
         }
     }
