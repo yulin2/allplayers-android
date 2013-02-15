@@ -3,6 +3,7 @@ package com.allplayers.android;
 import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.accounts.AccountManager;
@@ -33,6 +35,7 @@ public class Login extends Activity {
     TextView passwordLabel;
     TextView usernameLabel;
     Button button;
+    ProgressBar progressSpinner;
     AccountManager manager;
     private Context context;
 
@@ -56,6 +59,8 @@ public class Login extends Activity {
         passwordEditText = (EditText)findViewById(R.id.passwordField);
         passwordLabel = (TextView)findViewById(R.id.passwordLabel);
         usernameLabel = (TextView)findViewById(R.id.usernameLabel);
+        progressSpinner = (ProgressBar) findViewById(R.id.ctrlActivityIndicator);
+        progressSpinner.setVisibility(View.INVISIBLE);
 
 
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
@@ -75,6 +80,7 @@ public class Login extends Activity {
                 textEncryptor.setPassword(storedSecretKey);
                 String unencryptedPassword = textEncryptor.decrypt(storedPassword);
 
+                progressSpinner.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
                 helper.execute(storedEmail, unencryptedPassword);
             }
@@ -92,6 +98,7 @@ public class Login extends Activity {
                 String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
+                progressSpinner.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
                 helper.execute(email, password);
 
@@ -111,13 +118,23 @@ public class Login extends Activity {
      * Attempt a login, if successful, move to the real main activity.
      */
     public class AttemptLoginTask extends AsyncTask<String, Void, Boolean> {
+    	
+//    	public ProgressDialog dialog;
+    	
+    	protected void onPreExecute() {
+//    		dialog = new ProgressDialog(getBaseContext());
+//    		dialog.setMessage("Logging In");
+//    		dialog.show();
+    	}
+    	
         /**
          * @return
          *  0 - Was not able to log in successfully.
          *  1 - Was able to log a user back in.
          *  2 - Was able to log a user in
          */
-        protected Boolean doInBackground(String... strings) {
+        protected Boolean doInBackground(String... strings) { 	
+        	
             String email = strings[0];
             String pass = strings[1];
 
@@ -160,6 +177,11 @@ public class Login extends Activity {
         }
 
         protected void onPostExecute(Boolean ex) {
+        	
+//        	if (dialog.isShowing()) {
+//        		dialog.dismiss();
+//        	}
+        	
             if (!ex) {
                 Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
                 invalidLogin.show();
