@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +39,14 @@ public class Login extends Activity {
     static ProgressBar progressSpinner;
     AccountManager manager;
     private Context context;
+    
+    @Override  
+    public void onBackPressed() {
+    	
+    	System.out.println("Pressed the back button");
+        super.onBackPressed();
+        // Do extra stuff here
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,8 +69,6 @@ public class Login extends Activity {
         passwordLabel = (TextView)findViewById(R.id.passwordLabel);
         usernameLabel = (TextView)findViewById(R.id.usernameLabel);
         progressSpinner = (ProgressBar) findViewById(R.id.ctrlActivityIndicator);
-        progressSpinner.setVisibility(View.INVISIBLE);
-
 
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
         // There should only be one allplayers type account in the device at once.
@@ -101,8 +108,9 @@ public class Login extends Activity {
                 progressSpinner.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
                 helper.execute(email, password);
-
+                
             }
+                      
         });
     }
 
@@ -110,6 +118,8 @@ public class Login extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU) {
             startActivity(new Intent(Login.this, FindGroupsActivity.class));
+        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+        	finish();
         }
         return super.onKeyUp(keyCode, event);
     }

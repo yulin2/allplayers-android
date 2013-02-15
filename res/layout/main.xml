@@ -89,6 +89,7 @@
 	</Button>
 	
 	<ProgressBar
+	    android:visibility="gone"
 	    android:id="@+id/ctrlActivityIndicator"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
