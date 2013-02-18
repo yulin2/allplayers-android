@@ -52,22 +52,6 @@ public class LocalStorage {
         return returnValue;
     }
 
-    public static void writeUserName(Context c, String write) {
-        writeFile(c, write, "UserName");
-    }
-    public static String readUserName(Context c) {
-        String returnValue = readFile(c, "UserName");
-        return returnValue;
-    }
-
-    public static void writePassword(Context c, String write) {
-        writeFile(c, write, "Password");
-    }
-    public static String readPassword(Context c) {
-        String returnValue = readFile(c, "Password");
-        return returnValue;
-    }
-
     //If overwrite is true, the file will be written regardless of the last update timestamp
     public static void writeInbox(Context c, String write, boolean overwrite) {
         if (overwrite) {
