@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -85,11 +87,7 @@ public class Login extends Activity {
                 helper.execute(storedEmail, unencryptedPassword);
             }
         } else {
-            button.setVisibility(View.VISIBLE);
-            usernameEditText.setVisibility(View.VISIBLE);
-            passwordEditText.setVisibility(View.VISIBLE);
-            passwordLabel.setVisibility(View.VISIBLE);
-            usernameLabel.setVisibility(View.VISIBLE);
+            showLoginFields();
         }
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -115,30 +113,37 @@ public class Login extends Activity {
         return super.onKeyUp(keyCode, event);
     }
 
+    public void showLoginFields() {
+        button.setVisibility(View.VISIBLE);
+        usernameEditText.setVisibility(View.VISIBLE);
+        passwordEditText.setVisibility(View.VISIBLE);
+        passwordLabel.setVisibility(View.VISIBLE);
+        usernameLabel.setVisibility(View.VISIBLE);
+    }
+
     /**
      * Attempt a login, if successful, move to the real main activity.
      */
-    public class AttemptLoginTask extends AsyncTask<String, Void, Boolean> {
-        /**
-         * @return
-         *  0 - Was not able to log in successfully.
-         *  1 - Was able to log a user back in.
-         *  2 - Was able to log a user in
-         */
-        protected Boolean doInBackground(String... strings) {
+    public class AttemptLoginTask extends AsyncTask<String, Void, String> {
+        protected String doInBackground(String... strings) {
 
             String email = strings[0];
             String pass = strings[1];
 
             RestApiV1 client = new RestApiV1();
             try {
-                if (client.isLoggedIn()) {
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if (activeNetworkInfo == null) {
+                    showLoginFields();
+                    return "noInternetConnection";
+                }
+                if (RestApiV1.isLoggedIn()) {
                     Intent intent = new Intent(Login.this, MainScreen.class);
                     startActivity(intent);
                     finish();
-                    return true;
+                    return "validLogin";
                 }
-
 
                 String result = client.validateLogin(email, pass);
                 JSONObject jsonResult = new JSONObject(result);
@@ -161,18 +166,21 @@ public class Login extends Activity {
                 Intent intent = new Intent(Login.this, MainScreen.class);
                 startActivity(intent);
                 finish();
-                return true;
+                return "validLogin";
             } catch (JSONException ex) {
                 System.err.println("Login/user_id/" + ex);
-                return false;
+                return "invalidLogin";
             }
         }
 
-        protected void onPostExecute(Boolean ex) {
-
-            if (!ex) {
+        protected void onPostExecute(String ex) {
+            if (ex.equals("invalidLogin")) {
                 Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
                 invalidLogin.show();
+                Login.progressSpinner.setVisibility(View.INVISIBLE);
+            } else if (ex.equals("noInternetConnection")) {
+                Toast noInternetConnection = Toast.makeText(getApplicationContext(), "No Connection \nCheck Internet Connectivity", Toast.LENGTH_LONG);
+                noInternetConnection.show();
                 Login.progressSpinner.setVisibility(View.INVISIBLE);
             }
         }
