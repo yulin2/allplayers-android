@@ -40,14 +40,6 @@ public class Login extends Activity {
     AccountManager manager;
 
     private Context context;
-    
-    @Override  
-    public void onBackPressed() {
-    	
-    	System.out.println("Pressed the back button");
-        super.onBackPressed();
-        // Do extra stuff here
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,9 +101,7 @@ public class Login extends Activity {
                 progressSpinner.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
                 helper.execute(email, password);
-                
             }
-                      
         });
     }
 
@@ -120,7 +110,7 @@ public class Login extends Activity {
         if (keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU) {
             startActivity(new Intent(Login.this, FindGroupsActivity.class));
         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-        	finish();
+            finish();
         }
         return super.onKeyUp(keyCode, event);
     }
