@@ -3,21 +3,23 @@ package com.allplayers.android;
 import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.accounts.AccountManager;
 import android.accounts.Account;
 import android.widget.Toast;
-
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +36,18 @@ public class Login extends Activity {
     TextView passwordLabel;
     TextView usernameLabel;
     Button button;
+    static ProgressBar progressSpinner;
     AccountManager manager;
 
     private Context context;
+    
+    @Override  
+    public void onBackPressed() {
+    	
+    	System.out.println("Pressed the back button");
+        super.onBackPressed();
+        // Do extra stuff here
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +69,7 @@ public class Login extends Activity {
         passwordEditText = (EditText)findViewById(R.id.passwordField);
         passwordLabel = (TextView)findViewById(R.id.passwordLabel);
         usernameLabel = (TextView)findViewById(R.id.usernameLabel);
-
+        progressSpinner = (ProgressBar) findViewById(R.id.ctrlActivityIndicator);
 
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
         // There should only be one allplayers type account in the device at once.
@@ -77,6 +88,7 @@ public class Login extends Activity {
                 textEncryptor.setPassword(storedSecretKey);
                 String unencryptedPassword = textEncryptor.decrypt(storedPassword);
 
+                progressSpinner.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
                 helper.execute(storedEmail, unencryptedPassword);
             }
@@ -94,10 +106,12 @@ public class Login extends Activity {
                 String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
+                progressSpinner.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
                 helper.execute(email, password);
-
+                
             }
+                      
         });
     }
 
@@ -105,6 +119,8 @@ public class Login extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU) {
             startActivity(new Intent(Login.this, FindGroupsActivity.class));
+        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+        	finish();
         }
         return super.onKeyUp(keyCode, event);
     }
@@ -120,6 +136,7 @@ public class Login extends Activity {
          *  2 - Was able to log a user in
          */
         protected Boolean doInBackground(String... strings) {
+
             String email = strings[0];
             String pass = strings[1];
 
@@ -162,9 +179,11 @@ public class Login extends Activity {
         }
 
         protected void onPostExecute(Boolean ex) {
+
             if (!ex) {
                 Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
                 invalidLogin.show();
+                Login.progressSpinner.setVisibility(View.INVISIBLE);
             }
         }
     }
