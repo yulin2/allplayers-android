@@ -10,58 +10,12 @@ public class AlbumData extends DataObject {
     private String uuid = "";
     private String title = "";
     private String description = "";
-    private int photoCount = 0;
-    private Date modifiedDate = null;
-    private String coverPhoto = "";
+    private int photo_count = 0;
+    private String modified_date = "";
+    private String rep_photo = ""; // Cover Photo.
 
     public AlbumData() {
 
-    }
-
-    public AlbumData(String jsonResult) {
-        JSONObject albumObject = null;
-
-        try {
-            albumObject = new JSONObject(jsonResult);
-        } catch (JSONException ex) {
-            System.err.println("AlbumData/albumObject/" + ex);
-        }
-
-        try {
-            uuid = albumObject.getString("uuid");
-        } catch (JSONException ex) {
-            System.err.println("AlbumData/uuid/" + ex);
-        }
-
-        try {
-            title = albumObject.getString("title");
-        } catch (JSONException ex) {
-            System.err.println("AlbumData/title/" + ex);
-        }
-
-        try {
-            description = albumObject.getString("description");
-        } catch (JSONException ex) {
-            System.err.println("AlbumData/description/" + ex);
-        }
-
-        try {
-            photoCount = albumObject.getInt("photo_count");
-        } catch (JSONException ex) {
-            System.err.println("AlbumData/photoCount/" + ex);
-        }
-
-        try {
-            modifiedDate = parseTimestamp(albumObject.getString("modified_date") + "000"); //to change seconds to milliseconds
-        } catch (JSONException ex) {
-            System.err.println("AlbumData/modifiedDate/" + ex);
-        }
-
-        try {
-            coverPhoto = albumObject.getString("rep_photo");
-        } catch (JSONException ex) {
-            System.err.println("AlbumData/coverPhoto/" + ex);
-        }
     }
 
     private Date parseTimestamp(String timestamp) {
@@ -90,18 +44,18 @@ public class AlbumData extends DataObject {
     }
 
     public int getPhotoCount() {
-        return photoCount;
+        return photo_count;
     }
 
     public Date getModifedDate() {
-        return modifiedDate;
+        return parseTimestamp(modified_date + "000"); // "+ "000"" Converts from seconds to milliseconds.
     }
 
     public String getModifiedDateString() {
-        return modifiedDate.toString();
+        return parseTimestamp(modified_date + "000").toString(); // "+ "000"" Converts from seconds to milliseconds.
     }
 
     public String getCoverPhoto() {
-        return coverPhoto;
+        return rep_photo;
     }
 }
