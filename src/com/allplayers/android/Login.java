@@ -139,7 +139,6 @@ public class Login extends Activity {
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
                 if (activeNetworkInfo == null) {
-                    showLoginFields();
                     return "noInternetConnection";
                 }
                 if (RestApiV1.isLoggedIn()) {
@@ -183,6 +182,7 @@ public class Login extends Activity {
                 invalidLogin.show();
                 Login.progressSpinner.setVisibility(View.INVISIBLE);
             } else if (ex.equals("noInternetConnection")) {
+                showLoginFields();
                 Toast noInternetConnection = Toast.makeText(getApplicationContext(), "No Connection \nCheck Internet Connectivity", Toast.LENGTH_LONG);
                 noInternetConnection.show();
                 Login.progressSpinner.setVisibility(View.INVISIBLE);
