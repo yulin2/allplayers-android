@@ -30,8 +30,10 @@ public class EventDisplayActivity extends MapActivity {
                           "\nStart: " + event.getStartDateString() + "\nEnd: " + event.getEndDateString());
 
         MapController mapController = map.getController();
-        String lat = event.getLatitude();
-        String lon = event.getLongitude();
+        String lat = "";
+        lat = event.getLatitude();
+        String lon = "";
+        lon = event.getLongitude();
         GeoPoint point;
 
         if (lat.equals("") || lon.equals("")) {

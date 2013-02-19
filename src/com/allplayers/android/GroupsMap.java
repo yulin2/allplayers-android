@@ -2,6 +2,7 @@ package com.allplayers.android;
 
 import com.allplayers.objects.DataObject;
 import com.allplayers.objects.GroupData;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,8 +17,11 @@ public class GroupsMap {
             JSONArray jsonArray = new JSONArray(jsonResult);
 
             if (jsonArray.length() > 0) {
+
+                // Used to create GroupData objects from json.
+                Gson gson = new Gson();
                 for (int i = 0; i < jsonResult.length(); i++) {
-                    GroupData group = new GroupData(jsonArray.getString(i));
+                    GroupData group = gson.fromJson(jsonArray.getString(i), GroupData.class);
 
                     if (group.isNew(groups)) {
                         groups.add(group);
