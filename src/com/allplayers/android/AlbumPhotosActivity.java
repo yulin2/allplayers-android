@@ -4,41 +4,64 @@ import com.allplayers.rest.RestApiV1;
 import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.PhotoData;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.GridView;
+import android.widget.AdapterView;
 
 import java.util.ArrayList;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public class AlbumPhotosActivity extends ListActivity {
+public class AlbumPhotosActivity extends Activity {
     private ArrayList<PhotoData> photoList;
+    private ArrayAdapter blankAdapter = null;
+    private PhotoAdapter photoAdapter;
+    private GridView grid;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.albumdisplay);
         AlbumData album = (new Router(this)).getIntentAlbum();
-
-        GetAlbumPhotosByAlbumIdTask helper = new GetAlbumPhotosByAlbumIdTask();
-        helper.execute(album);
+        photoList = new ArrayList<PhotoData>();
+        grid = (GridView) findViewById(R.id.gridview);
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                if (photoList.get(position) != null) {
+                    // Display the group page for the selected group
+                    Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoPagerActivityIntent(photoList.get(position));
+                    startActivity(intent);
+                }
+            }
+        });
+        new GetAlbumPhotosByAlbumIdTask().execute(album);
     }
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+    public void setAdapter() {
+        if (photoList.isEmpty()) {
+            String[] values = new String[] {"no photos to display"};
 
-        if (!photoList.isEmpty()) {
-            // Display the group page for the selected group
-            Intent intent = (new Router(this)).getPhotoDisplayActivityIntent(photoList.get(position));
-            startActivity(intent);
+            blankAdapter = new ArrayAdapter<String>(AlbumPhotosActivity.this,
+                                                    android.R.layout.simple_list_item_1, values);
+            grid.setAdapter(blankAdapter);
+        } else {
+            //Create a customized ArrayAdapter
+            photoAdapter = new PhotoAdapter(getApplicationContext());
+            grid.setAdapter(photoAdapter);
+        }
+    }
+
+    public void updateAlbumPhotos(String jsonResult) {
+        PhotosMap photos = new PhotosMap(jsonResult);
+        photoList.addAll(photos.getPhotoData());
+        setAdapter();
+        if (photoList.size() != 0) {
+            photoAdapter.addAll(photoList);
         }
     }
 
@@ -48,23 +71,11 @@ public class AlbumPhotosActivity extends ListActivity {
     public class GetAlbumPhotosByAlbumIdTask extends AsyncTask<AlbumData, Void, String> {
 
         protected String doInBackground(AlbumData... album) {
-            return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID());
+            return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID(), 0, 0);
         }
 
         protected void onPostExecute(String jsonResult) {
-            PhotosMap photos = new PhotosMap(jsonResult);
-            photoList = photos.getPhotoData();
-            if (photoList.isEmpty()) {
-                String[] values = new String[] {"no photos to display"};
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(AlbumPhotosActivity.this,
-                        android.R.layout.simple_list_item_1, values);
-                setListAdapter(adapter);
-            } else {
-                //Create a customized ArrayAdapter
-                PhotoAdapter adapter = new PhotoAdapter(getApplicationContext(), R.layout.photolistitem, photoList);
-                setListAdapter(adapter);
-            }
+            updateAlbumPhotos(jsonResult);
         }
     }
 }
