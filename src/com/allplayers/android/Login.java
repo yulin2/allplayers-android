@@ -14,6 +14,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -46,6 +47,7 @@ public class Login extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+    	this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // TODO - Temporarily disable StrictMode because all networking is
         // currently in the UI thread. Android now throws exceptions when
@@ -95,6 +97,8 @@ public class Login extends Activity {
 
                 String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
+                System.out.println(email);
+                System.out.println(password);
 
                 progressSpinner.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
