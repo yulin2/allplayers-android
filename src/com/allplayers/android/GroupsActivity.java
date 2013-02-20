@@ -129,7 +129,7 @@ public class GroupsActivity extends ListActivity {
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(pageNumber++ * 5, 5);
+            return RestApiV1.getUserGroups(pageNumber++ * 8, 8);
         }
 
         protected void onPostExecute(String jsonResult) {

@@ -13,41 +13,6 @@ public class GroupData extends DataObject {
 
     }
 
-    public GroupData(String jsonResult) {
-        JSONObject groupObject = null;
-
-        try {
-            groupObject = new JSONObject(jsonResult);
-        } catch (JSONException ex) {
-            System.err.println("GroupData/groupObject/" + ex);
-        }
-
-        try {
-            uuid = groupObject.getString("uuid");
-        } catch (JSONException ex) {
-            System.err.println("GroupData/uuid/" + ex);
-        }
-
-        try {
-            title = groupObject.getString("title");
-        } catch (JSONException ex) {
-            System.err.println("GroupData/title/" + ex);
-        }
-
-        try {
-            description = groupObject.getString("description");
-        } catch (JSONException ex) {
-            System.err.println("GroupData/description/" + ex);
-        }
-
-        try {
-            logo = groupObject.getString("logo");
-            logo = logo.replace("imagecache/profile_small/", "");
-        } catch (JSONException ex) {
-            System.err.println("GroupData/logo/" + ex);
-        }
-    }
-
     public String getUUID() {
         return uuid;
     }
@@ -65,6 +30,6 @@ public class GroupData extends DataObject {
     }
 
     public String getLogo() {
-        return logo;
+        return logo.replace("imagecache/profile_small/", "");
     }
 }

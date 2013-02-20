@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import com.google.gson.Gson;
+
 public class MessageData extends DataObject {
     private String thread_id = "";
     private String subject = "";
@@ -16,62 +18,21 @@ public class MessageData extends DataObject {
     private String last_message_body = "";
     private String last_updated = "";
     private Date updatedDate = null;
+    private boolean variablesUpdated = false;
 
     public MessageData() {
 
     }
 
-    public MessageData(String jsonResult) {
-        JSONObject messageObject = null;
-
-        try {
-            messageObject = new JSONObject(jsonResult);
-        } catch (JSONException ex) {
-            System.err.println("MessageData/messageObject/" + ex);
-        }
-
-        try {
-            thread_id = messageObject.getString("thread_id");
-        } catch (JSONException ex) {
-            System.err.println("MessageData/thread_id/" + ex);
-        }
-
-        try {
-            subject = messageObject.getString("subject");
-        } catch (JSONException ex) {
-            System.err.println("MessageData/subject/" + ex);
-        }
-
-        try {
-            is_new = messageObject.getString("is_new");
-        } catch (JSONException ex) {
-            System.err.println("MessageData/is_new/" + ex);
-        }
-
-        try {
-            last_message_sender = messageObject.getString("last_message_sender");
-        } catch (JSONException ex) {
-            System.err.println("MessageData/last_message_sender/" + ex);
-        }
-
-        try {
-            last_message_body = messageObject.getString("last_message_body");
-        } catch (JSONException ex) {
-            System.err.println("MessageData/last_message_body/" + ex);
-        }
-
-        try {
-            last_updated = messageObject.getString("last_updated") + "000"; //convert seconds to milliseconds
-            updatedDate = parseTimestamp(last_updated);
-            last_updated = Long.toString(updatedDate.getTime()); //update the string in case someone uses it
-        } catch (JSONException ex) {
-            System.err.println("MessageData/last_updated/" + ex);
-        }
+    private void updateVariables() {
+        last_updated += "000"; //Converts to milliseconds.
+        updatedDate = parseTimestamp(last_updated);
+        last_updated = Long.toString(updatedDate.getTime()); //update the string in case someone uses it
+        variablesUpdated = true;
     }
 
     private Date parseTimestamp(String timestamp) {
         Date date = new Date(Long.parseLong(timestamp));
-
         TimeZone timezone = TimeZone.getDefault();
         int offset = timezone.getOffset(date.getTime());
         date = new Date(date.getTime() + offset);
@@ -79,15 +40,24 @@ public class MessageData extends DataObject {
     }
 
     public String getTimestampString() {
+        if (!variablesUpdated) {
+            updateVariables();
+        }
         return last_updated;
     }
 
     public Date getDate() {
+        if (!variablesUpdated) {
+            updateVariables();
+        }
         return updatedDate;
     }
 
     public String getDateString() {
         Calendar calendar = Calendar.getInstance();
+        if (!variablesUpdated) {
+            updateVariables();
+        }
         calendar.setTime(updatedDate);
 
         int day = calendar.get(Calendar.DAY_OF_MONTH);
