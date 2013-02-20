@@ -17,17 +17,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.List;
+
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class RestApiV1 {
+    private static String endpoint = "https://www.allplayers.com/?q=api/v1/rest/";
     private static String sCurrentUserUUID = "";
     private static CookieHandler sCookieHandler = new CookieManager();
 
@@ -64,15 +69,13 @@ public class RestApiV1 {
 
     public static boolean isLoggedIn() {
         if (sCurrentUserUUID.equals("") || sCurrentUserUUID.equals(null)) {
-            ((CookieManager) CookieHandler.getDefault()).getCookieStore().removeAll();
+            logOut();
             return false;
         }
 
         // Check an authorized call
         try {
-            URL url = new URL(
-                "https://www.allplayers.com/?q=api/v1/rest/users/"
-                + sCurrentUserUUID + ".json");
+            URL url = new URL(endpoint + "users/" + sCurrentUserUUID + ".json");
             HttpURLConnection connection = (HttpURLConnection) url
                                            .openConnection();
             connection.setDoInput(true);
@@ -106,8 +109,7 @@ public class RestApiV1 {
         // String[][] contents = new String[1][2];
         // Type: thread or message (default = thread)
 
-        return makeAuthenticatedDelete("https://www.allplayers.com/?q=api/v1/rest/messages/"
-                                       + threadId + ".json");
+        return makeAuthenticatedDelete(endpoint + "messages/" + threadId + ".json");
     }
 
     // Change read/unread status
@@ -118,9 +120,7 @@ public class RestApiV1 {
         contents[0][1] = "" + status;
         // Type: thread or message (default = thread)
 
-        return makeAuthenticatedPut(
-                   "https://www.allplayers.com/?q=api/v1/rest/messages/"
-                   + threadId + ".json", contents);
+        return makeAuthenticatedPut(endpoint + "messages/" + threadId + ".json", contents);
     }
 
     public String validateLogin(String username, String password) {
@@ -130,9 +130,7 @@ public class RestApiV1 {
         contents[1][0] = "password";
         contents[1][1] = password;
 
-        return makeAuthenticatedPost(
-                   "https://www.allplayers.com/?q=api/v1/rest/users/login.json",
-                   contents);
+        return makeAuthenticatedPost(endpoint + "users/login.json", contents);
     }
 
     public static String postMessage(int threadId, String body) {
@@ -142,13 +140,11 @@ public class RestApiV1 {
         contents[1][0] = "body";
         contents[1][1] = body;
 
-        return makeAuthenticatedPost(
-                   "https://www.allplayers.com/?q=api/v1/rest/messages.json",
-                   contents);
+        return makeAuthenticatedPost(endpoint + "messages.json", contents);
     }
 
     public static String searchGroups(String search, int zipcode, int distance) {
-        String searchTerms = "https://www.allplayers.com/?q=api/v1/rest/groups.json";
+        String searchTerms = endpoint + "groups.json";
         if (search.length() != 0) {
             searchTerms += ("&search=\"" + search + "\"");
         }
@@ -165,106 +161,88 @@ public class RestApiV1 {
     }
 
     public static String getUserGroups() {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
-                                    + sCurrentUserUUID + "/groups.json");
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groups.json");
     }
 
     public static String getUserGroups(int offset) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
-                                    + sCurrentUserUUID + "/groups.json&offset=" + offset);
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groups.json&offset=" + offset);
     }
 
     public static String getUserGroups(int offset, int limit) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
-                                    + sCurrentUserUUID + "/groups.json&offset=" + offset + "&limit=" + limit);
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groups.json&offset=" + offset + "&limit=" + limit);
     }
 
     public static String getUserFriends() {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
-                                    + sCurrentUserUUID + "/friends.json");
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/friends.json");
     }
 
     public static String getUserGroupmates() {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
-                                    + sCurrentUserUUID + "/groupmates.json");
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groupmates.json");
     }
 
     public static String getUserEvents() {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/users/"
-                                    + sCurrentUserUUID + "/events/upcoming.json");
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/events/upcoming.json");
     }
 
     public static String getGroupInformationByGroupId(String group_uuid) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/"
-                                    + group_uuid + ".json");
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + ".json");
     }
 
     public static String getGroupAlbumsByGroupId(String group_uuid) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/"
-                                    + group_uuid + "/albums.json");
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/albums.json");
     }
 
     public static String getGroupEventsByGroupId(String group_uuid) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/"
-                                    + group_uuid + "/events/upcoming.json");
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/events/upcoming.json");
     }
 
     public static String getGroupMembersByGroupId(String group_uuid) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/"
-                                    + group_uuid + "/members.json");
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/members.json");
     }
 
     public static String getGroupPhotosByGroupId(String group_uuid) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/groups/photos.json");
+        return makeAuthenticatedGet(endpoint + "groups/photos.json");
     }
 
     public static String getAlbumByAlbumId(String album_uuid) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/"
-                                    + album_uuid + ".json");
+        return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + ".json");
     }
 
     public static String getAlbumPhotosByAlbumId(String album_uuid) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/"
-                                    + album_uuid + "/photos.json");
+        return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json");
     }
 
     public static String getAlbumPhotosByAlbumId(String album_uuid, int offset) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/"
-                                    + album_uuid + "/photos.json&offset=" + offset);
+        return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json&offset=" + offset);
     }
 
     public static String getAlbumPhotosByAlbumId(String album_uuid, int offset, int limit) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/"
-                                    + album_uuid + "/photos.json&offset=" + offset
+        return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json&offset=" + offset
                                     + "&limit=" + limit);
     }
 
     public static String getPhotoByPhotoId(String photo_uuid) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/photos/"
-                                    + photo_uuid + ".json");
+        return makeAuthenticatedGet(endpoint + "photos/" + photo_uuid + ".json");
     }
 
     public static String getUserInbox() {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages.json&box=inbox");
+        return makeAuthenticatedGet(endpoint + "messages.json&box=inbox");
     }
 
     public static String getUserSentBox() {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages.json&box=sent");
+        return makeAuthenticatedGet(endpoint + "messages.json&box=sent");
     }
 
     public static String getUserMessagesByThreadId(String thread_id) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/messages/"
-                                    + thread_id + ".json");
+        return makeAuthenticatedGet(endpoint + "messages/" + thread_id + ".json");
     }
 
     public static String getEventByEventId(String event_id) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/events/"
-                                    + event_id + ".json");
+        return makeAuthenticatedGet(endpoint + "events/" + event_id + ".json");
     }
 
     public static String getUserResourceByResourceId(String resource_id) {
-        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/resources/"
-                                    + resource_id + ".json");
+        return makeAuthenticatedGet(endpoint + "resources/" + resource_id + ".json");
     }
 
     private static String makeAuthenticatedGet(String urlString) {
@@ -406,7 +384,7 @@ public class RestApiV1 {
 
             // If not logging in, set the cookies in the header
             if (!urlString
-                    .equals("https://www.allplayers.com/?q=api/v1/rest/users/login.json")) {
+                    .equals(endpoint + "users/login.json")) {
                 if (!isLoggedIn()) {
                     return "You are not logged in";
                 }
@@ -452,7 +430,16 @@ public class RestApiV1 {
     }
 
     public static void logOut() {
-        ((CookieManager) CookieHandler.getDefault()).getCookieStore().removeAll();
+        try {
+            CookieManager cm = ((CookieManager) CookieHandler.getDefault());
+            URI uri = new URI(endpoint + "users/login.json");
+            List<HttpCookie> myCookies = cm.getCookieStore().get(uri);
+            for (int i = 0; i < myCookies.size(); i++) {
+                cm.getCookieStore().remove(uri, myCookies.get(i));
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         sCurrentUserUUID = "";
     }
 
