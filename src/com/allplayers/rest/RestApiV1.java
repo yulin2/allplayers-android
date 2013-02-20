@@ -64,6 +64,7 @@ public class RestApiV1 {
 
     public static boolean isLoggedIn() {
         if (sCurrentUserUUID.equals("") || sCurrentUserUUID.equals(null)) {
+            ((CookieManager) CookieHandler.getDefault()).getCookieStore().removeAll();
             return false;
         }
 
