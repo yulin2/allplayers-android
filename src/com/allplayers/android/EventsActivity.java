@@ -13,5 +13,5 @@ public class EventsActivity extends FragmentActivity {
         setContentView(R.layout.events);
     }
 
-    
+
 }

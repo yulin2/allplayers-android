@@ -14,8 +14,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-public class EventFragment extends ListFragment{
-	private ArrayList<EventData> eventsList;
+public class EventFragment extends ListFragment {
+    private ArrayList<EventData> eventsList;
     private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private boolean hasEvents = false;
     private String jsonResult;
@@ -23,13 +23,13 @@ public class EventFragment extends ListFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-     
+
         GetUserEventsTask helper = new GetUserEventsTask();
         helper.execute();
     }
 
     @Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
         if (hasEvents) {
@@ -43,7 +43,6 @@ public class EventFragment extends ListFragment{
      * Populates a hash map with event information.
      */
     protected void setEventsMap() {
-    	System.err.println("IN THE SET EVENTS MAP METHOD and JSON=\n" + jsonResult);
         EventsMap events = new EventsMap(jsonResult);
         eventsList = events.getEventData();
         HashMap<String, String> map;

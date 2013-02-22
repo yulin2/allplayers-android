@@ -47,7 +47,7 @@ public class Login extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-    	this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // TODO - Temporarily disable StrictMode because all networking is
         // currently in the UI thread. Android now throws exceptions when
