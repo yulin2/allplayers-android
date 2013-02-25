@@ -63,7 +63,7 @@ public class RestApiV1 {
     }
 
     public static boolean isLoggedIn() {
-        if (sCurrentUserUUID.equals("")) {
+        if (sCurrentUserUUID.equals("") || sCurrentUserUUID.equals(null)) {
             return false;
         }
 
@@ -225,6 +225,17 @@ public class RestApiV1 {
     public static String getAlbumPhotosByAlbumId(String album_uuid) {
         return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/"
                                     + album_uuid + "/photos.json");
+    }
+
+    public static String getAlbumPhotosByAlbumId(String album_uuid, int offset) {
+        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/"
+                                    + album_uuid + "/photos.json&offset=" + offset);
+    }
+
+    public static String getAlbumPhotosByAlbumId(String album_uuid, int offset, int limit) {
+        return makeAuthenticatedGet("https://www.allplayers.com/?q=api/v1/rest/albums/"
+                                    + album_uuid + "/photos.json&offset=" + offset
+                                    + "&limit=" + limit);
     }
 
     public static String getPhotoByPhotoId(String photo_uuid) {
@@ -435,7 +446,7 @@ public class RestApiV1 {
             return result;
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/makeAuthenticatedPost/" + ex);
-            return ex.toString();
+            return "error";
         }
     }
 

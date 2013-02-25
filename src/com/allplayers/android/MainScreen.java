@@ -1,68 +1,77 @@
 package com.allplayers.android;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
+
 import com.allplayers.rest.RestApiV1;
 
 import android.app.Activity;
 import android.app.LocalActivityManager;
+import android.accounts.AccountManager;
+import android.accounts.Account;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.TabHost;
+import android.widget.Toast;
 
-public class MainScreen extends TabActivity {
-    private Context context;
+public class MainScreen extends SherlockFragmentActivity {
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.inapplayout);
 
-        context = this.getBaseContext();
-
-        Resources res = getResources(); // Resource object to get Drawables, this will be little icons for each one
-        TabHost tabHost = getTabHost();  // The activity TabHost
-        TabHost.TabSpec spec;  // Reusable TabSpec for each tab
-        Intent intent;  // Reusable Intent for each tab
-
-
-        // Create an Intent to launch an Activity for the tab (to be reused)
-        intent = new Intent().setClass(this, GroupsActivity.class); //set as GroupsActivity.class, this will be changed to
-        //whatever we end up calling that particular class
-
-        // Initialize a TabSpec for each tab and add it to the TabHost
-        spec = tabHost.newTabSpec("groups").setIndicator("Groups",
-                res.getDrawable(R.drawable.ic_tab_groups)).setContent(intent);
-        tabHost.addTab(spec);
-
-        // Do the same for the other tabs
-        intent = new Intent().setClass(this, MessageActivity.class);
-        spec = tabHost.newTabSpec("messages").setIndicator("Messages",
-                res.getDrawable(R.drawable.ic_tab_messages)).setContent(intent);
-        tabHost.addTab(spec);
-
-        intent = new Intent().setClass(this, PhotosActivity.class);
-        spec = tabHost.newTabSpec("photos").setIndicator("Photos",
-                res.getDrawable(R.drawable.ic_tab_photos)).setContent(intent);
-        tabHost.addTab(spec);
-
-        intent = new Intent().setClass(this, EventsActivity.class);
-        spec = tabHost.newTabSpec("events").setIndicator("Events",
-                res.getDrawable(R.drawable.ic_tab_events)).setContent(intent);
-        tabHost.addTab(spec);
-
-        tabHost.setCurrentTab(0);
+        // Create the action bar and set it to use tab navigation.
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+                        
+        // Create a tab for the groups page.
+        actionbar.addTab(actionbar
+        		.newTab()
+        		.setText("Groups")
+        		.setTabListener(
+        				new TabListener<GroupsFragment>(this, "Groups",
+        				GroupsFragment.class, null)));
+        
+        // Create a tab for the messages page.
+        actionbar.addTab(actionbar
+        		.newTab()
+        		.setText("Messages")
+        		.setTabListener(
+        				new TabListener<MessageFragment>(this, "Messages",
+        				MessageFragment.class, null)));
+        
+        // Create a tab for the photos page.
+        actionbar.addTab(actionbar
+        		.newTab()
+        		.setText("Photos")
+        		.setTabListener(
+        				new TabListener<PhotosFragment>(this, "Photos",
+        				PhotosFragment.class, null)));
+        
+        // Create a tab for the Events page.
+        actionbar.addTab(actionbar
+        		.newTab()
+        		.setText("Events")
+        		.setTabListener(
+        				new TabListener<EventFragment>(this, "Events",
+        				EventFragment.class, null)));
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+        MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.defaultmenu, menu);
         return true;
     }
@@ -73,7 +82,11 @@ public class MainScreen extends TabActivity {
         case R.id.logOut: {
             LogOutTask helper = new LogOutTask();
             helper.execute();
-            LocalStorage.writePassword(context, "");
+            AccountManager manager = AccountManager.get(this.getBaseContext());
+            Account[] accounts = manager.getAccountsByType("com.allplayers.android");
+            if (accounts.length == 1) {
+                manager.removeAccount(accounts[0], null, null);
+            }
             startActivity(new Intent(MainScreen.this, Login.class));
             finish();
             return true;
@@ -82,19 +95,19 @@ public class MainScreen extends TabActivity {
             startActivity(new Intent(MainScreen.this, FindGroupsActivity.class));
             return true;
         }
-        case R.id.refresh: {
-            TabHost tabHost = getTabHost();
-            LocalActivityManager manager = getLocalActivityManager();
-            String currentTag = tabHost.getCurrentTabTag();
-            int currentIndex = tabHost.getCurrentTab();
-            int swapIndex = (currentIndex % 3) + 1;
-            Class <? extends Activity > currentClass = manager.getCurrentActivity().getClass();
-            manager.destroyActivity(currentTag, true);
-            manager.startActivity(currentTag, new Intent(this, currentClass));
-            tabHost.setCurrentTab(swapIndex);
-            tabHost.setCurrentTab(currentIndex);
-            return true;
-        }
+//        case R.id.refresh: {
+//            TabHost tabHost = getTabHost();
+//            LocalActivityManager manager = getLocalActivityManager();
+//            String currentTag = tabHost.getCurrentTabTag();
+//            int currentIndex = tabHost.getCurrentTab();
+//            int swapIndex = (currentIndex % 3) + 1;
+//            Class <? extends Activity > currentClass = manager.getCurrentActivity().getClass();
+//            manager.destroyActivity(currentTag, true);
+//            manager.startActivity(currentTag, new Intent(this, currentClass));
+//            tabHost.setCurrentTab(swapIndex);
+//            tabHost.setCurrentTab(currentIndex);
+//            return true;
+//        }
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -109,4 +122,85 @@ public class MainScreen extends TabActivity {
             return null;
         }
     }
+    
+    
+
 }
+
+/**
+ * Handles switching between fragments when a tab is selected.
+ *
+ */
+class TabListener<T extends Fragment> implements ActionBar.TabListener {
+	private final FragmentActivity fragmentActivity;
+	private final String fragmentTag;
+	private final Class<T> fragmentClass;
+	private final Bundle fragmentArgs;
+	private Fragment fragment;
+	
+	/**
+	 * Constructs the listener.
+	 * 
+	 * @param activity The activity the fragment was created in.
+	 * @param tag A tag describing the fragment.
+	 * @param clz The class the fragment is defined by.
+	 * @param args Additional arguments.
+	 */
+	public TabListener(FragmentActivity activity, String tag, Class<T> clz,
+			Bundle args) {
+		fragmentActivity = activity;
+		fragmentTag = tag;
+		fragmentClass = clz;
+		fragmentArgs = args;
+		FragmentTransaction ft = fragmentActivity.getSupportFragmentManager()
+		        .beginTransaction();
+	}
+	
+	/**
+	 * Switches the active fragment to the one corresponding with the selected
+	 * tab.
+	 * 
+	 */
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+	ft = fragmentActivity.getSupportFragmentManager()
+	        .beginTransaction();
+	
+		if (fragment == null) {
+		    fragment = Fragment.instantiate(fragmentActivity, fragmentClass.getName(),
+		            fragmentArgs);
+		    ft.add(android.R.id.content, fragment, fragmentTag);
+		    ft.commit();
+		} else {
+		    ft.attach(fragment);
+		    ft.commit();
+		}
+	}
+	
+	/**
+	 * When a tab is switched from, closes the previous fragment.
+	 * 
+	 */
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+	ft = fragmentActivity.getSupportFragmentManager().beginTransaction();
+	
+		if (fragment != null) {
+		    ft.detach(fragment);
+		    ft.commitAllowingStateLoss();
+		}
+	}
+	
+	/**
+	 * When a tab that has been previously selected is reselected, does some 
+	 * "special behavior".
+	 * 
+	 */
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		//Do Nothing.
+	}
+}
+
+
+
