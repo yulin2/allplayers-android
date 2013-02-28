@@ -5,62 +5,15 @@ import org.json.JSONObject;
 
 public class PhotoData extends DataObject {
     private String uuid = "";
-    private String groupUUID = "";
+    private String group_uuid = "";
     private String title = "";
     private String description = "";
-    private String photoFull = "";
-    private String photoThumb = "";
+    private String photo_full = "";
+    private String photo_thumb = "";
     private PhotoData previousPhoto = null;
     private PhotoData nextPhoto = null;
 
     public PhotoData() {
-
-    }
-
-    public PhotoData(String jsonResult) {
-        JSONObject photoObject = null;
-
-        try {
-            photoObject = new JSONObject(jsonResult);
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/photoObject/" + ex);
-        }
-
-        try {
-            uuid = photoObject.getString("uuid");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/uuid/" + ex);
-        }
-
-        try {
-            groupUUID = photoObject.getString("group_uuid");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/groupUUID/" + ex);
-        }
-
-        try {
-            title = photoObject.getString("title");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/title/" + ex);
-        }
-
-        try {
-            description = photoObject.getString("description");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/description/" + ex);
-        }
-
-        try {
-            photoFull = photoObject.getString("photo_full");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/photoFull/" + ex);
-        }
-
-        try {
-            photoThumb = photoObject.getString("photo_thumb");
-        } catch (JSONException ex) {
-            System.err.println("PhotoData/photoThumb/" + ex);
-        }
 
     }
 
@@ -73,7 +26,7 @@ public class PhotoData extends DataObject {
     }
 
     public String getGroupUUID() {
-        return groupUUID;
+        return group_uuid;
     }
 
     public String getTitle() {
@@ -85,11 +38,11 @@ public class PhotoData extends DataObject {
     }
 
     public String getPhotoFull() {
-        return photoFull;
+        return photo_full;
     }
 
     public String getPhotoThumb() {
-        return photoThumb;
+        return photo_thumb;
     }
 
     //Link Photos

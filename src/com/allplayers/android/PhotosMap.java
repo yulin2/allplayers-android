@@ -2,6 +2,7 @@ package com.allplayers.android;
 
 import com.allplayers.objects.DataObject;
 import com.allplayers.objects.PhotoData;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,8 +20,10 @@ public class PhotosMap {
                 if (jsonArray.length() > 0) {
                     int numPhotos = 0;
 
+                    // Used to create PhotoData objects from json.
+                    Gson gson = new Gson();
                     for (int i = 0; i < jsonResult.length(); i++) {
-                        PhotoData photo = new PhotoData(jsonArray.getString(i));
+                        PhotoData photo = gson.fromJson(jsonArray.getString(i), PhotoData.class);
 
                         if (photo.getPhotoFull() != null && !photo.getPhotoFull().trim().equals("")) {
                             if (photo.isNew(photos)) {
