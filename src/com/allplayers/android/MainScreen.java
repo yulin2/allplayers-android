@@ -28,18 +28,24 @@ import android.widget.Toast;
 
 public class MainScreen extends SherlockFragmentActivity {
 
+	/**
+	 * Called when the activity is first created. Sets up the action bar tab
+	 * navigation interface.
+	 * 
+	 */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Create the action bar and set it to use tab navigation.
         ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayShowTitleEnabled(false);
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
                         
         // Create a tab for the groups page.
         actionbar.addTab(actionbar
         		.newTab()
-        		.setText("Groups")
+        		.setCustomView(R.layout.groups_tab_text)
         		.setTabListener(
         				new TabListener<GroupsFragment>(this, "Groups",
         				GroupsFragment.class, null)));
@@ -47,7 +53,7 @@ public class MainScreen extends SherlockFragmentActivity {
         // Create a tab for the messages page.
         actionbar.addTab(actionbar
         		.newTab()
-        		.setText("Messages")
+        		.setCustomView(R.layout.messages_tab_text)
         		.setTabListener(
         				new TabListener<MessageFragment>(this, "Messages",
         				MessageFragment.class, null)));
@@ -55,7 +61,7 @@ public class MainScreen extends SherlockFragmentActivity {
         // Create a tab for the photos page.
         actionbar.addTab(actionbar
         		.newTab()
-        		.setText("Photos")
+        		.setCustomView(R.layout.photos_tab_text)
         		.setTabListener(
         				new TabListener<PhotosFragment>(this, "Photos",
         				PhotosFragment.class, null)));
@@ -63,12 +69,15 @@ public class MainScreen extends SherlockFragmentActivity {
         // Create a tab for the Events page.
         actionbar.addTab(actionbar
         		.newTab()
-        		.setText("Events")
+        		.setCustomView(R.layout.events_tab_text)
         		.setTabListener(
         				new TabListener<EventFragment>(this, "Events",
         				EventFragment.class, null)));
     }
     
+    /**
+     * When the activity is created, populate the options menu.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getSupportMenuInflater();
@@ -76,6 +85,14 @@ public class MainScreen extends SherlockFragmentActivity {
         return true;
     }
 
+    /**
+     * When an option in the options menu is selected, perform the associated
+     * task.
+     * 
+     * @TODO Fix the refresh functionality to work with the action bar tab 
+     * navigation.
+     * 
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -83,7 +100,8 @@ public class MainScreen extends SherlockFragmentActivity {
             LogOutTask helper = new LogOutTask();
             helper.execute();
             AccountManager manager = AccountManager.get(this.getBaseContext());
-            Account[] accounts = manager.getAccountsByType("com.allplayers.android");
+            Account[] accounts = manager.getAccountsByType(
+            		"com.allplayers.android");
             if (accounts.length == 1) {
                 manager.removeAccount(accounts[0], null, null);
             }
@@ -92,7 +110,8 @@ public class MainScreen extends SherlockFragmentActivity {
             return true;
         }
         case R.id.search: {
-            startActivity(new Intent(MainScreen.this, FindGroupsActivity.class));
+            startActivity(new Intent(MainScreen.this,
+            		FindGroupsActivity.class));
             return true;
         }
 //        case R.id.refresh: {
@@ -101,7 +120,8 @@ public class MainScreen extends SherlockFragmentActivity {
 //            String currentTag = tabHost.getCurrentTabTag();
 //            int currentIndex = tabHost.getCurrentTab();
 //            int swapIndex = (currentIndex % 3) + 1;
-//            Class <? extends Activity > currentClass = manager.getCurrentActivity().getClass();
+//            Class <? extends Activity > currentClass = 
+//            		manager.getCurrentActivity().getClass();
 //            manager.destroyActivity(currentTag, true);
 //            manager.startActivity(currentTag, new Intent(this, currentClass));
 //            tabHost.setCurrentTab(swapIndex);
@@ -113,8 +133,9 @@ public class MainScreen extends SherlockFragmentActivity {
         }
     }
 
-    /*
-     * Logs the user out using a rest call.
+    /**
+     * Will log the current user out using a REST call.
+     *
      */
     public class LogOutTask extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... args) {
@@ -122,9 +143,6 @@ public class MainScreen extends SherlockFragmentActivity {
             return null;
         }
     }
-    
-    
-
 }
 
 /**
@@ -167,8 +185,8 @@ class TabListener<T extends Fragment> implements ActionBar.TabListener {
 	        .beginTransaction();
 	
 		if (fragment == null) {
-		    fragment = Fragment.instantiate(fragmentActivity, fragmentClass.getName(),
-		            fragmentArgs);
+		    fragment = Fragment.instantiate(fragmentActivity, 
+		    		fragmentClass.getName(), fragmentArgs);
 		    ft.add(android.R.id.content, fragment, fragmentTag);
 		    ft.commit();
 		} else {
