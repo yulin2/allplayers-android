@@ -142,7 +142,7 @@ public class Login extends Activity {
                     return "noInternetConnection";
                 }
                 if (RestApiV1.isLoggedIn()) {
-                    Intent intent = new Intent(Login.this, MainScreen.class);
+                    Intent intent = new Intent(Login.this, GroupsActivity.class);
                     startActivity(intent);
                     finish();
                     return "validLogin";
@@ -166,7 +166,7 @@ public class Login extends Activity {
                 Account account = new Account(email, "com.allplayers.android");
                 manager.addAccountExplicitly(account, encryptedPassword, null);
 
-                Intent intent = new Intent(Login.this, MainScreen.class);
+                Intent intent = new Intent(Login.this, GroupsActivity.class);
                 startActivity(intent);
                 finish();
                 return "validLogin";
