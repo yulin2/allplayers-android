@@ -2,6 +2,8 @@ package com.allplayers.android;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
@@ -15,7 +17,12 @@ public class GroupsActivity extends SherlockFragmentActivity implements ISideNav
 	
 	private SideNavigationView sideNavigationView;
 	
-	/** Called when the activity is first created. */
+	/**
+	 * Called when the activity is first created, this creates the Action Bar
+	 * and sets up the Side Navigation Menu.
+	 * @param savedInstanceState: Saved data from the last instance of the
+	 * activity.
+	 */
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +38,41 @@ public class GroupsActivity extends SherlockFragmentActivity implements ISideNav
         	
         actionbar.setDisplayHomeAsUpEnabled(true);
     }
+	
+	/**
+	 * Creates the Action Bar Options Menu. 
+	 * @param menu: The menu to be created.
+	 */
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.defaultmenu, menu);
+        return true;
+    }
 
+	/**
+	 * Listener for the Action Bar Options Menu.
+	 * @param item: The selected menu item.
+	 * TODO: Add options for:
+	 * 			Logout
+	 * 			Search
+	 * 			Refresh
+	 */
+	public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()) {
+    		// Listens for the "icon" button on the left of the Action Bar.
+    		// Used for the Side Navigation Menu toggle.
+    		case android.R.id.home:
+    			sideNavigationView.toggleMenu();
+    		default:
+                return super.onOptionsItemSelected(item);
+    	}
+    }
+	
+	/**
+	 * Listener for the Side Navigation Menu.
+	 * @param itemId: The ID of the list item that was selected.
+	 */
 	@Override
     public void onSideNavigationItemClick(int itemId) {
         switch (itemId) {
@@ -57,19 +98,18 @@ public class GroupsActivity extends SherlockFragmentActivity implements ISideNav
         finish();
     }
 	
+	/**
+	 * Helper method for onSideNavigationItemClick. Starts the passed in
+	 * activity.
+	 * @param activity: The activity to be started.
+	 */
 	private void invokeActivity(Class activity) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
         overridePendingTransition(0, 0);
     }
 	
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()) {
-    		case android.R.id.home:
-    			sideNavigationView.toggleMenu();
-    		default:
-                return super.onOptionsItemSelected(item);
-    	}
-    }
+	
+    
 
 }
