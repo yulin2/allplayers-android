@@ -42,7 +42,7 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
         setButtonState(uuid);
 
         ActionBar actionbar = getSupportActionBar();
-        actionbar.setTitle(R.string.title3);
+        actionbar.setTitle(group.getTitle());
         
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
