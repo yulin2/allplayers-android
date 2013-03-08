@@ -22,7 +22,6 @@ public class GroupsActivity extends SherlockFragmentActivity implements ISideNav
         setContentView(R.layout.groups);
         
         ActionBar actionbar = getSupportActionBar();
-        //actionbar.setDisplayShowTitleEnabled(false);
         actionbar.setTitle(R.string.title1);
         
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
@@ -61,6 +60,7 @@ public class GroupsActivity extends SherlockFragmentActivity implements ISideNav
 	private void invokeActivity(Class activity) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 	
     public boolean onOptionsItemSelected(MenuItem item) {

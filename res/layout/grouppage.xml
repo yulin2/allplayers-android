@@ -69,5 +69,8 @@
 		  android:layout_weight="0">
 		</Button>
 	</LinearLayout>
-	
+	<com.devspark.sidenavigation.SideNavigationView
+            android:id="@+id/side_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 </LinearLayout>

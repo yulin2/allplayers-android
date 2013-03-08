@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.allplayers.objects.EventData;
 import com.allplayers.rest.RestApiV1;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,11 +20,13 @@ public class EventFragment extends ListFragment {
     private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private boolean hasEvents = false;
     private String jsonResult;
+    private Activity parentActivity;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        parentActivity = this.getActivity();
         GetUserEventsTask helper = new GetUserEventsTask();
         helper.execute();
     }
@@ -34,7 +37,7 @@ public class EventFragment extends ListFragment {
 
         if (hasEvents) {
             // Can be used to display map or full details.
-            Intent intent = (new Router(this.getActivity())).getEventDisplayActivityIntent(eventsList.get(position));
+            Intent intent = (new Router(parentActivity)).getEventDisplayActivityIntent(eventsList.get(position));
             startActivity(intent);
         }
     }
@@ -70,7 +73,7 @@ public class EventFragment extends ListFragment {
 
         int[] to = {android.R.id.text1, android.R.id.text2};
 
-        SimpleAdapter adapter = new SimpleAdapter(this.getActivity(), list, android.R.layout.simple_list_item_2, from, to);
+        SimpleAdapter adapter = new SimpleAdapter(parentActivity, list, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
     }
 

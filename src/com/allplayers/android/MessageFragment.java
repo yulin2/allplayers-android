@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.allplayers.objects.MessageData;
 import com.allplayers.rest.RestApiV1;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,11 +22,14 @@ public class MessageFragment extends ListFragment {
 
     private ArrayList<MessageData> messageList;
     private String jsonResult = "";
+    
+    private Activity parentActivity;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        parentActivity = this.getActivity();
 
         GetUserInboxTask helper = new GetUserInboxTask();
         helper.execute();
@@ -39,11 +43,11 @@ public class MessageFragment extends ListFragment {
             Bundle bundle = new Bundle();
             bundle.putString("inboxJSON", jsonResult);
 
-            Intent intent = new Intent(this.getActivity(), MessageInbox.class);
+            Intent intent = new Intent(parentActivity, MessageInbox.class);
             intent.putExtras(bundle);
             startActivity(intent);
         } else if (position == 1) {
-            Intent intent = new Intent(this.getActivity(), MessageSent.class);
+            Intent intent = new Intent(parentActivity, MessageSent.class);
             startActivity(intent);
         }
     }
@@ -53,7 +57,7 @@ public class MessageFragment extends ListFragment {
      * user with the messages.
      */
     protected void populateInbox() {
-        jsonResult = LocalStorage.readInbox(this.getActivity().getBaseContext());
+        jsonResult = LocalStorage.readInbox(parentActivity.getBaseContext());
         MessagesMap messages = new MessagesMap(jsonResult);
         messageList = messages.getMessageData();
         HashMap<String, String> map;
@@ -80,7 +84,7 @@ public class MessageFragment extends ListFragment {
 
         int[] to = { android.R.id.text1, android.R.id.text2 };
 
-        SimpleAdapter adapter = new SimpleAdapter(this.getActivity(), list, android.R.layout.simple_list_item_2, from, to);
+        SimpleAdapter adapter = new SimpleAdapter(parentActivity, list, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
     }
 
