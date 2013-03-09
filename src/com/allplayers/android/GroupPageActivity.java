@@ -3,9 +3,15 @@ package com.allplayers.android;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.objects.GroupData;
 import com.allplayers.objects.GroupMemberData;
 import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.ISideNavigationCallback;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,9 +24,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class GroupPageActivity extends Activity {
+public class GroupPageActivity extends SherlockActivity implements ISideNavigationCallback {
     GroupData group;
     private ArrayList<GroupMemberData> membersList;
+    private SideNavigationView sideNavigationView;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,10 +41,60 @@ public class GroupPageActivity extends Activity {
 
         setButtonState(uuid);
 
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setTitle(group.getTitle());
+        
+        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        sideNavigationView.setMenuClickCallback(this);
+        sideNavigationView.setMode(Mode.LEFT);
+        	
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        
         GetRemoteImageTask helper = new GetRemoteImageTask();
         helper.execute(logoURL);
     }
 
+	@Override
+    public void onSideNavigationItemClick(int itemId) {
+        switch (itemId) {
+            case R.id.side_navigation_menu_item1:
+                invokeActivity(GroupsActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item2:
+                invokeActivity(MessageActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item3:
+                invokeActivity(PhotosActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item4:
+                invokeActivity(EventsActivity.class);
+                break;
+                
+            default:
+                return;
+        }
+        finish();
+    }
+	
+	private void invokeActivity(Class activity) {
+        Intent intent = new Intent(this, activity);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+	
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()) {
+    		case android.R.id.home:
+    			sideNavigationView.toggleMenu();
+    		default:
+                return super.onOptionsItemSelected(item);
+    	}
+    }
+    
     /**
      * Checks if the user is a member of the group in order to determine if they should have
      * access to the buttons provided to view members, events, and photos.

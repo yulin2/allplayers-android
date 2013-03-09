@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
   android:layout_width="match_parent"
@@ -7,7 +7,7 @@
 	<ImageView
 	  android:id="@+id/groupLogo"
 	  android:layout_width="match_parent"
-	  android:layout_height="0dip"
+	  android:layout_height="100dp"
 	  android:layout_gravity="center"
 	  android:scaleType="centerInside"
 	  android:layout_weight="1"
@@ -17,6 +17,7 @@
 	  android:paddingBottom="10px">
 	</ImageView>
 	<TextView
+	  android:layout_below="@id/groupLogo"
 	  android:editable="false"
 	  android:text=""
 	  android:id="@+id/groupDetails"
@@ -31,6 +32,7 @@
 	</TextView>
 	
 	<LinearLayout
+	  android:layout_below="@id/groupDetails"
 	  android:layout_width="fill_parent"
 	  android:layout_height="wrap_content"
 	  android:gravity="center_horizontal|bottom"
@@ -69,5 +71,8 @@
 		  android:layout_weight="0">
 		</Button>
 	</LinearLayout>
-	
-</LinearLayout>
+	<com.devspark.sidenavigation.SideNavigationView
+            android:id="@+id/side_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+</RelativeLayout>

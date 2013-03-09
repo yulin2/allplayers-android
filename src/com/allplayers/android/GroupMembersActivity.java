@@ -1,29 +1,92 @@
 package com.allplayers.android;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.objects.GroupData;
 import com.allplayers.objects.GroupMemberData;
 import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.ISideNavigationCallback;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
-public class GroupMembersActivity extends ListActivity {
+public class GroupMembersActivity extends SherlockListActivity implements ISideNavigationCallback{
     private ArrayList<GroupMemberData> membersList;
-
+    private SideNavigationView sideNavigationView;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
+        setContentView(R.layout.members_list);
+        
         GroupData group = (new Router(this)).getIntentGroup();
 
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setTitle(group.getTitle());
+        actionbar.setSubtitle("Members");
+        
+        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        sideNavigationView.setMenuClickCallback(this);
+        sideNavigationView.setMode(Mode.LEFT);
+        	
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        
         GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
         helper.execute(group);
     }
+    
+    @Override
+    public void onSideNavigationItemClick(int itemId) {
+        switch (itemId) {
+            case R.id.side_navigation_menu_item1:
+                invokeActivity(GroupsActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item2:
+                invokeActivity(MessageActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item3:
+                invokeActivity(PhotosActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item4:
+                invokeActivity(EventsActivity.class);
+                break;
+                
+            default:
+                return;
+        }
+        finish();
+    }
+	
+	private void invokeActivity(Class activity) {
+        Intent intent = new Intent(this, activity);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()) {
+    		case android.R.id.home:
+    			sideNavigationView.toggleMenu();
+    		default:
+                return super.onOptionsItemSelected(item);
+    	}
+    }
+	
     /*
      * Gets a group's members using a rest call and populates an array with the data.
      */

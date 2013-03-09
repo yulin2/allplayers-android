@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -25,15 +26,18 @@ public class GroupsFragment extends ListFragment{
     private int currentAmountShown = 0;
     private ArrayAdapter<String> adapter;
     private TextView loadingMore;
+    
+    private Activity parentActivity;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        parentActivity = this.getActivity();
         groupList = new ArrayList<GroupData>();
-        adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1);
+        adapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1);
 
-        loadingMore = new TextView(this.getActivity());
+        loadingMore = new TextView(parentActivity);
         loadingMore.setTextColor(Color.WHITE);
         loadingMore.setText("LOADING MORE GROUPS...");
         loadingMore.setTextSize(20);
@@ -75,7 +79,7 @@ public class GroupsFragment extends ListFragment{
         super.onListItemClick(l, v, position, id);
         if (hasGroups && position < groupList.size()) {
             //Display the group page for the selected group
-            Intent intent = (new Router(this.getActivity())).getGroupPageActivityIntent(groupList.get(position));
+            Intent intent = (new Router(parentActivity)).getGroupPageActivityIntent(groupList.get(position));
             startActivity(intent);
         }
     }
