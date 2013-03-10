@@ -19,6 +19,8 @@ import android.widget.ListView;
 public class PhotosFragment extends ListFragment{
 	private ArrayList<AlbumData> albumList = new ArrayList<AlbumData>();
 	private static Activity parentActivity;
+	private int numOfGroups, groupsLoaded;
+
 
     /** Called when the activity is first created. */
     @Override
@@ -83,8 +85,8 @@ public class PhotosFragment extends ListFragment{
             String group_uuid;
 
             LocalStorage.writeUserAlbums(parentActivity.getBaseContext(), "", true);
-
-            for (int i = 0; i < groupList.size(); i++) {
+            numOfGroups = groupList.size();
+            for (int i = 0; i < numOfGroups; i++) {
                 group_uuid = groupList.get(i).getUUID();
                 GetGroupAlbumsByGroupIdTask helper = new GetGroupAlbumsByGroupIdTask();
                 helper.execute(group_uuid);
@@ -102,6 +104,7 @@ public class PhotosFragment extends ListFragment{
         }
 
         protected void onPostExecute(String jsonResult) {
+            groupsLoaded++;
             populateGroupAlbums(jsonResult);
         }
     }
@@ -126,7 +129,7 @@ public class PhotosFragment extends ListFragment{
                     albumList.add(newAlbumList.get(j));
                 }
             }
-            if (albumList.isEmpty()) {
+            if (albumList.isEmpty() && groupsLoaded == numOfGroups) {
                 String[] values = new String[] {"no albums to display"};
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(PhotosFragment.parentActivity,
                         android.R.layout.simple_list_item_1, values);
