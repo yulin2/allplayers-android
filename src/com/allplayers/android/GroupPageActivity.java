@@ -25,39 +25,68 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class GroupPageActivity extends SherlockActivity implements ISideNavigationCallback {
-    GroupData group;
+    private GroupData group;
     private ArrayList<GroupMemberData> membersList;
+    
+	// Used for the Side Navigation Menu.
     private SideNavigationView sideNavigationView;
     
-    /** Called when the activity is first created. */
+    /**
+	 * Called when the activity is first created, this creates the Action Bar
+	 * and sets up the Side Navigation Menu as well as assigning some variables.
+	 * @param savedInstanceState: Saved data from the last instance of the
+	 * activity.
+	 */  
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        group = (new Router(this)).getIntentGroup();
+    	
         super.onCreate(savedInstanceState);
+
+        group = (new Router(this)).getIntentGroup();
+
+        setButtonState(group.getUUID());
+
         setContentView(R.layout.grouppage);
-
-        String logoURL = group.getLogo();
-        String uuid = group.getUUID();
-
-        setButtonState(uuid);
 
         ActionBar actionbar = getSupportActionBar();
         actionbar.setTitle(group.getTitle());
-        
+        actionbar.setDisplayHomeAsUpEnabled(true);
+
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        	
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        
+        	        
         GetRemoteImageTask helper = new GetRemoteImageTask();
-        helper.execute(logoURL);
+        helper.execute(group.getLogo());
     }
 
+    /**
+	 * Listener for the Action Bar Options Menu.
+	 * @param item: The selected menu item.
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+    	switch(item.getItemId()) {
+    	
+    		case android.R.id.home:
+    			sideNavigationView.toggleMenu();
+    			
+    		default:
+                return super.onOptionsItemSelected(item);
+    	}
+    }
+	
+	/**
+	 * Listener for the Side Navigation Menu.
+	 * @param itemId: The ID of the list item that was selected.
+	 */
 	@Override
     public void onSideNavigationItemClick(int itemId) {
+		
         switch (itemId) {
+        
             case R.id.side_navigation_menu_item1:
                 invokeActivity(GroupsActivity.class);
                 break;
@@ -77,45 +106,47 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
             default:
                 return;
         }
+        
         finish();
     }
 	
+	/**
+	 * Helper method for onSideNavigationItemClick. Starts the passed in
+	 * activity.
+	 * @param activity: The activity to be started.
+	 */
 	private void invokeActivity(Class activity) {
+		
         Intent intent = new Intent(this, activity);
         startActivity(intent);
-        overridePendingTransition(0, 0);
-    }
-	
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()) {
-    		case android.R.id.home:
-    			sideNavigationView.toggleMenu();
-    		default:
-                return super.onOptionsItemSelected(item);
-    	}
+        
+        overridePendingTransition(0, 0); // Disables new activity animation.
     }
     
     /**
      * Checks if the user is a member of the group in order to determine if they should have
      * access to the buttons provided to view members, events, and photos.
      *
-     * @param group_uuid
+     * @param group_uuid: The uuid of the group to be checked.
      */
     private void setButtonState(String group_uuid) {
+    	
         GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
         helper.execute(group_uuid);
     }
 
-    /*
-     * Gets a remote image using a rest call and uses it in a view.
+    /**
+     * Gets a remote image using a REST call.
      */
     public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
 
         protected Bitmap doInBackground(String... logoURL) {
+        	
             return RestApiV1.getRemoteImage(logoURL[0]);
         }
 
         protected void onPostExecute(Bitmap logo) {
+        	
             ImageView imView = (ImageView)findViewById(R.id.groupLogo);
             imView.setImageBitmap(logo);
         }
