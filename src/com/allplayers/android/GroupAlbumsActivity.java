@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 public class GroupAlbumsActivity  extends SherlockListActivity implements ISideNavigationCallback{
     private ArrayList<AlbumData> albumList;
+    private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
 
     /** Called when the activity is first created. */
@@ -33,7 +34,8 @@ public class GroupAlbumsActivity  extends SherlockListActivity implements ISideN
         setContentView(R.layout.albums_list);
         GroupData group = (new Router(this)).getIntentGroup();
 
-        ActionBar actionbar = getSupportActionBar();
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(group.getTitle());
         actionbar.setSubtitle("Photo Albums");
         
@@ -41,9 +43,7 @@ public class GroupAlbumsActivity  extends SherlockListActivity implements ISideN
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        	
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        
+        	        
         GetGroupAlbumsByGroupIdTask helper = new GetGroupAlbumsByGroupIdTask();
         helper.execute(group);
     }
@@ -111,6 +111,7 @@ public class GroupAlbumsActivity  extends SherlockListActivity implements ISideN
         protected void onPostExecute(String jsonResult) {
             AlbumsMap albums = new AlbumsMap(jsonResult);
             albumList = albums.getAlbumData();
+            
             if (albumList.isEmpty()) {
                 String[] values = new String[] {"no albums to display"};
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupAlbumsActivity.this,

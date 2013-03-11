@@ -14,7 +14,7 @@ import android.os.Bundle;
 
 public class MessageActivity extends SherlockFragmentActivity implements ISideNavigationCallback{
 
-	// Used for the Side Navigation Menu.
+	private ActionBar actionbar;
 	private SideNavigationView sideNavigationView;
 	
 	/**
@@ -30,9 +30,9 @@ public class MessageActivity extends SherlockFragmentActivity implements ISideNa
         
         setContentView(R.layout.messages);
         
-        ActionBar actionbar = getSupportActionBar();
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Messages");
-        actionbar.setDisplayHomeAsUpEnabled(true);
 
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);

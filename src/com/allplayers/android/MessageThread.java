@@ -1,16 +1,20 @@
 package com.allplayers.android;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.objects.MessageData;
 import com.allplayers.objects.MessageThreadData;
 import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.ISideNavigationCallback;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -19,32 +23,56 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
-public class MessageThread extends ListActivity {
+public class MessageThread extends SherlockListActivity implements ISideNavigationCallback{
     private ArrayList<MessageThreadData> messageThreadList;
     private boolean hasMessages = false;
     private String jsonResult = "";
     private int threadIDInt;
-
-    ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+    private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private MessageData message;
-
-    /** Called when the activity is first created. */
-    @SuppressWarnings( { "unchecked", "rawtypes" })
+    private SideNavigationView sideNavigationView;
+    private ActionBar actionbar;
+    
+    /**
+	 * Called when the activity is first created, this sets up some variables, 
+	 * creates the Action Bar, and sets up the Side Navigation Menu.
+	 * @param savedInstanceState: Saved data from the last instance of the
+	 * activity.
+	 */    
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	
         super.onCreate(savedInstanceState);
-
+        
         message = (new Router(this)).getIntentMessage();
         String threadID = message.getThreadID();
 
+        setContentView(R.layout.members_list);
+
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
+        actionbar.setTitle("Messages");
+        
+        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        sideNavigationView.setMenuClickCallback(this);
+        sideNavigationView.setMode(Mode.LEFT);
+        
         PutAndGetMessagesTask helper = new PutAndGetMessagesTask();
         helper.execute(threadID);
     }
 
+    /**
+     * Listener for the list on the page.
+     * @param l
+     * @param v
+     * @param position: The position in the list of the clicked item.
+     * @param id: The id of the list item that was clicked.
+     */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
+    	
         super.onListItemClick(l, v, position, id);
 
         if (hasMessages) {
@@ -53,51 +81,126 @@ public class MessageThread extends ListActivity {
         }
     }
 
-    @Override
+    /**
+	 * Creates the Action Bar Options Menu. 
+	 * @param menu: The menu to be created.
+	 */
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.markreadmenu, menu);
+		
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.defaultmenu, menu);
+        
         return true;
     }
 
+	/**
+	 * Listener for the Action Bar Options Menu.
+	 * @param item: The selected menu item.
+	 * @TODO Make the Mark Read button work.
+	 */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+    	
         switch (item.getItemId()) {
+        
         case R.id.reply: {
             Intent intent = (new Router(this)).getMessagReplyIntent(message);
             startActivity(intent);
             return true;
         }
+        
         case R.id.markRead: {
             RestApiV1.putMessage(threadIDInt, 1, "");
             startActivity(new Intent(MessageThread.this, MessageInbox.class));
             finish();
             return true;
         }
+        
+        case android.R.id.home:
+			sideNavigationView.toggleMenu();
+			
         default:
             return super.onOptionsItemSelected(item);
         }
     }
+    
+	/**
+	 * Listener for the Side Navigation Menu.
+	 * @param itemId: The ID of the list item that was selected.
+	 */
+	@Override
+    public void onSideNavigationItemClick(int itemId) {
+		
+        switch (itemId) {
+        
+            case R.id.side_navigation_menu_item1:
+                invokeActivity(GroupsActivity.class);
+                break;
 
+            case R.id.side_navigation_menu_item2:
+                invokeActivity(MessageActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item3:
+                invokeActivity(PhotosActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item4:
+                invokeActivity(EventsActivity.class);
+                break;
+                
+            default:
+                return;
+        }
+        
+        finish();
+    }
+	
+	/**
+	 * Helper method for onSideNavigationItemClick. Starts the passed in
+	 * activity.
+	 * @param activity: The activity to be started.
+	 */
+	private void invokeActivity(Class activity) {
+		
+        Intent intent = new Intent(this, activity);
+        startActivity(intent);
+        
+        overridePendingTransition(0, 0); // Disables new activity animation.
+    }
+
+	/**
+	 * An async task containing the REST calls needed to populate the messages
+	 * list.
+	 */
     public class PutAndGetMessagesTask extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... threadID) {
+        	
             threadIDInt = Integer.parseInt(threadID[0]);
+            
             RestApiV1.putMessage(threadIDInt, 0, "");
+            
             jsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
+            
             return jsonResult;
         }
 
-        /*
+        /**
          * Gets a user's sent and received messages and puts this data into the
-         *      user's message thread.
+         * user's message thread.
+         * @param jsonResult: The json result containing the data for the user's
+         * sent and received messages in this thread.
          */
         protected void onPostExecute(String jsonResult) {
+        	
             HashMap<String, String> map;
-
             MessageThreadMap messages = new MessageThreadMap(jsonResult);
             messageThreadList = messages.getMessageThreadData();
-
+            
+            actionbar.setSubtitle("Thread started by " + messageThreadList.get(0).getSenderName());
+            
             Collections.sort(messageThreadList, new Comparator<Object>() {
                 public int compare(Object o1, Object o2) {
                     MessageThreadData m1 = (MessageThreadData) o1;
@@ -108,7 +211,6 @@ public class MessageThread extends ListActivity {
 
             if (!messageThreadList.isEmpty()) {
                 hasMessages = true;
-
                 for (int i = 0; i < messageThreadList.size(); i++) {
                     map = new HashMap<String, String>();
                     map.put("line1", messageThreadList.get(i).getMessageBody());

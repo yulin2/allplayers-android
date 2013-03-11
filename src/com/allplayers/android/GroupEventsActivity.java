@@ -27,6 +27,7 @@ public class GroupEventsActivity extends SherlockListActivity implements ISideNa
     private ArrayList<EventData> eventsList;
     private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private boolean hasEvents = false;
+    private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
 
     /** Called when the activity is first created. */
@@ -38,7 +39,8 @@ public class GroupEventsActivity extends SherlockListActivity implements ISideNa
 
         GroupData group = (new Router(this)).getIntentGroup();
 
-        ActionBar actionbar = getSupportActionBar();
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(group.getTitle());
         actionbar.setSubtitle("Events");
         
@@ -46,9 +48,7 @@ public class GroupEventsActivity extends SherlockListActivity implements ISideNa
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        	
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        
+        	        
         GetIntentGroupTask helper = new GetIntentGroupTask();
         helper.execute(group);
     }
@@ -116,6 +116,7 @@ public class GroupEventsActivity extends SherlockListActivity implements ISideNa
         protected void onPostExecute(String jsonResult) {
             EventsMap events = new EventsMap(jsonResult);
             eventsList = events.getEventData();
+            
             HashMap<String, String> map;
             if (!eventsList.isEmpty()) {
                 for (int i = 0; i < eventsList.size(); i++) {

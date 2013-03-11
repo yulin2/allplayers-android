@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class GroupMembersActivity extends SherlockListActivity implements ISideNavigationCallback{
     private ArrayList<GroupMemberData> membersList;
+    private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
     
     /** Called when the activity is first created. */
@@ -32,7 +33,8 @@ public class GroupMembersActivity extends SherlockListActivity implements ISideN
         
         GroupData group = (new Router(this)).getIntentGroup();
 
-        ActionBar actionbar = getSupportActionBar();
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(group.getTitle());
         actionbar.setSubtitle("Members");
         
@@ -40,9 +42,7 @@ public class GroupMembersActivity extends SherlockListActivity implements ISideN
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        	
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        
+        	        
         GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
         helper.execute(group);
     }
@@ -99,6 +99,7 @@ public class GroupMembersActivity extends SherlockListActivity implements ISideN
         protected void onPostExecute(String jsonResult) {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
             membersList = groupMembers.getGroupMemberData();
+            
             String[] values;
             if (!membersList.isEmpty()) {
                 values = new String[membersList.size()];

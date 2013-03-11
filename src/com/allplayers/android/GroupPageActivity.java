@@ -28,7 +28,7 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
     private GroupData group;
     private ArrayList<GroupMemberData> membersList;
     
-	// Used for the Side Navigation Menu.
+	private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
     
     /**
@@ -48,9 +48,9 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
         setContentView(R.layout.grouppage);
 
-        ActionBar actionbar = getSupportActionBar();
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(group.getTitle());
-        actionbar.setDisplayHomeAsUpEnabled(true);
 
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
