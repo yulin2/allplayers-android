@@ -86,7 +86,6 @@ public class PhotoAdapter extends BaseAdapter {
         }
 
         protected void onPostExecute(Bitmap bitmap) {
-            System.out.println("Loaded a new image");
             photoImage[row].setImageBitmap(bitmap);
         }
     }

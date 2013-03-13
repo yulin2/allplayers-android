@@ -57,7 +57,6 @@ public class PhotoPager extends Activity {
             while (temp.previousPhoto() != null) {
                 photos.add(0, temp.previousPhoto());
                 temp = temp.previousPhoto();
-                System.out.println("Added a photo before.");
             }
             if (currentPhotoIndex == 0) {
                 currentPhotoIndex = photos.size();
@@ -67,7 +66,6 @@ public class PhotoPager extends Activity {
             while (temp.nextPhoto() != null) {
                 photos.add(temp.nextPhoto());
                 temp = temp.nextPhoto();
-                System.out.println("Added a photo after.");
             }
             images = new ImageView[photos.size()];
         }

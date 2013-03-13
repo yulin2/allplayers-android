@@ -97,8 +97,6 @@ public class Login extends Activity {
 
                 String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                System.out.println(email);
-                System.out.println(password);
 
                 progressSpinner.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
