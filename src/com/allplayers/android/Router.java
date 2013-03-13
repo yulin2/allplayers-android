@@ -75,6 +75,10 @@ public class Router {
         return getGroupIntent(GroupAlbumsActivity.class, group);
     }
 
+    public Intent getGroupLocationActivityIntent(GroupData group) {
+        return getGroupIntent(GroupLocationActivity.class, group);
+    }
+
     public Intent getGroupEventsActivityIntent(GroupData group) {
         return getGroupIntent(GroupEventsActivity.class, group);
     }

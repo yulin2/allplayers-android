@@ -210,6 +210,9 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
             if (isLoggedIn) groupLocationButton.setVisibility(View.VISIBLE);
             groupLocationButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+                    Intent intent = (new Router(GroupPageActivity.this))
+                            .getGroupLocationActivityIntent(group);
+                    startActivity(intent);
                 }
             });
         }
