@@ -17,7 +17,7 @@
 	  android:id="@+id/eventMap"
 	  android:layout_width="fill_parent"
 	  android:layout_height="fill_parent"
-	  android:clickable="false"
+	  android:clickable="true"
 	  android:apiKey="0alB8H6T-db781lpmO-JMXpe7_d2Uohis4iGIpw"/>
 	
 	<com.devspark.sidenavigation.SideNavigationView

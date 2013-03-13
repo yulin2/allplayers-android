@@ -16,6 +16,7 @@ public class EventData extends DataObject {
     private String end = "";
     private String longitude = "";
     private String latitude = "";
+    private String zip = "";
 
     public EventData() {
 
@@ -63,6 +64,10 @@ public class EventData extends DataObject {
 
     public void setLongitude(String newLongitude) {
         longitude = newLongitude;
+    }
+
+    public void setZip(String s) {
+        zip = s;
     }
 
     public String getUUID() {
@@ -115,5 +120,9 @@ public class EventData extends DataObject {
 
     public String getLongitude() {
         return longitude;
+    }
+
+    public String getZip() {
+        return zip;
     }
 }
