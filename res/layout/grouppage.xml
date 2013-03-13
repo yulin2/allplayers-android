@@ -5,74 +5,64 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 	<ImageView
-	  android:id="@+id/groupLogo"
-	  android:layout_width="match_parent"
-	  android:layout_height="100dp"
-	  android:layout_gravity="center"
-	  android:scaleType="centerInside"
-	  android:layout_weight="1"
-	  android:paddingLeft="5px"
-	  android:paddingRight="5px"
-	  android:paddingTop="25px"
-	  android:paddingBottom="10px">
-	</ImageView>
-	<TextView
-	  android:layout_below="@id/groupLogo"
-	  android:editable="false"
-	  android:text=""
-	  android:id="@+id/groupDetails"
-	  android:layout_width="match_parent"
-	  android:layout_height="wrap_content"
-	  android:layout_weight="0"
-	  android:gravity="left|center_vertical"
-	  android:paddingLeft="5px"
-	  android:paddingRight="5px"
-	  android:paddingTop="10px"
-	  android:paddingBottom="10px">
-	</TextView>
-	
-	<LinearLayout
-	  android:layout_below="@id/groupDetails"
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:gravity="center_horizontal|bottom"
-	  android:orientation="vertical"
-	  android:layout_weight=".75"
-	  android:paddingLeft="5px"
-	  android:paddingRight="5px"
-	  android:paddingTop="10px"
-	  android:paddingBottom="25px">
-		<Button
-		  android:visibility="gone"
-		  android:id="@+id/groupMembersButton"
-		  android:layout_width="fill_parent"
-		  android:layout_height="wrap_content"
-		  android:text="Group Members"
-		  android:gravity="center"
-		  android:layout_weight="0">
-		  
-		</Button>
-		<Button
-		  android:visibility="gone"
-		  android:id="@+id/groupEventsButton"
-		  android:layout_width="fill_parent"
-		  android:layout_height="wrap_content"
-		  android:text="Group Events"
-		  android:gravity="center"
-		  android:layout_weight="0">
-		</Button>
-		<Button
-		  android:visibility="gone"
-		  android:id="@+id/groupPhotosButton"
-		  android:layout_width="fill_parent"
-		  android:layout_height="wrap_content"
-		  android:text="Group Photos"
-		  android:gravity="center"
-		  android:layout_weight="0">
-		</Button>
-	</LinearLayout>
-	<com.devspark.sidenavigation.SideNavigationView
-            android:id="@+id/side_navigation_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+      android:id="@+id/groupLogo"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:adjustViewBounds="true"
+      android:scaleType="fitStart">
+    </ImageView>
+    <TableLayout
+      android:layout_below="@+id/groupLogo"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content">
+        <TableRow
+          android:gravity="center"
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+          android:layout_weight="1">
+	        <ImageButton
+                android:id="@+id/groupMembersButton"
+                android:scaleType="fitXY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:src="@drawable/groups_icon" />
+            <ImageButton
+                android:id="@+id/groupPhotosButton"
+                android:scaleType="fitXY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:src="@drawable/photos_icon" />
+        </TableRow>
+        <TableRow
+          android:gravity="center"
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+          android:layout_weight="1">
+            <ImageButton
+                android:id="@+id/groupEventsButton"
+                android:scaleType="fitXY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:src="@drawable/events_icon" />
+            <ImageButton
+                android:id="@+id/groupLocationButton"
+                android:scaleType="fitXY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:src="@drawable/events_icon" />
+        </TableRow>
+    </TableLayout>
+    <com.devspark.sidenavigation.SideNavigationView
+      android:id="@+id/side_navigation_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
 </RelativeLayout>

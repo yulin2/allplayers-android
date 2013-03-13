@@ -17,7 +17,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -176,9 +176,8 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
                 }
             }
 
-            final Button groupMembersButton = (Button) findViewById(R.id.groupMembersButton);
-            if (isMember && isLoggedIn)
-                groupMembersButton.setVisibility(View.VISIBLE);
+            final ImageButton groupMembersButton = (ImageButton) findViewById(R.id.groupMembersButton);
+            if (isMember && isLoggedIn) groupMembersButton.setVisibility(View.VISIBLE);
             groupMembersButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
@@ -187,9 +186,8 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
                 }
             });
 
-            final Button groupEventsButton = (Button) findViewById(R.id.groupEventsButton);
-            if (isLoggedIn)
-                groupEventsButton.setVisibility(View.VISIBLE);
+            final ImageButton groupEventsButton = (ImageButton) findViewById(R.id.groupEventsButton);
+            if (isLoggedIn) groupEventsButton.setVisibility(View.VISIBLE);
             groupEventsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
@@ -198,9 +196,8 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
                 }
             });
 
-            final Button groupPhotosButton = (Button) findViewById(R.id.groupPhotosButton);
-            if (isLoggedIn)
-                groupPhotosButton.setVisibility(View.VISIBLE);
+            final ImageButton groupPhotosButton = (ImageButton) findViewById(R.id.groupPhotosButton);
+            if (isLoggedIn) groupPhotosButton.setVisibility(View.VISIBLE);
             groupPhotosButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
@@ -209,9 +206,12 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
                 }
             });
 
-            TextView groupInfo = (TextView) findViewById(R.id.groupDetails);
-            groupInfo.setText("Title: " + group.getTitle() + "\n\nDescription: "
-                    + group.getDescription());
+            final ImageButton groupLocationButton = (ImageButton) findViewById(R.id.groupLocationButton);
+            if (isLoggedIn) groupLocationButton.setVisibility(View.VISIBLE);
+            groupLocationButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                }
+            });
         }
     }
 }

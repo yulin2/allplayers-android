@@ -34,7 +34,7 @@
         
 		<!-- Start Group Activities -->
 		<activity android:name="GroupsActivity" android:label="@string/app_name" android:theme="@style/Theme.Sherlock"/>
-		<activity android:name="GroupPageActivity" android:label="@string/app_name" android:theme="@style/Theme.Sherlock"/>
+		<activity android:name="GroupPageActivity" android:screenOrientation="portrait" android:label="@string/app_name" android:theme="@style/Theme.Sherlock"/>
 		<activity android:name="GroupMembersActivity" android:label="@string/app_name" android:theme="@style/Theme.Sherlock"/>
 		<activity android:name="GroupEventsActivity" android:label="@string/app_name" android:theme="@style/Theme.Sherlock"/>
 		<activity android:name="EventDisplayActivity" android:label="@string/app_name" android:theme="@style/Theme.Sherlock"/>
