@@ -27,6 +27,7 @@ public class MessageInbox extends SherlockActivity implements ISideNavigationCal
     private ArrayList<MessageData> messageList;
     private String jsonResult = "";
     private boolean hasMessages = false;
+    private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
     
     /** Called when the activity is first created. */
@@ -48,8 +49,9 @@ public class MessageInbox extends SherlockActivity implements ISideNavigationCal
             populateInbox(jsonResult);
         }
         
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setTitle(R.string.title2);
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
+        actionbar.setTitle("Messages");
         actionbar.setSubtitle("Inbox");
 
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
@@ -57,7 +59,6 @@ public class MessageInbox extends SherlockActivity implements ISideNavigationCal
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
         	
-        actionbar.setDisplayHomeAsUpEnabled(true);
     }
     
     @Override
@@ -103,7 +104,7 @@ public class MessageInbox extends SherlockActivity implements ISideNavigationCal
     public void populateInbox(String json) {
         MessagesMap messages = new MessagesMap(json);
         messageList = messages.getMessageData();
-
+        
         Collections.reverse(messageList);
 
         ListView list = (ListView) findViewById(R.id.customListView);
