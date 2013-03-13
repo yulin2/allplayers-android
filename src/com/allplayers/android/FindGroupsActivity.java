@@ -24,14 +24,14 @@ public class FindGroupsActivity extends SherlockActivity implements ISideNavigat
     TextView distanceLabel;
     private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
-    
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         setContentView(R.layout.findgroups);
-        
+
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Search");
@@ -40,7 +40,7 @@ public class FindGroupsActivity extends SherlockActivity implements ISideNavigat
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        
+
         searchEditText = (EditText)findViewById(R.id.searchGroupsField);
         zipcodeEditText = (EditText)findViewById(R.id.searchGroupsZipcodeField);
         distanceEditText = (EditText)findViewById(R.id.searchGroupsDistanceField);
@@ -103,10 +103,10 @@ public class FindGroupsActivity extends SherlockActivity implements ISideNavigat
             }
         });
     }
-    
+
     /**
      * Listener for the Action Bar Options Menu.
-     * 
+     *
      * @param item: The selected menu item.
      */
     @Override
@@ -114,19 +114,19 @@ public class FindGroupsActivity extends SherlockActivity implements ISideNavigat
 
         switch (item.getItemId()) {
 
-            case android.R.id.home: {
-                sideNavigationView.toggleMenu();
-                return true;
-            }
+        case android.R.id.home: {
+            sideNavigationView.toggleMenu();
+            return true;
+        }
 
-            default:
-                return super.onOptionsItemSelected(item);
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
-     * 
+     *
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -134,24 +134,24 @@ public class FindGroupsActivity extends SherlockActivity implements ISideNavigat
 
         switch (itemId) {
 
-            case R.id.side_navigation_menu_item1:
-                invokeActivity(GroupsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item1:
+            invokeActivity(GroupsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item2:
-                invokeActivity(MessageActivity.class);
-                break;
+        case R.id.side_navigation_menu_item2:
+            invokeActivity(MessageActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item3:
-                invokeActivity(PhotosActivity.class);
-                break;
+        case R.id.side_navigation_menu_item3:
+            invokeActivity(PhotosActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item4:
-                invokeActivity(EventsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item4:
+            invokeActivity(EventsActivity.class);
+            break;
 
-            default:
-                return;
+        default:
+            return;
         }
 
         finish();
@@ -160,7 +160,7 @@ public class FindGroupsActivity extends SherlockActivity implements ISideNavigat
     /**
      * Helper method for onSideNavigationItemClick. Starts the passed in
      * activity.
-     * 
+     *
      * @param activity: The activity to be started.
      */
     @SuppressWarnings("rawtypes")

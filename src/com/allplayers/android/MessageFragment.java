@@ -22,7 +22,7 @@ public class MessageFragment extends ListFragment {
 
     private ArrayList<MessageData> messageList;
     private String jsonResult = "";
-    
+
     private Activity parentActivity;
 
     /** Called when the activity is first created. */

@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-public class MessageThread extends SherlockListActivity implements ISideNavigationCallback{
+public class MessageThread extends SherlockListActivity implements ISideNavigationCallback {
     private ArrayList<MessageThreadData> messageThreadList;
     private boolean hasMessages = false;
     private String jsonResult = "";
@@ -33,18 +33,18 @@ public class MessageThread extends SherlockListActivity implements ISideNavigati
     private MessageData message;
     private SideNavigationView sideNavigationView;
     private ActionBar actionbar;
-    
+
     /**
-	 * Called when the activity is first created, this sets up some variables, 
-	 * creates the Action Bar, and sets up the Side Navigation Menu.
-	 * @param savedInstanceState: Saved data from the last instance of the
-	 * activity.
-	 */    
+     * Called when the activity is first created, this sets up some variables,
+     * creates the Action Bar, and sets up the Side Navigation Menu.
+     * @param savedInstanceState: Saved data from the last instance of the
+     * activity.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	
+
         super.onCreate(savedInstanceState);
-        
+
         message = (new Router(this)).getIntentMessage();
         String threadID = message.getThreadID();
 
@@ -53,12 +53,12 @@ public class MessageThread extends SherlockListActivity implements ISideNavigati
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Messages");
-        
+
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        
+
         PutAndGetMessagesTask helper = new PutAndGetMessagesTask();
         helper.execute(threadID);
     }
@@ -72,7 +72,7 @@ public class MessageThread extends SherlockListActivity implements ISideNavigati
      */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-    	
+
         super.onListItemClick(l, v, position, id);
 
         if (hasMessages) {
@@ -82,108 +82,108 @@ public class MessageThread extends SherlockListActivity implements ISideNavigati
     }
 
     /**
-	 * Creates the Action Bar Options Menu. 
-	 * @param menu: The menu to be created.
-	 */
-	@Override
+     * Creates the Action Bar Options Menu.
+     * @param menu: The menu to be created.
+     */
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		
+
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.defaultmenu, menu);
-        
+
         return true;
     }
 
-	/**
-	 * Listener for the Action Bar Options Menu.
-	 * @param item: The selected menu item.
-	 * @TODO Make the Mark Read button work.
-	 */
+    /**
+     * Listener for the Action Bar Options Menu.
+     * @param item: The selected menu item.
+     * @TODO Make the Mark Read button work.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	
+
         switch (item.getItemId()) {
-        
+
         case R.id.reply: {
             Intent intent = (new Router(this)).getMessagReplyIntent(message);
             startActivity(intent);
             return true;
         }
-        
+
         case R.id.markRead: {
             RestApiV1.putMessage(threadIDInt, 1, "");
             startActivity(new Intent(MessageThread.this, MessageInbox.class));
             finish();
             return true;
         }
-        
+
         case android.R.id.home:
-			sideNavigationView.toggleMenu();
-			
+            sideNavigationView.toggleMenu();
+
         default:
             return super.onOptionsItemSelected(item);
         }
     }
-    
-	/**
-	 * Listener for the Side Navigation Menu.
-	 * @param itemId: The ID of the list item that was selected.
-	 */
-	@Override
+
+    /**
+     * Listener for the Side Navigation Menu.
+     * @param itemId: The ID of the list item that was selected.
+     */
+    @Override
     public void onSideNavigationItemClick(int itemId) {
-		
+
         switch (itemId) {
-        
-            case R.id.side_navigation_menu_item1:
-                invokeActivity(GroupsActivity.class);
-                break;
 
-            case R.id.side_navigation_menu_item2:
-                invokeActivity(MessageActivity.class);
-                break;
+        case R.id.side_navigation_menu_item1:
+            invokeActivity(GroupsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item3:
-                invokeActivity(PhotosActivity.class);
-                break;
+        case R.id.side_navigation_menu_item2:
+            invokeActivity(MessageActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item4:
-                invokeActivity(EventsActivity.class);
-                break;
-                
-            default:
-                return;
+        case R.id.side_navigation_menu_item3:
+            invokeActivity(PhotosActivity.class);
+            break;
+
+        case R.id.side_navigation_menu_item4:
+            invokeActivity(EventsActivity.class);
+            break;
+
+        default:
+            return;
         }
-        
+
         finish();
     }
-	
-	/**
-	 * Helper method for onSideNavigationItemClick. Starts the passed in
-	 * activity.
-	 * @param activity: The activity to be started.
-	 */
-	private void invokeActivity(Class activity) {
-		
+
+    /**
+     * Helper method for onSideNavigationItemClick. Starts the passed in
+     * activity.
+     * @param activity: The activity to be started.
+     */
+    private void invokeActivity(Class activity) {
+
         Intent intent = new Intent(this, activity);
         startActivity(intent);
-        
+
         overridePendingTransition(0, 0); // Disables new activity animation.
     }
 
-	/**
-	 * An async task containing the REST calls needed to populate the messages
-	 * list.
-	 */
+    /**
+     * An async task containing the REST calls needed to populate the messages
+     * list.
+     */
     public class PutAndGetMessagesTask extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... threadID) {
-        	
+
             threadIDInt = Integer.parseInt(threadID[0]);
-            
+
             RestApiV1.putMessage(threadIDInt, 0, "");
-            
+
             jsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
-            
+
             return jsonResult;
         }
 
@@ -194,13 +194,13 @@ public class MessageThread extends SherlockListActivity implements ISideNavigati
          * sent and received messages in this thread.
          */
         protected void onPostExecute(String jsonResult) {
-        	
+
             HashMap<String, String> map;
             MessageThreadMap messages = new MessageThreadMap(jsonResult);
             messageThreadList = messages.getMessageThreadData();
-            
+
             actionbar.setSubtitle("Thread started by " + messageThreadList.get(0).getSenderName());
-            
+
             Collections.sort(messageThreadList, new Comparator<Object>() {
                 public int compare(Object o1, Object o2) {
                     MessageThreadData m1 = (MessageThreadData) o1;

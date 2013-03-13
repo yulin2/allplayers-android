@@ -29,7 +29,7 @@ public class MessageInbox extends SherlockActivity implements ISideNavigationCal
     private boolean hasMessages = false;
     private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
-    
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class MessageInbox extends SherlockActivity implements ISideNavigationCal
         } else {
             populateInbox(jsonResult);
         }
-        
+
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Messages");
@@ -58,53 +58,53 @@ public class MessageInbox extends SherlockActivity implements ISideNavigationCal
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        	
+
     }
-    
+
     @Override
     public void onSideNavigationItemClick(int itemId) {
         switch (itemId) {
-            case R.id.side_navigation_menu_item1:
-                invokeActivity(GroupsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item1:
+            invokeActivity(GroupsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item2:
-                invokeActivity(MessageActivity.class);
-                break;
+        case R.id.side_navigation_menu_item2:
+            invokeActivity(MessageActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item3:
-                invokeActivity(PhotosActivity.class);
-                break;
+        case R.id.side_navigation_menu_item3:
+            invokeActivity(PhotosActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item4:
-                invokeActivity(EventsActivity.class);
-                break;
-                
-            default:
-                return;
+        case R.id.side_navigation_menu_item4:
+            invokeActivity(EventsActivity.class);
+            break;
+
+        default:
+            return;
         }
         finish();
     }
-	
-	private void invokeActivity(Class activity) {
+
+    private void invokeActivity(Class activity) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
         overridePendingTransition(0, 0);
     }
-	
+
     public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()) {
-    		case android.R.id.home:
-    			sideNavigationView.toggleMenu();
-    		default:
-                return super.onOptionsItemSelected(item);
-    	}
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            sideNavigationView.toggleMenu();
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     public void populateInbox(String json) {
         MessagesMap messages = new MessagesMap(json);
         messageList = messages.getMessageData();
-        
+
         Collections.reverse(messageList);
 
         ListView list = (ListView) findViewById(R.id.customListView);

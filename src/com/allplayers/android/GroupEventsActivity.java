@@ -34,7 +34,7 @@ public class GroupEventsActivity extends SherlockListActivity implements ISideNa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         setContentView(R.layout.events_list);
 
         GroupData group = (new Router(this)).getIntentGroup();
@@ -43,12 +43,12 @@ public class GroupEventsActivity extends SherlockListActivity implements ISideNa
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(group.getTitle());
         actionbar.setSubtitle("Events");
-        
+
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        	        
+
         GetIntentGroupTask helper = new GetIntentGroupTask();
         helper.execute(group);
     }
@@ -56,43 +56,43 @@ public class GroupEventsActivity extends SherlockListActivity implements ISideNa
     @Override
     public void onSideNavigationItemClick(int itemId) {
         switch (itemId) {
-            case R.id.side_navigation_menu_item1:
-                invokeActivity(GroupsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item1:
+            invokeActivity(GroupsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item2:
-                invokeActivity(MessageActivity.class);
-                break;
+        case R.id.side_navigation_menu_item2:
+            invokeActivity(MessageActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item3:
-                invokeActivity(PhotosActivity.class);
-                break;
+        case R.id.side_navigation_menu_item3:
+            invokeActivity(PhotosActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item4:
-                invokeActivity(EventsActivity.class);
-                break;
-                
-            default:
-                return;
+        case R.id.side_navigation_menu_item4:
+            invokeActivity(EventsActivity.class);
+            break;
+
+        default:
+            return;
         }
         finish();
     }
-	
-	private void invokeActivity(Class activity) {
+
+    private void invokeActivity(Class activity) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
         overridePendingTransition(0, 0);
     }
-	
-	public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()) {
-    		case android.R.id.home:
-    			sideNavigationView.toggleMenu();
-    		default:
-                return super.onOptionsItemSelected(item);
-    	}
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            sideNavigationView.toggleMenu();
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
-	
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -116,7 +116,7 @@ public class GroupEventsActivity extends SherlockListActivity implements ISideNa
         protected void onPostExecute(String jsonResult) {
             EventsMap events = new EventsMap(jsonResult);
             eventsList = events.getEventData();
-            
+
             HashMap<String, String> map;
             if (!eventsList.isEmpty()) {
                 for (int i = 0; i < eventsList.size(); i++) {

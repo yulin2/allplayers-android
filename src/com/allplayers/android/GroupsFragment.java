@@ -19,15 +19,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
-public class GroupsFragment extends ListFragment{
-	private ArrayList<GroupData> groupList;
+public class GroupsFragment extends ListFragment {
+    private ArrayList<GroupData> groupList;
     private boolean hasGroups = false, loadMore = true;
     private String jsonResult;
     private int pageNumber = 0;
     private int currentAmountShown = 0;
     private ArrayAdapter<String> adapter;
     private ProgressBar loadingMore;
-    
+
     private Activity parentActivity;
 
     /** Called when the activity is first created. */
@@ -39,12 +39,12 @@ public class GroupsFragment extends ListFragment{
         adapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1);
 
         loadingMore = new ProgressBar(parentActivity);
-           
+
         GetUserGroupsTask helper = new GetUserGroupsTask();
         helper.execute();
     }
-    
-    public void onViewCreated (View view, Bundle savedInstanceState) {
+
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         getListView().addFooterView(loadingMore, null, false);
         setListAdapter(adapter);
 
@@ -73,7 +73,7 @@ public class GroupsFragment extends ListFragment{
     }
 
     @Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         if (hasGroups && position < groupList.size()) {
             //Display the group page for the selected group
@@ -85,7 +85,7 @@ public class GroupsFragment extends ListFragment{
     /** Populates the list of groups to display to the UI thread. */
     protected void updateGroupData() {
         if (!groupList.isEmpty()) {
-        	
+
             // Counter to check if a full 8 new groups were loaded.
             int counter = 0;
             for (int i = currentAmountShown; i < groupList.size(); i++) {

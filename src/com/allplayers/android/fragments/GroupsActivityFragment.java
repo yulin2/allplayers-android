@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class GroupsActivityFragment extends ListFragment {
-  private ArrayList<GroupData> groupList;
+    private ArrayList<GroupData> groupList;
     private boolean hasGroups = false, loadMore = true;
     private String jsonResult;
     private int pageNumber = 0;
@@ -35,8 +35,8 @@ public class GroupsActivityFragment extends ListFragment {
     private Activity parentActivity;
 
     public static GroupsActivityFragment newInstance() {
-    	GroupsActivityFragment fragment = new GroupsActivityFragment();
-    	return fragment;
+        GroupsActivityFragment fragment = new GroupsActivityFragment();
+        return fragment;
     }
     /** Called when the activity is first created. */
     @Override
@@ -87,7 +87,7 @@ public class GroupsActivityFragment extends ListFragment {
     }
 
     @Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         if (hasGroups && position < groupList.size()) {
             //Display the group page for the selected group
@@ -97,7 +97,7 @@ public class GroupsActivityFragment extends ListFragment {
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-    	return parentActivity.onKeyUp(keyCode, event);
+        return parentActivity.onKeyUp(keyCode, event);
     }
 
     /** Populates the list of groups to display to the UI thread. */

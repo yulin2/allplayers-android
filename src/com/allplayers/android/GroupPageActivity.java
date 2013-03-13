@@ -2,6 +2,10 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -31,7 +35,7 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
     /**
      * Called when the activity is first created, this creates the Action Bar
      * and sets up the Side Navigation Menu as well as assigning some variables.
-     * 
+     *
      * @param savedInstanceState: Saved data from the last instance of the
      *            activity.
      */
@@ -57,11 +61,12 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
         GetRemoteImageTask helper = new GetRemoteImageTask();
         helper.execute(group.getLogo());
+        new GetGroupLocationTask().execute(group.getUUID());
     }
 
     /**
      * Listener for the Action Bar Options Menu.
-     * 
+     *
      * @param item: The selected menu item.
      */
     @Override
@@ -69,17 +74,17 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
         switch (item.getItemId()) {
 
-            case android.R.id.home:
-                sideNavigationView.toggleMenu();
+        case android.R.id.home:
+            sideNavigationView.toggleMenu();
 
-            default:
-                return super.onOptionsItemSelected(item);
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
-     * 
+     *
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -87,24 +92,24 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
         switch (itemId) {
 
-            case R.id.side_navigation_menu_item1:
-                invokeActivity(GroupsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item1:
+            invokeActivity(GroupsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item2:
-                invokeActivity(MessageActivity.class);
-                break;
+        case R.id.side_navigation_menu_item2:
+            invokeActivity(MessageActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item3:
-                invokeActivity(PhotosActivity.class);
-                break;
+        case R.id.side_navigation_menu_item3:
+            invokeActivity(PhotosActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item4:
-                invokeActivity(EventsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item4:
+            invokeActivity(EventsActivity.class);
+            break;
 
-            default:
-                return;
+        default:
+            return;
         }
 
         finish();
@@ -113,7 +118,7 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
     /**
      * Helper method for onSideNavigationItemClick. Starts the passed in
      * activity.
-     * 
+     *
      * @param activity: The activity to be started.
      */
     private void invokeActivity(Class activity) {
@@ -128,7 +133,7 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
      * Checks if the user is a member of the group in order to determine if they
      * should have access to the buttons provided to view members, events, and
      * photos.
-     * 
+     *
      * @param group_uuid: The uuid of the group to be checked.
      */
     private void setButtonState(String group_uuid) {
@@ -151,6 +156,23 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
             ImageView imView = (ImageView) findViewById(R.id.groupLogo);
             imView.setImageBitmap(logo);
+        }
+    }
+
+    public class GetGroupLocationTask extends AsyncTask<String, Void, String> {
+        protected String doInBackground(String... group_uuid) {
+            return RestApiV1.getGroupInformationByGroupId(group_uuid[0]);
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            try {
+                JSONObject groupInfo = new JSONObject(jsonResult);
+                group.setZip(groupInfo.getJSONObject("location").getString("zip"));
+                group.setLatLon(groupInfo.getJSONObject("location").getString("latitude"), groupInfo.getJSONObject("location").getString("longitude"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -181,7 +203,7 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
             groupMembersButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
-                            .getGroupMembersActivityIntent(group);
+                                    .getGroupMembersActivityIntent(group);
                     startActivity(intent);
                 }
             });
@@ -191,7 +213,7 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
             groupEventsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
-                            .getGroupEventsActivityIntent(group);
+                                    .getGroupEventsActivityIntent(group);
                     startActivity(intent);
                 }
             });
@@ -201,7 +223,7 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
             groupPhotosButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
-                            .getGroupAlbumsActivityIntent(group);
+                                    .getGroupAlbumsActivityIntent(group);
                     startActivity(intent);
                 }
             });
@@ -211,7 +233,7 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
             groupLocationButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
-                            .getGroupLocationActivityIntent(group);
+                                    .getGroupLocationActivityIntent(group);
                     startActivity(intent);
                 }
             });

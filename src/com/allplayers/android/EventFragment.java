@@ -21,7 +21,7 @@ public class EventFragment extends ListFragment {
     private boolean hasEvents = false;
     private String jsonResult;
     private Activity parentActivity;
-    
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

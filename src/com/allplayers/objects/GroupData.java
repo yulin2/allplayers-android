@@ -8,6 +8,9 @@ public class GroupData extends DataObject {
     private String title = "";
     private String description = "";
     private String logo = "";
+    private String zip = "";
+    private String lat = "";
+    private String lon = "";
 
     public GroupData() {
 
@@ -31,5 +34,26 @@ public class GroupData extends DataObject {
 
     public String getLogo() {
         return logo.replace("imagecache/profile_small/", "");
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public String getLon() {
+        return lon;
+    }
+
+    public void setZip(String s) {
+        zip = s;
+    }
+
+    public void setLatLon(String la, String lo) {
+        lat = la;
+        lon = lo;
     }
 }

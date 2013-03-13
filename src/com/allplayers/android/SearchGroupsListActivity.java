@@ -21,7 +21,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class SearchGroupsListActivity extends SherlockListActivity implements
-        ISideNavigationCallback {
+    ISideNavigationCallback {
 
     private ArrayList<GroupData> groupList;
     private boolean hasGroups = false;
@@ -55,7 +55,7 @@ public class SearchGroupsListActivity extends SherlockListActivity implements
 
     /**
      * Listener for the Action Bar Options Menu.
-     * 
+     *
      * @param item: The selected menu item.
      */
     @Override
@@ -63,19 +63,19 @@ public class SearchGroupsListActivity extends SherlockListActivity implements
 
         switch (item.getItemId()) {
 
-            case android.R.id.home: {
-                sideNavigationView.toggleMenu();
-                return true;
-            }
+        case android.R.id.home: {
+            sideNavigationView.toggleMenu();
+            return true;
+        }
 
-            default:
-                return super.onOptionsItemSelected(item);
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
-     * 
+     *
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -83,24 +83,24 @@ public class SearchGroupsListActivity extends SherlockListActivity implements
 
         switch (itemId) {
 
-            case R.id.side_navigation_menu_item1:
-                invokeActivity(GroupsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item1:
+            invokeActivity(GroupsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item2:
-                invokeActivity(MessageActivity.class);
-                break;
+        case R.id.side_navigation_menu_item2:
+            invokeActivity(MessageActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item3:
-                invokeActivity(PhotosActivity.class);
-                break;
+        case R.id.side_navigation_menu_item3:
+            invokeActivity(PhotosActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item4:
-                invokeActivity(EventsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item4:
+            invokeActivity(EventsActivity.class);
+            break;
 
-            default:
-                return;
+        default:
+            return;
         }
 
         finish();
@@ -109,7 +109,7 @@ public class SearchGroupsListActivity extends SherlockListActivity implements
     /**
      * Helper method for onSideNavigationItemClick. Starts the passed in
      * activity.
-     * 
+     *
      * @param activity: The activity to be started.
      */
     @SuppressWarnings("rawtypes")
@@ -172,7 +172,7 @@ public class SearchGroupsListActivity extends SherlockListActivity implements
                 hasGroups = true;
             } else {
                 values = new String[] {
-                        "no groups to display"
+                    "no groups to display"
                 };
                 hasGroups = false;
             }

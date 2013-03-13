@@ -25,7 +25,7 @@ public class PhotosActivity extends SherlockFragmentActivity implements ISideNav
     /**
      * Called when the activity is first created, this creates the Action Bar
      * and sets up the Side Navigation Menu.
-     * 
+     *
      * @param savedInstanceState: Saved data from the last instance of the
      *            activity.
      */
@@ -48,7 +48,7 @@ public class PhotosActivity extends SherlockFragmentActivity implements ISideNav
 
     /**
      * Creates the Action Bar Options Menu.
-     * 
+     *
      * @param menu: The menu to be created.
      */
     @Override
@@ -62,7 +62,7 @@ public class PhotosActivity extends SherlockFragmentActivity implements ISideNav
 
     /**
      * Listener for the Action Bar Options Menu.
-     * 
+     *
      * @param item: The selected menu item.
      */
     @Override
@@ -70,34 +70,34 @@ public class PhotosActivity extends SherlockFragmentActivity implements ISideNav
 
         switch (item.getItemId()) {
 
-            case R.id.search: {
-                search();
-                return true;
-            }
+        case R.id.search: {
+            search();
+            return true;
+        }
 
-            case R.id.logOut: {
-                logOut();
-                return true;
-            }
+        case R.id.logOut: {
+            logOut();
+            return true;
+        }
 
-            case R.id.refresh: {
-                refresh();
-                return true;
-            }
+        case R.id.refresh: {
+            refresh();
+            return true;
+        }
 
-            case android.R.id.home: {
-                sideNavigationView.toggleMenu();
-                return true;
-            }
+        case android.R.id.home: {
+            sideNavigationView.toggleMenu();
+            return true;
+        }
 
-            default:
-                return super.onOptionsItemSelected(item);
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
-     * 
+     *
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -105,24 +105,24 @@ public class PhotosActivity extends SherlockFragmentActivity implements ISideNav
 
         switch (itemId) {
 
-            case R.id.side_navigation_menu_item1:
-                invokeActivity(GroupsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item1:
+            invokeActivity(GroupsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item2:
-                invokeActivity(MessageActivity.class);
-                break;
+        case R.id.side_navigation_menu_item2:
+            invokeActivity(MessageActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item3:
-                invokeActivity(PhotosActivity.class);
-                break;
+        case R.id.side_navigation_menu_item3:
+            invokeActivity(PhotosActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item4:
-                invokeActivity(EventsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item4:
+            invokeActivity(EventsActivity.class);
+            break;
 
-            default:
-                return;
+        default:
+            return;
         }
 
         finish();
@@ -131,7 +131,7 @@ public class PhotosActivity extends SherlockFragmentActivity implements ISideNav
     /**
      * Helper method for onSideNavigationItemClick. Starts the passed in
      * activity.
-     * 
+     *
      * @param activity: The activity to be started.
      */
     @SuppressWarnings("rawtypes")

@@ -16,10 +16,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class PhotosFragment extends ListFragment{
-	private ArrayList<AlbumData> albumList = new ArrayList<AlbumData>();
-	private static Activity parentActivity;
-	private int numOfGroups, groupsLoaded;
+public class PhotosFragment extends ListFragment {
+    private ArrayList<AlbumData> albumList = new ArrayList<AlbumData>();
+    private static Activity parentActivity;
+    private int numOfGroups, groupsLoaded;
 
 
     /** Called when the activity is first created. */
@@ -62,7 +62,7 @@ public class PhotosFragment extends ListFragment{
     }
 
     @Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
         if (!albumList.isEmpty()) {
