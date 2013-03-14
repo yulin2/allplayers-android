@@ -18,8 +18,10 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -52,7 +54,15 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
-        actionbar.setTitle(group.getTitle());
+        actionbar.setDisplayShowTitleEnabled(false);
+
+        TextView title = new TextView(this);
+        title.setText(group.getTitle());
+        title.setTextSize(19);
+        title.setTypeface(Typeface.DEFAULT_BOLD);
+        ActionBar.LayoutParams params = new	ActionBar.LayoutParams(Gravity.CENTER);
+        actionbar.setCustomView(title, params);
+        actionbar.setDisplayShowCustomEnabled(true);
 
         sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
