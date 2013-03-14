@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
-public class GroupMembersActivity extends ListActivity {
+public class SelectUserContacts extends ListActivity {
     private ArrayList<GroupMemberData> membersList;
 
     /** Called when the activity is first created. */
@@ -19,19 +19,18 @@ public class GroupMembersActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GroupData group = (new Router(this)).getIntentGroup();
 
-        GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
+        GetUserGroupmatesTask helper = new GetUserGroupmatesTask();
         helper.execute(group);
     }
     
     /*
      * Gets a group's members using a rest call and populates an array with the data.
      */
-    public class GetGroupMembersByGroupIdTask extends AsyncTask<GroupData, Void, String> {
+    public class GetUserGroupmatesTask extends AsyncTask<Void, Void, String> {
 
-        protected String doInBackground(GroupData... groups) {
-            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID());
+        protected String doInBackground(Void... args) {
+            return RestApiV1.getUserGroupmates();
         }
 
         protected void onPostExecute(String jsonResult) {
@@ -46,7 +45,7 @@ public class GroupMembersActivity extends ListActivity {
             } else {
                 values = new String[] {"No members to display"};
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupMembersActivity.this,
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(SelectUserContacts.this,
                     android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
         }

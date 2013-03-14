@@ -50,6 +50,9 @@ public class MessageActivity extends ListActivity {
         } else if (position == 1) {
             Intent intent = new Intent(MessageActivity.this, MessageSent.class);
             startActivity(intent);
+        } else if (position == 2) {
+            //Intent intent = new Intent(MessageActivity.this, SelectMessageContacts.class);
+            //startActivity(intent);
         }
     }
 
@@ -78,6 +81,11 @@ public class MessageActivity extends ListActivity {
 
         map = new HashMap<String, String>();
         map.put("line1", "Sent");
+        map.put("line2", "");
+        list.add(map);
+        
+        map = new HashMap<String, String>();
+        map.put("line1", "Compose");
         map.put("line2", "");
         list.add(map);
 
