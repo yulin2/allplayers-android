@@ -18,9 +18,11 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -58,8 +60,13 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
         TextView title = new TextView(this);
         title.setText(group.getTitle());
-        title.setTextSize(19);
+        title.setText("This is a test group title does it fit all right?");
+        title.setTextSize(25);
         title.setTypeface(Typeface.DEFAULT_BOLD);
+        title.setTextColor(Color.WHITE);
+        title.setLines(1);
+        title.setEllipsize(TextUtils.TruncateAt.END);
+        title.setPadding(0,15,0,0); 
         ActionBar.LayoutParams params = new	ActionBar.LayoutParams(Gravity.CENTER);
         actionbar.setCustomView(title, params);
         actionbar.setDisplayShowCustomEnabled(true);
