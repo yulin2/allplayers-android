@@ -1,29 +1,26 @@
 package com.allplayers.android;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.EventData;
 import com.allplayers.objects.GroupData;
 
 import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GroupEventsActivity extends SherlockListActivity implements ISideNavigationCallback {
+public class GroupEventsActivity extends AllplayersSherlockListActivity {
     private ArrayList<EventData> eventsList;
     private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private boolean hasEvents = false;
@@ -53,44 +50,72 @@ public class GroupEventsActivity extends SherlockListActivity implements ISideNa
         helper.execute(group);
     }
 
+    /**
+     * Listener for the Action Bar Options Menu.
+     * 
+     * @param item: The selected menu item.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home: {
+                sideNavigationView.toggleMenu();
+                return true;
+            }
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Listener for the Side Navigation Menu.
+     * 
+     * @param itemId: The ID of the list item that was selected.
+     */
     @Override
     public void onSideNavigationItemClick(int itemId) {
+
         switch (itemId) {
-        case R.id.side_navigation_menu_item1:
-            invokeActivity(GroupsActivity.class);
-            break;
 
-        case R.id.side_navigation_menu_item2:
-            invokeActivity(MessageActivity.class);
-            break;
+            case R.id.side_navigation_menu_item1:
+                invokeActivity(GroupsActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item3:
-            invokeActivity(PhotosActivity.class);
-            break;
+            case R.id.side_navigation_menu_item2:
+                invokeActivity(MessageActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item4:
-            invokeActivity(EventsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item3:
+                invokeActivity(PhotosActivity.class);
+                break;
 
-        default:
-            return;
+            case R.id.side_navigation_menu_item4:
+                invokeActivity(EventsActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item5: {
+                search();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item6: {
+                logOut();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item7: {
+                refresh();
+                break;
+            }
+
+            default:
+                return;
         }
+
         finish();
-    }
-
-    private void invokeActivity(Class activity) {
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-        overridePendingTransition(0, 0);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case android.R.id.home:
-            sideNavigationView.toggleMenu();
-        default:
-            return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override

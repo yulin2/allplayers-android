@@ -7,12 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.GroupData;
 import com.allplayers.objects.GroupMemberData;
 import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
@@ -29,7 +28,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class GroupPageActivity extends SherlockActivity implements ISideNavigationCallback {
+public class GroupPageActivity extends AllplayersSherlockActivity {
 
     private GroupData group;
     private ArrayList<GroupMemberData> membersList;
@@ -60,7 +59,6 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
         TextView title = new TextView(this);
         title.setText(group.getTitle());
-        title.setText("This is a test group title does it fit all right?");
         title.setTextSize(25);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setTextColor(Color.WHITE);
@@ -83,7 +81,7 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
     /**
      * Listener for the Action Bar Options Menu.
-     *
+     * 
      * @param item: The selected menu item.
      */
     @Override
@@ -91,17 +89,19 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
         switch (item.getItemId()) {
 
-        case android.R.id.home:
-            sideNavigationView.toggleMenu();
+            case android.R.id.home: {
+                sideNavigationView.toggleMenu();
+                return true;
+            }
 
-        default:
-            return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
-     *
+     * 
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -109,41 +109,42 @@ public class GroupPageActivity extends SherlockActivity implements ISideNavigati
 
         switch (itemId) {
 
-        case R.id.side_navigation_menu_item1:
-            invokeActivity(GroupsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item1:
+                invokeActivity(GroupsActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item2:
-            invokeActivity(MessageActivity.class);
-            break;
+            case R.id.side_navigation_menu_item2:
+                invokeActivity(MessageActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item3:
-            invokeActivity(PhotosActivity.class);
-            break;
+            case R.id.side_navigation_menu_item3:
+                invokeActivity(PhotosActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item4:
-            invokeActivity(EventsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item4:
+                invokeActivity(EventsActivity.class);
+                break;
 
-        default:
-            return;
+            case R.id.side_navigation_menu_item5: {
+                search();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item6: {
+                logOut();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item7: {
+                refresh();
+                break;
+            }
+
+            default:
+                return;
         }
 
         finish();
-    }
-
-    /**
-     * Helper method for onSideNavigationItemClick. Starts the passed in
-     * activity.
-     *
-     * @param activity: The activity to be started.
-     */
-    private void invokeActivity(Class activity) {
-
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-
-        overridePendingTransition(0, 0); // Disables new activity animation.
     }
 
     /**

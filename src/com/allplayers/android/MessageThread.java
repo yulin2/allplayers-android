@@ -1,14 +1,11 @@
 package com.allplayers.android;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.MessageData;
 import com.allplayers.objects.MessageThreadData;
 import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
@@ -24,7 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-public class MessageThread extends SherlockListActivity implements ISideNavigationCallback {
+public class MessageThread extends AllplayersSherlockListActivity {
     private ArrayList<MessageThreadData> messageThreadList;
     private boolean hasMessages = false;
     private String jsonResult = "";
@@ -64,6 +61,74 @@ public class MessageThread extends SherlockListActivity implements ISideNavigati
     }
 
     /**
+     * Listener for the Action Bar Options Menu.
+     * 
+     * @param item: The selected menu item.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home: {
+                sideNavigationView.toggleMenu();
+                return true;
+            }
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Listener for the Side Navigation Menu.
+     * 
+     * @param itemId: The ID of the list item that was selected.
+     */
+    @Override
+    public void onSideNavigationItemClick(int itemId) {
+
+        switch (itemId) {
+
+            case R.id.side_navigation_menu_item1:
+                invokeActivity(GroupsActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item2:
+                invokeActivity(MessageActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item3:
+                invokeActivity(PhotosActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item4:
+                invokeActivity(EventsActivity.class);
+                break;
+
+            case R.id.side_navigation_menu_item5: {
+                search();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item6: {
+                logOut();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item7: {
+                refresh();
+                break;
+            }
+
+            default:
+                return;
+        }
+
+        finish();
+    }
+    
+    /**
      * Listener for the list on the page.
      * @param l
      * @param v
@@ -79,95 +144,6 @@ public class MessageThread extends SherlockListActivity implements ISideNavigati
             Intent intent = (new Router(this)).getMessageViewSingleIntent(message, messageThreadList.get(position));
             startActivity(intent);
         }
-    }
-
-    /**
-     * Creates the Action Bar Options Menu.
-     * @param menu: The menu to be created.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.defaultmenu, menu);
-
-        return true;
-    }
-
-    /**
-     * Listener for the Action Bar Options Menu.
-     * @param item: The selected menu item.
-     * @TODO Make the Mark Read button work.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-
-        case R.id.reply: {
-            Intent intent = (new Router(this)).getMessagReplyIntent(message);
-            startActivity(intent);
-            return true;
-        }
-
-        case R.id.markRead: {
-            RestApiV1.putMessage(threadIDInt, 1, "");
-            startActivity(new Intent(MessageThread.this, MessageInbox.class));
-            finish();
-            return true;
-        }
-
-        case android.R.id.home:
-            sideNavigationView.toggleMenu();
-
-        default:
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     * Listener for the Side Navigation Menu.
-     * @param itemId: The ID of the list item that was selected.
-     */
-    @Override
-    public void onSideNavigationItemClick(int itemId) {
-
-        switch (itemId) {
-
-        case R.id.side_navigation_menu_item1:
-            invokeActivity(GroupsActivity.class);
-            break;
-
-        case R.id.side_navigation_menu_item2:
-            invokeActivity(MessageActivity.class);
-            break;
-
-        case R.id.side_navigation_menu_item3:
-            invokeActivity(PhotosActivity.class);
-            break;
-
-        case R.id.side_navigation_menu_item4:
-            invokeActivity(EventsActivity.class);
-            break;
-
-        default:
-            return;
-        }
-
-        finish();
-    }
-
-    /**
-     * Helper method for onSideNavigationItemClick. Starts the passed in
-     * activity.
-     * @param activity: The activity to be started.
-     */
-    private void invokeActivity(Class activity) {
-
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-
-        overridePendingTransition(0, 0); // Disables new activity animation.
     }
 
     /**

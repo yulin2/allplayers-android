@@ -2,11 +2,10 @@
 package com.allplayers.android;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
@@ -20,8 +19,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class SearchGroupsListActivity extends SherlockListActivity implements
-    ISideNavigationCallback {
+public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
     private ArrayList<GroupData> groupList;
     private boolean hasGroups = false;
@@ -55,7 +53,7 @@ public class SearchGroupsListActivity extends SherlockListActivity implements
 
     /**
      * Listener for the Action Bar Options Menu.
-     *
+     * 
      * @param item: The selected menu item.
      */
     @Override
@@ -63,19 +61,19 @@ public class SearchGroupsListActivity extends SherlockListActivity implements
 
         switch (item.getItemId()) {
 
-        case android.R.id.home: {
-            sideNavigationView.toggleMenu();
-            return true;
-        }
+            case android.R.id.home: {
+                sideNavigationView.toggleMenu();
+                return true;
+            }
 
-        default:
-            return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
-     *
+     * 
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -83,42 +81,42 @@ public class SearchGroupsListActivity extends SherlockListActivity implements
 
         switch (itemId) {
 
-        case R.id.side_navigation_menu_item1:
-            invokeActivity(GroupsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item1:
+                invokeActivity(GroupsActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item2:
-            invokeActivity(MessageActivity.class);
-            break;
+            case R.id.side_navigation_menu_item2:
+                invokeActivity(MessageActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item3:
-            invokeActivity(PhotosActivity.class);
-            break;
+            case R.id.side_navigation_menu_item3:
+                invokeActivity(PhotosActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item4:
-            invokeActivity(EventsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item4:
+                invokeActivity(EventsActivity.class);
+                break;
 
-        default:
-            return;
+            case R.id.side_navigation_menu_item5: {
+                search();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item6: {
+                logOut();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item7: {
+                refresh();
+                break;
+            }
+
+            default:
+                return;
         }
 
         finish();
-    }
-
-    /**
-     * Helper method for onSideNavigationItemClick. Starts the passed in
-     * activity.
-     *
-     * @param activity: The activity to be started.
-     */
-    @SuppressWarnings("rawtypes")
-    private void invokeActivity(Class activity) {
-
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-
-        overridePendingTransition(0, 0); // Disables new activity animation.
     }
 
     @Override

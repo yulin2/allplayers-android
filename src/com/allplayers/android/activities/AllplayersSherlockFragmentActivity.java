@@ -49,6 +49,21 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
         case R.id.side_navigation_menu_item4:
             invokeActivity(EventsActivity.class);
             break;
+            
+        case R.id.side_navigation_menu_item5: {
+            search();
+            break;
+        }
+
+        case R.id.side_navigation_menu_item6: {
+            logOut();
+            break;
+        }
+
+        case R.id.side_navigation_menu_item7: {
+            refresh();
+            break;
+        }
 
         default:
             return;

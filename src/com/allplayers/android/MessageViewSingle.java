@@ -1,17 +1,13 @@
 package com.allplayers.android;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.MessageData;
 import com.allplayers.objects.MessageThreadData;
-import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
@@ -19,7 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MessageViewSingle extends SherlockActivity implements ISideNavigationCallback {
+public class MessageViewSingle extends AllplayersSherlockActivity {
 
     private SideNavigationView sideNavigationView;
 
@@ -77,41 +73,28 @@ public class MessageViewSingle extends SherlockActivity implements ISideNavigati
     }
 
     /**
-     * Creates the Action Bar Options Menu.
-     * @param menu: The menu to be created.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.defaultmenu, menu);
-
-        return true;
-    }
-
-    /**
      * Listener for the Action Bar Options Menu.
+     * 
      * @param item: The selected menu item.
-     * TODO: Add options for:
-     *          Logout
-     *          Search
-     *          Refresh
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
 
-        case android.R.id.home:
-            sideNavigationView.toggleMenu();
+            case android.R.id.home: {
+                sideNavigationView.toggleMenu();
+                return true;
+            }
 
-        default:
-            return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
+     * 
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -119,39 +102,41 @@ public class MessageViewSingle extends SherlockActivity implements ISideNavigati
 
         switch (itemId) {
 
-        case R.id.side_navigation_menu_item1:
-            invokeActivity(GroupsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item1:
+                invokeActivity(GroupsActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item2:
-            invokeActivity(MessageActivity.class);
-            break;
+            case R.id.side_navigation_menu_item2:
+                invokeActivity(MessageActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item3:
-            invokeActivity(PhotosActivity.class);
-            break;
+            case R.id.side_navigation_menu_item3:
+                invokeActivity(PhotosActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item4:
-            invokeActivity(EventsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item4:
+                invokeActivity(EventsActivity.class);
+                break;
 
-        default:
-            return;
+            case R.id.side_navigation_menu_item5: {
+                search();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item6: {
+                logOut();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item7: {
+                refresh();
+                break;
+            }
+
+            default:
+                return;
         }
 
         finish();
-    }
-
-    /**
-     * Helper method for onSideNavigationItemClick. Starts the passed in
-     * activity.
-     * @param activity: The activity to be started.
-     */
-    private void invokeActivity(Class activity) {
-
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-
-        overridePendingTransition(0, 0); // Disables new activity animation.
     }
 }

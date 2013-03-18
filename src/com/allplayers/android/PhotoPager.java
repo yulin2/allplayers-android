@@ -4,18 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.PhotoData;
 import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-public class PhotoPager extends SherlockActivity implements ISideNavigationCallback {
+public class PhotoPager extends AllplayersSherlockActivity {
 
     private ViewPager mViewPager;
     private PhotoPagerAdapter photoAdapter;
@@ -41,7 +37,7 @@ public class PhotoPager extends SherlockActivity implements ISideNavigationCallb
      * @TODO The side navigation menu does NOT work due to conflicting views.
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
             currentPhotoIndex = savedInstanceState.getInt("photoToStart");
@@ -71,20 +67,8 @@ public class PhotoPager extends SherlockActivity implements ISideNavigationCallb
     }
 
     /**
-     * Creates the Action Bar Options Menu.
-     * @param menu: The menu to be created.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.defaultmenu, menu);
-
-        return true;
-    }
-
-    /**
      * Listener for the Action Bar Options Menu.
+     * 
      * @param item: The selected menu item.
      */
     @Override
@@ -92,16 +76,19 @@ public class PhotoPager extends SherlockActivity implements ISideNavigationCallb
 
         switch (item.getItemId()) {
 
-        case android.R.id.home:
-            sideNavigationView.toggleMenu();
+            case android.R.id.home: {
+                sideNavigationView.toggleMenu();
+                return true;
+            }
 
-        default:
-            return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
+     * 
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -109,40 +96,42 @@ public class PhotoPager extends SherlockActivity implements ISideNavigationCallb
 
         switch (itemId) {
 
-        case R.id.side_navigation_menu_item1:
-            invokeActivity(GroupsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item1:
+                invokeActivity(GroupsActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item2:
-            invokeActivity(MessageActivity.class);
-            break;
+            case R.id.side_navigation_menu_item2:
+                invokeActivity(MessageActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item3:
-            invokeActivity(PhotosActivity.class);
-            break;
+            case R.id.side_navigation_menu_item3:
+                invokeActivity(PhotosActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item4:
-            invokeActivity(EventsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item4:
+                invokeActivity(EventsActivity.class);
+                break;
 
-        default:
-            return;
+            case R.id.side_navigation_menu_item5: {
+                search();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item6: {
+                logOut();
+                break;
+            }
+
+            case R.id.side_navigation_menu_item7: {
+                refresh();
+                break;
+            }
+
+            default:
+                return;
         }
 
         finish();
-    }
-
-    /**
-     * Helper method for onSideNavigationItemClick. Starts the passed in
-     * activity.
-     * @param activity: The activity to be started.
-     */
-    private void invokeActivity(Class activity) {
-
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-
-        overridePendingTransition(0, 0); // Disables new activity animation.
     }
 
     /**
