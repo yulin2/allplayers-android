@@ -4,7 +4,6 @@ import com.allplayers.objects.AlbumData;
 import com.allplayers.rest.RestApiV1;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -13,13 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class AlbumAdapter extends ArrayAdapter<AlbumData> {
     private List<ImageView> coverPhotos = new ArrayList<ImageView>();
