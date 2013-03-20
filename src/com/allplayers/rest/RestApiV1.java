@@ -142,6 +142,19 @@ public class RestApiV1 {
 
         return makeAuthenticatedPost(endpoint + "messages.json", contents);
     }
+    
+    public static String createNewMessage(String[] uuids, String subject, String body) {
+    	String[][] contents = new String[uuids.length+2][2];
+    	for(int i = 0; i < uuids.length; i++) {
+    		contents[i][0] = "recipients["+i+"]";
+    		contents[i][1] = uuids[i];
+    	}
+    	contents[uuids.length][0] = "subject";
+    	contents[uuids.length][1] = subject;
+    	contents[uuids.length+1][0] = "body";
+    	contents[uuids.length+1][1] = body;
+    	return makeAuthenticatedPost(endpoint + "messages.json", contents);
+    }
 
     public static String searchGroups(String search, int zipcode, int distance) {
         String searchTerms = endpoint + "groups.json";
