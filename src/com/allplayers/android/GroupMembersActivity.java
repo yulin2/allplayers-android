@@ -87,6 +87,7 @@ public class GroupMembersActivity extends SherlockListActivity implements ISideN
         }
     }
 
+    
     /*
      * Gets a group's members using a rest call and populates an array with the data.
      */

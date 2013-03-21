@@ -21,7 +21,7 @@ public class SelectMessageContacts extends ListActivity {
     
     private Button addRecipientButton;
     private Button composeMessageButton;
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +32,10 @@ public class SelectMessageContacts extends ListActivity {
         recipientList.add(gson.fromJson(intent.getStringExtra("selected user"),
                 GroupMemberData.class));
         }
+
+        recipientList.add(gson.fromJson(intent.getStringExtra("selected user"),
+                GroupMemberData.class));
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, recipientList.toArray(new String[recipientList
                         .size()]));
@@ -39,19 +43,25 @@ public class SelectMessageContacts extends ListActivity {
         
         addRecipientButton = (Button)findViewById(R.id.addRecipientButton);
         composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
+        
         addRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	Intent intent = new Intent(SelectMessageContacts.this, SelectUserContacts.class);
+                Intent intent = (new Router(SelectMessageContacts.this)).getGroupMembersActivityIntent(group);
                 startActivity(intent);
             }
         });
         
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                
-            }
+            public void onClick(View v) {                
+                Intent intent = (new Router(SelectMessageContacts.this)).getGroupMembersActivityIntent(group);
+                startActivity(intent);
+                }
         });
     }
     
     
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 0db52b4bac7948489d1718f926ae035df1248f8b

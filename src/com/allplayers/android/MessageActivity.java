@@ -94,6 +94,25 @@ public class MessageActivity extends SherlockFragmentActivity implements ISideNa
             return super.onOptionsItemSelected(item);
         }
     }
+    
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        if (position == 0) {
+            Bundle bundle = new Bundle();
+            bundle.putString("inboxJSON", jsonResult);
+
+            Intent intent = new Intent(MessageActivity.this, MessageInbox.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else if (position == 1) {
+            Intent intent = new Intent(MessageActivity.this, MessageSent.class);
+            startActivity(intent);
+        } else if (position == 2) {
+            //Intent intent = new Intent(MessageActivity.this, SelectMessageContacts.class);
+            //startActivity(intent);
+        }
+    }
 
     /**
      * Listener for the Side Navigation Menu.
@@ -136,6 +155,15 @@ public class MessageActivity extends SherlockFragmentActivity implements ISideNa
      */
     @SuppressWarnings("rawtypes")
     private void invokeActivity(Class activity) {
+        map = new HashMap<String, String>();
+        map.put("line1", "Sent");
+        map.put("line2", "");
+        list.add(map);
+        
+        map = new HashMap<String, String>();
+        map.put("line1", "Compose");
+        map.put("line2", "");
+        list.add(map);
 
         Intent intent = new Intent(this, activity);
         startActivity(intent);
