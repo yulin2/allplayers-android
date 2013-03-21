@@ -69,6 +69,7 @@ public class RestApiV1 {
 
     public static boolean isLoggedIn() {
         if (sCurrentUserUUID.equals("") || sCurrentUserUUID.equals(null)) {
+            System.out.println("user uuid is " + sCurrentUserUUID);
             logOut();
             return false;
         }
