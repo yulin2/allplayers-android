@@ -9,6 +9,7 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,11 +21,11 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class SelectUserContacts extends AllplayersSherlockListActivity {
-    
+
     private ArrayList<GroupMemberData> membersList;
     private ArrayList<GroupMemberData> selectedMembers;
-    private Intent selectMessageContactsIntent;
-    
+    private Intent parentIntent;
+
     private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
 
@@ -32,9 +33,9 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         setContentView(R.layout.selectusercontacts);
-        
+
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Compose Message");
@@ -44,30 +45,28 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        
+
         selectedMembers = new ArrayList<GroupMemberData>();
 
         GetUserGroupmatesTask helper = new GetUserGroupmatesTask();
         helper.execute();
-        
+
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                selectMessageContactsIntent = new Intent(SelectUserContacts.this, SelectMessageContacts.class);
-                
+                parentIntent = new Intent();
                 Gson gson = new Gson();
                 String userData = gson.toJson(selectedMembers);
-                
-                selectMessageContactsIntent.putExtra("userData", userData);
-                
-                startActivity(selectMessageContactsIntent);
+                parentIntent.putExtra("userData", userData);
+                setResult(Activity.RESULT_OK, parentIntent);
+                finish();
             }
         });
     }
-    
+
     /**
      * Listener for the Action Bar Options Menu.
-     * 
+     *
      * @param item: The selected menu item.
      */
     @Override
@@ -75,19 +74,19 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
 
         switch (item.getItemId()) {
 
-            case android.R.id.home: {
-                sideNavigationView.toggleMenu();
-                return true;
-            }
+        case android.R.id.home: {
+            sideNavigationView.toggleMenu();
+            return true;
+        }
 
-            default:
-                return super.onOptionsItemSelected(item);
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
-     * 
+     *
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -95,39 +94,39 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
 
         switch (itemId) {
 
-            case R.id.side_navigation_menu_item1:
-                invokeActivity(GroupsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item1:
+            invokeActivity(GroupsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item2:
-                invokeActivity(MessageActivity.class);
-                break;
+        case R.id.side_navigation_menu_item2:
+            invokeActivity(MessageActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item3:
-                invokeActivity(PhotosActivity.class);
-                break;
+        case R.id.side_navigation_menu_item3:
+            invokeActivity(PhotosActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item4:
-                invokeActivity(EventsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item4:
+            invokeActivity(EventsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item5: {
-                search();
-                break;
-            }
+        case R.id.side_navigation_menu_item5: {
+            search();
+            break;
+        }
 
-            case R.id.side_navigation_menu_item6: {
-                logOut();
-                break;
-            }
+        case R.id.side_navigation_menu_item6: {
+            logOut();
+            break;
+        }
 
-            case R.id.side_navigation_menu_item7: {
-                refresh();
-                break;
-            }
+        case R.id.side_navigation_menu_item7: {
+            refresh();
+            break;
+        }
 
-            default:
-                return;
+        default:
+            return;
         }
 
         finish();
@@ -139,11 +138,11 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
             selectedMembers.get(position);
             v.setBackgroundResource(R.color.black);
             selectedMembers.remove(position);
-            
-        } catch(IndexOutOfBoundsException e) {
+
+        } catch (IndexOutOfBoundsException e) {
             v.setBackgroundResource(R.color.android_blue);
             selectedMembers.add(membersList.get(position));
-        }        
+        }
     }
 
     /*
