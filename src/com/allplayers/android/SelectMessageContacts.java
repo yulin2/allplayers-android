@@ -14,36 +14,36 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 /**
- * 
+ *
  */
 public class SelectMessageContacts extends ListActivity {
 
     private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
     private ArrayList<String> recipientNamesList = new ArrayList<String>();
-    
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.selectmessagecontacts);
-        
+
         Intent intent = getIntent();
-                
+
         Gson gson = new Gson();
-        
-        if(intent.hasExtra("userData")) {
-            recipientList.addAll((ArrayList<GroupMemberData>) gson.fromJson(intent.getStringExtra("userData"), ArrayList.class));     
+
+        if (intent.hasExtra("userData")) {
+            recipientList.addAll((ArrayList<GroupMemberData>) gson.fromJson(intent.getStringExtra("userData"), ArrayList.class));
         }
-        
+
         for (int i = 0; i < recipientList.size(); i++) {
             recipientNamesList.set(i, recipientList.get(i).getName());
         }
-       
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, recipientNamesList.toArray(new String[recipientNamesList.size()]));
         setListAdapter(adapter);
-        
+
         final Button addRecipientButton = (Button)findViewById(R.id.addRecipientButton);
         addRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -51,7 +51,7 @@ public class SelectMessageContacts extends ListActivity {
                 startActivity(intent);
             }
         });
-        
+
         final Button composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -60,6 +60,4 @@ public class SelectMessageContacts extends ListActivity {
             }
         });
     }
-    
-    
 }

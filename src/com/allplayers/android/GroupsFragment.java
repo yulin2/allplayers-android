@@ -85,8 +85,8 @@ public class GroupsFragment extends ListFragment {
     /** Populates the list of groups to display to the UI thread. */
     protected void updateGroupData() {
         if (!groupList.isEmpty()) {
-        	
-        	
+
+
 
             // Counter to check if a full 8 new groups were loaded.
             int counter = 0;

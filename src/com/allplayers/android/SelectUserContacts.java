@@ -19,7 +19,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class SelectUserContacts extends ListActivity {
-    
+
     private ArrayList<GroupMemberData> membersList;
     private ArrayList<GroupMemberData> selectedMembers;
     private Intent selectMessageContactsIntent;
@@ -28,23 +28,23 @@ public class SelectUserContacts extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         selectedMembers = new ArrayList<GroupMemberData>();
         setContentView(R.layout.selectusercontacts);
 
         GetUserGroupmatesTask helper = new GetUserGroupmatesTask();
         helper.execute();
-        
+
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 selectMessageContactsIntent = new Intent(SelectUserContacts.this, SelectMessageContacts.class);
-                
+
                 Gson gson = new Gson();
                 String userData = gson.toJson(selectedMembers);
-                
+
                 selectMessageContactsIntent.putExtra("userData", userData);
-                
+
                 startActivity(selectMessageContactsIntent);
             }
         });
@@ -52,7 +52,7 @@ public class SelectUserContacts extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        if(selectedMembers.get(position) == null) {
+        if (selectedMembers.get(position) == null) {
             v.setBackgroundResource(R.color.android_blue);
             selectedMembers.add(membersList.get(position));
         } else {
