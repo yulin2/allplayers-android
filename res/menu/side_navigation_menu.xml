@@ -17,5 +17,14 @@
         android:id="@+id/side_navigation_menu_item4"
         android:icon="@drawable/events_icon"
         android:title="Events"/>
+    <item
+        android:id="@+id/side_navigation_menu_item5"
+        android:title="Search"/>
+    <item
+        android:id="@+id/side_navigation_menu_item6"
+        android:title="Log Out"/>
+    <item
+        android:id="@+id/side_navigation_menu_item7"
+        android:title="Refresh"/>
 
 </menu>

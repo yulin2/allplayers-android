@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.allplayers.objects.GroupMemberData;
 import com.google.gson.Gson;
@@ -18,50 +19,47 @@ import android.widget.Button;
 public class SelectMessageContacts extends ListActivity {
 
     private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
+    private ArrayList<String> recipientNamesList = new ArrayList<String>();
     
-    private Button addRecipientButton;
-    private Button composeMessageButton;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.select_message_contacts);
+
+        setContentView(R.layout.selectmessagecontacts);
+        
         Intent intent = getIntent();
+                
         Gson gson = new Gson();
-        if(intent.hasExtra("selected user")) {
-        recipientList.add(gson.fromJson(intent.getStringExtra("selected user"),
-                GroupMemberData.class));
+        
+        if(intent.hasExtra("userData")) {
+            recipientList.addAll((ArrayList<GroupMemberData>) gson.fromJson(intent.getStringExtra("userData"), ArrayList.class));     
         }
-
-        recipientList.add(gson.fromJson(intent.getStringExtra("selected user"),
-                GroupMemberData.class));
-
+        
+        for (int i = 0; i < recipientList.size(); i++) {
+            recipientNamesList.set(i, recipientList.get(i).getName());
+        }
+       
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, recipientList.toArray(new String[recipientList
-                        .size()]));
+                android.R.layout.simple_list_item_1, recipientNamesList.toArray(new String[recipientNamesList.size()]));
         setListAdapter(adapter);
         
-        addRecipientButton = (Button)findViewById(R.id.addRecipientButton);
-        composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
-        
+        final Button addRecipientButton = (Button)findViewById(R.id.addRecipientButton);
         addRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = (new Router(SelectMessageContacts.this)).getGroupMembersActivityIntent(group);
+                Intent intent = new Intent(SelectMessageContacts.this, SelectUserContacts.class);
                 startActivity(intent);
             }
         });
         
+        final Button composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {                
-                Intent intent = (new Router(SelectMessageContacts.this)).getGroupMembersActivityIntent(group);
-                startActivity(intent);
-                }
+            public void onClick(View v) {
+                //Intent intent = new Intent(SelectMessageContacts.this, SelectGroupContacts.class);
+                //startActivity(intent);
+            }
         });
     }
     
     
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 0db52b4bac7948489d1718f926ae035df1248f8b
