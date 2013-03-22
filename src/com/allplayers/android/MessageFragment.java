@@ -94,11 +94,6 @@ public class MessageFragment extends ListFragment {
         map.put("line2", "");
         list.add(map);
 
-        map = new HashMap<String, String>();
-        map.put("line1", "Compose");
-        map.put("line2", "");
-        list.add(map);
-
         String[] from = { "line1", "line2" };
 
         int[] to = { android.R.id.text1, android.R.id.text2 };
