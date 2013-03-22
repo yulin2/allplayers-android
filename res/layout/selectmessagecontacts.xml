@@ -17,11 +17,19 @@
         </ListView>
 
         <Button
-            android:id="@+id/addRecipientButton"
+            android:id="@+id/addUserRecipientButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Add Recipient" >
+            android:text="Add User Recipient" >
+        </Button>
+        
+        <Button
+            android:id="@+id/addGroupRecipientButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Add Group Recipient" >
         </Button>
 
         <Button

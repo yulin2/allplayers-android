@@ -189,6 +189,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
+            android:name="SelectGroupContacts"
+            android:configChanges="orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock" />
+        <activity
             android:name="SelectMessageContacts"
             android:configChanges="orientation"
             android:label="@string/app_name"

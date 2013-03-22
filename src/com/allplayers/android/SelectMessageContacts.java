@@ -1,8 +1,10 @@
-
 package com.allplayers.android;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
@@ -46,26 +48,46 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
         
-        Intent intent = getIntent();
-                
-        Gson gson = new Gson();
-        
+        Intent intent = getIntent();        
         if(intent.hasExtra("userData")) {
-            recipientList.addAll((ArrayList<GroupMemberData>) gson.fromJson(intent.getStringExtra("userData"), ArrayList.class));     
+            try {
+                JSONArray jsonArray = new JSONArray(intent.getStringExtra("userData"));
+                if (jsonArray.length() > 0) {
+                    // Used to create GroupMemberData objects from json.
+                    Gson gson = new Gson();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
+                        if (member.isNew(recipientList)) {
+                            recipientList.add(member);
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         
         for (int i = 0; i < recipientList.size(); i++) {
-            recipientNamesList.set(i, recipientList.get(i).getName());
+            GroupMemberData member = (GroupMemberData) recipientList.get(i);
+            recipientNamesList.add(member.getName());
         }
        
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, recipientNamesList.toArray(new String[recipientNamesList.size()]));
         setListAdapter(adapter);
         
-        final Button addRecipientButton = (Button)findViewById(R.id.addRecipientButton);
-        addRecipientButton.setOnClickListener(new View.OnClickListener() {
+        final Button addUserRecipientButton = (Button)findViewById(R.id.addUserRecipientButton);
+        addUserRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectUserContacts.class);
+                startActivity(intent);
+            }
+        });
+        
+        final Button addGroupRecipientButton = (Button)findViewById(R.id.addGroupRecipientButton);
+        addGroupRecipientButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectMessageContacts.this, SelectGroupContacts.class);
                 startActivity(intent);
             }
         });
