@@ -1,10 +1,13 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,10 +32,10 @@ import com.google.gson.Gson;
  * compose the message itself.
  */
 public class SelectMessageContacts extends AllplayersSherlockListActivity {
-    private ActionBar actionbar;
     private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
-    private ArrayList<String> recipientNamesList = new ArrayList<String>();
+    private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
+    private ArrayAdapter<String> adapter;
     
     /**
      * Called when the activity is created or recreated. This sets up the action bar, side 
@@ -42,12 +45,18 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
      * @param savedInstanceState: Passes data from other instances of the same activity.
      */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        System.out.println("we started a new selectMessage");
 
-        // Set up the page UI
+        System.out.println(icicle);
+        if (icicle != null) {
+            String currentRecipients = icicle.getString("currentRecipients");
+            System.out.println("bundle was not null");
+            addRecipientsToList(currentRecipients);
+        }
         setContentView(R.layout.selectmessagecontacts);
-        
+
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Compose Messsage");
@@ -57,43 +66,48 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        
-        Intent intent = getIntent();        
-        if(intent.hasExtra("userData")) {
-            try {
-                JSONArray jsonArray = new JSONArray(intent.getStringExtra("userData"));
-                if (jsonArray.length() > 0) {
-                    Gson gson = new Gson();
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
-                        if (member.isNew(recipientList)) {
-                            recipientList.add(member);
-                        }
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("userData")) {
+            addRecipientsToList(intent.getStringExtra("userData"));
         }
-        
-        // Store just the names of the intended recipients separately for use with an array adapter.
-        GroupMemberData member;
-        for (int i = 0; i < recipientList.size(); i++) {
-            member = (GroupMemberData) recipientList.get(i);
-            recipientNamesList.add(member.getName());
-        }
-       
-        // Populate an array adapter which is used to display the selected recipients' names.
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, recipientNamesList.toArray(new String[recipientNamesList.size()]));
+
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         setListAdapter(adapter);
+        
+        getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
+                System.out.println("Im holdin dat shit!!! @ position " + position + " In view " + view + "Ma nikka");
+                PopupMenu menu = new PopupMenu(SelectMessageContacts.this, view);
+                menu.inflate(R.menu.message_recipient_menu);
+                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(android.view.MenuItem arg0) {
+                        switch(arg0.getItemId()) {
+                            case R.id.removeRecipient: 
+                                adapter.remove(adapter.getItem(position));
+                                recipientList.remove(position);
+                                break;
+                            case R.id.cancel:
+                        }
+                        for (int i = 0; i < adapter.getCount(); i++) {
+                            System.out.println(adapter.getItem(i) + "All dem otha niggas got iced" + recipientList.get(i).getName());
+                        }
+                        return true;
+                    }
+                });
+                menu.show();
+                return true;
+            }
+        });
         
         // "Add User Recipient" button.
         final Button addUserRecipientButton = (Button)findViewById(R.id.addUserRecipientButton);
         addUserRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectUserContacts.class);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
         
@@ -102,7 +116,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         addGroupRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectGroupContacts.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
         
@@ -120,6 +134,53 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         });
     }
     
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0 || requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                String userData = data.getStringExtra("userData");
+                addRecipientsToList(userData);
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
+        Gson gson = new Gson();
+        String currentRecipients = gson.toJson(recipientList);
+        icicle.putString("currentRecipients", currentRecipients);
+        System.out.println("added " + currentRecipients + " to the icicle");
+    }
+
+    public void addRecipientsToList(String json) {
+        System.out.println("Adding \n" + json + "\nto the list");
+        try {
+            int previousSize = recipientList.size();
+            JSONArray jsonArray = new JSONArray(json);
+            if (jsonArray.length() > 0) {
+                // Used to create GroupMemberData objects from json.
+                Gson gson = new Gson();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
+                    if (member.isNew(recipientList)) {
+                        recipientList.add(member);
+                    }
+                }
+                for (int i = previousSize; i < recipientList.size(); i++) {
+                    GroupMemberData member = (GroupMemberData) recipientList.get(i);
+                    adapter.add(member.getName());
+                }
+            }
+            Collections.sort(recipientList, new RecipientComparator());
+            adapter.sort(new NameComparator());
+            adapter.notifyDataSetChanged();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Listener for the Action Bar Options Menu.
      * 
@@ -186,5 +247,26 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         }
 
         finish();
+    }
+    
+    public class NameComparator implements Comparator<String> {
+        @Override
+        public int compare(String lhs, String rhs) {
+            int spaceIndex1 = lhs.lastIndexOf(' ');
+            int spaceIndex2 = rhs.lastIndexOf(' ');
+            if(spaceIndex1 == -1) spaceIndex1 = 0;
+            if(spaceIndex2 == -1) spaceIndex2 = 0;
+            return(lhs.substring(spaceIndex1).compareTo(rhs.substring(spaceIndex2)));
+        }       
+    }
+    
+    public class RecipientComparator implements Comparator<Object> {
+
+        @Override
+        public int compare(Object lhs, Object rhs) {
+            NameComparator helper = new NameComparator();
+            return helper.compare(((GroupMemberData) lhs).getName(),((GroupMemberData) rhs).getName());
+        }
+        
     }
 }

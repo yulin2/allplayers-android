@@ -26,10 +26,10 @@ public class GroupMemberData extends DataObject {
 
     public String getName() {
         //To fix names that are all lowercase
-        if (fname != null && !fname.equals("null")) {
+        if (fname != null && !fname.equals("null") && !fname.equals("")) {
             name = fname.substring(0, 1).toUpperCase() + fname.substring(1).toLowerCase();
         }
-        if (lname != null && !lname.equals("null")) {
+        if (lname != null && !lname.equals("null") && !lname.equals("")) {
             //If a first name has been added already
             if (!name.equals("")) {
                 name += " ";
@@ -43,21 +43,21 @@ public class GroupMemberData extends DataObject {
     public String getPicture() {
         return picture;
     }
-    
-    public ArrayList<String> getSerializedList(ArrayList<GroupMemberData> list){
-        
+
+    public ArrayList<String> getSerializedList(ArrayList<GroupMemberData> list) {
+
         ArrayList<String> tbr = new ArrayList<String>();
-        
+
         String uuid = "";
         String fname = "";
         String lname = "";
         String name = "";
         String picture = "";
-        
-        for(int i = 0; i < list.size(); i++) {
-            
+
+        for (int i = 0; i < list.size(); i++) {
+
         }
         return null;
-        
+
     }
 }

@@ -59,17 +59,12 @@ public class ComposeMessage extends AllplayersSherlockActivity {
                     Gson gson = new Gson();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
-                        recipientList.add(member);
+                        recipientUuidList.add(member.getUUID());
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-        
-        // Store the UUIDs seperately because we only need to send them with the REST call.
-        for (int i = 0; i < recipientList.size(); i++) {
-            recipientUuidList.add(recipientList.get(i).getUUID());
         }
                 
         // The field for the message subject.

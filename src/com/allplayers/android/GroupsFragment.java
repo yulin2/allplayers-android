@@ -86,6 +86,8 @@ public class GroupsFragment extends ListFragment {
     protected void updateGroupData() {
         if (!groupList.isEmpty()) {
 
+
+
             // Counter to check if a full 8 new groups were loaded.
             int counter = 0;
             for (int i = currentAmountShown; i < groupList.size(); i++) {
@@ -98,7 +100,12 @@ public class GroupsFragment extends ListFragment {
             // not to try to load more groups.
             if (counter < 8) {
                 loadMore = false;
-                getListView().removeFooterView(loadingMore);
+                try{
+                    getListView().removeFooterView(loadingMore);
+                }
+                catch(IllegalStateException e) {
+                	
+                }
             }
 
             hasGroups = true;

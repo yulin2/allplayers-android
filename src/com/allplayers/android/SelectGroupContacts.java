@@ -1,5 +1,16 @@
-
 package com.allplayers.android;
+
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
@@ -11,25 +22,13 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-
-import java.util.ArrayList;
-
-import org.json.JSONObject;
-
 public class SelectGroupContacts extends AllplayersSherlockListActivity {
     
     private ArrayList<GroupData> groupsList;
     private ArrayList<GroupData> selectedGroups;
     private ArrayList<GroupMemberData> selectedMembers;
-    private Intent selectMessageContactsIntent;
-    
+    private Intent parentIntent;
+    private ProgressBar spinner;
     private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
 
@@ -39,6 +38,8 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.selectgroupcontacts);
+        
+        spinner = (ProgressBar) findViewById(R.id.progress_indicator);
         
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
@@ -60,11 +61,14 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                selectMessageContactsIntent = new Intent(SelectGroupContacts.this, SelectMessageContacts.class);
-                
-                helper.execute(selectedGroups);
-                
-                
+                if(selectedGroups.size() == 0) {
+                    finish();
+                }
+                else {
+                    parentIntent = new Intent(); 
+                    spinner.setVisibility(View.VISIBLE);
+                    helper.execute(selectedGroups);
+                }
             }
         });
     }
@@ -139,15 +143,14 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        try {
-            selectedGroups.get(position);
-            v.setBackgroundResource(R.drawable.backgroundstate);
-            selectedGroups.remove(position);
-            
-        } catch(IndexOutOfBoundsException e) {
+        if(!selectedGroups.contains(groupsList.get(position))) {
             v.setBackgroundResource(R.color.android_blue);
             selectedGroups.add(groupsList.get(position));
-        }        
+        }
+        else {
+            v.setBackgroundResource(R.drawable.backgroundstate);
+            selectedGroups.remove(groupsList.get(position));
+        }      
     }
 
     /*
@@ -178,6 +181,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(SelectGroupContacts.this,
                     android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
+            spinner.setVisibility(View.GONE);
         }
     }
     
@@ -202,9 +206,9 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             String userData = gson.toJson(selectedMembers);
             System.out.println("SHIT BEIN SENT " + userData);
             
-            selectMessageContactsIntent.putExtra("userData", userData);
-            
-            startActivity(selectMessageContactsIntent);
+            parentIntent.putExtra("userData", userData);
+            setResult(Activity.RESULT_OK, parentIntent);
+            finish();
         }
     }
 }

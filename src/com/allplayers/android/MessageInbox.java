@@ -36,18 +36,8 @@ public class MessageInbox extends SherlockActivity implements ISideNavigationCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inboxlist);
 
-        try {
-            Bundle bundle = this.getIntent().getExtras();
-            jsonResult = bundle.getString("inboxJSON");
-        } catch (Throwable t) {
-        }
-
-        if (jsonResult.equals("")) {
-            GetUserInboxTask helper = new GetUserInboxTask();
-            helper.execute();
-        } else {
-            populateInbox(jsonResult);
-        }
+        GetUserInboxTask helper = new GetUserInboxTask();
+        helper.execute();
 
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);

@@ -2,6 +2,7 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
@@ -28,7 +30,8 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     private ActionBar actionbar;
     private ArrayList<GroupMemberData> membersList;
     private ArrayList<GroupMemberData> selectedMembers;
-    private Intent selectMessageContactsIntent;
+    private Intent parentIntent;
+    private ProgressBar spinner;
     private SideNavigationView sideNavigationView;
 
     /**
@@ -40,6 +43,8 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         
         // Set up the page UI
         setContentView(R.layout.selectusercontacts);
+        
+        spinner = (ProgressBar) findViewById(R.id.progress_indicator);
         
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
@@ -59,14 +64,12 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                selectMessageContactsIntent = new Intent(SelectUserContacts.this, SelectMessageContacts.class);
-                
+                parentIntent = new Intent();
                 Gson gson = new Gson();
                 String userData = gson.toJson(selectedMembers);
-                
-                selectMessageContactsIntent.putExtra("userData", userData);
-                
-                startActivity(selectMessageContactsIntent);
+                parentIntent.putExtra("userData", userData);
+                setResult(Activity.RESULT_OK, parentIntent);
+                finish();
             }
         });
     }
@@ -141,15 +144,14 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        try {
-            selectedMembers.get(position);
-            v.setBackgroundResource(R.drawable.backgroundstate);
-            selectedMembers.remove(position);
-            
-        } catch(IndexOutOfBoundsException e) {
+        if(!selectedMembers.contains(membersList.get(position))) {
             v.setBackgroundResource(R.color.android_blue);
             selectedMembers.add(membersList.get(position));
-        }        
+        }
+        else {
+            v.setBackgroundResource(R.drawable.backgroundstate);
+            selectedMembers.remove(membersList.get(position));
+        }
     }
 
     /*
@@ -182,6 +184,7 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(SelectUserContacts.this,
                     android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
+            spinner.setVisibility(View.GONE);
         }
     }
 }

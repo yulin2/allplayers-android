@@ -40,7 +40,7 @@ public class MessageFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
 
         if (position == 0) {
-            
+
             Bundle bundle = new Bundle();
             bundle.putString("inboxJSON", jsonResult);
 
@@ -48,11 +48,14 @@ public class MessageFragment extends ListFragment {
             intent.putExtras(bundle);
             startActivity(intent);
         } else if (position == 1) {
-            
+
             Intent intent = new Intent(parentActivity, MessageSent.class);
-            startActivity(intent); 
+            startActivity(intent);
         } else if (position == 2) {
-            
+
+            Intent intent = new Intent(parentActivity, SelectMessageContacts.class);
+            startActivity(intent);
+        } else if (position == 2) {
             Intent intent = new Intent(parentActivity, SelectMessageContacts.class);
             startActivity(intent);
         }
@@ -85,7 +88,7 @@ public class MessageFragment extends ListFragment {
         map.put("line1", "Sent");
         map.put("line2", "");
         list.add(map);
-        
+
         map = new HashMap<String, String>();
         map.put("line1", "Compose");
         map.put("line2", "");

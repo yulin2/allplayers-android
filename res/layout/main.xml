@@ -113,29 +113,16 @@
         </Button>
         
         <ProgressBar
-            android:visibility="gone"
-            android:layout_below="@id/loginButton"
             android:id="@+id/ctrlActivityIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/loginButton"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
-            android:layout_centerHorizontal="true"
             android:indeterminateOnly="true"
-            android:keepScreenOn="true" />        
-
-    </RelativeLayout>
-    
-    
-    <!-- Change to be activated by the physical search button 
-    <Button
-      android:id="@+id/findGroupsButton"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:text="Search Groups"
-      android:gravity="center"
-      android:layout_weight="0">
-    </Button>
-    -->
+            android:keepScreenOn="true"
+            android:visibility="gone" />
+</RelativeLayout>
 
 </LinearLayout>
