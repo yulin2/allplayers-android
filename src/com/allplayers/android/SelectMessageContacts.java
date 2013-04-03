@@ -269,14 +269,4 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         }
         
     }
-    
-    public class RecipientComparator implements Comparator<Object> {
-
-		@Override
-		public int compare(Object lhs, Object rhs) {
-			NameComparator helper = new NameComparator();
-			return helper.compare(((GroupMemberData) lhs).getName(),((GroupMemberData) rhs).getName());
-		}
-    	
-    }
 }
