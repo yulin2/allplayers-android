@@ -14,19 +14,19 @@
     </ImageView>
 
     <TableLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/groupLogo" >
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center" >
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
@@ -35,17 +35,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dip"
                     android:layout_gravity="center"
-                    android:layout_margin="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
+                    android:background="@drawable/backgroundstate"
                     android:padding="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/groups_icon" />
+                    android:src="@drawable/members_button_group_page" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
@@ -54,24 +58,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dip"
                     android:layout_gravity="center"
-                    android:layout_margin="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
+                    android:background="@drawable/backgroundstate"
                     android:padding="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/photos_icon" />
+                    android:src="@drawable/photo_button_group_page" />
             </LinearLayout>
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center" >
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
@@ -80,17 +88,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dip"
                     android:layout_gravity="center"
-                    android:layout_margin="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
+                    android:background="@drawable/backgroundstate"
                     android:padding="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/events_icon" />
+                    android:src="@drawable/events_button_group_page" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
@@ -99,12 +111,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dip"
                     android:layout_gravity="center"
-                    android:layout_margin="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
+                    android:background="@drawable/backgroundstate"
                     android:padding="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/events_icon" />
+                    android:src="@drawable/location_button_group_page" />
             </LinearLayout>
         </TableRow>
     </TableLayout>

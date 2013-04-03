@@ -32,7 +32,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class RestApiV1 {
-    private static String endpoint = "https://www.allplayers.com/?q=api/v1/rest/";
+    private static String endpoint = "https://www.a.jdarling.allplayers.com/?q=api/v1/rest/";
     private static String sCurrentUserUUID = "";
     private static CookieHandler sCookieHandler = new CookieManager();
 
@@ -142,7 +142,7 @@ public class RestApiV1 {
 
         return makeAuthenticatedPost(endpoint + "messages.json", contents);
     }
-
+    
     public static String createNewMessage(String[] uuids, String subject, String body) {
         String[][] contents = new String[uuids.length + 2][2];
         for (int i = 0; i < uuids.length; i++) {

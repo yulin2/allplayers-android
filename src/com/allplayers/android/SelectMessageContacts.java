@@ -1,14 +1,17 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
@@ -18,27 +21,27 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-
 /**
- *
+ * "Main Screen" for message composition. It holds an aggregate list of all intended message 
+ * recipients and contains the navigation buttons to add user recipients, add group recipients, and 
+ * compose the message itself.
  */
 public class SelectMessageContacts extends AllplayersSherlockListActivity {
-
-    private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
+	private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
     private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
     private ArrayAdapter<String> adapter;
-
-
+    
+    /**
+     * Called when the activity is created or recreated. This sets up the action bar, side 
+     * navigation interface, and page UI. It also controls the flow of data between the message 
+     * composition activities. 
+     * 
+     * @param savedInstanceState: Passes data from other instances of the same activity.
+     */
     @Override
     public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    	super.onCreate(icicle);
         System.out.println("we started a new selectMessage");
 
         System.out.println(icicle);
@@ -63,47 +66,50 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         if (intent.hasExtra("userData")) {
             addRecipientsToList(intent.getStringExtra("userData"));
         }
+
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         setListAdapter(adapter);
-
         
+        // "Add User Recipient" button.
         final Button addUserRecipientButton = (Button)findViewById(R.id.addUserRecipientButton);
         addUserRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectUserContacts.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, 0);
             }
         });
-
         
+        // "Add Group Recipient" button.
         final Button addGroupRecipientButton = (Button)findViewById(R.id.addGroupRecipientButton);
         addGroupRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectGroupContacts.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
         
+        // "Compose Message" button.
         final Button composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //Intent intent = new Intent(SelectMessageContacts.this, SelectGroupContacts.class);
-                //startActivity(intent);
+                Intent intent = new Intent(SelectMessageContacts.this, ComposeMessage.class);
+                Gson gson = new Gson();
+                String userData = gson.toJson(recipientList);
+                System.out.println("In SelectMessageContacts I sent to ComposeMessage this " + userData);
+                intent.putExtra("userData", userData);
+                startActivity(intent);
             }
         });
     }
-
+    
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-        case (1) : {
+        if(requestCode == 0 || requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 String userData = data.getStringExtra("userData");
                 addRecipientsToList(userData);
             }
-            break;
-        }
         }
     }
 
@@ -142,10 +148,9 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
             e.printStackTrace();
         }
     }
-
     /**
      * Listener for the Action Bar Options Menu.
-     *
+     * 
      * @param item: The selected menu item.
      */
     @Override
@@ -153,19 +158,19 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
 
         switch (item.getItemId()) {
 
-        case android.R.id.home: {
-            sideNavigationView.toggleMenu();
-            return true;
-        }
+            case android.R.id.home: {
+                sideNavigationView.toggleMenu();
+                return true;
+            }
 
-        default:
-            return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
-     *
+     * 
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -173,39 +178,39 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
 
         switch (itemId) {
 
-        case R.id.side_navigation_menu_item1:
-            invokeActivity(GroupsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item1:
+                invokeActivity(GroupsActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item2:
-            invokeActivity(MessageActivity.class);
-            break;
+            case R.id.side_navigation_menu_item2:
+                invokeActivity(MessageActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item3:
-            invokeActivity(PhotosActivity.class);
-            break;
+            case R.id.side_navigation_menu_item3:
+                invokeActivity(PhotosActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item4:
-            invokeActivity(EventsActivity.class);
-            break;
+            case R.id.side_navigation_menu_item4:
+                invokeActivity(EventsActivity.class);
+                break;
 
-        case R.id.side_navigation_menu_item5: {
-            search();
-            break;
-        }
+            case R.id.side_navigation_menu_item5: {
+                search();
+                break;
+            }
 
-        case R.id.side_navigation_menu_item6: {
-            logOut();
-            break;
-        }
+            case R.id.side_navigation_menu_item6: {
+                logOut();
+                break;
+            }
 
-        case R.id.side_navigation_menu_item7: {
-            refresh();
-            break;
-        }
+            case R.id.side_navigation_menu_item7: {
+                refresh();
+                break;
+            }
 
-        default:
-            return;
+            default:
+                return;
         }
 
         finish();
