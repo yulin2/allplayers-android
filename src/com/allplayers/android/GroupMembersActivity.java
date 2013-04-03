@@ -129,6 +129,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
                 values = new String[membersList.size()];
                 for (int i = 0; i < membersList.size(); i++) {
                     values[i] = membersList.get(i).getName();
+                    System.out.println(membersList.get(i).getName());
                 }
             } else {
                 values = new String[] {"No members to display"};

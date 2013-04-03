@@ -1,10 +1,15 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
@@ -14,28 +19,29 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
-import android.app.ListActivity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-
 /**
- * 
+ * "Main Screen" for message composition. It holds an aggregate list of all intended message 
+ * recipients and contains the navigation buttons to add user recipients, add group recipients, and 
+ * compose the message itself.
  */
 public class SelectMessageContacts extends AllplayersSherlockListActivity {
-
+    private ActionBar actionbar;
     private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
     private ArrayList<String> recipientNamesList = new ArrayList<String>();
-    private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
     
-
+    /**
+     * Called when the activity is created or recreated. This sets up the action bar, side 
+     * navigation interface, and page UI. It also controls the flow of data between the message 
+     * composition activities. 
+     * 
+     * @param savedInstanceState: Passes data from other instances of the same activity.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Set up the page UI
         setContentView(R.layout.selectmessagecontacts);
         
         actionbar = getSupportActionBar();
@@ -53,7 +59,6 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
             try {
                 JSONArray jsonArray = new JSONArray(intent.getStringExtra("userData"));
                 if (jsonArray.length() > 0) {
-                    // Used to create GroupMemberData objects from json.
                     Gson gson = new Gson();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
@@ -67,15 +72,19 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
             }
         }
         
+        // Store just the names of the intended recipients separately for use with an array adapter.
+        GroupMemberData member;
         for (int i = 0; i < recipientList.size(); i++) {
-            GroupMemberData member = (GroupMemberData) recipientList.get(i);
+            member = (GroupMemberData) recipientList.get(i);
             recipientNamesList.add(member.getName());
         }
        
+        // Populate an array adapter which is used to display the selected recipients' names.
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, recipientNamesList.toArray(new String[recipientNamesList.size()]));
         setListAdapter(adapter);
         
+        // "Add User Recipient" button.
         final Button addUserRecipientButton = (Button)findViewById(R.id.addUserRecipientButton);
         addUserRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -84,6 +93,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
             }
         });
         
+        // "Add Group Recipient" button.
         final Button addGroupRecipientButton = (Button)findViewById(R.id.addGroupRecipientButton);
         addGroupRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -92,11 +102,16 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
             }
         });
         
+        // "Compose Message" button.
         final Button composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //Intent intent = new Intent(SelectMessageContacts.this, SelectGroupContacts.class);
-                //startActivity(intent);
+                Intent intent = new Intent(SelectMessageContacts.this, ComposeMessage.class);
+                Gson gson = new Gson();
+                String userData = gson.toJson(recipientList);
+                System.out.println("In SelectMessageContacts I sent to ComposeMessage this " + userData);
+                intent.putExtra("userData", userData);
+                startActivity(intent);
             }
         });
     }
