@@ -143,7 +143,7 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         try {
             selectedMembers.get(position);
-            v.setBackgroundResource(R.color.black);
+            v.setBackgroundResource(R.drawable.backgroundstate);
             selectedMembers.remove(position);
             
         } catch(IndexOutOfBoundsException e) {
