@@ -7,6 +7,9 @@ import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
@@ -60,18 +63,27 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         if (intent.hasExtra("userData")) {
             addRecipientsToList(intent.getStringExtra("userData"));
         }
-
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         setListAdapter(adapter);
 
-        final Button addRecipientButton = (Button)findViewById(R.id.addRecipientButton);
-        addRecipientButton.setOnClickListener(new View.OnClickListener() {
+        
+        final Button addUserRecipientButton = (Button)findViewById(R.id.addUserRecipientButton);
+        addUserRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectUserContacts.class);
                 startActivityForResult(intent, 1);
             }
         });
 
+        
+        final Button addGroupRecipientButton = (Button)findViewById(R.id.addGroupRecipientButton);
+        addGroupRecipientButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectMessageContacts.this, SelectGroupContacts.class);
+                startActivity(intent);
+            }
+        });
+        
         final Button composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
