@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
@@ -36,6 +37,8 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
     private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
     private ArrayAdapter<String> adapter;
+    private Toast toast;
+
     
     /**
      * Called when the activity is created or recreated. This sets up the action bar, side 
@@ -49,6 +52,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         super.onCreate(icicle);
         System.out.println("we started a new selectMessage");
 
+        
         System.out.println(icicle);
         if (icicle != null) {
             String currentRecipients = icicle.getString("currentRecipients");
@@ -57,6 +61,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         }
         setContentView(R.layout.selectmessagecontacts);
 
+        toast = Toast.makeText(getBaseContext(), "You need to add at least one recipient", Toast.LENGTH_LONG);
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Compose Messsage");
@@ -124,12 +129,16 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         final Button composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(SelectMessageContacts.this, ComposeMessage.class);
-                Gson gson = new Gson();
-                String userData = gson.toJson(recipientList);
-                System.out.println("In SelectMessageContacts I sent to ComposeMessage this " + userData);
-                intent.putExtra("userData", userData);
-                startActivity(intent);
+                if (!recipientList.isEmpty()) {
+                    Intent intent = new Intent(SelectMessageContacts.this, ComposeMessage.class);
+                    Gson gson = new Gson();
+                    String userData = gson.toJson(recipientList);
+                    System.out.println("In SelectMessageContacts I sent to ComposeMessage this " + userData);
+                    intent.putExtra("userData", userData);
+                    startActivity(intent); 
+                } else {
+                    toast.show();
+                }
             }
         });
     }
