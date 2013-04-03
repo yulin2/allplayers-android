@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 import org.json.JSONArray;
@@ -141,6 +142,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                     adapter.add(member.getName());
                 }
             }
+            Collections.sort(recipientList, new RecipientComparator());
             adapter.sort(new NameComparator());
             adapter.notifyDataSetChanged();
 
@@ -225,5 +227,15 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
 			if(spaceIndex2 == -1) spaceIndex2 = 0;
 			return(lhs.substring(spaceIndex1).compareTo(rhs.substring(spaceIndex2)));
 		}   	
+    }
+    
+    public class RecipientComparator implements Comparator<Object> {
+
+		@Override
+		public int compare(Object lhs, Object rhs) {
+			NameComparator helper = new NameComparator();
+			return helper.compare(((GroupMemberData) lhs).getName(),((GroupMemberData) rhs).getName());
+		}
+    	
     }
 }

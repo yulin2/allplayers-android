@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
@@ -104,7 +105,7 @@ public class GroupsFragment extends ListFragment {
                     getListView().removeFooterView(loadingMore);
                 }
                 catch(IllegalStateException e) {
-                	
+                	Log.e("IllegalState", e.getMessage());
                 }
             }
 
