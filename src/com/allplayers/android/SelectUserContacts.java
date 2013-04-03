@@ -64,7 +64,7 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	parentIntent = new Intent();
+                parentIntent = new Intent();
                 Gson gson = new Gson();
                 String userData = gson.toJson(selectedMembers);
                 parentIntent.putExtra("userData", userData);
@@ -145,12 +145,12 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         if(!selectedMembers.contains(membersList.get(position))) {
-        	v.setBackgroundResource(R.color.android_blue);
+            v.setBackgroundResource(R.color.android_blue);
             selectedMembers.add(membersList.get(position));
         }
         else {
-        	v.setBackgroundResource(R.drawable.backgroundstate);
-        	selectedMembers.remove(membersList.get(position));
+            v.setBackgroundResource(R.drawable.backgroundstate);
+            selectedMembers.remove(membersList.get(position));
         }
     }
 

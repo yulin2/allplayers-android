@@ -1,4 +1,3 @@
-
 package com.allplayers.android;
 
 import java.util.ArrayList;
@@ -62,14 +61,14 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	if(selectedGroups.size() == 0) {
-            		finish();
-            	}
-            	else {
-                	parentIntent = new Intent(); 
-                	spinner.setVisibility(View.VISIBLE);
-            		helper.execute(selectedGroups);
-            	}
+                if(selectedGroups.size() == 0) {
+                    finish();
+                }
+                else {
+                    parentIntent = new Intent(); 
+                    spinner.setVisibility(View.VISIBLE);
+                    helper.execute(selectedGroups);
+                }
             }
         });
     }
@@ -144,13 +143,13 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-    	if(!selectedGroups.contains(groupsList.get(position))) {
-        	v.setBackgroundResource(R.color.android_blue);
-        	selectedGroups.add(groupsList.get(position));
+        if(!selectedGroups.contains(groupsList.get(position))) {
+            v.setBackgroundResource(R.color.android_blue);
+            selectedGroups.add(groupsList.get(position));
         }
         else {
-        	v.setBackgroundResource(R.drawable.backgroundstate);
-        	selectedGroups.remove(groupsList.get(position));
+            v.setBackgroundResource(R.drawable.backgroundstate);
+            selectedGroups.remove(groupsList.get(position));
         }      
     }
 
@@ -209,7 +208,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             
             parentIntent.putExtra("userData", userData);
             setResult(Activity.RESULT_OK, parentIntent);
-        	finish();
+            finish();
         }
     }
 }

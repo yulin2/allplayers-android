@@ -11,8 +11,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
@@ -28,7 +32,7 @@ import com.google.gson.Gson;
  * compose the message itself.
  */
 public class SelectMessageContacts extends AllplayersSherlockListActivity {
-	private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
+    private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
     private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
     private ArrayAdapter<String> adapter;
@@ -42,7 +46,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
      */
     @Override
     public void onCreate(Bundle icicle) {
-    	super.onCreate(icicle);
+        super.onCreate(icicle);
         System.out.println("we started a new selectMessage");
 
         System.out.println(icicle);
@@ -70,6 +74,33 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         setListAdapter(adapter);
+        
+        getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
+                System.out.println("Im holdin dat shit!!! @ position " + position + " In view " + view + "Ma nikka");
+                PopupMenu menu = new PopupMenu(SelectMessageContacts.this, view);
+                menu.inflate(R.menu.message_recipient_menu);
+                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(android.view.MenuItem arg0) {
+                        switch(arg0.getItemId()) {
+                            case R.id.removeRecipient: 
+                                adapter.remove(adapter.getItem(position));
+                                recipientList.remove(position);
+                                break;
+                            case R.id.cancel:
+                        }
+                        for (int i = 0; i < adapter.getCount(); i++) {
+                            System.out.println(adapter.getItem(i) + "All dem otha niggas got iced" + recipientList.get(i).getName());
+                        }
+                        return true;
+                    }
+                });
+                menu.show();
+                return true;
+            }
+        });
         
         // "Add User Recipient" button.
         final Button addUserRecipientButton = (Button)findViewById(R.id.addUserRecipientButton);
@@ -219,14 +250,24 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
     }
     
     public class NameComparator implements Comparator<String> {
-		@Override
-		public int compare(String lhs, String rhs) {
-			int spaceIndex1 = lhs.lastIndexOf(' ');
-			int spaceIndex2 = rhs.lastIndexOf(' ');
-			if(spaceIndex1 == -1) spaceIndex1 = 0;
-			if(spaceIndex2 == -1) spaceIndex2 = 0;
-			return(lhs.substring(spaceIndex1).compareTo(rhs.substring(spaceIndex2)));
-		}   	
+        @Override
+        public int compare(String lhs, String rhs) {
+            int spaceIndex1 = lhs.lastIndexOf(' ');
+            int spaceIndex2 = rhs.lastIndexOf(' ');
+            if(spaceIndex1 == -1) spaceIndex1 = 0;
+            if(spaceIndex2 == -1) spaceIndex2 = 0;
+            return(lhs.substring(spaceIndex1).compareTo(rhs.substring(spaceIndex2)));
+        }       
+    }
+    
+    public class RecipientComparator implements Comparator<Object> {
+
+        @Override
+        public int compare(Object lhs, Object rhs) {
+            NameComparator helper = new NameComparator();
+            return helper.compare(((GroupMemberData) lhs).getName(),((GroupMemberData) rhs).getName());
+        }
+        
     }
     
     public class RecipientComparator implements Comparator<Object> {
