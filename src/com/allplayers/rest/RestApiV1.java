@@ -186,7 +186,8 @@ public class RestApiV1 {
     }
 
     public static String getUserFriends() {
-        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/friends.json");
+        String jsonResult = makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/friends.json");
+        return jsonResult.replaceAll("&#039;", "'");
     }
 
     public static String getUserGroupmates() {

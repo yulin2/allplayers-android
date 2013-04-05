@@ -34,7 +34,12 @@ public class GroupMemberData extends DataObject {
             if (!name.equals("")) {
                 name += " ";
             }
-            name += lname.substring(0, 1).toUpperCase() + lname.substring(1).toLowerCase();
+            if(!lname.contains("'")) { 
+                name += lname.substring(0, 1).toUpperCase() + lname.substring(1).toLowerCase();
+            }
+            else {
+                name += lname;
+            }
         }
 
         return name;

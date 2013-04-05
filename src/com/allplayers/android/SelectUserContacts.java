@@ -1,13 +1,13 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+import android.view.View; 
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -28,8 +28,8 @@ import com.google.gson.Gson;
 public class SelectUserContacts extends AllplayersSherlockListActivity {
     
     private ActionBar actionbar;
-    private ArrayList<GroupMemberData> membersList;
-    private ArrayList<GroupMemberData> selectedMembers;
+    private ArrayList<GroupMemberData> contactsList;
+    private ArrayList<GroupMemberData> selectedContacts;
     private Intent parentIntent;
     private ProgressBar spinner;
     private SideNavigationView sideNavigationView;
@@ -56,17 +56,17 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
         
-        selectedMembers = new ArrayList<GroupMemberData>();
+        selectedContacts = new ArrayList<GroupMemberData>();
 
-        GetUserGroupmatesTask helper = new GetUserGroupmatesTask();
-        helper.execute();
+        new GetUserContactsTask().execute(); // Fetches the user's contacts (groupmates and friends)
+                                             // and stores them in contactsList
         
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 parentIntent = new Intent();
                 Gson gson = new Gson();
-                String userData = gson.toJson(selectedMembers);
+                String userData = gson.toJson(selectedContacts);
                 parentIntent.putExtra("userData", userData);
                 setResult(Activity.RESULT_OK, parentIntent);
                 finish();
@@ -144,13 +144,13 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        if(!selectedMembers.contains(membersList.get(position))) {
+        if(!selectedContacts.contains(contactsList.get(position))) {
             v.setBackgroundResource(R.color.android_blue);
-            selectedMembers.add(membersList.get(position));
+            selectedContacts.add(contactsList.get(position));
         }
         else {
             v.setBackgroundResource(R.drawable.backgroundstate);
-            selectedMembers.remove(membersList.get(position));
+            selectedContacts.remove(contactsList.get(position));
         }
     }
 
@@ -158,25 +158,26 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
      * Gets a group's members using a rest call and populates an array with the
      * data.
      */
-    public class GetUserGroupmatesTask extends AsyncTask<Void, Void, String> {
+    public class GetUserContactsTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroupmates();
+            String jsonResult1 = RestApiV1.getUserGroupmates().substring(0, RestApiV1.getUserGroupmates().length() - 1);
+            String jsonResult2 = RestApiV1.getUserFriends().substring(1);
+            System.out.println("!!\n" + (jsonResult1 + "," + jsonResult2));
+            return (jsonResult1 + "," + jsonResult2);
         }
 
         protected void onPostExecute(String jsonResult) {
-            Log.d("errorr", jsonResult);
             jsonResult = jsonResult.replaceAll("firstname", "fname");
             jsonResult = jsonResult.replaceAll("lastname", "lname");
-            Log.d("errorr", jsonResult);
-            GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
-            membersList = groupMembers.getGroupMemberData();
+            GroupMembersMap contacts = new GroupMembersMap(jsonResult);
+            contactsList = contacts.getGroupMemberData();
+            Collections.sort(contactsList, new SelectMessageContacts().new RecipientComparator());
             String[] values;
-
-            if (!membersList.isEmpty()) {
-                values = new String[membersList.size()];
-                for (int i = 0; i < membersList.size(); i++) {
-                    values[i] = membersList.get(i).getName();
+            if (!contactsList.isEmpty()) {
+                values = new String[contactsList.size()];
+                for (int i = 0; i < contactsList.size(); i++) {
+                    values[i] = contactsList.get(i).getName();
                 }
             } else {
                 values = new String[] {"No members to display"};
