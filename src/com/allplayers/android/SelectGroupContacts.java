@@ -30,7 +30,6 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
     private Intent parentIntent;
     private ProgressBar spinner;
     private ActionBar actionbar;
-    private SideNavigationView sideNavigationView;
 
     /** Called when the activity is first created. */
     @Override

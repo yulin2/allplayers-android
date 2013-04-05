@@ -3,6 +3,7 @@ package com.allplayers.android;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.MessageData;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.ISideNavigationCallback;
@@ -23,12 +24,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class MessageInbox extends SherlockActivity implements ISideNavigationCallback {
+public class MessageInbox extends AllplayersSherlockActivity implements ISideNavigationCallback {
     private ArrayList<MessageData> messageList;
     private String jsonResult = "";
     private boolean hasMessages = false;
     private ActionBar actionbar;
-    private SideNavigationView sideNavigationView;
 
     /** Called when the activity is first created. */
     @Override
@@ -49,46 +49,6 @@ public class MessageInbox extends SherlockActivity implements ISideNavigationCal
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
 
-    }
-
-    @Override
-    public void onSideNavigationItemClick(int itemId) {
-        switch (itemId) {
-        case R.id.side_navigation_menu_item1:
-            invokeActivity(GroupsActivity.class);
-            break;
-
-        case R.id.side_navigation_menu_item2:
-            invokeActivity(MessageActivity.class);
-            break;
-
-        case R.id.side_navigation_menu_item3:
-            invokeActivity(PhotosActivity.class);
-            break;
-
-        case R.id.side_navigation_menu_item4:
-            invokeActivity(EventsActivity.class);
-            break;
-
-        default:
-            return;
-        }
-        finish();
-    }
-
-    private void invokeActivity(Class activity) {
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-        overridePendingTransition(0, 0);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case android.R.id.home:
-            sideNavigationView.toggleMenu();
-        default:
-            return super.onOptionsItemSelected(item);
-        }
     }
 
     public void populateInbox(String json) {

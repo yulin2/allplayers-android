@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockMapActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.android.EventsActivity;
 import com.allplayers.android.FindGroupsActivity;
 import com.allplayers.android.GroupsActivity;
@@ -16,12 +17,36 @@ import com.allplayers.android.PhotosActivity;
 import com.allplayers.android.R;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.ISideNavigationCallback;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class AllplayersSherlockMapActivity extends SherlockMapActivity implements ISideNavigationCallback {
 
+protected SideNavigationView sideNavigationView;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+    
+    /**
+     * Listener for the Action Bar Options Menu.
+     * 
+     * @param item: The selected menu item.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home: {
+                sideNavigationView.toggleMenu();
+                return true;
+            }
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -135,9 +160,8 @@ public class AllplayersSherlockMapActivity extends SherlockMapActivity implement
         }
     }
 
-    @Override
-    protected boolean isRouteDisplayed() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	@Override
+	protected boolean isRouteDisplayed() {
+		return false;
+	}
 }

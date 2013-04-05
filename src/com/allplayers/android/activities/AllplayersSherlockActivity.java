@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.android.EventsActivity;
 import com.allplayers.android.FindGroupsActivity;
 import com.allplayers.android.GroupsActivity;
@@ -14,14 +15,39 @@ import com.allplayers.android.Login;
 import com.allplayers.android.MessageActivity;
 import com.allplayers.android.PhotosActivity;
 import com.allplayers.android.R;
+import com.allplayers.android.activities.AllplayersSherlockListActivity.LogOutTask;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.ISideNavigationCallback;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class AllplayersSherlockActivity extends SherlockActivity implements ISideNavigationCallback {
 
+protected SideNavigationView sideNavigationView;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+    
+    /**
+     * Listener for the Action Bar Options Menu.
+     * 
+     * @param item: The selected menu item.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home: {
+                sideNavigationView.toggleMenu();
+                return true;
+            }
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
