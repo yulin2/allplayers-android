@@ -101,11 +101,10 @@ public class GroupsFragment extends ListFragment {
             // not to try to load more groups.
             if (counter < 8) {
                 loadMore = false;
-                try{
+                try {
                     getListView().removeFooterView(loadingMore);
-                }
-                catch(IllegalStateException e) {
-                	Log.e("IllegalState", e.getMessage());
+                } catch (IllegalStateException e) {
+                    Log.e("IllegalState", e.getMessage());
                 }
             }
 

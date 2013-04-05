@@ -21,16 +21,16 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class AllplayersSherlockListActivity extends SherlockListActivity implements ISideNavigationCallback {
-	protected SideNavigationView sideNavigationView;
-	
+    protected SideNavigationView sideNavigationView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-    
+
     /**
      * Listener for the Action Bar Options Menu.
-     * 
+     *
      * @param item: The selected menu item.
      */
     @Override
@@ -38,13 +38,13 @@ public class AllplayersSherlockListActivity extends SherlockListActivity impleme
 
         switch (item.getItemId()) {
 
-            case android.R.id.home: {
-                sideNavigationView.toggleMenu();
-                return true;
-            }
+        case android.R.id.home: {
+            sideNavigationView.toggleMenu();
+            return true;
+        }
 
-            default:
-                return super.onOptionsItemSelected(item);
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 

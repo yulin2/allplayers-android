@@ -142,7 +142,7 @@ public class RestApiV1 {
 
         return makeAuthenticatedPost(endpoint + "messages.json", contents);
     }
-    
+
     public static String createNewMessage(String[] uuids, String subject, String body) {
         String[][] contents = new String[uuids.length + 2][2];
         for (int i = 0; i < uuids.length; i++) {

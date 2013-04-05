@@ -48,7 +48,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
         GetIntentGroupTask helper = new GetIntentGroupTask();
         helper.execute(group);
     }
-    
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);

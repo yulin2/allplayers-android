@@ -200,7 +200,6 @@ public class PhotoPager extends AllplayersSherlockActivity {
              * @param image: The image to be added.
              */
             protected void onPostExecute(Bitmap image) {
-
                 images[index].setImageBitmap(image);
             }
         }

@@ -28,8 +28,8 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
 /**
- * "Main Screen" for message composition. It holds an aggregate list of all intended message 
- * recipients and contains the navigation buttons to add user recipients, add group recipients, and 
+ * "Main Screen" for message composition. It holds an aggregate list of all intended message
+ * recipients and contains the navigation buttons to add user recipients, add group recipients, and
  * compose the message itself.
  */
 public class SelectMessageContacts extends AllplayersSherlockListActivity {
@@ -38,12 +38,12 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
     private ArrayAdapter<String> adapter;
     private Toast toast;
 
-    
+
     /**
-     * Called when the activity is created or recreated. This sets up the action bar, side 
-     * navigation interface, and page UI. It also controls the flow of data between the message 
-     * composition activities. 
-     * 
+     * Called when the activity is created or recreated. This sets up the action bar, side
+     * navigation interface, and page UI. It also controls the flow of data between the message
+     * composition activities.
+     *
      * @param savedInstanceState: Passes data from other instances of the same activity.
      */
     @Override
@@ -51,7 +51,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         super.onCreate(icicle);
         System.out.println("we started a new selectMessage");
 
-        
+
         System.out.println(icicle);
         if (icicle != null) {
             String currentRecipients = icicle.getString("currentRecipients");
@@ -73,7 +73,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         setListAdapter(adapter);
-        
+
         getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
@@ -83,12 +83,12 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                 menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(android.view.MenuItem arg0) {
-                        switch(arg0.getItemId()) {
-                            case R.id.removeRecipient: 
-                                adapter.remove(adapter.getItem(position));
-                                recipientList.remove(position);
-                                break;
-                            case R.id.cancel:
+                        switch (arg0.getItemId()) {
+                        case R.id.removeRecipient:
+                            adapter.remove(adapter.getItem(position));
+                            recipientList.remove(position);
+                            break;
+                        case R.id.cancel:
                         }
                         for (int i = 0; i < adapter.getCount(); i++) {
                             System.out.println(adapter.getItem(i) + "All dem otha niggas got iced" + recipientList.get(i).getName());
@@ -100,7 +100,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                 return true;
             }
         });
-        
+
         // "Add User Recipient" button.
         final Button addUserRecipientButton = (Button)findViewById(R.id.addUserRecipientButton);
         addUserRecipientButton.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +109,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                 startActivityForResult(intent, 0);
             }
         });
-        
+
         // "Add Group Recipient" button.
         final Button addGroupRecipientButton = (Button)findViewById(R.id.addGroupRecipientButton);
         addGroupRecipientButton.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +118,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                 startActivityForResult(intent, 1);
             }
         });
-        
+
         // "Compose Message" button.
         final Button composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -129,18 +129,18 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                     String userData = gson.toJson(recipientList);
                     System.out.println("In SelectMessageContacts I sent to ComposeMessage this " + userData);
                     intent.putExtra("userData", userData);
-                    startActivity(intent); 
+                    startActivity(intent);
                 } else {
                     toast.show();
                 }
             }
         });
     }
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0 || requestCode == 1) {
+        if (requestCode == 0 || requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 String userData = data.getStringExtra("userData");
                 addRecipientsToList(userData);
@@ -184,25 +184,25 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
             e.printStackTrace();
         }
     }
-    
+
     public class NameComparator implements Comparator<String> {
         @Override
         public int compare(String lhs, String rhs) {
             int spaceIndex1 = lhs.lastIndexOf(' ');
             int spaceIndex2 = rhs.lastIndexOf(' ');
-            if(spaceIndex1 == -1) spaceIndex1 = 0;
-            if(spaceIndex2 == -1) spaceIndex2 = 0;
+            if (spaceIndex1 == -1) spaceIndex1 = 0;
+            if (spaceIndex2 == -1) spaceIndex2 = 0;
             return(lhs.substring(spaceIndex1).compareTo(rhs.substring(spaceIndex2)));
-        }       
+        }
     }
-    
+
     public class RecipientComparator implements Comparator<Object> {
 
         @Override
         public int compare(Object lhs, Object rhs) {
             NameComparator helper = new NameComparator();
-            return helper.compare(((GroupMemberData) lhs).getName(),((GroupMemberData) rhs).getName());
+            return helper.compare(((GroupMemberData) lhs).getName(), ((GroupMemberData) rhs).getName());
         }
-        
+
     }
 }

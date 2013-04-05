@@ -49,8 +49,8 @@ public class ComposeMessage extends AllplayersSherlockActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
 
-        Intent intent = getIntent();        
-        if(intent.hasExtra("userData")) {
+        Intent intent = getIntent();
+        if (intent.hasExtra("userData")) {
             try {
                 JSONArray jsonArray = new JSONArray(intent.getStringExtra("userData"));
                 if (jsonArray.length() > 0) {
@@ -65,11 +65,11 @@ public class ComposeMessage extends AllplayersSherlockActivity {
                 e.printStackTrace();
             }
         }
-                
+
         // The field for the message subject.
         final EditText subjectField = (EditText)findViewById(R.id.subjectField);
         subjectField.setText("");
-        
+
         // The field for the message body.
         final EditText bodyField = (EditText)findViewById(R.id.bodyField);
         bodyField.setText("");

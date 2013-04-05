@@ -26,7 +26,7 @@ import com.google.gson.Gson;
  * List of selectable message recipients.
  */
 public class SelectUserContacts extends AllplayersSherlockListActivity {
-    
+
     private ActionBar actionbar;
     private ArrayList<GroupMemberData> membersList;
     private ArrayList<GroupMemberData> selectedMembers;
@@ -39,12 +39,12 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         // Set up the page UI
         setContentView(R.layout.selectusercontacts);
-        
+
         spinner = (ProgressBar) findViewById(R.id.progress_indicator);
-        
+
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Compose Message");
@@ -54,12 +54,12 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        
+
         selectedMembers = new ArrayList<GroupMemberData>();
 
         GetUserGroupmatesTask helper = new GetUserGroupmatesTask();
         helper.execute();
-        
+
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -75,11 +75,10 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        if(!selectedMembers.contains(membersList.get(position))) {
+        if (!selectedMembers.contains(membersList.get(position))) {
             v.setBackgroundResource(R.color.android_blue);
             selectedMembers.add(membersList.get(position));
-        }
-        else {
+        } else {
             v.setBackgroundResource(R.drawable.backgroundstate);
             selectedMembers.remove(membersList.get(position));
         }
