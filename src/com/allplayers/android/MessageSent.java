@@ -1,12 +1,7 @@
 package com.allplayers.android;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockListActivity;
-import com.allplayers.objects.MessageData;
-import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,15 +10,17 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.allplayers.android.activities.AllplayersSherlockListActivity;
+import com.allplayers.objects.MessageData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class MessageSent extends AllplayersSherlockListActivity {
 
     private ArrayList<MessageData> messageList;
     private boolean hasMessages;
     private String jsonResult = "";
-    private ActionBar actionbar;
 
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
 

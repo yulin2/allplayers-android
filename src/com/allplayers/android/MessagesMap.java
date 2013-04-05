@@ -1,14 +1,12 @@
 package com.allplayers.android;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.allplayers.objects.DataObject;
-import com.allplayers.objects.MessageData;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.allplayers.objects.MessageData;
 import com.google.gson.Gson;
 
 public class MessagesMap {

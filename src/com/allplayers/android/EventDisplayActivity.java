@@ -3,13 +3,6 @@ package com.allplayers.android;
 import java.io.IOException;
 import java.util.List;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockMapActivity;
-import com.allplayers.objects.EventData;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
-
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -17,6 +10,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.allplayers.android.activities.AllplayersSherlockMapActivity;
+import com.allplayers.objects.EventData;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -79,7 +76,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
             itemizedoverlay.addOverlay(center);
             mapOverlays.add(itemizedoverlay);
         }
-        ActionBar actionbar = getSupportActionBar();
+        actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(event.getTitle());
 

@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.GroupData;
@@ -29,7 +28,6 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
     private ArrayList<GroupMemberData> selectedMembers;
     private Intent parentIntent;
     private ProgressBar spinner;
-    private ActionBar actionbar;
 
     /** Called when the activity is first created. */
     @Override

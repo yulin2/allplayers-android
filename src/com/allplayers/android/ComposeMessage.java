@@ -5,31 +5,24 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockActivity;
-import com.allplayers.objects.GroupMemberData;
-import com.allplayers.objects.MessageData;
-import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
-import com.google.gson.Gson;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.allplayers.objects.GroupMemberData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
+import com.google.gson.Gson;
+
 public class ComposeMessage extends AllplayersSherlockActivity {
-    private String threadID;
     private String sendBody;
     private String sendSubject;
-    private ActionBar actionbar;
-    private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
     private ArrayList<String> recipientUuidList = new ArrayList<String>();
 
     /** called when the activity is first created. */

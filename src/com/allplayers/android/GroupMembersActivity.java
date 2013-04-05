@@ -1,7 +1,11 @@
 package com.allplayers.android;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
+import java.util.ArrayList;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.GroupData;
 import com.allplayers.objects.GroupMemberData;
@@ -9,16 +13,9 @@ import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.widget.ArrayAdapter;
-
-import java.util.ArrayList;
-
 public class GroupMembersActivity extends AllplayersSherlockListActivity {
     private ArrayList<GroupMemberData> membersList;
-    private ActionBar actionbar;
-
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

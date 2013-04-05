@@ -2,28 +2,25 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
-import com.allplayers.objects.GroupData;
-import com.allplayers.rest.RestApiV1;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
+
+import com.allplayers.objects.GroupData;
+import com.allplayers.rest.RestApiV1;
 
 public class GroupsFragment extends ListFragment {
     private ArrayList<GroupData> groupList;
     private boolean hasGroups = false, loadMore = true;
-    private String jsonResult;
     private int pageNumber = 0;
     private int currentAmountShown = 0;
     private ArrayAdapter<String> adapter;
@@ -128,7 +125,6 @@ public class GroupsFragment extends ListFragment {
         }
 
         protected void onPostExecute(String jsonResult) {
-            GroupsFragment.this.jsonResult += jsonResult;
             GroupsMap groups = new GroupsMap(jsonResult);
             groupList.addAll(groups.getGroupData());
             updateGroupData();

@@ -13,8 +13,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.GroupMemberData;
 import com.allplayers.rest.RestApiV1;
@@ -27,7 +25,6 @@ import com.google.gson.Gson;
  */
 public class SelectUserContacts extends AllplayersSherlockListActivity {
 
-    private ActionBar actionbar;
     private ArrayList<GroupMemberData> membersList;
     private ArrayList<GroupMemberData> selectedMembers;
     private Intent parentIntent;

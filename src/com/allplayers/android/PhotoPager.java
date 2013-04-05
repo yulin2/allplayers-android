@@ -3,14 +3,6 @@ package com.allplayers.android;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockActivity;
-import com.allplayers.objects.PhotoData;
-import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -20,6 +12,13 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.allplayers.objects.PhotoData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class PhotoPager extends AllplayersSherlockActivity {
 
@@ -84,7 +83,6 @@ public class PhotoPager extends AllplayersSherlockActivity {
      */
     public class PhotoPagerAdapter extends PagerAdapter {
 
-        private Context mContext;
         private ImageView[] images;
         private List<PhotoData> photos;
 
@@ -95,7 +93,6 @@ public class PhotoPager extends AllplayersSherlockActivity {
          */
         public PhotoPagerAdapter(Context context, PhotoData item) {
 
-            mContext = context;
             photos = new ArrayList<PhotoData>();
 
             PhotoData temp = item;

@@ -1,8 +1,17 @@
 package com.allplayers.android;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+
 import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.MessageData;
 import com.allplayers.rest.RestApiV1;
@@ -10,25 +19,9 @@ import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 public class MessageInbox extends AllplayersSherlockActivity implements ISideNavigationCallback {
     private ArrayList<MessageData> messageList;
-    private String jsonResult = "";
     private boolean hasMessages = false;
-    private ActionBar actionbar;
 
     /** Called when the activity is first created. */
     @Override
@@ -84,7 +77,7 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
 
     public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... Args) {
-            return jsonResult = RestApiV1.getUserInbox();
+            return RestApiV1.getUserInbox();
         }
 
         protected void onPostExecute(String jsonResult) {

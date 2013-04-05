@@ -1,17 +1,13 @@
 
 package com.allplayers.android;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
+import android.os.Bundle;
+
 import com.allplayers.android.activities.AllplayersSherlockFragmentActivity;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-import android.os.Bundle;
-
 public class PhotosActivity extends AllplayersSherlockFragmentActivity {
-
-    private ActionBar actionbar;
 
     /**
      * Called when the activity is first created, this creates the Action Bar

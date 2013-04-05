@@ -1,11 +1,5 @@
 package com.allplayers.android;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockActivity;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,12 +9,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
+
 public class FindGroupsActivity extends AllplayersSherlockActivity {
     EditText searchEditText;
     EditText zipcodeEditText;
     EditText distanceEditText;
     TextView distanceLabel;
-    private ActionBar actionbar;
 
     /** Called when the activity is first created. */
     @Override

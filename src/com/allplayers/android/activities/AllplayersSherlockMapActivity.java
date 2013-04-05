@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.android.EventsActivity;
@@ -18,11 +19,11 @@ import com.allplayers.android.R;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class AllplayersSherlockMapActivity extends SherlockMapActivity implements ISideNavigationCallback {
 
     protected SideNavigationView sideNavigationView;
+    protected ActionBar actionbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

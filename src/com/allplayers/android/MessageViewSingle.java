@@ -1,19 +1,17 @@
 package com.allplayers.android;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockActivity;
-import com.allplayers.objects.MessageData;
-import com.allplayers.objects.MessageThreadData;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.allplayers.objects.MessageData;
+import com.allplayers.objects.MessageThreadData;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class MessageViewSingle extends AllplayersSherlockActivity {
 
@@ -59,7 +57,7 @@ public class MessageViewSingle extends AllplayersSherlockActivity {
             }
         });
 
-        ActionBar actionbar = getSupportActionBar();
+        actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Messages");
         actionbar.setSubtitle("Message From: " + messageThreadList.getSenderName());

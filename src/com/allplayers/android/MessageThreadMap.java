@@ -1,14 +1,13 @@
 package com.allplayers.android;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.allplayers.objects.DataObject;
 import com.allplayers.objects.MessageThreadData;
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class MessageThreadMap {
     private ArrayList<MessageThreadData> mail = new ArrayList<MessageThreadData>();

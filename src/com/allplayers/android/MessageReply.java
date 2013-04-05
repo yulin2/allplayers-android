@@ -1,13 +1,5 @@
 package com.allplayers.android;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockActivity;
-import com.allplayers.objects.MessageData;
-import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -16,10 +8,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.allplayers.objects.MessageData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
+
 public class MessageReply extends AllplayersSherlockActivity {
     private String threadID;
     private String sendBody;
-    private ActionBar actionbar;
 
     /** called when the activity is first created. */
     @Override

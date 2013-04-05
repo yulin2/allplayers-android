@@ -1,27 +1,22 @@
 package com.allplayers.android;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.rest.RestApiV1;
-import com.allplayers.android.activities.AllplayersSherlockActivity;
-import com.allplayers.objects.AlbumData;
-import com.allplayers.objects.PhotoData;
-import com.devspark.sidenavigation.ISideNavigationCallback;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
+import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.AdapterView;
 
-import java.util.ArrayList;
+import com.actionbarsherlock.app.ActionBar;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.allplayers.objects.AlbumData;
+import com.allplayers.objects.PhotoData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class AlbumPhotosActivity extends AllplayersSherlockActivity {
     private ArrayList<PhotoData> photoList;

@@ -1,14 +1,7 @@
 package com.allplayers.android;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockListActivity;
-import com.allplayers.objects.EventData;
-import com.allplayers.objects.GroupData;
-
-import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,14 +10,17 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.allplayers.android.activities.AllplayersSherlockListActivity;
+import com.allplayers.objects.EventData;
+import com.allplayers.objects.GroupData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class GroupEventsActivity extends AllplayersSherlockListActivity {
     private ArrayList<EventData> eventsList;
     private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private boolean hasEvents = false;
-    private ActionBar actionbar;
 
     /** Called when the activity is first created. */
     @Override

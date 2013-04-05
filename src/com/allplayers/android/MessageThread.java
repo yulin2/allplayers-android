@@ -1,13 +1,9 @@
 package com.allplayers.android;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockListActivity;
-import com.allplayers.objects.MessageData;
-import com.allplayers.objects.MessageThreadData;
-import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,10 +12,12 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+import com.allplayers.android.activities.AllplayersSherlockListActivity;
+import com.allplayers.objects.MessageData;
+import com.allplayers.objects.MessageThreadData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class MessageThread extends AllplayersSherlockListActivity {
     private ArrayList<MessageThreadData> messageThreadList;
@@ -28,7 +26,6 @@ public class MessageThread extends AllplayersSherlockListActivity {
     private int threadIDInt;
     private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private MessageData message;
-    private ActionBar actionbar;
 
     /**
      * Called when the activity is first created, this sets up some variables,

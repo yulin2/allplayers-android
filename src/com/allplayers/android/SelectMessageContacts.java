@@ -19,8 +19,6 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.GroupMemberData;
 import com.devspark.sidenavigation.SideNavigationView;
@@ -34,7 +32,6 @@ import com.google.gson.Gson;
  */
 public class SelectMessageContacts extends AllplayersSherlockListActivity {
     private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
-    private ActionBar actionbar;
     private ArrayAdapter<String> adapter;
     private Toast toast;
 

@@ -6,15 +6,6 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockActivity;
-import com.allplayers.objects.GroupData;
-import com.allplayers.objects.GroupMemberData;
-import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -28,11 +19,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.allplayers.objects.GroupData;
+import com.allplayers.objects.GroupMemberData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
+
 public class GroupPageActivity extends AllplayersSherlockActivity {
 
     private GroupData group;
     private ArrayList<GroupMemberData> membersList;
-    private ActionBar actionbar;
 
     /**
      * Called when the activity is first created, this creates the Action Bar
