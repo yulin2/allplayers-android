@@ -3,6 +3,7 @@ package com.allplayers.android;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.MessageData;
 import com.allplayers.objects.MessageThreadData;
+import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
@@ -26,6 +28,8 @@ public class MessageViewSingle extends AllplayersSherlockActivity {
         MessageThreadData messageThreadList = router.getIntentMessageThread();
         final MessageData message = router.getIntentMessage();
 
+        Log.d("mytag", "Message id = " + message.getId());
+        new RestApiV1().putMessage(Integer.parseInt(message.getId()), 0, "msg");
         String subject = messageThreadList.getSubject();
         String sender = messageThreadList.getSenderName();
         String date = messageThreadList.getDateString();

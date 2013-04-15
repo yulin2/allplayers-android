@@ -1,15 +1,5 @@
 package com.allplayers.rest;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,14 +12,29 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class RestApiV1 {
     private static String endpoint = "https://www.a.jdarling.allplayers.com/?q=api/v1/rest/";
@@ -114,12 +119,13 @@ public class RestApiV1 {
 
     // Change read/unread status
     public static String putMessage(int threadId, int status, String type) {
-        String[][] contents = new String[1][2];
+        String[][] contents = new String[2][2];
         // Status: 1=unread, 0=read
         contents[0][0] = "status";
         contents[0][1] = "" + status;
-        // Type: thread or message (default = thread)
-
+        // Type: thread or msg (default = thread)
+        contents[1][0] = "type";
+        contents[1][1] = type;
         return makeAuthenticatedPut(endpoint + "messages/" + threadId + ".json", contents);
     }
 
@@ -347,7 +353,6 @@ public class RestApiV1 {
             printout.writeBytes(content);
             printout.flush();
             printout.close();
-
             return "done";
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/makeAuthenticatedPut/" + ex);

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -66,7 +67,6 @@ public class MessageFragment extends ListFragment {
      * user with the messages.
      */
     protected void populateInbox() {
-        jsonResult = LocalStorage.readInbox(parentActivity.getBaseContext());
         MessagesMap messages = new MessagesMap(jsonResult);
         messageList = messages.getMessageData();
         HashMap<String, String> map;
@@ -104,7 +104,7 @@ public class MessageFragment extends ListFragment {
 
     public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserInbox();
+            return jsonResult = RestApiV1.getUserInbox();
         }
 
         protected void onPostExecute(String jsonResult) {

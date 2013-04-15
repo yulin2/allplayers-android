@@ -8,6 +8,7 @@ import java.util.HashMap;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -83,8 +84,8 @@ public class MessageThread extends AllplayersSherlockListActivity {
         protected String doInBackground(String... threadID) {
 
             threadIDInt = Integer.parseInt(threadID[0]);
-
-            RestApiV1.putMessage(threadIDInt, 0, "");
+            Log.d("mytag", "The thread id in MessageThread is "+ threadIDInt);
+            RestApiV1.putMessage(threadIDInt, 0, "thread");
 
             jsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
 
