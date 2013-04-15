@@ -2,19 +2,18 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
-import com.allplayers.objects.AlbumData;
-import com.allplayers.objects.GroupData;
-import com.allplayers.rest.RestApiV1;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.allplayers.objects.AlbumData;
+import com.allplayers.objects.GroupData;
+import com.allplayers.rest.RestApiV1;
 
 public class PhotosFragment extends ListFragment {
     private ArrayList<AlbumData> albumList = new ArrayList<AlbumData>();

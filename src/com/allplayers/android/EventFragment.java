@@ -3,9 +3,6 @@ package com.allplayers.android;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.allplayers.objects.EventData;
-import com.allplayers.rest.RestApiV1;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,6 +11,9 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+
+import com.allplayers.objects.EventData;
+import com.allplayers.rest.RestApiV1;
 
 public class EventFragment extends ListFragment {
     private ArrayList<EventData> eventsList;

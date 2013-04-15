@@ -114,12 +114,13 @@ public class RestApiV1 {
 
     // Change read/unread status
     public static String putMessage(int threadId, int status, String type) {
-        String[][] contents = new String[1][2];
+        String[][] contents = new String[2][2];
         // Status: 1=unread, 0=read
         contents[0][0] = "status";
         contents[0][1] = "" + status;
-        // Type: thread or message (default = thread)
-
+        // Type: thread or msg (default = thread)
+        contents[1][0] = "type";
+        contents[1][1] = type;
         return makeAuthenticatedPut(endpoint + "messages/" + threadId + ".json", contents);
     }
 
@@ -142,7 +143,7 @@ public class RestApiV1 {
 
         return makeAuthenticatedPost(endpoint + "messages.json", contents);
     }
-    
+
     public static String createNewMessage(String[] uuids, String subject, String body) {
         String[][] contents = new String[uuids.length + 2][2];
         for (int i = 0; i < uuids.length; i++) {
@@ -348,7 +349,6 @@ public class RestApiV1 {
             printout.writeBytes(content);
             printout.flush();
             printout.close();
-
             return "done";
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/makeAuthenticatedPut/" + ex);

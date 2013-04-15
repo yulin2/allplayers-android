@@ -1,13 +1,12 @@
 package com.allplayers.android;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.allplayers.objects.DataObject;
 import com.allplayers.objects.GroupMemberData;
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
 
 public class GroupMembersMap {
     private ArrayList<GroupMemberData> members = new ArrayList<GroupMemberData>();

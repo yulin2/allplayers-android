@@ -1,9 +1,12 @@
 package com.allplayers.android;
 
-import com.allplayers.rest.RestApiV1;
+import org.jasypt.util.text.BasicTextEncryptor;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -11,7 +14,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -20,12 +22,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.accounts.AccountManager;
-import android.accounts.Account;
-import android.widget.Toast;
-import org.jasypt.util.text.BasicTextEncryptor;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import com.allplayers.rest.RestApiV1;
 
 /**
  * Initial activity to handle login.

@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.GroupData;
@@ -23,24 +22,22 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
 public class SelectGroupContacts extends AllplayersSherlockListActivity {
-    
+
     private ArrayList<GroupData> groupsList;
     private ArrayList<GroupData> selectedGroups;
     private ArrayList<GroupMemberData> selectedMembers;
     private Intent parentIntent;
     private ProgressBar spinner;
-    private ActionBar actionbar;
-    private SideNavigationView sideNavigationView;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         setContentView(R.layout.selectgroupcontacts);
-        
+
         spinner = (ProgressBar) findViewById(R.id.progress_indicator);
-        
+
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Compose Message");
@@ -50,32 +47,31 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        
+
         selectedGroups = new ArrayList<GroupData>();
         selectedMembers = new ArrayList<GroupMemberData>();
 
         new GetUserGroupsTask().execute();
-        
+
         final GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
-        
+
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(selectedGroups.size() == 0) {
+                if (selectedGroups.size() == 0) {
                     finish();
-                }
-                else {
-                    parentIntent = new Intent(); 
+                } else {
+                    parentIntent = new Intent();
                     spinner.setVisibility(View.VISIBLE);
                     helper.execute(selectedGroups);
                 }
             }
         });
     }
-    
+
     /**
      * Listener for the Action Bar Options Menu.
-     * 
+     *
      * @param item: The selected menu item.
      */
     @Override
@@ -83,19 +79,19 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
         switch (item.getItemId()) {
 
-            case android.R.id.home: {
-                sideNavigationView.toggleMenu();
-                return true;
-            }
+        case android.R.id.home: {
+            sideNavigationView.toggleMenu();
+            return true;
+        }
 
-            default:
-                return super.onOptionsItemSelected(item);
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Listener for the Side Navigation Menu.
-     * 
+     *
      * @param itemId: The ID of the list item that was selected.
      */
     @Override
@@ -103,39 +99,39 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
         switch (itemId) {
 
-            case R.id.side_navigation_menu_item1:
-                invokeActivity(GroupsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item1:
+            invokeActivity(GroupsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item2:
-                invokeActivity(MessageActivity.class);
-                break;
+        case R.id.side_navigation_menu_item2:
+            invokeActivity(MessageActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item3:
-                invokeActivity(PhotosActivity.class);
-                break;
+        case R.id.side_navigation_menu_item3:
+            invokeActivity(PhotosActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item4:
-                invokeActivity(EventsActivity.class);
-                break;
+        case R.id.side_navigation_menu_item4:
+            invokeActivity(EventsActivity.class);
+            break;
 
-            case R.id.side_navigation_menu_item5: {
-                search();
-                break;
-            }
+        case R.id.side_navigation_menu_item5: {
+            search();
+            break;
+        }
 
-            case R.id.side_navigation_menu_item6: {
-                logOut();
-                break;
-            }
+        case R.id.side_navigation_menu_item6: {
+            logOut();
+            break;
+        }
 
-            case R.id.side_navigation_menu_item7: {
-                refresh();
-                break;
-            }
+        case R.id.side_navigation_menu_item7: {
+            refresh();
+            break;
+        }
 
-            default:
-                return;
+        default:
+            return;
         }
 
         finish();
@@ -143,14 +139,13 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        if(!selectedGroups.contains(groupsList.get(position))) {
+        if (!selectedGroups.contains(groupsList.get(position))) {
             v.setBackgroundResource(R.color.android_blue);
             selectedGroups.add(groupsList.get(position));
-        }
-        else {
+        } else {
             v.setBackgroundResource(R.drawable.backgroundstate);
             selectedGroups.remove(groupsList.get(position));
-        }      
+        }
     }
 
     /*
@@ -166,7 +161,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             GroupsMap groups = new GroupsMap(jsonResult);
             groupsList = groups.getGroupData();
             String[] values;
-            
+
             if (!groupsList.isEmpty()) {
                 values = new String[groupsList.size()];
 
@@ -184,7 +179,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             spinner.setVisibility(View.GONE);
         }
     }
-    
+
     /*
      * Gets a group's members using a rest call.
      */
@@ -192,8 +187,8 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
         protected String doInBackground(ArrayList<GroupData>... groups) {
             String jsonResult = new String();
-            for(int i = 0; i < groups[0].size(); i++) {
-                 jsonResult += (RestApiV1.getGroupMembersByGroupId(groups[0].get(i).getUUID()));
+            for (int i = 0; i < groups[0].size(); i++) {
+                jsonResult += (RestApiV1.getGroupMembersByGroupId(groups[0].get(i).getUUID()));
             }
             return jsonResult;
         }
@@ -205,7 +200,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             Gson gson = new Gson();
             String userData = gson.toJson(selectedMembers);
             System.out.println("SHIT BEIN SENT " + userData);
-            
+
             parentIntent.putExtra("userData", userData);
             setResult(Activity.RESULT_OK, parentIntent);
             finish();
