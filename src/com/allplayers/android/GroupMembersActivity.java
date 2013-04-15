@@ -8,10 +8,18 @@ import com.allplayers.objects.GroupMemberData;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
+import com.google.gson.Gson;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.PopupMenu;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import java.util.ArrayList;
 
@@ -19,6 +27,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
     private ArrayList<GroupMemberData> membersList;
     private ActionBar actionbar;
     private SideNavigationView sideNavigationView;
+    private ArrayAdapter<String> adapter;
 
     /** Called when the activity is first created. */
     @Override
@@ -135,7 +144,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
             } else {
                 values = new String[] {"No members to display"};
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupMembersActivity.this,
+            adapter = new ArrayAdapter<String>(GroupMembersActivity.this,
                     android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
         }

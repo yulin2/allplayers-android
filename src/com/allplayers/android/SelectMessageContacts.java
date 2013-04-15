@@ -7,6 +7,7 @@ import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
      * 
      * @param savedInstanceState: Passes data from other instances of the same activity.
      */
+    @SuppressLint("ShowToast")
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -62,6 +64,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         setContentView(R.layout.selectmessagecontacts);
 
         toast = Toast.makeText(getBaseContext(), "You need to add at least one recipient", Toast.LENGTH_LONG);
+        
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Compose Messsage");
@@ -83,7 +86,6 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
-                System.out.println("Im holdin dat shit!!! @ position " + position + " In view " + view + "Ma nikka");
                 PopupMenu menu = new PopupMenu(SelectMessageContacts.this, view);
                 menu.inflate(R.menu.message_recipient_menu);
                 menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -95,9 +97,6 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                                 recipientList.remove(position);
                                 break;
                             case R.id.cancel:
-                        }
-                        for (int i = 0; i < adapter.getCount(); i++) {
-                            System.out.println(adapter.getItem(i) + "All dem otha niggas got iced" + recipientList.get(i).getName());
                         }
                         return true;
                     }
@@ -190,6 +189,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
             e.printStackTrace();
         }
     }
+    
     /**
      * Listener for the Action Bar Options Menu.
      * 

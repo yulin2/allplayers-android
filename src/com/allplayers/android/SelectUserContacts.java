@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View; 
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -161,10 +162,7 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     public class GetUserContactsTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {
-            String jsonResult1 = RestApiV1.getUserGroupmates().substring(0, RestApiV1.getUserGroupmates().length() - 1);
-            String jsonResult2 = RestApiV1.getUserFriends().substring(1);
-            System.out.println("!!\n" + (jsonResult1 + "," + jsonResult2));
-            return (jsonResult1 + "," + jsonResult2);
+            return RestApiV1.getUserGroupmates();
         }
 
         protected void onPostExecute(String jsonResult) {
