@@ -44,7 +44,7 @@
                     android:background="@drawable/backgroundstate"
                     android:padding="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/members_button_group_page" />
+                    android:src="@drawable/members_400x400" />
             </LinearLayout>
 
             <LinearLayout
@@ -67,7 +67,7 @@
                     android:background="@drawable/backgroundstate"
                     android:padding="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/photo_button_group_page" />
+                    android:src="@drawable/photos_400x400" />
             </LinearLayout>
         </TableRow>
 
@@ -97,7 +97,7 @@
                     android:background="@drawable/backgroundstate"
                     android:padding="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/events_button_group_page" />
+                    android:src="@drawable/events_400x400" />
             </LinearLayout>
 
             <LinearLayout
@@ -120,7 +120,7 @@
                     android:background="@drawable/backgroundstate"
                     android:padding="4dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/location_button_group_page" />
+                    android:src="@drawable/location_400x400" />
             </LinearLayout>
         </TableRow>
     </TableLayout>

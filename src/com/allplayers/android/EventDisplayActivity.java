@@ -74,7 +74,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
             mapController.setZoom(15);
 
             List<Overlay> mapOverlays = map.getOverlays();
-            Drawable drawable = this.getResources().getDrawable(R.drawable.mini_icon);
+            Drawable drawable = this.getResources().getDrawable(R.drawable.pindrop_50x50);
             mItemizedOverlay itemizedoverlay = new mItemizedOverlay(drawable, this);
             OverlayItem center = new OverlayItem(point, event.getTitle(), event.getZip());
             itemizedoverlay.addOverlay(center);
