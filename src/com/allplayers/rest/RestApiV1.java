@@ -349,7 +349,7 @@ public class RestApiV1 {
             printout.writeBytes(content);
             printout.flush();
             printout.close();
-            return "done";
+            return connection.getResponseMessage();
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/makeAuthenticatedPut/" + ex);
             return ex.toString();
