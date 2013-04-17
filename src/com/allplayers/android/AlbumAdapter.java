@@ -67,8 +67,9 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
             helper.execute(album, position);
         }
 
+        //@TODO: Fix API bug causing the incorrect number of photos in an album to be displayed.
         //Set extra info
-        albumExtraInfo.setText(album.getPhotoCount() + " photos in this album");
+        //albumExtraInfo.setText(album.getPhotoCount() + " photos in this album");
         return row;
     }
 

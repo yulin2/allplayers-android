@@ -32,7 +32,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public class RestApiV1 {
-    private static String endpoint = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
+    private static String endpoint = "https://www.allplayers.com/?q=api/v1/rest/";
     private static String sCurrentUserUUID = "";
     private static CookieHandler sCookieHandler = new CookieManager();
 
