@@ -10,7 +10,7 @@
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
       android:clickable="true"
-      android:apiKey="0alB8H6T-db781lpmO-JMXpe7_d2Uohis4iGIpw"/>
+      android:apiKey="AIzaSyBdG6eMgG-gqKTDo5a0FYU2b32U_zx419A"/>
     
     <com.devspark.sidenavigation.SideNavigationView
             android:id="@+id/side_navigation_view"

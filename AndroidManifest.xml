@@ -219,6 +219,9 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBdG6eMgG-gqKTDo5a0FYU2b32U_zx419A" />
     </application>
 
 </manifest>
