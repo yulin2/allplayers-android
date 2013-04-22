@@ -14,6 +14,12 @@ import com.allplayers.android.activities.AllplayersSherlockMapActivity;
 import com.allplayers.objects.EventData;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -37,45 +43,40 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         setContentView(R.layout.eventdetail);
 
         TextView eventInfo = (TextView)findViewById(R.id.eventInfo);
-        MapView map = (MapView)findViewById(R.id.eventMap);
-        map.setBuiltInZoomControls(true);
+        GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
         EventData event = (new Router(this)).getIntentEvent();
         eventInfo.setText("Event Title: " + event.getTitle() + "\nDescription: " +
                           event.getDescription() + "\nCategory: " + event.getCategory() +
                           "\nStart: " + event.getStartDateString() + "\nEnd: " + event.getEndDateString());
+        
+        
 
-        MapController mapController = map.getController();
-        String lat = "";
-        lat = event.getLatitude();
-        String lon = "";
-        lon = event.getLongitude();
+        String lat = event.getLatitude();
+        String lon = event.getLongitude();
 
-        if (lat.equals("") || lon.equals("")) {
-            map.setVisibility(View.GONE);
-        } else {
-            if (lat.equals("0.000000") || lon.equals("0.000000")) {
-                Geocoder geo = new Geocoder(this);
-                try {
-                    List<Address> addr = geo.getFromLocationName(event.getZip(), 1);
-                    lat = addr.get(0).getLatitude() + "";
-                    lon = addr.get(0).getLongitude() + "";
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        if (lat.equals("") || lon.equals("") || lat.equals("0.000000") || lon.equals("0.000000")) {
+            Geocoder geo = new Geocoder(this);
+            try {
+                List<Address> addr = geo.getFromLocationName(event.getZip(), 1);
+                lat = addr.get(0).getLatitude() + "";
+                lon = addr.get(0).getLongitude() + "";
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            GeoPoint point = new GeoPoint((int)(Float.parseFloat(lat) * 1000000), (int)(Float.parseFloat(lon) * 1000000));
-            mapController.setCenter(point);
-            mapController.setZoom(15);
-
-            List<Overlay> mapOverlays = map.getOverlays();
-            Drawable drawable = this.getResources().getDrawable(R.drawable.pindrop_50x50);
-            mItemizedOverlay itemizedoverlay = new mItemizedOverlay(drawable, this);
-            OverlayItem center = new OverlayItem(point, event.getTitle(), event.getZip());
-            itemizedoverlay.addOverlay(center);
-            mapOverlays.add(itemizedoverlay);
         }
+        
+        LatLng location = new LatLng((Float.parseFloat(lat)), (Float.parseFloat(lon)));
+        map.moveCamera(CameraUpdateFactory.newLatLng(location));
+        map.addMarker(new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50))
+                .position(location)
+                .title(event.getTitle())
+                .snippet(event.getZip() + "\n" 
+                        + event.getStartDateString() + "\n" 
+                        + event.getEndDateString())
+                );
+        
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(event.getTitle());

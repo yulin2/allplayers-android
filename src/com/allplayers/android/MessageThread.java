@@ -84,7 +84,6 @@ public class MessageThread extends AllplayersSherlockListActivity {
         protected String doInBackground(String... threadID) {
 
             threadIDInt = Integer.parseInt(threadID[0]);
-            Log.d("mytag", "The thread id in MessageThread is "+ threadIDInt);
             RestApiV1.putMessage(threadIDInt, 0, "thread");
 
             jsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);

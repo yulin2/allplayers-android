@@ -7,15 +7,28 @@
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="11" />
+    
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+    
 
+    <permission android:name="com.android.mapsv2test.permission.MAPS_RECEIVE"
+                android:protectionLevel="signature"></permission>
+    <uses-permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <!-- Recommended for Maps API v2 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    
 
     <application
-        android:debuggable="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/launch_icon"
         android:label="@string/app_name" >
@@ -221,7 +234,7 @@
         </service>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBdG6eMgG-gqKTDo5a0FYU2b32U_zx419A" />
+            android:value="AIzaSyBll0WWzB0cTebDXz2xt98YytdnBIeK0wQ"/>
     </application>
 
 </manifest>
