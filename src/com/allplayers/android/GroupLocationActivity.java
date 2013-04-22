@@ -65,7 +65,7 @@ public class GroupLocationActivity extends AllplayersSherlockMapActivity {
         map.addMarker(new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50))
                 .position(location)
-                .title("Event Location")
+                .title(group.getTitle())
                 );
     
         actionbar = getSupportActionBar();
