@@ -72,6 +72,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50))
                 .position(location)
                 .title(event.getTitle())
+                .snippet(event.getZip())
                 );
         
         actionbar = getSupportActionBar();
