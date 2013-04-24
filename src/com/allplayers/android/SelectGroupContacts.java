@@ -196,11 +196,8 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         protected void onPostExecute(String jsonResult) {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
             selectedMembers = groupMembers.getGroupMemberData();
-            System.out.println("Printin dat sheeet " + selectedMembers.get(0).getName());
             Gson gson = new Gson();
             String userData = gson.toJson(selectedMembers);
-            System.out.println("SHIT BEIN SENT " + userData);
-
             parentIntent.putExtra("userData", userData);
             setResult(Activity.RESULT_OK, parentIntent);
             finish();

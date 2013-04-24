@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
 /**
  * TODO If maps are missing on device image, this activity will crash.
  */
@@ -36,7 +37,6 @@ public class GroupLocationActivity extends AllplayersSherlockMapActivity {
         setContentView(R.layout.group_location);
 
         mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         GroupData group = (new Router(this)).getIntentGroup();
 
@@ -53,13 +53,16 @@ public class GroupLocationActivity extends AllplayersSherlockMapActivity {
                 e.printStackTrace();
             }
         }
-        mMap.addMarker(new MarkerOptions()
-                       .position(new LatLng(Float.parseFloat(lat), Float.parseFloat(lon)))
-                       .title(group.getTitle())
-                       .snippet(group.getZip())
-                       .icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Float.parseFloat(lat), Float.parseFloat(lon)), 15));
 
+        LatLng location = new LatLng((Float.parseFloat(lat)), (Float.parseFloat(lon)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7));
+        mMap.addMarker(new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50))
+                .position(location)
+                .title(group.getTitle())
+                .snippet(group.getZip())
+                );
+    
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(group.getTitle());

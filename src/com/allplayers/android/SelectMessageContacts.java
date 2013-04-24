@@ -46,13 +46,9 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        System.out.println("we started a new selectMessage");
 
-
-        System.out.println(icicle);
         if (icicle != null) {
             String currentRecipients = icicle.getString("currentRecipients");
-            System.out.println("bundle was not null");
             addRecipientsToList(currentRecipients);
         }
         setContentView(R.layout.selectmessagecontacts);
@@ -74,7 +70,6 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
-                System.out.println("Im holdin dat shit!!! @ position " + position + " In view " + view + "Ma nikka");
                 PopupMenu menu = new PopupMenu(SelectMessageContacts.this, view);
                 menu.inflate(R.menu.message_recipient_menu);
                 menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -88,7 +83,6 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                         case R.id.cancel:
                         }
                         for (int i = 0; i < adapter.getCount(); i++) {
-                            System.out.println(adapter.getItem(i) + "All dem otha niggas got iced" + recipientList.get(i).getName());
                         }
                         return true;
                     }
@@ -124,7 +118,6 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                     Intent intent = new Intent(SelectMessageContacts.this, ComposeMessage.class);
                     Gson gson = new Gson();
                     String userData = gson.toJson(recipientList);
-                    System.out.println("In SelectMessageContacts I sent to ComposeMessage this " + userData);
                     intent.putExtra("userData", userData);
                     startActivity(intent);
                 } else {
@@ -151,11 +144,9 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         Gson gson = new Gson();
         String currentRecipients = gson.toJson(recipientList);
         icicle.putString("currentRecipients", currentRecipients);
-        System.out.println("added " + currentRecipients + " to the icicle");
     }
 
     public void addRecipientsToList(String json) {
-        System.out.println("Adding \n" + json + "\nto the list");
         try {
             int previousSize = recipientList.size();
             JSONArray jsonArray = new JSONArray(json);

@@ -3,7 +3,6 @@ package com.allplayers.android;
 import java.io.IOException;
 import java.util.List;
 
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -13,13 +12,14 @@ import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.EventData;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
+
+
 
 /**
  * TODO If maps are missing on device image, this activity will crash.
@@ -40,36 +40,35 @@ public class EventDisplayActivity extends AllplayersSherlockActivity {
         TextView eventInfo = (TextView)findViewById(R.id.eventInfo);
         mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
+
         EventData event = (new Router(this)).getIntentEvent();
         eventInfo.setText("Event Title: " + event.getTitle() + "\nDescription: " +
                           event.getDescription() + "\nCategory: " + event.getCategory() +
                           "\nStart: " + event.getStartDateString() + "\nEnd: " + event.getEndDateString());
+        
+        String lat = event.getLatitude();
+        String lon = event.getLongitude();
 
-        String lat = "";
-        lat = event.getLatitude();
-        String lon = "";
-        lon = event.getLongitude();
-
-        if (lat.equals("") || lon.equals("")) {
-            mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
-        } else {
-            if (lat.equals("0.000000") || lon.equals("0.000000")) {
-                Geocoder geo = new Geocoder(this);
-                try {
-                    List<Address> addr = geo.getFromLocationName(event.getZip(), 1);
-                    lat = addr.get(0).getLatitude() + "";
-                    lon = addr.get(0).getLongitude() + "";
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        if (lat.equals("") || lon.equals("") || lat.equals("0.000000") || lon.equals("0.000000")) {
+            Geocoder geo = new Geocoder(this);
+            try {
+                List<Address> addr = geo.getFromLocationName(event.getZip(), 1);
+                lat = addr.get(0).getLatitude() + "";
+                lon = addr.get(0).getLongitude() + "";
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            mMap.addMarker(new MarkerOptions()
-                           .position(new LatLng(Float.parseFloat(lat), Float.parseFloat(lon)))
-                           .title(event.getTitle())
-                           .snippet(event.getZip())
-                           .icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50)));
-
         }
+        
+        LatLng location = new LatLng((Float.parseFloat(lat)), (Float.parseFloat(lon)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7));
+        mMap.addMarker(new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50))
+                .position(location)
+                .title(event.getTitle())
+                .snippet(event.getZip())
+                );
+        
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(event.getTitle());

@@ -92,10 +92,8 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         }
 
         protected void onPostExecute(String jsonResult) {
-            Log.d("errorr", jsonResult);
             jsonResult = jsonResult.replaceAll("firstname", "fname");
             jsonResult = jsonResult.replaceAll("lastname", "lname");
-            Log.d("errorr", jsonResult);
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
             membersList = groupMembers.getGroupMemberData();
             String[] values;

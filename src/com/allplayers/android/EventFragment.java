@@ -27,8 +27,7 @@ public class EventFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         parentActivity = this.getActivity();
-        GetUserEventsTask helper = new GetUserEventsTask();
-        helper.execute();
+        new GetUserEventsTask().execute();
     }
 
     @Override
