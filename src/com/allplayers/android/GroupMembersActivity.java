@@ -15,7 +15,7 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class GroupMembersActivity extends AllplayersSherlockListActivity {
     private ArrayList<GroupMemberData> membersList;
-    
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

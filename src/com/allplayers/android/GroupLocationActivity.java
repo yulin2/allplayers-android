@@ -3,7 +3,6 @@ package com.allplayers.android;
 import java.io.IOException;
 import java.util.List;
 
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -12,17 +11,19 @@ import com.allplayers.android.activities.AllplayersSherlockMapActivity;
 import com.allplayers.objects.GroupData;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * TODO If maps are missing on device image, this activity will crash.
  */
 public class GroupLocationActivity extends AllplayersSherlockMapActivity {
 
+    private GoogleMap mMap;
     /**
      * Called when the activity is first created, this sets up variables,
      * creates the Action Bar, and sets up the Side Navigation Menu.
@@ -34,13 +35,11 @@ public class GroupLocationActivity extends AllplayersSherlockMapActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_location);
 
-        MapView map = (MapView)findViewById(R.id.groupLocation);
-        map.setBuiltInZoomControls(true);
+        mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         GroupData group = (new Router(this)).getIntentGroup();
 
-        MapController mapController = map.getController();
-        GeoPoint point;
         String lat = group.getLat();
         String lon = group.getLon();
 
@@ -54,16 +53,12 @@ public class GroupLocationActivity extends AllplayersSherlockMapActivity {
                 e.printStackTrace();
             }
         }
-        point = new GeoPoint((int)(Float.parseFloat(lat) * 1000000), (int)(Float.parseFloat(lon) * 1000000));
-        mapController.setCenter(point);
-        mapController.setZoom(15);
-
-        List<Overlay> mapOverlays = map.getOverlays();
-        Drawable drawable = this.getResources().getDrawable(R.drawable.pindrop_50x50);
-        mItemizedOverlay itemizedoverlay = new mItemizedOverlay(drawable, this);
-        OverlayItem center = new OverlayItem(point, group.getTitle(), group.getZip());
-        itemizedoverlay.addOverlay(center);
-        mapOverlays.add(itemizedoverlay);
+        mMap.addMarker(new MarkerOptions()
+                       .position(new LatLng(Float.parseFloat(lat), Float.parseFloat(lon)))
+                       .title(group.getTitle())
+                       .snippet(group.getZip())
+                       .icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Float.parseFloat(lat), Float.parseFloat(lon)), 15));
 
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);

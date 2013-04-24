@@ -7,24 +7,25 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
-import com.allplayers.android.activities.AllplayersSherlockMapActivity;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.EventData;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 /**
  * TODO If maps are missing on device image, this activity will crash.
  */
-public class EventDisplayActivity extends AllplayersSherlockMapActivity {
-
+public class EventDisplayActivity extends AllplayersSherlockActivity {
+    private GoogleMap mMap;
     /**
      * Called when the activity is first created, this sets up variables,
      * creates the Action Bar, and sets up the Side Navigation Menu.
@@ -37,22 +38,20 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         setContentView(R.layout.eventdetail);
 
         TextView eventInfo = (TextView)findViewById(R.id.eventInfo);
-        MapView map = (MapView)findViewById(R.id.eventMap);
-        map.setBuiltInZoomControls(true);
+        mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
         EventData event = (new Router(this)).getIntentEvent();
         eventInfo.setText("Event Title: " + event.getTitle() + "\nDescription: " +
                           event.getDescription() + "\nCategory: " + event.getCategory() +
                           "\nStart: " + event.getStartDateString() + "\nEnd: " + event.getEndDateString());
 
-        MapController mapController = map.getController();
         String lat = "";
         lat = event.getLatitude();
         String lon = "";
         lon = event.getLongitude();
 
         if (lat.equals("") || lon.equals("")) {
-            map.setVisibility(View.GONE);
+            mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
         } else {
             if (lat.equals("0.000000") || lon.equals("0.000000")) {
                 Geocoder geo = new Geocoder(this);
@@ -64,17 +63,12 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
                     e.printStackTrace();
                 }
             }
+            mMap.addMarker(new MarkerOptions()
+                           .position(new LatLng(Float.parseFloat(lat), Float.parseFloat(lon)))
+                           .title(event.getTitle())
+                           .snippet(event.getZip())
+                           .icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50)));
 
-            GeoPoint point = new GeoPoint((int)(Float.parseFloat(lat) * 1000000), (int)(Float.parseFloat(lon) * 1000000));
-            mapController.setCenter(point);
-            mapController.setZoom(15);
-
-            List<Overlay> mapOverlays = map.getOverlays();
-            Drawable drawable = this.getResources().getDrawable(R.drawable.pindrop_50x50);
-            mItemizedOverlay itemizedoverlay = new mItemizedOverlay(drawable, this);
-            OverlayItem center = new OverlayItem(point, event.getTitle(), event.getZip());
-            itemizedoverlay.addOverlay(center);
-            mapOverlays.add(itemizedoverlay);
         }
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
