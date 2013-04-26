@@ -3,16 +3,8 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
-
-    <TextView
-      android:id="@+id/eventInfo"
-	  android:editable="false"
-	  android:text=""
-	  android:layout_width="match_parent"
-	  android:layout_height="wrap_content"/>
     
 	<fragment
-	  android:layout_below="@id/eventInfo"
       android:id="@+id/map"
       android:name="com.google.android.gms.maps.MapFragment"
       android:layout_width="match_parent"

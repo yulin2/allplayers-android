@@ -48,10 +48,16 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
+        
+        Intent intent;
+        
         if (hasEvents) {
-            // Can be used to display map or full details.
-            Intent intent = (new Router(this)).getEventDisplayActivityIntent(eventsList.get(position));
+            if (!(eventsList.get(position).getLatitude().equals("") 
+                    && eventsList.get(position).getLatitude().equals(""))) {
+                intent = (new Router(this)).getEventDisplayActivityIntent(eventsList.get(position));
+            } else {
+                intent = (new Router(this)).getEventDetailActivityIntent(eventsList.get(position));
+            }
             startActivity(intent);
         }
     }
@@ -66,6 +72,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
         }
 
         protected void onPostExecute(String jsonResult) {
+            System.out.println(jsonResult);
             EventsMap events = new EventsMap(jsonResult);
             eventsList = events.getEventData();
 

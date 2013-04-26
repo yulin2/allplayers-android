@@ -3,10 +3,12 @@ package com.allplayers.android;
 import java.io.IOException;
 import java.util.List;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,9 +18,13 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
@@ -26,11 +32,11 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-/**
- * TODO If maps are missing on device image, this activity will crash.
- */
 public class EventDisplayActivity extends AllplayersSherlockMapActivity {
-
+    private EventData mEvent;
+    private String mLatitude;
+    private String mLongitude;
+    
     /**
      * Called when the activity is first created, this sets up variables,
      * creates the Action Bar, and sets up the Side Navigation Menu.
@@ -42,46 +48,76 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eventdetail);
 
-        TextView eventInfo = (TextView)findViewById(R.id.eventInfo);
-        GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-
-        EventData event = (new Router(this)).getIntentEvent();
-        eventInfo.setText("Event Title: " + event.getTitle() + "\nDescription: " +
-                          event.getDescription() + "\nCategory: " + event.getCategory() +
-                          "\nStart: " + event.getStartDateString() + "\nEnd: " + event.getEndDateString());
-        
-        
-
-        String lat = event.getLatitude();
-        String lon = event.getLongitude();
-
-        if (lat.equals("") || lon.equals("") || lat.equals("0.000000") || lon.equals("0.000000")) {
-            Geocoder geo = new Geocoder(this);
-            try {
-                List<Address> addr = geo.getFromLocationName(event.getZip(), 1);
-                lat = addr.get(0).getLatitude() + "";
-                lon = addr.get(0).getLongitude() + "";
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        
-        LatLng location = new LatLng((Float.parseFloat(lat)), (Float.parseFloat(lon)));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7));
-        map.addMarker(new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50))
-                .position(location)
-                .title(event.getTitle())
-                .snippet(event.getZip())
-                );
+        mEvent = (new Router(this)).getIntentEvent();
         
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
-        actionbar.setTitle(event.getTitle());
+        actionbar.setTitle(mEvent.getTitle());
 
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
+        
+        mLatitude = mEvent.getLatitude();
+        mLongitude = mEvent.getLongitude();
+        
+        createGoogleMap();
     }
+    
+    private void createGoogleMap() {
+        GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        LatLng location = new LatLng((Float.parseFloat(mLatitude)), (Float.parseFloat(mLongitude)));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7));
+        MarkerOptions marker = new MarkerOptions()
+                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50))
+                .position(location)
+                .title(mEvent.getTitle())
+                .snippet("Start: " + mEvent.getStartDateString() + "\nEnd: " + mEvent.getEndDateString());
+       
+        map.setInfoWindowAdapter(new CustomInfoAdapter(getLayoutInflater()));
+        map.addMarker(marker).showInfoWindow();
+
+        map.setOnMarkerClickListener(new OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent intent = (new Router(EventDisplayActivity.this)).getEventDetailActivityIntent(mEvent);
+                startActivity(intent);
+                return false;
+            }
+        });
+        map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = (new Router(EventDisplayActivity.this)).getEventDetailActivityIntent(mEvent);
+                startActivity(intent);
+            }
+        }); 
+    }
+}
+
+class CustomInfoAdapter implements InfoWindowAdapter {
+    LayoutInflater inflater;
+    
+    CustomInfoAdapter (LayoutInflater inflater) {
+        this.inflater = inflater;
+    }
+    
+    @Override
+    public View getInfoContents(Marker marker) {
+        View infoWindow = inflater.inflate(R.layout.event_marker_info_window, null);
+        
+        TextView textView=(TextView)infoWindow.findViewById(R.id.title);
+        textView.setText(marker.getTitle());
+        textView=(TextView)infoWindow.findViewById(R.id.snippet);
+        textView.setText(marker.getSnippet());
+        return infoWindow;
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
 }

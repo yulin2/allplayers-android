@@ -3,6 +3,7 @@ package com.allplayers.objects;
 import java.text.DecimalFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -20,6 +21,35 @@ public class EventData extends DataObject {
 
     public EventData() {
 
+    }
+    
+    /**
+     * Check if this DataObject exists in an ArrayList list.
+     *
+     * @param list to look through.
+     * @return if this is new to list.
+     */
+    @Override
+    public boolean isNew(ArrayList <? extends DataObject > list) {
+        if (!list.isEmpty()) {
+            for (int i = 0; i < list.size(); i++) {
+                EventData object = (EventData) list.get(i);
+
+                if (uuid.equals(object.getUUID())
+                        && title.equals(object.getTitle())
+                        && description.equals(object.getDescription())
+                        && category.equals(object.getCategory())
+                        && start.equals(object.getStart())
+                        && end.equals(object.getEnd())
+                        && longitude.equals(object.getLongitude())
+                        && latitude.equals(object.getLatitude())
+                        && zip.equals(object.getZip())) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private Date parseDatetime(String datetime) {

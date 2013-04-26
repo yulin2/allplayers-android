@@ -29,14 +29,20 @@ public class EventFragment extends ListFragment {
         parentActivity = this.getActivity();
         new GetUserEventsTask().execute();
     }
-
+    
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
+        
+        Intent intent;
+        
         if (hasEvents) {
-            // Can be used to display map or full details.
-            Intent intent = (new Router(parentActivity)).getEventDisplayActivityIntent(eventsList.get(position));
+            if (!(eventsList.get(position).getLatitude().equals("") 
+                    && eventsList.get(position).getLatitude().equals(""))) {
+                intent = (new Router(parentActivity)).getEventDisplayActivityIntent(eventsList.get(position));
+            } else {
+                intent = (new Router(parentActivity)).getEventDetailActivityIntent(eventsList.get(position));
+            }
             startActivity(intent);
         }
     }
