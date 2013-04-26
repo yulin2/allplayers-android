@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.AlbumData;
@@ -17,6 +18,8 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
+    private ProgressBar loading;
+
     private ArrayList<AlbumData> albumList;
 
     /** Called when the activity is first created. */
@@ -25,6 +28,8 @@ public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.albums_list);
+        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+
         GroupData group = (new Router(this)).getIntentGroup();
 
         actionbar = getSupportActionBar();
@@ -75,6 +80,7 @@ public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
                 AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
                 setListAdapter(adapter);
             }
+            loading.setVisibility(View.GONE);
         }
     }
 }

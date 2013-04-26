@@ -21,13 +21,8 @@ public class EventDetailActivity extends AllplayersSherlockListActivity {
         setContentView(R.layout.event_detail_activity_layout);
 
         ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
-        
-//        TextView eventInfo = (TextView)findViewById(R.id.eventInfo);
-//
+
         mEvent = (new Router(this)).getIntentEvent();
-//        eventInfo.setText("Event Title:\n" + mEvent.getTitle() + "\nDescription:\n" +
-//                          mEvent.getDescription() + "\nCategory:\n" + mEvent.getCategory() +
-//                          "\nStart:\n" + mEvent.getStartDateString() + "\nEnd:\n" + mEvent.getEndDateString());
         
         HashMap<String, String> map;
         map = new HashMap<String, String>();

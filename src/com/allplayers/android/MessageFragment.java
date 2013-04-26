@@ -31,7 +31,7 @@ public class MessageFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         parentActivity = this.getActivity();
-
+        
         GetUserInboxTask helper = new GetUserInboxTask();
         helper.execute();
     }

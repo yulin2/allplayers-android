@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
@@ -21,6 +22,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
     private ArrayList<EventData> eventsList;
     private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private boolean hasEvents = false;
+    private ProgressBar loading;
 
     /** Called when the activity is first created. */
     @Override
@@ -28,6 +30,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.events_list);
+        loading = (ProgressBar) findViewById(R.id.progress_indicator);
 
         GroupData group = (new Router(this)).getIntentGroup();
 
@@ -72,7 +75,6 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
         }
 
         protected void onPostExecute(String jsonResult) {
-            System.out.println(jsonResult);
             EventsMap events = new EventsMap(jsonResult);
             eventsList = events.getEventData();
 
@@ -98,6 +100,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
             int[] to = {android.R.id.text1, android.R.id.text2};
             SimpleAdapter adapter = new SimpleAdapter(GroupEventsActivity.this, list, android.R.layout.simple_list_item_2, from, to);
             setListAdapter(adapter);
+            loading.setVisibility(View.GONE);
         }
     }
 }

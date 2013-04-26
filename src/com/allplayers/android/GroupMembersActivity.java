@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.GroupData;
@@ -14,6 +16,8 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class GroupMembersActivity extends AllplayersSherlockListActivity {
+    private ProgressBar loading;
+
     private ArrayList<GroupMemberData> membersList;
     
     /** Called when the activity is first created. */
@@ -22,6 +26,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.members_list);
+        loading = (ProgressBar) findViewById(R.id.progress_indicator);
 
         GroupData group = (new Router(this)).getIntentGroup();
 
@@ -64,6 +69,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupMembersActivity.this,
                     android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
+            loading.setVisibility(View.GONE);
         }
     }
 }

@@ -70,7 +70,6 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         LatLng location = new LatLng((Float.parseFloat(mLatitude)), (Float.parseFloat(mLongitude)));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7));
         MarkerOptions marker = new MarkerOptions()
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop_50x50))
                 .position(location)
                 .title(mEvent.getTitle())
                 .snippet("Start: " + mEvent.getStartDateString() + "\nEnd: " + mEvent.getEndDateString());

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.allplayers.android.activities.AllplayersSherlockActivity;
@@ -24,6 +25,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
     private PhotoAdapter photoAdapter;
     private GridView grid;
     private ActionBar actionbar;
+    private ProgressBar loading;
 
     /**
      * Called when the activity is first created, this sets up some variables,
@@ -37,6 +39,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.albumdisplay);
+        loading = (ProgressBar) findViewById(R.id.progress_indicator);
 
         final AlbumData album = (new Router(this)).getIntentAlbum();
         photoList = new ArrayList<PhotoData>();
@@ -116,6 +119,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
         protected void onPostExecute(String jsonResult) {
 
             updateAlbumPhotos(jsonResult);
+            loading.setVisibility(View.GONE);
         }
     }
 }
