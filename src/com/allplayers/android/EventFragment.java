@@ -88,7 +88,8 @@ public class EventFragment extends ListFragment {
     public class GetUserEventsTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserEvents();
+            // @TODO: Move to asynchronous loading.
+            return RestApiV1.getUserEvents(0);
         }
 
         protected void onPostExecute(String jsonResult) {

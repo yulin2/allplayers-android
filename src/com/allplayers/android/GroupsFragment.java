@@ -122,6 +122,7 @@ public class GroupsFragment extends ListFragment {
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
+            // @TODO: Move to asynchronous loading.
             return RestApiV1.getUserGroups(pageNumber++ * 8, 8);
         }
 

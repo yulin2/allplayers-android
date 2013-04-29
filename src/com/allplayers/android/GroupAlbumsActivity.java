@@ -63,7 +63,8 @@ public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
     public class GetGroupAlbumsByGroupIdTask extends AsyncTask<GroupData, Void, String> {
 
         protected String doInBackground(GroupData... groups) {
-            return RestApiV1.getGroupAlbumsByGroupId(groups[0].getUUID());
+            // @TODO: Move to asynchronous loading.
+            return RestApiV1.getGroupAlbumsByGroupId(groups[0].getUUID(), 0);
         }
 
         protected void onPostExecute(String jsonResult) {

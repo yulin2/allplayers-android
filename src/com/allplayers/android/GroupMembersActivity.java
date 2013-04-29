@@ -50,7 +50,8 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
     public class GetGroupMembersByGroupIdTask extends AsyncTask<GroupData, Void, String> {
 
         protected String doInBackground(GroupData... groups) {
-            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID());
+            // @TODO: Move to asynchronous loading.
+            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID(), 1000);
         }
 
         protected void onPostExecute(String jsonResult) {

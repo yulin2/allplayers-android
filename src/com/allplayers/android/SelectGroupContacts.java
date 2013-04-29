@@ -188,7 +188,8 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         protected String doInBackground(ArrayList<GroupData>... groups) {
             String jsonResult = new String();
             for (int i = 0; i < groups[0].size(); i++) {
-                jsonResult += (RestApiV1.getGroupMembersByGroupId(groups[0].get(i).getUUID()));
+                // @TODO: Move to asynchronous loading.
+                jsonResult += (RestApiV1.getGroupMembersByGroupId(groups[0].get(i).getUUID(), 0));
             }
             return jsonResult;
         }

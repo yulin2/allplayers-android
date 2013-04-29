@@ -192,28 +192,48 @@ public class RestApiV1 {
         return jsonResult.replaceAll("&#039;", "'");
     }
 
-    public static String getUserGroupmates() {
-        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groupmates.json");
+    public static String getUserGroupmates(int limit) {
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groupmates.json&limit=" + limit);
+    }
+    
+    public static String getUserGroupmates(int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groupmates.json&limit=" + limit + "&offset=" + offset);
     }
 
-    public static String getUserEvents() {
-        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/events/upcoming.json");
+    public static String getUserEvents(int limit) {
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/events/upcoming.json&limit=" + limit);
+    }
+    
+    public static String getUserEvents(int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
     }
 
     public static String getGroupInformationByGroupId(String group_uuid) {
         return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + ".json");
     }
 
-    public static String getGroupAlbumsByGroupId(String group_uuid) {
-        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/albums.json");
+    public static String getGroupAlbumsByGroupId(String group_uuid, int limit) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/albums.json&limit=" + limit);
+    }
+    
+    public static String getGroupAlbumsByGroupId(String group_uuid, int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/albums.json&limit=" + limit + "&offset=" + offset);
     }
 
-    public static String getGroupEventsByGroupId(String group_uuid) {
-        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/events/upcoming.json");
+    public static String getGroupEventsByGroupId(String group_uuid, int limit) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/events/upcoming.json&limit=" + limit);
     }
-
-    public static String getGroupMembersByGroupId(String group_uuid) {
-        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/members.json");
+    
+    public static String getGroupEventsByGroupId(String group_uuid, int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
+    }
+    
+    public static String getGroupMembersByGroupId(String group_uuid, int limit) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/members.json&limit=" + limit);
+    }
+    
+    public static String getGroupMembersByGroupId(String group_uuid, int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/members.json&limit=" + limit + "&offset=" + offset);
     }
 
     public static String getGroupPhotosByGroupId(String group_uuid) {
@@ -224,15 +244,11 @@ public class RestApiV1 {
         return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + ".json");
     }
 
-    public static String getAlbumPhotosByAlbumId(String album_uuid) {
-        return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json");
+    public static String getAlbumPhotosByAlbumId(String album_uuid, int limit) {
+        return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json&limit=" + limit);
     }
 
-    public static String getAlbumPhotosByAlbumId(String album_uuid, int offset) {
-        return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json&offset=" + offset);
-    }
-
-    public static String getAlbumPhotosByAlbumId(String album_uuid, int offset, int limit) {
+    public static String getAlbumPhotosByAlbumId(String album_uuid, int limit, int offset) {
         return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json&offset=" + offset
                                     + "&limit=" + limit);
     }
