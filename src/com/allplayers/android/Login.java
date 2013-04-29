@@ -9,6 +9,7 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -65,6 +66,13 @@ public class Login extends Activity {
         usernameLabel = (TextView)findViewById(R.id.usernameLabel);
         progressSpinner = (ProgressBar) findViewById(R.id.ctrlActivityIndicator);
 
+        // Clear any UUID that may be saved from a previous user.
+        // @TODO: This is not an elegant solution though is the only apparent one due to the way that
+        //  RestApiV1 is currently set up.
+        SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("UUID", "");
+        
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
         // There should only be one allplayers type account in the device at once.
         if (accounts.length == 1) {
