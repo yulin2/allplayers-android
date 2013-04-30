@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
@@ -21,6 +22,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
     private ArrayList<EventData> eventsList;
     private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private boolean hasEvents = false;
+    private ProgressBar loading;
 
     /** Called when the activity is first created. */
     @Override
@@ -28,6 +30,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.events_list);
+        loading = (ProgressBar) findViewById(R.id.progress_indicator);
 
         GroupData group = (new Router(this)).getIntentGroup();
 
@@ -48,10 +51,16 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
+        
+        Intent intent;
+        
         if (hasEvents) {
-            // Can be used to display map or full details.
-            Intent intent = (new Router(this)).getEventDisplayActivityIntent(eventsList.get(position));
+            if (!(eventsList.get(position).getLatitude().equals("") 
+                    && eventsList.get(position).getLatitude().equals(""))) {
+                intent = (new Router(this)).getEventDisplayActivityIntent(eventsList.get(position));
+            } else {
+                intent = (new Router(this)).getEventDetailActivityIntent(eventsList.get(position));
+            }
             startActivity(intent);
         }
     }
@@ -62,7 +71,8 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
     public class GetIntentGroupTask extends AsyncTask<GroupData, Void, String> {
 
         protected String doInBackground(GroupData... groups) {
-            return RestApiV1.getGroupEventsByGroupId(groups[0].getUUID());
+            // @TODO: Move to asynchronous loading.
+            return RestApiV1.getGroupEventsByGroupId(groups[0].getUUID(), 0);
         }
 
         protected void onPostExecute(String jsonResult) {
@@ -91,6 +101,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
             int[] to = {android.R.id.text1, android.R.id.text2};
             SimpleAdapter adapter = new SimpleAdapter(GroupEventsActivity.this, list, android.R.layout.simple_list_item_2, from, to);
             setListAdapter(adapter);
+            loading.setVisibility(View.GONE);
         }
     }
 }

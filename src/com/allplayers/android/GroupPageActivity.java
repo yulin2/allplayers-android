@@ -102,7 +102,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             });
 
             final ImageButton groupEventsButton = (ImageButton) findViewById(R.id.groupEventsButton);
-            if (isLoggedIn) groupEventsButton.setVisibility(View.VISIBLE);
+            if (isMember && isLoggedIn) groupEventsButton.setVisibility(View.VISIBLE);
             groupEventsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
@@ -112,7 +112,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             });
 
             final ImageButton groupPhotosButton = (ImageButton) findViewById(R.id.groupPhotosButton);
-            if (isLoggedIn) groupPhotosButton.setVisibility(View.VISIBLE);
+            if (isMember && isLoggedIn) groupPhotosButton.setVisibility(View.VISIBLE);
             groupPhotosButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
@@ -122,7 +122,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             });
 
             final ImageButton groupLocationButton = (ImageButton) findViewById(R.id.groupLocationButton);
-            if (isLoggedIn) groupLocationButton.setVisibility(View.VISIBLE);
+            if (isMember && isLoggedIn) groupLocationButton.setVisibility(View.VISIBLE);
             groupLocationButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
@@ -156,7 +156,8 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
      */
     public class GetGroupMembersByGroupIdTask extends AsyncTask<String, Void, String> {
         protected String doInBackground(String... group_uuid) {
-            return RestApiV1.getGroupMembersByGroupId(group_uuid[0]);
+            // @TODO: Move to asynchronous loading.
+            return RestApiV1.getGroupMembersByGroupId(group_uuid[0], 0);
         }
 
         protected void onPostExecute(String jsonResult) {

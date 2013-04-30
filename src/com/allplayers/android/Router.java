@@ -53,6 +53,12 @@ public class Router {
         intent.putExtra(EXTRA_EVENT, event);
         return intent;
     }
+    
+    public Intent getEventDetailActivityIntent(EventData event) {
+        Intent intent = new Intent(mActivity, EventDetailActivity.class);
+        intent.putExtra(EXTRA_EVENT, event);
+        return intent;
+    }
 
     private Intent getGroupIntent(Class<?> cls, GroupData group) {
         Intent intent = new Intent(mActivity, cls);

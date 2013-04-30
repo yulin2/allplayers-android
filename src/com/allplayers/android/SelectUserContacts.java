@@ -88,7 +88,8 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     public class GetUserGroupmatesTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroupmates();
+            // @TODO: Move to asynchronous loading.
+            return RestApiV1.getUserGroupmates(0);
         }
 
         protected void onPostExecute(String jsonResult) {

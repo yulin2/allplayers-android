@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
@@ -22,12 +23,14 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 public class MessageInbox extends AllplayersSherlockActivity implements ISideNavigationCallback {
     private ArrayList<MessageData> messageList;
     private boolean hasMessages = false;
+    private ProgressBar loading;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inboxlist);
+        loading = (ProgressBar) findViewById(R.id.progress_indicator);
 
         GetUserInboxTask helper = new GetUserInboxTask();
         helper.execute();
@@ -82,6 +85,7 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
 
         protected void onPostExecute(String jsonResult) {
             populateInbox(jsonResult);
+            loading.setVisibility(View.GONE);
         }
     }
 }

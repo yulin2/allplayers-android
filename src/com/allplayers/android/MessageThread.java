@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
@@ -26,6 +27,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
     private int threadIDInt;
     private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private MessageData message;
+    private ProgressBar loading;
 
     /**
      * Called when the activity is first created, this sets up some variables,
@@ -41,7 +43,8 @@ public class MessageThread extends AllplayersSherlockListActivity {
         message = (new Router(this)).getIntentMessage();
         String threadID = message.getThreadID();
 
-        setContentView(R.layout.members_list);
+        setContentView(R.layout.message_thread);
+        loading = (ProgressBar) findViewById(R.id.progress_indicator);
 
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
@@ -135,6 +138,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
             SimpleAdapter adapter = new SimpleAdapter(MessageThread.this, list, android.R.layout.simple_list_item_2, from, to);
             setListAdapter(adapter);
+            loading.setVisibility(View.GONE);
         }
     }
 }

@@ -1,10 +1,14 @@
 package com.allplayers.android.activities;
 
+import java.net.CookieHandler;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.webkit.CookieManager;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -19,6 +23,7 @@ import com.allplayers.android.R;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
+import com.google.gson.Gson;
 
 public class AllplayersSherlockActivity extends SherlockActivity implements ISideNavigationCallback {
 
@@ -28,6 +33,52 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+    
+    /**
+     * onStop().
+     * Called when the activity is stopped. This function will save critical data such as the 
+     *  current user's UUID and the current Cookie Handler to local storage in the form of shared
+     *  preferences.
+     *  
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // ## For debugging purposes only ## //
+        System.out.println("Currently in \"onStop()\".");
+        
+        SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String UUID = RestApiV1.getCurrentUserUUID();
+        System.out.println(gson.toJson(RestApiV1.getCookieHandler()));
+        String cookieHandler = gson.toJson(RestApiV1.getCookieHandler());
+        editor.putString("UUID", UUID);
+        editor.putString("Cookie_Handler", cookieHandler);
+        editor.commit();
+    }
+    
+    /**
+     * onRestart().
+     * Called when the activity is restarted after being stopped. Will fetch critical data such as
+     *  the current usre's UUID and the current Cookie Handler from local storage in the form of 
+     *  shared preferences.
+     *  
+     */
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        
+        // ## For debugging purposes only ## //
+        System.out.println("Currently in \"onRestart()\".");
+        System.out.println("UUID before restore: " + RestApiV1.getCurrentUserUUID());
+        SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
+        Gson gson = new Gson();
+        RestApiV1.setCurrentUserUUID(sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
+        System.out.println("UUID after restore: " + RestApiV1.getCurrentUserUUID());
+        //RestApiV1.setCookieHandler(gson.fromJson(sharedPreferences.getString("Cookie_Handler", "ERROR: The string Cookie_Handler could not be fetched from sharedPreferences"), CookieHandler.class));
     }
 
     /**
