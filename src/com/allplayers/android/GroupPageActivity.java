@@ -88,8 +88,11 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         protected void onPostExecute(Bitmap logo) {
             loading.setVisibility(View.GONE);
             ImageView imView = (ImageView) findViewById(R.id.groupLogo);
-            imView.setImageBitmap(logo);
-
+            if(logo == null) {
+                imView.setImageResource(R.drawable.group_default_logo);
+            } else {
+                imView.setImageBitmap(logo);
+            }
 
             final ImageButton groupMembersButton = (ImageButton) findViewById(R.id.groupMembersButton);
             if (isMember && isLoggedIn) groupMembersButton.setVisibility(View.VISIBLE);
