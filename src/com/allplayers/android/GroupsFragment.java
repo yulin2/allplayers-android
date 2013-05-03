@@ -110,8 +110,8 @@ public class GroupsFragment extends ListFragment {
             }
         } else {
             hasGroups = false;
-            if(adapter.getPosition("no groups to display") < 0) {
-            	adapter.add("no groups to display");
+            if (adapter.getPosition("no groups to display") < 0) {
+                adapter.add("no groups to display");
             }
             getListView().removeFooterView(loadingMore);
         }

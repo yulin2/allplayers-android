@@ -19,7 +19,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
     private ProgressBar loading;
 
     private ArrayList<GroupMemberData> membersList;
-    
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
