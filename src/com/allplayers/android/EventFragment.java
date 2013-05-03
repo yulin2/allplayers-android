@@ -6,6 +6,7 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -35,10 +36,9 @@ public class EventFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         
         Intent intent;
-        
         if (hasEvents) {
-            if (!(eventsList.get(position).getLatitude().equals("") 
-                    && eventsList.get(position).getLatitude().equals(""))) {
+            if ((!(eventsList.get(position).getLatitude().equals("") 
+                    && eventsList.get(position).getLatitude().equals(""))) && (!(Build.VERSION.SDK_INT < 11))) {
                 intent = (new Router(parentActivity)).getEventDisplayActivityIntent(eventsList.get(position));
             } else {
                 intent = (new Router(parentActivity)).getEventDetailActivityIntent(eventsList.get(position));

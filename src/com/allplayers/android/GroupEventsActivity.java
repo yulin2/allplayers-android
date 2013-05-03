@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -49,14 +50,13 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         
         Intent intent;
-        
         if (hasEvents) {
-            if (!(eventsList.get(position).getLatitude().equals("") 
-                    && eventsList.get(position).getLatitude().equals(""))) {
+            if ((!(eventsList.get(position).getLatitude().equals("") 
+                    && eventsList.get(position).getLatitude().equals(""))) && (!(Build.VERSION.SDK_INT < 11))) {
                 intent = (new Router(this)).getEventDisplayActivityIntent(eventsList.get(position));
             } else {
                 intent = (new Router(this)).getEventDetailActivityIntent(eventsList.get(position));

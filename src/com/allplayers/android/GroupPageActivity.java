@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -19,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.allplayers.android.activities.AllplayersSherlockActivity;
@@ -34,6 +36,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
     private ArrayList<GroupMemberData> membersList;
     private boolean isMember = false, isLoggedIn = false;
     private ProgressBar loading;
+    private AllplayersSherlockActivity parentActivity = this;
 
     /**
      * Called when the activity is first created, this creates the Action Bar
@@ -128,9 +131,13 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             if (isMember && isLoggedIn) groupLocationButton.setVisibility(View.VISIBLE);
             groupLocationButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Intent intent = (new Router(GroupPageActivity.this))
-                                    .getGroupLocationActivityIntent(group);
-                    startActivity(intent);
+                    if (!(Build.VERSION.SDK_INT < 11)) {
+                        Intent intent = (new Router(GroupPageActivity.this))
+                                .getGroupLocationActivityIntent(group);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(parentActivity, "This feature is not supported on your device.", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
