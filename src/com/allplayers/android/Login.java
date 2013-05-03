@@ -154,7 +154,7 @@ public class Login extends Activity {
 
                 String result = client.validateLogin(email, pass);
                 JSONObject jsonResult = new JSONObject(result);
-                client.setCurrentUserUUID(jsonResult.getJSONObject("user").getString("uuid"));
+                RestApiV1.setCurrentUserUUID(jsonResult.getJSONObject("user").getString("uuid"));
 
                 // If we get to this point, then we encrypt their password and add a new account.
                 String key = LocalStorage.readSecretKey(context);
