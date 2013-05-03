@@ -46,17 +46,10 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
     public void onStop() {
         super.onStop();
         
-        // ## For debugging purposes only ## //
-        System.out.println("Currently in \"onStop()\".");
-        
         SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
         String UUID = RestApiV1.getCurrentUserUUID();
-        System.out.println(gson.toJson(RestApiV1.getCookieHandler()));
-        String cookieHandler = gson.toJson(RestApiV1.getCookieHandler());
         editor.putString("UUID", UUID);
-        editor.putString("Cookie_Handler", cookieHandler);
         editor.commit();
     }
     
@@ -70,15 +63,9 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
     @Override
     public void onRestart() {
         super.onRestart();
-        
-        // ## For debugging purposes only ## //
-        System.out.println("Currently in \"onRestart()\".");
-        System.out.println("UUID before restore: " + RestApiV1.getCurrentUserUUID());
+
         SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
-        Gson gson = new Gson();
         RestApiV1.setCurrentUserUUID(sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
-        System.out.println("UUID after restore: " + RestApiV1.getCurrentUserUUID());
-        //RestApiV1.setCookieHandler(gson.fromJson(sharedPreferences.getString("Cookie_Handler", "ERROR: The string Cookie_Handler could not be fetched from sharedPreferences"), CookieHandler.class));
     }
 
     /**
