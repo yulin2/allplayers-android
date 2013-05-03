@@ -27,7 +27,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
     private EventData mEvent;
     private String mLatitude;
     private String mLongitude;
-    
+
     /**
      * Called when the activity is first created, this sets up variables,
      * creates the Action Bar, and sets up the Side Navigation Menu.
@@ -41,7 +41,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
 
 
         mEvent = (new Router(this)).getIntentEvent();
-        
+
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(mEvent.getTitle());
@@ -50,22 +50,22 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        
+
         mLatitude = mEvent.getLatitude();
         mLongitude = mEvent.getLongitude();
-        
+
         createGoogleMap();
     }
-    
+
     private void createGoogleMap() {
         GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         LatLng location = new LatLng((Float.parseFloat(mLatitude)), (Float.parseFloat(mLongitude)));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7));
         MarkerOptions marker = new MarkerOptions()
-                .position(location)
-                .title(mEvent.getTitle())
-                .snippet("Start: " + mEvent.getStartDateString() + "\nEnd: " + mEvent.getEndDateString());
-       
+        .position(location)
+        .title(mEvent.getTitle())
+        .snippet("Start: " + mEvent.getStartDateString() + "\nEnd: " + mEvent.getEndDateString());
+
         map.setInfoWindowAdapter(new CustomInfoAdapter(getLayoutInflater()));
         map.addMarker(marker).showInfoWindow();
 
@@ -83,24 +83,24 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
                 Intent intent = (new Router(EventDisplayActivity.this)).getEventDetailActivityIntent(mEvent);
                 startActivity(intent);
             }
-        }); 
+        });
     }
 }
 
 class CustomInfoAdapter implements InfoWindowAdapter {
     LayoutInflater inflater;
-    
-    CustomInfoAdapter (LayoutInflater inflater) {
+
+    CustomInfoAdapter(LayoutInflater inflater) {
         this.inflater = inflater;
     }
-    
+
     @Override
     public View getInfoContents(Marker marker) {
         View infoWindow = inflater.inflate(R.layout.event_marker_info_window, null);
-        
-        TextView textView=(TextView)infoWindow.findViewById(R.id.title);
+
+        TextView textView = (TextView)infoWindow.findViewById(R.id.title);
         textView.setText(marker.getTitle());
-        textView=(TextView)infoWindow.findViewById(R.id.snippet);
+        textView = (TextView)infoWindow.findViewById(R.id.snippet);
         textView.setText(marker.getSnippet());
         return infoWindow;
     }
@@ -110,5 +110,5 @@ class CustomInfoAdapter implements InfoWindowAdapter {
         // TODO Auto-generated method stub
         return null;
     }
-    
+
 }

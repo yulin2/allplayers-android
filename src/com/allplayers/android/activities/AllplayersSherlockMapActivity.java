@@ -36,28 +36,28 @@ public class AllplayersSherlockMapActivity extends SherlockMapActivity implement
 
     /**
      * onStop().
-     * Called when the activity is stopped. This function will save critical data such as the 
+     * Called when the activity is stopped. This function will save critical data such as the
      *  current user's UUID and the current Cookie Handler to local storage in the form of shared
      *  preferences.
-     *  
+     *
      */
     @Override
     public void onStop() {
         super.onStop();
-        
+
         SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String UUID = RestApiV1.getCurrentUserUUID();
         editor.putString("UUID", UUID);
         editor.commit();
     }
-    
+
     /**
      * onRestart().
      * Called when the activity is restarted after being stopped. Will fetch critical data such as
-     *  the current usre's UUID and the current Cookie Handler from local storage in the form of 
+     *  the current usre's UUID and the current Cookie Handler from local storage in the form of
      *  shared preferences.
-     *  
+     *
      */
     @Override
     public void onRestart() {
@@ -66,7 +66,7 @@ public class AllplayersSherlockMapActivity extends SherlockMapActivity implement
         SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
         RestApiV1.setCurrentUserUUID(sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
     }
-    
+
     /**
      * Listener for the Action Bar Options Menu.
      *

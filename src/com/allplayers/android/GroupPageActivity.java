@@ -91,7 +91,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         protected void onPostExecute(Bitmap logo) {
             loading.setVisibility(View.GONE);
             ImageView imView = (ImageView) findViewById(R.id.groupLogo);
-            if(logo == null) {
+            if (logo == null) {
                 imView.setImageResource(R.drawable.group_default_logo);
             } else {
                 imView.setImageBitmap(logo);
@@ -133,7 +133,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
                 public void onClick(View v) {
                     if (!(Build.VERSION.SDK_INT < 11)) {
                         Intent intent = (new Router(GroupPageActivity.this))
-                                .getGroupLocationActivityIntent(group);
+                                        .getGroupLocationActivityIntent(group);
                         startActivity(intent);
                     } else {
                         Toast.makeText(parentActivity, "This feature is not supported on your device.", Toast.LENGTH_LONG).show();

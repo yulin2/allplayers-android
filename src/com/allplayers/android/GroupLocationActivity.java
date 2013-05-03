@@ -57,11 +57,11 @@ public class GroupLocationActivity extends AllplayersSherlockMapActivity {
         LatLng location = new LatLng((Float.parseFloat(lat)), (Float.parseFloat(lon)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7));
         mMap.addMarker(new MarkerOptions()
-                .position(location)
-                .title(group.getTitle())
-                .snippet(group.getZip())
-                ).showInfoWindow();
-    
+                       .position(location)
+                       .title(group.getTitle())
+                       .snippet(group.getZip())
+                      ).showInfoWindow();
+
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(group.getTitle());

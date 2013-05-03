@@ -15,7 +15,7 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class EventDetailActivity extends AllplayersSherlockListActivity {
     private EventData mEvent;
-    
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_detail_activity_layout);
@@ -23,7 +23,7 @@ public class EventDetailActivity extends AllplayersSherlockListActivity {
         ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
 
         mEvent = (new Router(this)).getIntentEvent();
-        
+
         HashMap<String, String> map;
         map = new HashMap<String, String>();
         map.put("line1", "Title");
@@ -36,19 +36,19 @@ public class EventDetailActivity extends AllplayersSherlockListActivity {
             map.put("line2", mEvent.getDescription());
             list.add(map);
         }
-        
+
         if (mEvent.getDescription() != "") {
             map = new HashMap<String, String>();
             map.put("line1", "Category");
             map.put("line2", mEvent.getCategory());
             list.add(map);
         }
-        
+
         map = new HashMap<String, String>();
         map.put("line1", "Start");
         map.put("line2", mEvent.getStartDateString());
         list.add(map);
-        
+
         map = new HashMap<String, String>();
         map.put("line1", "End");
         map.put("line2", mEvent.getEndDateString());
@@ -58,7 +58,7 @@ public class EventDetailActivity extends AllplayersSherlockListActivity {
         int[] to = { android.R.id.text1, android.R.id.text2 };
         SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
-        
+
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(mEvent.getTitle());

@@ -66,7 +66,7 @@ public class RestApiV1 {
 
         // Install CookieHandler
         CookieHandler.setDefault(sCookieHandler);
-    }   
+    }
 
     public static boolean isLoggedIn() {
         if (sCurrentUserUUID.equals("") || sCurrentUserUUID.equals(null)) {
@@ -195,7 +195,7 @@ public class RestApiV1 {
     public static String getUserGroupmates(int limit) {
         return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groupmates.json&limit=" + limit);
     }
-    
+
     public static String getUserGroupmates(int limit, int offset) {
         return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groupmates.json&limit=" + limit + "&offset=" + offset);
     }
@@ -203,7 +203,7 @@ public class RestApiV1 {
     public static String getUserEvents(int limit) {
         return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/events/upcoming.json&limit=" + limit);
     }
-    
+
     public static String getUserEvents(int limit, int offset) {
         return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
     }
@@ -215,7 +215,7 @@ public class RestApiV1 {
     public static String getGroupAlbumsByGroupId(String group_uuid, int limit) {
         return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/albums.json&limit=" + limit);
     }
-    
+
     public static String getGroupAlbumsByGroupId(String group_uuid, int limit, int offset) {
         return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/albums.json&limit=" + limit + "&offset=" + offset);
     }
@@ -223,15 +223,15 @@ public class RestApiV1 {
     public static String getGroupEventsByGroupId(String group_uuid, int limit) {
         return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/events/upcoming.json&limit=" + limit);
     }
-    
+
     public static String getGroupEventsByGroupId(String group_uuid, int limit, int offset) {
         return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
     }
-    
+
     public static String getGroupMembersByGroupId(String group_uuid, int limit) {
         return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/members.json&limit=" + limit);
     }
-    
+
     public static String getGroupMembersByGroupId(String group_uuid, int limit, int offset) {
         return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/members.json&limit=" + limit + "&offset=" + offset);
     }
@@ -509,11 +509,11 @@ public class RestApiV1 {
     public static String getCurrentUserUUID() {
         return sCurrentUserUUID;
     }
-    
+
     public static void setCookieHandler(CookieHandler cookieHandler) {
         sCookieHandler = cookieHandler;
     }
-    
+
     public static CookieHandler getCookieHandler() {
         return sCookieHandler;
     }

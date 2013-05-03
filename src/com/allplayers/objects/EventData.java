@@ -22,7 +22,7 @@ public class EventData extends DataObject {
     public EventData() {
 
     }
-    
+
     /**
      * Check if this DataObject exists in an ArrayList list.
      *

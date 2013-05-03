@@ -72,7 +72,7 @@ public class Login extends Activity {
         SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("UUID", "");
-        
+
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
         // There should only be one allplayers type account in the device at once.
         if (accounts.length == 1) {
