@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.PhotoData;
@@ -20,12 +19,10 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class AlbumPhotosActivity extends AllplayersSherlockActivity {
-    private ArrayList<PhotoData> photoList;
-    private ArrayAdapter blankAdapter = null;
-    private PhotoAdapter photoAdapter;
-    private GridView grid;
-    private ActionBar actionbar;
-    private ProgressBar loading;
+    private ArrayList<PhotoData> mPhotoList;
+    private PhotoAdapter mPhotoAdapter;
+    private GridView mGridView;
+    private ProgressBar mProgressBar;
 
     /**
      * Called when the activity is first created, this sets up some variables,
@@ -35,28 +32,25 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.albumdisplay);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
 
         final AlbumData album = (new Router(this)).getIntentAlbum();
-        photoList = new ArrayList<PhotoData>();
-        grid = (GridView) findViewById(R.id.gridview);
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mPhotoList = new ArrayList<PhotoData>();
+        mGridView = (GridView) findViewById(R.id.gridview);
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                if (photoList.get(position) != null) {
+                if (mPhotoList.get(position) != null) {
                     // Display the group page for the selected group
-                    Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoPagerActivityIntent(photoList.get(position));
+                    Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoPagerActivityIntent(mPhotoList.get(position));
                     intent.putExtra("album title", album.getTitle());
                     startActivity(intent);
                 }
             }
         });
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(album.getTitle());
 
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
@@ -72,15 +66,14 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
      */
     public void setAdapter() {
 
-        if (photoList.isEmpty()) {
+        if (mPhotoList.isEmpty()) {
             String[] values = new String[] {"no photos to display"};
 
-            blankAdapter = new ArrayAdapter<String>(AlbumPhotosActivity.this,
-                                                    android.R.layout.simple_list_item_1, values);
-            grid.setAdapter(blankAdapter);
+            mGridView.setAdapter(new ArrayAdapter<String>(AlbumPhotosActivity.this,
+                    android.R.layout.simple_list_item_1, values));
         } else {
-            photoAdapter = new PhotoAdapter(getApplicationContext());
-            grid.setAdapter(photoAdapter);
+            mPhotoAdapter = new PhotoAdapter(getApplicationContext());
+            mGridView.setAdapter(mPhotoAdapter);
         }
     }
 
@@ -91,12 +84,12 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
     public void updateAlbumPhotos(String jsonResult) {
 
         PhotosMap photos = new PhotosMap(jsonResult);
-        photoList.addAll(photos.getPhotoData());
+        mPhotoList.addAll(photos.getPhotoData());
 
         setAdapter();
 
-        if (photoList.size() != 0) {
-            photoAdapter.addAll(photoList);
+        if (mPhotoList.size() != 0) {
+            mPhotoAdapter.addAll(mPhotoList);
         }
     }
 
@@ -109,7 +102,6 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
          * Gets the photos in a specified album using a rest call.
          */
         protected String doInBackground(AlbumData... album) {
-
             return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID(), 0, 0);
         }
 
@@ -117,9 +109,8 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
          * Calls a method to organize the fetched photos into a map.
          */
         protected void onPostExecute(String jsonResult) {
-
             updateAlbumPhotos(jsonResult);
-            loading.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }

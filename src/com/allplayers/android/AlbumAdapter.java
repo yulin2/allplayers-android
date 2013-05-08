@@ -17,22 +17,22 @@ import com.allplayers.objects.AlbumData;
 import com.allplayers.rest.RestApiV1;
 
 public class AlbumAdapter extends ArrayAdapter<AlbumData> {
-    private List<ImageView> coverPhotos = new ArrayList<ImageView>();
-    private TextView albumTitle;
-    private TextView albumExtraInfo;
-    private List<AlbumData> albums = new ArrayList<AlbumData>();
+    private List<ImageView> mCoverPhotos = new ArrayList<ImageView>();
+    private TextView mAlbumTitle;
+    private TextView mAlbumExtraInfo;
+    private List<AlbumData> mAlbums = new ArrayList<AlbumData>();
 
     public AlbumAdapter(Context context, int textViewResourceId, List<AlbumData> objects) {
         super(context, textViewResourceId, objects);
-        this.albums = objects;
+        this.mAlbums = objects;
     }
 
     public int getCount() {
-        return albums.size();
+        return mAlbums.size();
     }
 
     public AlbumData getItem(int index) {
-        return albums.get(index);
+        return mAlbums.get(index);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -48,23 +48,22 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         AlbumData album = getItem(position);
 
         //Get reference to ImageView
-        coverPhotos.add(position, (ImageView)row.findViewById(R.id.albumCoverPhoto));
+        mCoverPhotos.add(position, (ImageView)row.findViewById(R.id.albumCoverPhoto));
 
         //Get reference to TextView - albumTitle
-        albumTitle = (TextView)row.findViewById(R.id.albumTitle);
+        mAlbumTitle = (TextView)row.findViewById(R.id.albumTitle);
 
         //Get reference to TextView - albumExtraInfo
-        albumExtraInfo = (TextView)row.findViewById(R.id.albumExtraInfo);
+        mAlbumExtraInfo = (TextView)row.findViewById(R.id.albumExtraInfo);
 
         //Set album title
-        albumTitle.setText(album.getTitle());
+        mAlbumTitle.setText(album.getTitle());
 
         //Set cover photo icon
         String imageURL = album.getCoverPhoto();
 
         if (!imageURL.trim().equals("")) {
-            GetRemoteImageTask helper = new GetRemoteImageTask();
-            helper.execute(album, position);
+            new GetRemoteImageTask(position).execute(album);
         }
 
         //@TODO: Fix API bug causing the incorrect number of photos in an album to be displayed.
@@ -76,16 +75,20 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
     /*
      * Gets an albums cover photo with a rest call.
      */
-    public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
+    public class GetRemoteImageTask extends AsyncTask<AlbumData, Void, Bitmap> {
         int row;
-        protected Bitmap doInBackground(Object... albums) {
-            this.row = (Integer)albums[1];
+        
+        public GetRemoteImageTask(int r) {
+        	this.row = r;
+        }
+        
+        protected Bitmap doInBackground(AlbumData... albums) {
             AlbumData album = (AlbumData)albums[0];
             return RestApiV1.getRemoteImage(album.getCoverPhoto());
         }
 
         protected void onPostExecute(Bitmap bitmap) {
-            coverPhotos.get(row).setImageBitmap(bitmap);
+            mCoverPhotos.get(row).setImageBitmap(bitmap);
         }
     }
 }

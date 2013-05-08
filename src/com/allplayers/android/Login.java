@@ -33,15 +33,14 @@ import com.allplayers.rest.RestApiV1;
  * is needed.
  */
 public class Login extends Activity {
-    EditText usernameEditText;
-    EditText passwordEditText;
-    TextView passwordLabel;
-    TextView usernameLabel;
-    Button button;
-    static ProgressBar progressSpinner;
-    AccountManager manager;
-
-    private Context context;
+    private EditText mUsernameEditText;
+    private EditText mPasswordEditText;
+    private TextView mPasswordLabel;
+    private TextView mUsernameLabel;
+    private Button mLoginButton;
+    private ProgressBar mLoadingIndicator;
+    private AccountManager mAccountManager;
+    private Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,14 +56,14 @@ public class Login extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        context = this.getBaseContext();
-        manager = AccountManager.get(context);
-        button = (Button)findViewById(R.id.loginButton);
-        usernameEditText = (EditText)findViewById(R.id.usernameField);
-        passwordEditText = (EditText)findViewById(R.id.passwordField);
-        passwordLabel = (TextView)findViewById(R.id.passwordLabel);
-        usernameLabel = (TextView)findViewById(R.id.usernameLabel);
-        progressSpinner = (ProgressBar) findViewById(R.id.ctrlActivityIndicator);
+        mContext = this.getBaseContext();
+        mAccountManager = AccountManager.get(mContext);
+        mLoginButton = (Button)findViewById(R.id.loginButton);
+        mUsernameEditText = (EditText)findViewById(R.id.usernameField);
+        mPasswordEditText = (EditText)findViewById(R.id.passwordField);
+        mPasswordLabel = (TextView)findViewById(R.id.passwordLabel);
+        mUsernameLabel = (TextView)findViewById(R.id.usernameLabel);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.ctrlActivityIndicator);
 
         // Clear any UUID that may be saved from a previous user.
         // @TODO: This is not an elegant solution though is the only apparent one due to the way that
@@ -72,17 +71,18 @@ public class Login extends Activity {
         SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("UUID", "");
+        editor.commit();
 
-        Account[] accounts = manager.getAccountsByType("com.allplayers.android");
+        Account[] accounts = mAccountManager.getAccountsByType("com.allplayers.android");
         // There should only be one allplayers type account in the device at once.
         if (accounts.length == 1) {
             String storedEmail = accounts[0].name;
-            String storedPassword = manager.getPassword(accounts[0]);
-            String storedSecretKey = LocalStorage.readSecretKey(context);
+            String storedPassword = mAccountManager.getPassword(accounts[0]);
+            String storedSecretKey = LocalStorage.readSecretKey(mContext);
 
             if (storedSecretKey == null || storedSecretKey.equals("")) {
-                LocalStorage.writeSecretKey(context);
-                storedSecretKey = LocalStorage.readSecretKey(context);
+                LocalStorage.writeSecretKey(mContext);
+                storedSecretKey = LocalStorage.readSecretKey(mContext);
             }
 
             if (storedEmail != null && !storedEmail.equals("") && storedPassword != null && !storedPassword.equals("")) {
@@ -90,7 +90,7 @@ public class Login extends Activity {
                 textEncryptor.setPassword(storedSecretKey);
                 String unencryptedPassword = textEncryptor.decrypt(storedPassword);
 
-                progressSpinner.setVisibility(View.VISIBLE);
+                mLoadingIndicator.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
                 helper.execute(storedEmail, unencryptedPassword);
             }
@@ -98,13 +98,13 @@ public class Login extends Activity {
             showLoginFields();
         }
 
-        button.setOnClickListener(new View.OnClickListener() {
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                String email = usernameEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+                String email = mUsernameEditText.getText().toString();
+                String password = mPasswordEditText.getText().toString();
 
-                progressSpinner.setVisibility(View.VISIBLE);
+                mLoadingIndicator.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
                 helper.execute(email, password);
             }
@@ -122,11 +122,11 @@ public class Login extends Activity {
     }
 
     public void showLoginFields() {
-        button.setVisibility(View.VISIBLE);
-        usernameEditText.setVisibility(View.VISIBLE);
-        passwordEditText.setVisibility(View.VISIBLE);
-        passwordLabel.setVisibility(View.VISIBLE);
-        usernameLabel.setVisibility(View.VISIBLE);
+        mLoginButton.setVisibility(View.VISIBLE);
+        mUsernameEditText.setVisibility(View.VISIBLE);
+        mPasswordEditText.setVisibility(View.VISIBLE);
+        mPasswordLabel.setVisibility(View.VISIBLE);
+        mUsernameLabel.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -154,13 +154,13 @@ public class Login extends Activity {
 
                 String result = client.validateLogin(email, pass);
                 JSONObject jsonResult = new JSONObject(result);
-                client.setCurrentUserUUID(jsonResult.getJSONObject("user").getString("uuid"));
+                RestApiV1.setCurrentUserUUID(jsonResult.getJSONObject("user").getString("uuid"));
 
                 // If we get to this point, then we encrypt their password and add a new account.
-                String key = LocalStorage.readSecretKey(context);
+                String key = LocalStorage.readSecretKey(mContext);
                 if (key == null || key.equals("")) {
-                    LocalStorage.writeSecretKey(context);
-                    key = LocalStorage.readSecretKey(context);
+                    LocalStorage.writeSecretKey(mContext);
+                    key = LocalStorage.readSecretKey(mContext);
                 }
 
                 BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
@@ -168,7 +168,7 @@ public class Login extends Activity {
                 String encryptedPassword = textEncryptor.encrypt(pass);
 
                 Account account = new Account(email, "com.allplayers.android");
-                manager.addAccountExplicitly(account, encryptedPassword, null);
+                mAccountManager.addAccountExplicitly(account, encryptedPassword, null);
 
                 Intent intent = new Intent(Login.this, GroupsActivity.class);
                 startActivity(intent);
@@ -184,12 +184,12 @@ public class Login extends Activity {
             if (ex.equals("invalidLogin")) {
                 Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
                 invalidLogin.show();
-                Login.progressSpinner.setVisibility(View.INVISIBLE);
+                mLoadingIndicator.setVisibility(View.INVISIBLE);
             } else if (ex.equals("noInternetConnection")) {
                 showLoginFields();
                 Toast noInternetConnection = Toast.makeText(getApplicationContext(), "No Connection \nCheck Internet Connectivity", Toast.LENGTH_LONG);
                 noInternetConnection.show();
-                Login.progressSpinner.setVisibility(View.INVISIBLE);
+                mLoadingIndicator.setVisibility(View.INVISIBLE);
             }
         }
     }

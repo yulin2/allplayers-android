@@ -19,7 +19,7 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
-    private ArrayList<GroupData> groupList;
+    private ArrayList<GroupData> mGroupList;
     private boolean hasGroups = false;
 
     /** Called when the activity is first created. */
@@ -29,8 +29,6 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
         setContentView(R.layout.search_groups_list);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Search");
 
         sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
@@ -53,7 +51,7 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
         if (hasGroups) {
             // Display the group page for the selected group
-            Intent intent = (new Router(this)).getGroupPageActivityIntent(groupList.get(position));
+            Intent intent = (new Router(this)).getGroupPageActivityIntent(mGroupList.get(position));
             startActivity(intent);
         }
     }
@@ -78,21 +76,21 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
         protected void onPostExecute(String jsonResult) {
             GroupsMap groups = new GroupsMap(jsonResult);
-            groupList = groups.getGroupData();
+            mGroupList = groups.getGroupData();
 
-            if (groupList.size() == 1) {
+            if (mGroupList.size() == 1) {
                 actionbar.setSubtitle("1 Result");
             } else {
-                actionbar.setSubtitle(groupList.size() + " Results");
+                actionbar.setSubtitle(mGroupList.size() + " Results");
             }
 
             String[] values;
 
-            if (!groupList.isEmpty()) {
-                values = new String[groupList.size()];
+            if (!mGroupList.isEmpty()) {
+                values = new String[mGroupList.size()];
 
-                for (int i = 0; i < groupList.size(); i++) {
-                    values[i] = groupList.get(i).getTitle();
+                for (int i = 0; i < mGroupList.size(); i++) {
+                    values[i] = mGroupList.get(i).getTitle();
                 }
 
                 hasGroups = true;

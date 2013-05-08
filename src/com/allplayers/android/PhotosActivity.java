@@ -23,8 +23,6 @@ public class PhotosActivity extends AllplayersSherlockFragmentActivity {
 
         setContentView(R.layout.photos);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Photo Albums");
 
         sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);

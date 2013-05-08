@@ -14,10 +14,10 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class FindGroupsActivity extends AllplayersSherlockActivity {
-    EditText searchEditText;
-    EditText zipcodeEditText;
-    EditText distanceEditText;
-    TextView distanceLabel;
+    private EditText mSearchEditText;
+    private EditText mZipcodeEditText;
+    private EditText mDistanceEditText;
+    private TextView mDistanceLabel;
 
     /** Called when the activity is first created. */
     @Override
@@ -26,8 +26,6 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
 
         setContentView(R.layout.findgroups);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Search");
 
         sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
@@ -35,22 +33,22 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
 
-        searchEditText = (EditText)findViewById(R.id.searchGroupsField);
-        zipcodeEditText = (EditText)findViewById(R.id.searchGroupsZipcodeField);
-        distanceEditText = (EditText)findViewById(R.id.searchGroupsDistanceField);
-        distanceLabel = (TextView)findViewById(R.id.distanceLabel);
+        mSearchEditText = (EditText)findViewById(R.id.searchGroupsField);
+        mZipcodeEditText = (EditText)findViewById(R.id.searchGroupsZipcodeField);
+        mDistanceEditText = (EditText)findViewById(R.id.searchGroupsDistanceField);
+        mDistanceLabel = (TextView)findViewById(R.id.distanceLabel);
 
-        zipcodeEditText.addTextChangedListener(new TextWatcher() {
+        mZipcodeEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // We only want to show the distance field if the zipcode has a valid length of 5.
                 if (s.length() == 5) {
-                    distanceEditText.setVisibility(View.VISIBLE);
-                    distanceLabel.setVisibility(View.VISIBLE);
+                    mDistanceEditText.setVisibility(View.VISIBLE);
+                    mDistanceLabel.setVisibility(View.VISIBLE);
                     // If it changes back below 5 or above 5, then we make it disappear.
                 } else {
-                    distanceEditText.setVisibility(View.GONE);
-                    distanceLabel.setVisibility(View.GONE);
+                    mDistanceEditText.setVisibility(View.GONE);
+                    mDistanceLabel.setVisibility(View.GONE);
                 }
             }
             @Override
@@ -64,9 +62,9 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
         final Button logOnButton = (Button) findViewById(R.id.searchGroupsButton);
         logOnButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String query = searchEditText.getText().toString().trim();
-                String zipcodeString = zipcodeEditText.getText().toString().trim();
-                String distanceString = distanceEditText.getText().toString().trim();
+                String query = mSearchEditText.getText().toString().trim();
+                String zipcodeString = mZipcodeEditText.getText().toString().trim();
+                String distanceString = mDistanceEditText.getText().toString().trim();
 
                 int zipcode = 0;
                 int distance = 10;

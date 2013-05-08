@@ -19,12 +19,11 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class MessageSent extends AllplayersSherlockListActivity {
 
-    private ArrayList<MessageData> messageList;
+    private ArrayList<MessageData> mMessageList;
     private boolean hasMessages;
-    private String jsonResult = "";
-    private ProgressBar loading;
-
-    ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+    private String mJsonResult = "";
+    private ProgressBar mLoadingIndicator;
+    ArrayList<HashMap<String, String>> mInfoList = new ArrayList<HashMap<String, String>>(2);
 
     /** Called when the activity is first created. */
     @Override
@@ -33,10 +32,8 @@ public class MessageSent extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.message_sent);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Messages");
         actionbar.setSubtitle("Sent");
 
@@ -47,20 +44,20 @@ public class MessageSent extends AllplayersSherlockListActivity {
 
         //check local storage
         if (LocalStorage.getTimeSinceLastModification("Sentbox") / 1000 / 60 < 15) { //more recent than 15 minutes
-            jsonResult = LocalStorage.readSentbox(getBaseContext());
+            mJsonResult = LocalStorage.readSentbox(getBaseContext());
             HashMap<String, String> map;
 
-            MessagesMap messages = new MessagesMap(jsonResult);
-            messageList = messages.getMessageData();
+            MessagesMap messages = new MessagesMap(mJsonResult);
+            mMessageList = messages.getMessageData();
 
-            if (!messageList.isEmpty()) {
+            if (!mMessageList.isEmpty()) {
                 hasMessages = true;
 
-                for (int i = 0; i < messageList.size(); i++) {
+                for (int i = 0; i < mMessageList.size(); i++) {
                     map = new HashMap<String, String>();
-                    map.put("line1", messageList.get(i).getSubject());
-                    map.put("line2", "Last sent from: " + messageList.get(i).getLastSender());
-                    list.add(map);
+                    map.put("line1", mMessageList.get(i).getSubject());
+                    map.put("line2", "Last sent from: " + mMessageList.get(i).getLastSender());
+                    mInfoList.add(map);
                 }
             } else {
                 hasMessages = false;
@@ -68,14 +65,14 @@ public class MessageSent extends AllplayersSherlockListActivity {
                 map = new HashMap<String, String>();
                 map.put("line1", "You have no sent messages.");
                 map.put("line2", "");
-                list.add(map);
+                mInfoList.add(map);
             }
 
             String[] from = { "line1", "line2" };
 
             int[] to = { android.R.id.text1, android.R.id.text2 };
 
-            SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
+            SimpleAdapter adapter = new SimpleAdapter(this, mInfoList, android.R.layout.simple_list_item_2, from, to);
             setListAdapter(adapter);
         } else {
             GetUserSentBoxTask helper = new GetUserSentBoxTask();
@@ -89,7 +86,7 @@ public class MessageSent extends AllplayersSherlockListActivity {
 
         if (hasMessages) {
             // Go to the message thread.
-            Intent intent = (new Router(MessageSent.this)).getMessageThreadIntent(messageList.get(position));
+            Intent intent = (new Router(MessageSent.this)).getMessageThreadIntent(mMessageList.get(position));
             startActivity(intent);
         }
     }
@@ -107,16 +104,16 @@ public class MessageSent extends AllplayersSherlockListActivity {
             HashMap<String, String> map;
 
             MessagesMap messages = new MessagesMap(jsonResult);
-            messageList = messages.getMessageData();
+            mMessageList = messages.getMessageData();
 
-            if (!messageList.isEmpty()) {
+            if (!mMessageList.isEmpty()) {
                 hasMessages = true;
 
-                for (int i = 0; i < messageList.size(); i++) {
+                for (int i = 0; i < mMessageList.size(); i++) {
                     map = new HashMap<String, String>();
-                    map.put("line1", messageList.get(i).getSubject());
-                    map.put("line2", "Last sent from: " + messageList.get(i).getLastSender());
-                    list.add(map);
+                    map.put("line1", mMessageList.get(i).getSubject());
+                    map.put("line2", "Last sent from: " + mMessageList.get(i).getLastSender());
+                    mInfoList.add(map);
                 }
             } else {
                 hasMessages = false;
@@ -124,16 +121,16 @@ public class MessageSent extends AllplayersSherlockListActivity {
                 map = new HashMap<String, String>();
                 map.put("line1", "You have no sent messages.");
                 map.put("line2", "");
-                list.add(map);
+                mInfoList.add(map);
             }
 
             String[] from = { "line1", "line2" };
 
             int[] to = { android.R.id.text1, android.R.id.text2 };
 
-            SimpleAdapter adapter = new SimpleAdapter(MessageSent.this, list, android.R.layout.simple_list_item_2, from, to);
+            SimpleAdapter adapter = new SimpleAdapter(MessageSent.this, mInfoList, android.R.layout.simple_list_item_2, from, to);
             setListAdapter(adapter);
-            loading.setVisibility(View.GONE);
+            mLoadingIndicator.setVisibility(View.GONE);
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.allplayers.android.activities;
 
-import java.net.CookieHandler;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Intent;
@@ -22,7 +20,6 @@ import com.allplayers.android.R;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
-import com.google.gson.Gson;
 
 public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity implements ISideNavigationCallback {
 
@@ -32,6 +29,8 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
     }
 
     /**

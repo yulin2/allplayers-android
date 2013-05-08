@@ -57,8 +57,6 @@ public class MessageViewSingle extends AllplayersSherlockActivity {
             }
         });
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Messages");
         actionbar.setSubtitle("Message From: " + messageThreadList.getSenderName());
 

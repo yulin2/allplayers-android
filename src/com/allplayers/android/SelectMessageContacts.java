@@ -31,10 +31,8 @@ import com.google.gson.Gson;
  * compose the message itself.
  */
 public class SelectMessageContacts extends AllplayersSherlockListActivity {
-    private ArrayList<GroupMemberData> recipientList = new ArrayList<GroupMemberData>();
-    private ArrayAdapter<String> adapter;
-    private Toast toast;
-
+    private ArrayList<GroupMemberData> mRecipientList = new ArrayList<GroupMemberData>();
+    private ArrayAdapter<String> mAdapter;
 
     /**
      * Called when the activity is created or recreated. This sets up the action bar, side
@@ -53,9 +51,6 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         }
         setContentView(R.layout.selectmessagecontacts);
 
-        toast = Toast.makeText(getBaseContext(), "You need to add at least one recipient", Toast.LENGTH_LONG);
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Compose Messsage");
         actionbar.setSubtitle("Recipients");
 
@@ -64,8 +59,8 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        setListAdapter(adapter);
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        setListAdapter(mAdapter);
 
         getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
@@ -77,12 +72,12 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                     public boolean onMenuItemClick(android.view.MenuItem arg0) {
                         switch (arg0.getItemId()) {
                         case R.id.removeRecipient:
-                            adapter.remove(adapter.getItem(position));
-                            recipientList.remove(position);
+                            mAdapter.remove(mAdapter.getItem(position));
+                            mRecipientList.remove(position);
                             break;
                         case R.id.cancel:
                         }
-                        for (int i = 0; i < adapter.getCount(); i++) {
+                        for (int i = 0; i < mAdapter.getCount(); i++) {
                         }
                         return true;
                     }
@@ -114,14 +109,14 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         final Button composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (!recipientList.isEmpty()) {
+                if (!mRecipientList.isEmpty()) {
                     Intent intent = new Intent(SelectMessageContacts.this, ComposeMessage.class);
                     Gson gson = new Gson();
-                    String userData = gson.toJson(recipientList);
+                    String userData = gson.toJson(mRecipientList);
                     intent.putExtra("userData", userData);
                     startActivity(intent);
                 } else {
-                    toast.show();
+                    Toast.makeText(getBaseContext(), "You need to add at least one recipient", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -142,31 +137,31 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
     protected void onSaveInstanceState(Bundle icicle) {
         super.onSaveInstanceState(icicle);
         Gson gson = new Gson();
-        String currentRecipients = gson.toJson(recipientList);
+        String currentRecipients = gson.toJson(mRecipientList);
         icicle.putString("currentRecipients", currentRecipients);
     }
 
     public void addRecipientsToList(String json) {
         try {
-            int previousSize = recipientList.size();
+            int previousSize = mRecipientList.size();
             JSONArray jsonArray = new JSONArray(json);
             if (jsonArray.length() > 0) {
                 // Used to create GroupMemberData objects from json.
                 Gson gson = new Gson();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
-                    if (member.isNew(recipientList)) {
-                        recipientList.add(member);
+                    if (member.isNew(mRecipientList)) {
+                        mRecipientList.add(member);
                     }
                 }
-                for (int i = previousSize; i < recipientList.size(); i++) {
-                    GroupMemberData member = (GroupMemberData) recipientList.get(i);
-                    adapter.add(member.getName());
+                for (int i = previousSize; i < mRecipientList.size(); i++) {
+                    GroupMemberData member = (GroupMemberData) mRecipientList.get(i);
+                    mAdapter.add(member.getName());
                 }
             }
-            Collections.sort(recipientList, new RecipientComparator());
-            adapter.sort(new NameComparator());
-            adapter.notifyDataSetChanged();
+            Collections.sort(mRecipientList, new RecipientComparator());
+            mAdapter.sort(new NameComparator());
+            mAdapter.notifyDataSetChanged();
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -32,11 +32,11 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class GroupPageActivity extends AllplayersSherlockActivity {
 
-    private GroupData group;
-    private ArrayList<GroupMemberData> membersList;
+    private GroupData mGroup;
+    private ArrayList<GroupMemberData> mMembersList;
     private boolean isMember = false, isLoggedIn = false;
-    private ProgressBar loading;
-    private AllplayersSherlockActivity parentActivity = this;
+    private ProgressBar mProgressBar;
+    private AllplayersSherlockActivity mParentActivity = this;
 
     /**
      * Called when the activity is first created, this creates the Action Bar
@@ -49,17 +49,15 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        group = (new Router(this)).getIntentGroup();
+        mGroup = (new Router(this)).getIntentGroup();
 
         setContentView(R.layout.grouppage);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setDisplayShowTitleEnabled(false);
 
         TextView title = new TextView(this);
-        title.setText(group.getTitle());
+        title.setText(mGroup.getTitle());
         title.setTextSize(20);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setTextColor(Color.WHITE);
@@ -74,8 +72,8 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
-        new GetGroupMembersByGroupIdTask().execute(group.getUUID());
-        new GetGroupLocationTask().execute(group.getUUID());
+        new GetGroupMembersByGroupIdTask().execute(mGroup.getUUID());
+        new GetGroupLocationTask().execute(mGroup.getUUID());
     }
 
     /**
@@ -89,7 +87,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         }
 
         protected void onPostExecute(Bitmap logo) {
-            loading.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
             ImageView imView = (ImageView) findViewById(R.id.groupLogo);
             if (logo == null) {
                 imView.setImageResource(R.drawable.group_default_logo);
@@ -102,7 +100,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             groupMembersButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
-                                    .getGroupMembersActivityIntent(group);
+                                    .getGroupMembersActivityIntent(mGroup);
                     startActivity(intent);
                 }
             });
@@ -112,7 +110,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             groupEventsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
-                                    .getGroupEventsActivityIntent(group);
+                                    .getGroupEventsActivityIntent(mGroup);
                     startActivity(intent);
                 }
             });
@@ -122,7 +120,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             groupPhotosButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
-                                    .getGroupAlbumsActivityIntent(group);
+                                    .getGroupAlbumsActivityIntent(mGroup);
                     startActivity(intent);
                 }
             });
@@ -133,10 +131,10 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
                 public void onClick(View v) {
                     if (!(Build.VERSION.SDK_INT < 11)) {
                         Intent intent = (new Router(GroupPageActivity.this))
-                                        .getGroupLocationActivityIntent(group);
+                                        .getGroupLocationActivityIntent(mGroup);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(parentActivity, "This feature is not supported on your device.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mParentActivity, "This feature is not supported on your device.", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -151,8 +149,8 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         protected void onPostExecute(String jsonResult) {
             try {
                 JSONObject groupInfo = new JSONObject(jsonResult);
-                group.setZip(groupInfo.getJSONObject("location").getString("zip"));
-                group.setLatLon(groupInfo.getJSONObject("location").getString("latitude"), groupInfo.getJSONObject("location").getString("longitude"));
+                mGroup.setZip(groupInfo.getJSONObject("location").getString("zip"));
+                mGroup.setLatLon(groupInfo.getJSONObject("location").getString("latitude"), groupInfo.getJSONObject("location").getString("longitude"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -173,15 +171,15 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         protected void onPostExecute(String jsonResult) {
             isLoggedIn = RestApiV1.isLoggedIn();
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
-            membersList = groupMembers.getGroupMemberData();
+            mMembersList = groupMembers.getGroupMemberData();
             String currentUUID = RestApiV1.getCurrentUserUUID();
-            for (int i = 0; i < membersList.size(); i++) {
-                if (membersList.get(i).getUUID().equals(currentUUID)) {
+            for (int i = 0; i < mMembersList.size(); i++) {
+                if (mMembersList.get(i).getUUID().equals(currentUUID)) {
                     isMember = true;
                     break;
                 }
             }
-            new GetRemoteImageTask().execute(group.getLogo());
+            new GetRemoteImageTask().execute(mGroup.getLogo());
         }
     }
 }

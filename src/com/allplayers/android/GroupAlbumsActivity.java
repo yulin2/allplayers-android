@@ -18,9 +18,8 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
-    private ProgressBar loading;
-
-    private ArrayList<AlbumData> albumList;
+    private ProgressBar mProgressBar;
+    private ArrayList<AlbumData> mAlbumList;
 
     /** Called when the activity is first created. */
     @Override
@@ -28,12 +27,10 @@ public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.albums_list);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
 
         GroupData group = (new Router(this)).getIntentGroup();
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(group.getTitle());
         actionbar.setSubtitle("Photo Albums");
 
@@ -50,9 +47,9 @@ public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        if (!albumList.isEmpty()) {
+        if (!mAlbumList.isEmpty()) {
             //Display the photos for the selected album
-            Intent intent = (new Router(this)).getAlbumPhotosActivityIntent(albumList.get(position));
+            Intent intent = (new Router(this)).getAlbumPhotosActivityIntent(mAlbumList.get(position));
             startActivity(intent);
         }
     }
@@ -69,19 +66,19 @@ public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
 
         protected void onPostExecute(String jsonResult) {
             AlbumsMap albums = new AlbumsMap(jsonResult);
-            albumList = albums.getAlbumData();
+            mAlbumList = albums.getAlbumData();
 
-            if (albumList.isEmpty()) {
+            if (mAlbumList.isEmpty()) {
                 String[] values = new String[] {"no albums to display"};
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupAlbumsActivity.this,
                         android.R.layout.simple_list_item_1, values);
                 setListAdapter(adapter);
             } else {
                 //Create a customized ArrayAdapter
-                AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, albumList);
+                AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, mAlbumList);
                 setListAdapter(adapter);
             }
-            loading.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }

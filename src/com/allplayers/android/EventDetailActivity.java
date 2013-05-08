@@ -5,9 +5,7 @@ import java.util.HashMap;
 
 import android.os.Bundle;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
-import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.EventData;
 import com.devspark.sidenavigation.SideNavigationView;
@@ -59,8 +57,6 @@ public class EventDetailActivity extends AllplayersSherlockListActivity {
         SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(mEvent.getTitle());
 
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);

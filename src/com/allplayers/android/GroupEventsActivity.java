@@ -35,8 +35,6 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
 
         GroupData group = (new Router(this)).getIntentGroup();
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(group.getTitle());
         actionbar.setSubtitle("Events");
 

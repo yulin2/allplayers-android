@@ -21,22 +21,20 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class MessageInbox extends AllplayersSherlockActivity implements ISideNavigationCallback {
-    private ArrayList<MessageData> messageList;
+    private ArrayList<MessageData> mMessageList;
     private boolean hasMessages = false;
-    private ProgressBar loading;
+    private ProgressBar mLoadingIndicator;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inboxlist);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
         GetUserInboxTask helper = new GetUserInboxTask();
         helper.execute();
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Messages");
         actionbar.setSubtitle("Inbox");
 
@@ -49,27 +47,27 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
 
     public void populateInbox(String json) {
         MessagesMap messages = new MessagesMap(json);
-        messageList = messages.getMessageData();
+        mMessageList = messages.getMessageData();
 
-        Collections.reverse(messageList);
+        Collections.reverse(mMessageList);
 
         ListView list = (ListView) findViewById(R.id.customListView);
         list.setClickable(true);
 
-        if (!messageList.isEmpty()) {
+        if (!mMessageList.isEmpty()) {
             hasMessages = true;
         } else {
             hasMessages = false;
         }
 
-        final List<MessageData> messageList2 = messageList;
+        final List<MessageData> messageList2 = mMessageList;
         MessageAdapter adapter = new MessageAdapter(MessageInbox.this, messageList2);
 
         list.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
                 if (hasMessages) {
                     // Go to the message thread.
-                    Intent intent = (new Router(MessageInbox.this)).getMessageThreadIntent(messageList.get(position));
+                    Intent intent = (new Router(MessageInbox.this)).getMessageThreadIntent(mMessageList.get(position));
                     startActivity(intent);
                 }
             }
@@ -85,7 +83,7 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
 
         protected void onPostExecute(String jsonResult) {
             populateInbox(jsonResult);
-            loading.setVisibility(View.GONE);
+            mLoadingIndicator.setVisibility(View.GONE);
         }
     }
 }

@@ -13,19 +13,19 @@ import android.widget.TextView;
 import com.allplayers.objects.MessageData;
 
 public class MessageAdapter extends BaseAdapter {
-    private Context context;
+    private Context mContext;
 
-    private List<MessageData> messageDataList;
+    private List<MessageData> mMessageDataList;
 
     public MessageAdapter(Context context, List<MessageData> listMessageData) {
-        this.context = context;
-        messageDataList = listMessageData;
+        this.mContext = context;
+        mMessageDataList = listMessageData;
     }
 
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        MessageData entry = messageDataList.get(position);
+        MessageData entry = mMessageDataList.get(position);
         if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context
+            LayoutInflater inflater = (LayoutInflater) mContext
                                       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.inboxrow, null);
         }
@@ -43,20 +43,20 @@ public class MessageAdapter extends BaseAdapter {
 
         ImageView unreadIcon = (ImageView) convertView.findViewById(R.id.unreadIcon);
         if (Integer.parseInt(entry.getNew()) == 0) {
-            unreadIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.placeholder));
+            unreadIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.placeholder));
         } else {
-            unreadIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.unread_message_icon));
+            unreadIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.unread_message_icon));
         }
 
         return convertView;
     }
 
     public int getCount() {
-        return messageDataList.size();
+        return mMessageDataList.size();
     }
 
     public Object getItem(int position) {
-        return messageDataList.get(position);
+        return mMessageDataList.get(position);
     }
 
     public long getItemId(int position) {

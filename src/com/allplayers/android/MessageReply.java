@@ -15,8 +15,8 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class MessageReply extends AllplayersSherlockActivity {
-    private String threadID;
-    private String sendBody;
+    private String mThreadId;
+    private String mMessageBody;
 
     /** called when the activity is first created. */
     @Override
@@ -25,8 +25,6 @@ public class MessageReply extends AllplayersSherlockActivity {
 
         setContentView(R.layout.replymessage);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Messages");
         actionbar.setSubtitle("Reply");
 
@@ -40,33 +38,29 @@ public class MessageReply extends AllplayersSherlockActivity {
         String subject = message.getSubject();
         String sender = message.getLastSender();
         String date = message.getDateString();
-        threadID = message.getThreadID();
+        mThreadId = message.getThreadID();
 
         final TextView subjectText = (TextView)findViewById(R.id.subjectText);
-        subjectText.setText("This is the Subject.");
         subjectText.setText(subject);
 
         final TextView senderText = (TextView)findViewById(R.id.senderText);
-        senderText.setText("This is the Sender's Name.");
         senderText.setText("From: " + sender);
 
         final TextView dateText = (TextView)findViewById(R.id.dateText);
-        dateText.setText("This is the Date last sent.");
         dateText.setText("Last Message: " + date);
 
 
         final EditText bodyField = (EditText)findViewById(R.id.bodyField);
-        bodyField.setText("This is the Body text.");
         bodyField.setText("");
 
         final Button sendButton = (Button)findViewById(R.id.sendButton);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                sendBody = bodyField.getText().toString();
+                mMessageBody = bodyField.getText().toString();
 
                 PostMessageTask helper = new PostMessageTask();
-                helper.execute(Integer.parseInt(threadID), sendBody);
+                helper.execute(Integer.parseInt(mThreadId), mMessageBody);
 
                 Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
                 toast.show();

@@ -19,12 +19,12 @@ import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
 
 public class GroupsFragment extends ListFragment {
-    private ArrayList<GroupData> groupList;
+    private ArrayList<GroupData> mGroupList;
     private boolean hasGroups = false, loadMore = true;
-    private int pageNumber = 0;
-    private int currentAmountShown = 0;
-    private ArrayAdapter<String> adapter;
-    private ProgressBar loadingMore;
+    private int mPageNumber = 0;
+    private int mCurrentAmountShown = 0;
+    private ArrayAdapter<String> mAdapter;
+    private ProgressBar mProgressBar;
 
     private Activity parentActivity;
 
@@ -33,18 +33,18 @@ public class GroupsFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         parentActivity = this.getActivity();
-        groupList = new ArrayList<GroupData>();
-        adapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1);
+        mGroupList = new ArrayList<GroupData>();
+        mAdapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1);
 
-        loadingMore = new ProgressBar(parentActivity);
+        mProgressBar = new ProgressBar(parentActivity);
 
         GetUserGroupsTask helper = new GetUserGroupsTask();
         helper.execute();
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        getListView().addFooterView(loadingMore, null, false);
-        setListAdapter(adapter);
+        getListView().addFooterView(mProgressBar, null, false);
+        setListAdapter(mAdapter);
 
         getListView().setOnScrollListener(new OnScrollListener() {
             private int visibleThreshold = 2;
@@ -73,22 +73,22 @@ public class GroupsFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if (hasGroups && position < groupList.size()) {
+        if (hasGroups && position < mGroupList.size()) {
             //Display the group page for the selected group
-            Intent intent = (new Router(parentActivity)).getGroupPageActivityIntent(groupList.get(position));
+            Intent intent = (new Router(parentActivity)).getGroupPageActivityIntent(mGroupList.get(position));
             startActivity(intent);
         }
     }
 
     /** Populates the list of groups to display to the UI thread. */
     protected void updateGroupData() {
-        if (!groupList.isEmpty()) {
+        if (!mGroupList.isEmpty()) {
 
             // Counter to check if a full 8 new groups were loaded.
             int counter = 0;
-            for (int i = currentAmountShown; i < groupList.size(); i++) {
-                adapter.add(groupList.get(currentAmountShown).getTitle());
-                currentAmountShown++;
+            for (int i = mCurrentAmountShown; i < mGroupList.size(); i++) {
+                mAdapter.add(mGroupList.get(mCurrentAmountShown).getTitle());
+                mCurrentAmountShown++;
                 counter++;
             }
 
@@ -97,7 +97,7 @@ public class GroupsFragment extends ListFragment {
             if (counter < 8) {
                 loadMore = false;
                 try {
-                    getListView().removeFooterView(loadingMore);
+                    getListView().removeFooterView(mProgressBar);
                 } catch (IllegalStateException e) {
                     Log.e("IllegalState", e.getMessage());
                 }
@@ -105,15 +105,15 @@ public class GroupsFragment extends ListFragment {
 
             hasGroups = true;
             // Check for default of no groups to display.
-            if (adapter.getPosition("no groups to display") >= 0) {
-                adapter.remove("no groups to display");
+            if (mAdapter.getPosition("no groups to display") >= 0) {
+                mAdapter.remove("no groups to display");
             }
         } else {
             hasGroups = false;
-            if (adapter.getPosition("no groups to display") < 0) {
-                adapter.add("no groups to display");
+            if (mAdapter.getPosition("no groups to display") < 0) {
+                mAdapter.add("no groups to display");
             }
-            getListView().removeFooterView(loadingMore);
+            getListView().removeFooterView(mProgressBar);
         }
     }
 
@@ -123,12 +123,12 @@ public class GroupsFragment extends ListFragment {
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
             // @TODO: Move to asynchronous loading.
-            return RestApiV1.getUserGroups(pageNumber++ * 8, 8);
+            return RestApiV1.getUserGroups(mPageNumber++ * 8, 8);
         }
 
         protected void onPostExecute(String jsonResult) {
             GroupsMap groups = new GroupsMap(jsonResult);
-            groupList.addAll(groups.getGroupData());
+            mGroupList.addAll(groups.getGroupData());
             updateGroupData();
         }
     }

@@ -21,13 +21,13 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class MessageThread extends AllplayersSherlockListActivity {
-    private ArrayList<MessageThreadData> messageThreadList;
+    private ArrayList<MessageThreadData> mMessageThreadList;
     private boolean hasMessages = false;
-    private String jsonResult = "";
-    private int threadIDInt;
-    private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
-    private MessageData message;
-    private ProgressBar loading;
+    private String mJsonResult = "";
+    private int mThreadId;
+    private ArrayList<HashMap<String, String>> mInfoList = new ArrayList<HashMap<String, String>>(2);
+    private MessageData mMessage;
+    private ProgressBar mLoadingIndicator;
 
     /**
      * Called when the activity is first created, this sets up some variables,
@@ -40,14 +40,12 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
         super.onCreate(savedInstanceState);
 
-        message = (new Router(this)).getIntentMessage();
-        String threadID = message.getThreadID();
+        mMessage = (new Router(this)).getIntentMessage();
+        String threadID = mMessage.getThreadID();
 
         setContentView(R.layout.message_thread);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Messages");
 
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
@@ -72,7 +70,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (hasMessages) {
-            Intent intent = (new Router(this)).getMessageViewSingleIntent(message, messageThreadList.get(position));
+            Intent intent = (new Router(this)).getMessageViewSingleIntent(mMessage, mMessageThreadList.get(position));
             startActivity(intent);
         }
     }
@@ -85,12 +83,12 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
         protected String doInBackground(String... threadID) {
 
-            threadIDInt = Integer.parseInt(threadID[0]);
-            RestApiV1.putMessage(threadIDInt, 0, "thread");
+            mThreadId = Integer.parseInt(threadID[0]);
+            RestApiV1.putMessage(mThreadId, 0, "thread");
 
-            jsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
+            mJsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
 
-            return jsonResult;
+            return mJsonResult;
         }
 
         /**
@@ -103,11 +101,11 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
             HashMap<String, String> map;
             MessageThreadMap messages = new MessageThreadMap(jsonResult);
-            messageThreadList = messages.getMessageThreadData();
+            mMessageThreadList = messages.getMessageThreadData();
 
-            actionbar.setSubtitle("Thread started by " + messageThreadList.get(0).getSenderName());
+            actionbar.setSubtitle("Thread started by " + mMessageThreadList.get(0).getSenderName());
 
-            Collections.sort(messageThreadList, new Comparator<Object>() {
+            Collections.sort(mMessageThreadList, new Comparator<Object>() {
                 public int compare(Object o1, Object o2) {
                     MessageThreadData m1 = (MessageThreadData) o1;
                     MessageThreadData m2 = (MessageThreadData) o2;
@@ -115,13 +113,13 @@ public class MessageThread extends AllplayersSherlockListActivity {
                 }
             });
 
-            if (!messageThreadList.isEmpty()) {
+            if (!mMessageThreadList.isEmpty()) {
                 hasMessages = true;
-                for (int i = 0; i < messageThreadList.size(); i++) {
+                for (int i = 0; i < mMessageThreadList.size(); i++) {
                     map = new HashMap<String, String>();
-                    map.put("line1", messageThreadList.get(i).getMessageBody());
-                    map.put("line2", "From: " + messageThreadList.get(i).getSenderName() + " - " + messageThreadList.get(i).getDateString());
-                    list.add(map);
+                    map.put("line1", mMessageThreadList.get(i).getMessageBody());
+                    map.put("line2", "From: " + mMessageThreadList.get(i).getSenderName() + " - " + mMessageThreadList.get(i).getDateString());
+                    mInfoList.add(map);
                 }
             } else {
                 hasMessages = false;
@@ -129,16 +127,16 @@ public class MessageThread extends AllplayersSherlockListActivity {
                 map = new HashMap<String, String>();
                 map.put("line1", "You have no new messages.");
                 map.put("line2", "");
-                list.add(map);
+                mInfoList.add(map);
             }
 
             String[] from = { "line1", "line2" };
 
             int[] to = { android.R.id.text1, android.R.id.text2 };
 
-            SimpleAdapter adapter = new SimpleAdapter(MessageThread.this, list, android.R.layout.simple_list_item_2, from, to);
+            SimpleAdapter adapter = new SimpleAdapter(MessageThread.this, mInfoList, android.R.layout.simple_list_item_2, from, to);
             setListAdapter(adapter);
-            loading.setVisibility(View.GONE);
+            mLoadingIndicator.setVisibility(View.GONE);
         }
     }
 }

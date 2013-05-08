@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.PhotoData;
 import com.allplayers.rest.RestApiV1;
@@ -23,9 +22,9 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 public class PhotoPager extends AllplayersSherlockActivity {
 
     private ViewPager mViewPager;
-    private PhotoPagerAdapter photoAdapter;
-    private PhotoData currentPhoto;
-    private int currentPhotoIndex;
+    private PhotoPagerAdapter mPhotoAdapter;
+    private PhotoData mCurrentPhoto;
+    private int mCurrentPhotoIndex;
 
     /**
      * Called when the activity is first created, this sets up some variables,
@@ -38,23 +37,20 @@ public class PhotoPager extends AllplayersSherlockActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
-            currentPhotoIndex = savedInstanceState.getInt("photoToStart");
+            mCurrentPhotoIndex = savedInstanceState.getInt("photoToStart");
         }
 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.photo_pager);
 
-        currentPhoto = (new Router(this)).getIntentPhoto();
+        mCurrentPhoto = (new Router(this)).getIntentPhoto();
         mViewPager = new ViewPager(this);
-        photoAdapter = new PhotoPagerAdapter(this, currentPhoto);
+        mPhotoAdapter = new PhotoPagerAdapter(this, mCurrentPhoto);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setAdapter(photoAdapter);
-        mViewPager.setCurrentItem(currentPhotoIndex);
+        mViewPager.setAdapter(mPhotoAdapter);
+        mViewPager.setCurrentItem(mCurrentPhotoIndex);
 
-
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(getIntent().getStringExtra("album title"));
 
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
@@ -74,8 +70,8 @@ public class PhotoPager extends AllplayersSherlockActivity {
 
         super.onSaveInstanceState(icicle);
 
-        currentPhotoIndex = mViewPager.getCurrentItem();
-        icicle.putInt("photoToStart", currentPhotoIndex);
+        mCurrentPhotoIndex = mViewPager.getCurrentItem();
+        icicle.putInt("photoToStart", mCurrentPhotoIndex);
     }
 
     /**
@@ -102,8 +98,8 @@ public class PhotoPager extends AllplayersSherlockActivity {
                 temp = temp.previousPhoto();
             }
 
-            if (currentPhotoIndex == 0) {
-                currentPhotoIndex = photos.size();
+            if (mCurrentPhotoIndex == 0) {
+                mCurrentPhotoIndex = photos.size();
             }
 
             photos.add(item);

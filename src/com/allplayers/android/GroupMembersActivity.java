@@ -16,9 +16,9 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class GroupMembersActivity extends AllplayersSherlockListActivity {
-    private ProgressBar loading;
+    private ProgressBar mProgressBar;
 
-    private ArrayList<GroupMemberData> membersList;
+    private ArrayList<GroupMemberData> mMembersList;
 
     /** Called when the activity is first created. */
     @Override
@@ -26,12 +26,10 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.members_list);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
 
         GroupData group = (new Router(this)).getIntentGroup();
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(group.getTitle());
         actionbar.setSubtitle("Members");
 
@@ -56,13 +54,13 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
 
         protected void onPostExecute(String jsonResult) {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
-            membersList = groupMembers.getGroupMemberData();
+            mMembersList = groupMembers.getGroupMemberData();
 
             String[] values;
-            if (!membersList.isEmpty()) {
-                values = new String[membersList.size()];
-                for (int i = 0; i < membersList.size(); i++) {
-                    values[i] = membersList.get(i).getName();
+            if (!mMembersList.isEmpty()) {
+                values = new String[mMembersList.size()];
+                for (int i = 0; i < mMembersList.size(); i++) {
+                    values[i] = mMembersList.get(i).getName();
                 }
             } else {
                 values = new String[] {"No members to display"};
@@ -70,7 +68,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupMembersActivity.this,
                     android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
-            loading.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }

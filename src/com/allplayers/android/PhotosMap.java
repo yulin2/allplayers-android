@@ -9,7 +9,7 @@ import com.allplayers.objects.PhotoData;
 import com.google.gson.Gson;
 
 public class PhotosMap {
-    private ArrayList<PhotoData> photos = new ArrayList<PhotoData>();
+    private ArrayList<PhotoData> mPhotosList = new ArrayList<PhotoData>();
 
     public PhotosMap(String jsonResult) {
         if (!jsonResult.equals("false")) {
@@ -25,13 +25,13 @@ public class PhotosMap {
                         PhotoData photo = gson.fromJson(jsonArray.getString(i), PhotoData.class);
 
                         if (photo.getPhotoFull() != null && !photo.getPhotoFull().trim().equals("")) {
-                            if (photo.isNew(photos)) {
+                            if (photo.isNew(mPhotosList)) {
                                 if (numPhotos > 0) {
-                                    photo.setPreviousPhoto(photos.get(numPhotos - 1));
-                                    photos.get(numPhotos - 1).setNextPhoto(photo);
+                                    photo.setPreviousPhoto(mPhotosList.get(numPhotos - 1));
+                                    mPhotosList.get(numPhotos - 1).setNextPhoto(photo);
                                 }
 
-                                photos.add(photo);
+                                mPhotosList.add(photo);
                                 numPhotos++;
                             }
                         }
@@ -44,6 +44,6 @@ public class PhotosMap {
     }
 
     public ArrayList<PhotoData> getPhotoData() {
-        return photos;
+        return mPhotosList;
     }
 }

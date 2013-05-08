@@ -16,14 +16,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 public class PhotoAdapter extends BaseAdapter {
-    private ImageView[] photoImage;
-    private List<PhotoData> photos = new ArrayList<PhotoData>();
+    private ImageView[] mPhotosImages;
+    private List<PhotoData> mPhotos = new ArrayList<PhotoData>();
     private Context mContext;
-    private int numOfPhotosInAlbum = 0;
+    private int mPhotoCount = 0;
 
     public PhotoAdapter(Context context, List<PhotoData> objects) {
         mContext = context;
-        this.photos = objects;
+        this.mPhotos = objects;
     }
 
     public PhotoAdapter(Context context) {
@@ -31,22 +31,22 @@ public class PhotoAdapter extends BaseAdapter {
     }
 
     public void add(PhotoData photo) {
-        photos.add(photo);
-        numOfPhotosInAlbum++;
+        mPhotos.add(photo);
+        mPhotoCount++;
     }
 
     public void addAll(List<PhotoData> photoObjects) {
-        photos.addAll(photoObjects);
-        numOfPhotosInAlbum += photoObjects.size();
-        photoImage = new ImageView[numOfPhotosInAlbum];
+        mPhotos.addAll(photoObjects);
+        mPhotoCount += photoObjects.size();
+        mPhotosImages = new ImageView[mPhotoCount];
     }
 
     public int getCount() {
-        return photos.size();
+        return mPhotos.size();
     }
 
     public PhotoData getItem(int index) {
-        return photos.get(index);
+        return mPhotos.get(index);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -55,38 +55,40 @@ public class PhotoAdapter extends BaseAdapter {
         image.setLayoutParams(new GridView.LayoutParams(140, 140));
         image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         image.setPadding(5, 5, 5, 5);
-        if (photoImage[position] != null) {
-            return photoImage[position];
+        if (mPhotosImages[position] != null) {
+            return mPhotosImages[position];
         }
         //Get item
         PhotoData photo = getItem(position);
 
         //Get reference to ImageView
-        photoImage[position] = image;
+        mPhotosImages[position] = image;
 
         //Set cover photo icon
         String imageURL = photo.getPhotoThumb();
         if (!imageURL.trim().equals("")) {
-            GetRemoteImageTask helper = new GetRemoteImageTask();
-            helper.execute(photo, position);
+            new GetRemoteImageTask(position).execute(photo);
         }
-
-        return photoImage[position];
+        return mPhotosImages[position];
     }
 
     /*
      * Gets a user's image using a rest call.
      */
-    public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
+    public class GetRemoteImageTask extends AsyncTask<PhotoData, Void, Bitmap> {
         int row;
-        protected Bitmap doInBackground(Object... photos) {
-            this.row = (Integer)photos[1];
+        
+        public GetRemoteImageTask(int r) {
+        	this.row = r;
+        }
+        
+        protected Bitmap doInBackground(PhotoData... photos) {
             PhotoData photo = (PhotoData)photos[0];
             return RestApiV1.getRemoteImage(photo.getPhotoThumb());
         }
 
         protected void onPostExecute(Bitmap bitmap) {
-            photoImage[row].setImageBitmap(bitmap);
+            mPhotosImages[row].setImageBitmap(bitmap);
         }
     }
 

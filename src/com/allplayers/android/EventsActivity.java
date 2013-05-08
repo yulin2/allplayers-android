@@ -23,8 +23,6 @@ public class EventsActivity extends AllplayersSherlockFragmentActivity {
 
         setContentView(R.layout.events);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Events");
 
         sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);

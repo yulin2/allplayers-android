@@ -9,7 +9,7 @@ import com.allplayers.objects.GroupMemberData;
 import com.google.gson.Gson;
 
 public class GroupMembersMap {
-    private ArrayList<GroupMemberData> members = new ArrayList<GroupMemberData>();
+    private ArrayList<GroupMemberData> mMembersList = new ArrayList<GroupMemberData>();
 
     public GroupMembersMap(String jsonResult) {
         try {
@@ -22,8 +22,8 @@ public class GroupMembersMap {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
 
-                    if (member.isNew(members)) {
-                        members.add(member);
+                    if (member.isNew(mMembersList)) {
+                        mMembersList.add(member);
                     }
                 }
             }
@@ -33,6 +33,6 @@ public class GroupMembersMap {
     }
 
     public ArrayList<GroupMemberData> getGroupMemberData() {
-        return members;
+        return mMembersList;
     }
 }

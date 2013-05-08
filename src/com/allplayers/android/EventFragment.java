@@ -17,17 +17,17 @@ import com.allplayers.objects.EventData;
 import com.allplayers.rest.RestApiV1;
 
 public class EventFragment extends ListFragment {
-    private ArrayList<EventData> eventsList;
-    private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
+    private ArrayList<EventData> mEventsList;
+    private ArrayList<HashMap<String, String>> mTimeList = new ArrayList<HashMap<String, String>>(2);
     private boolean hasEvents = false;
-    private String jsonResult;
-    private Activity parentActivity;
+    private String mJsonResult;
+    private Activity mParentActivity;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        parentActivity = this.getActivity();
+        mParentActivity = this.getActivity();
         new GetUserEventsTask().execute();
     }
 
@@ -37,11 +37,11 @@ public class EventFragment extends ListFragment {
 
         Intent intent;
         if (hasEvents) {
-            if ((!(eventsList.get(position).getLatitude().equals("")
-                    && eventsList.get(position).getLatitude().equals(""))) && (!(Build.VERSION.SDK_INT < 11))) {
-                intent = (new Router(parentActivity)).getEventDisplayActivityIntent(eventsList.get(position));
+            if ((!(mEventsList.get(position).getLatitude().equals("")
+                    && mEventsList.get(position).getLatitude().equals(""))) && (!(Build.VERSION.SDK_INT < 11))) {
+                intent = (new Router(mParentActivity)).getEventDisplayActivityIntent(mEventsList.get(position));
             } else {
-                intent = (new Router(parentActivity)).getEventDetailActivityIntent(eventsList.get(position));
+                intent = (new Router(mParentActivity)).getEventDetailActivityIntent(mEventsList.get(position));
             }
             startActivity(intent);
         }
@@ -51,18 +51,18 @@ public class EventFragment extends ListFragment {
      * Populates a hash map with event information.
      */
     protected void setEventsMap() {
-        EventsMap events = new EventsMap(jsonResult);
-        eventsList = events.getEventData();
+        EventsMap events = new EventsMap(mJsonResult);
+        mEventsList = events.getEventData();
         HashMap<String, String> map;
 
-        if (!eventsList.isEmpty()) {
-            for (int i = 0; i < eventsList.size(); i++) {
+        if (!mEventsList.isEmpty()) {
+            for (int i = 0; i < mEventsList.size(); i++) {
                 map = new HashMap<String, String>();
-                map.put("line1", eventsList.get(i).getTitle());
+                map.put("line1", mEventsList.get(i).getTitle());
 
-                String start = eventsList.get(i).getStartDateString();
+                String start = mEventsList.get(i).getStartDateString();
                 map.put("line2", start);
-                list.add(map);
+                mTimeList.add(map);
             }
 
             hasEvents = true;
@@ -70,7 +70,7 @@ public class EventFragment extends ListFragment {
             map = new HashMap<String, String>();
             map.put("line1", "No events to display.");
             map.put("line2", "");
-            list.add(map);
+            mTimeList.add(map);
             hasEvents = false;
         }
 
@@ -78,7 +78,7 @@ public class EventFragment extends ListFragment {
 
         int[] to = {android.R.id.text1, android.R.id.text2};
 
-        SimpleAdapter adapter = new SimpleAdapter(parentActivity, list, android.R.layout.simple_list_item_2, from, to);
+        SimpleAdapter adapter = new SimpleAdapter(mParentActivity, mTimeList, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
     }
 
@@ -93,7 +93,7 @@ public class EventFragment extends ListFragment {
         }
 
         protected void onPostExecute(String jsonResult) {
-            EventFragment.this.jsonResult = jsonResult;
+            EventFragment.this.mJsonResult = jsonResult;
             setEventsMap();
         }
     }

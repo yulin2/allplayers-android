@@ -20,9 +20,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-
-
-
 public class EventDisplayActivity extends AllplayersSherlockMapActivity {
     private EventData mEvent;
     private String mLatitude;
@@ -42,8 +39,6 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
 
         mEvent = (new Router(this)).getIntentEvent();
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle(mEvent.getTitle());
 
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
@@ -85,30 +80,30 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
             }
         });
     }
-}
+    
+    class CustomInfoAdapter implements InfoWindowAdapter {
+        LayoutInflater inflater;
 
-class CustomInfoAdapter implements InfoWindowAdapter {
-    LayoutInflater inflater;
+        CustomInfoAdapter(LayoutInflater inflater) {
+            this.inflater = inflater;
+        }
 
-    CustomInfoAdapter(LayoutInflater inflater) {
-        this.inflater = inflater;
+        @Override
+        public View getInfoContents(Marker marker) {
+            View infoWindow = inflater.inflate(R.layout.event_marker_info_window, null);
+
+            TextView textView = (TextView)infoWindow.findViewById(R.id.title);
+            textView.setText(marker.getTitle());
+            textView = (TextView)infoWindow.findViewById(R.id.snippet);
+            textView.setText(marker.getSnippet());
+            return infoWindow;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
     }
-
-    @Override
-    public View getInfoContents(Marker marker) {
-        View infoWindow = inflater.inflate(R.layout.event_marker_info_window, null);
-
-        TextView textView = (TextView)infoWindow.findViewById(R.id.title);
-        textView.setText(marker.getTitle());
-        textView = (TextView)infoWindow.findViewById(R.id.snippet);
-        textView.setText(marker.getSnippet());
-        return infoWindow;
-    }
-
-    @Override
-    public View getInfoWindow(Marker marker) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

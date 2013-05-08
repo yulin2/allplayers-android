@@ -22,8 +22,6 @@ public class MessageActivity extends AllplayersSherlockFragmentActivity {
 
         setContentView(R.layout.messages);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Messages");
 
         sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);

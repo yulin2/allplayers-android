@@ -21,9 +21,9 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
 public class ComposeMessage extends AllplayersSherlockActivity {
-    private String sendBody;
-    private String sendSubject;
-    private ArrayList<String> recipientUuidList = new ArrayList<String>();
+    private String mMessageBody;
+    private String mMessageSubject;
+    private ArrayList<String> mRecipientUuidList = new ArrayList<String>();
 
     /** called when the activity is first created. */
     @Override
@@ -32,8 +32,6 @@ public class ComposeMessage extends AllplayersSherlockActivity {
 
         setContentView(R.layout.composemessage);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
         actionbar.setTitle("Compose Message");
         actionbar.setSubtitle("New Message");
 
@@ -51,7 +49,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
                     Gson gson = new Gson();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
-                        recipientUuidList.add(member.getUUID());
+                        mRecipientUuidList.add(member.getUUID());
                     }
                 }
             } catch (JSONException e) {
@@ -71,11 +69,11 @@ public class ComposeMessage extends AllplayersSherlockActivity {
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                sendBody = bodyField.getText().toString();
-                sendSubject = subjectField.getText().toString();
+                mMessageBody = bodyField.getText().toString();
+                mMessageSubject = subjectField.getText().toString();
 
                 createNewMessageTask helper = new createNewMessageTask();
-                helper.execute(sendSubject, sendBody);
+                helper.execute(mMessageSubject, mMessageBody);
 
                 Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
                 toast.show();
@@ -92,7 +90,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
      */
     public class createNewMessageTask extends AsyncTask<Object, Void, Void> {
         protected Void doInBackground(Object... args) {
-            RestApiV1.createNewMessage(recipientUuidList.toArray(new String[recipientUuidList.size()]), (String)args[0], (String)args[1]);
+            RestApiV1.createNewMessage(mRecipientUuidList.toArray(new String[mRecipientUuidList.size()]), (String)args[0], (String)args[1]);
             return null;
         }
     }
