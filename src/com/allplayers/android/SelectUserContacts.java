@@ -40,7 +40,7 @@ public class SelectUserContacts extends SherlockListActivity {
         setContentView(R.layout.selectusercontacts);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
-        
+
         actionbar = getSupportActionBar();
         actionbar.setTitle("Compose Message");
         actionbar.setSubtitle("Select Individual Recipients");
@@ -62,7 +62,7 @@ public class SelectUserContacts extends SherlockListActivity {
             }
         });
     }
-    
+
     /**
      * Listener for the Action Bar Options Menu.
      *
@@ -72,7 +72,7 @@ public class SelectUserContacts extends SherlockListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case android.R.id.home: {
-        	finish();
+            finish();
             return true;
         }
         default:

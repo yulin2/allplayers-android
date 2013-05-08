@@ -22,7 +22,7 @@ public class GroupsActivity extends AllplayersSherlockFragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.groups);
-        
+
         actionbar.setTitle("Groups");
 
         sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);

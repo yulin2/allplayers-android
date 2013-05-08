@@ -20,7 +20,7 @@ public class GroupMemberData extends DataObject {
     }
 
     public String getName() {
-    	name = fname + " " + lname;
+        name = fname + " " + lname;
         return name;
     }
 

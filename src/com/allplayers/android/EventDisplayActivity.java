@@ -80,7 +80,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
             }
         });
     }
-    
+
     class CustomInfoAdapter implements InfoWindowAdapter {
         LayoutInflater inflater;
 

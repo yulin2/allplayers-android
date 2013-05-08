@@ -77,11 +77,11 @@ public class PhotoAdapter extends BaseAdapter {
      */
     public class GetRemoteImageTask extends AsyncTask<PhotoData, Void, Bitmap> {
         int row;
-        
+
         public GetRemoteImageTask(int r) {
-        	this.row = r;
+            this.row = r;
         }
-        
+
         protected Bitmap doInBackground(PhotoData... photos) {
             PhotoData photo = (PhotoData)photos[0];
             return RestApiV1.getRemoteImage(photo.getPhotoThumb());

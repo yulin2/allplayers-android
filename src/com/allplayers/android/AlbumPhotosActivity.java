@@ -70,7 +70,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
             String[] values = new String[] {"no photos to display"};
 
             mGridView.setAdapter(new ArrayAdapter<String>(AlbumPhotosActivity.this,
-                    android.R.layout.simple_list_item_1, values));
+                                 android.R.layout.simple_list_item_1, values));
         } else {
             mPhotoAdapter = new PhotoAdapter(getApplicationContext());
             mGridView.setAdapter(mPhotoAdapter);

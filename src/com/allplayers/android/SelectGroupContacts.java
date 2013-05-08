@@ -58,7 +58,7 @@ public class SelectGroupContacts extends SherlockListActivity {
             }
         });
     }
-    
+
     /**
      * Listener for the Action Bar Options Menu.
      *

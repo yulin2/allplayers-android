@@ -77,11 +77,11 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
      */
     public class GetRemoteImageTask extends AsyncTask<AlbumData, Void, Bitmap> {
         int row;
-        
+
         public GetRemoteImageTask(int r) {
-        	this.row = r;
+            this.row = r;
         }
-        
+
         protected Bitmap doInBackground(AlbumData... albums) {
             AlbumData album = (AlbumData)albums[0];
             return RestApiV1.getRemoteImage(album.getCoverPhoto());
