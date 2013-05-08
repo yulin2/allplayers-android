@@ -96,33 +96,33 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
 
         switch (itemId) {
 
-        case R.id.side_navigation_menu_item1:
+        case R.id.groups:
             invokeActivity(GroupsActivity.class);
             break;
 
-        case R.id.side_navigation_menu_item2:
+        case R.id.messages:
             invokeActivity(MessageActivity.class);
             break;
 
-        case R.id.side_navigation_menu_item3:
+        case R.id.photos:
             invokeActivity(PhotosActivity.class);
             break;
 
-        case R.id.side_navigation_menu_item4:
+        case R.id.events:
             invokeActivity(EventsActivity.class);
             break;
 
-        case R.id.side_navigation_menu_item5: {
+        case R.id.search: {
             search();
             break;
         }
 
-        case R.id.side_navigation_menu_item6: {
+        case R.id.log_out: {
             logOut();
             break;
         }
 
-        case R.id.side_navigation_menu_item7: {
+        case R.id.refresh: {
             refresh();
             break;
         }

@@ -12,21 +12,22 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.allplayers.android.activities.AllplayersSherlockListActivity;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.allplayers.objects.GroupMemberData;
 import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
 /**
  * List of selectable message recipients.
  */
-public class SelectUserContacts extends AllplayersSherlockListActivity {
+public class SelectUserContacts extends SherlockListActivity {
 
     private ArrayList<GroupMemberData> mMembersList;
     private ArrayList<GroupMemberData> mSelectedMembers;
     private ProgressBar mLoadingIndicator;
+    private ActionBar actionbar;
 
     /**
      * This sets up the action bar, side navigation interface, and page UI.
@@ -39,14 +40,10 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         setContentView(R.layout.selectusercontacts);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
-
+        
+        actionbar = getSupportActionBar();
         actionbar.setTitle("Compose Message");
         actionbar.setSubtitle("Select Individual Recipients");
-
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
 
         mSelectedMembers = new ArrayList<GroupMemberData>();
 
@@ -64,6 +61,23 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
                 finish();
             }
         });
+    }
+    
+    /**
+     * Listener for the Action Bar Options Menu.
+     *
+     * @param item: The selected menu item.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home: {
+        	finish();
+            return true;
+        }
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

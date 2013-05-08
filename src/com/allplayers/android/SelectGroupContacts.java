@@ -12,21 +12,21 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.GroupData;
 import com.allplayers.objects.GroupMemberData;
 import com.allplayers.rest.RestApiV1;
-import com.devspark.sidenavigation.SideNavigationView;
-import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
-public class SelectGroupContacts extends AllplayersSherlockListActivity {
+public class SelectGroupContacts extends SherlockListActivity {
 
     private ArrayList<GroupData> mGroupsList;
     private ArrayList<GroupData> mSelectedGroups;
     private ArrayList<GroupMemberData> mSelectedMembers;
     private ProgressBar mLoadingIndicator;
+    private ActionBar actionbar;
 
     /** Called when the activity is first created. */
     @Override
@@ -37,13 +37,9 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
+        actionbar = getSupportActionBar();
         actionbar.setTitle("Compose Message");
         actionbar.setSubtitle("Select Group Recipients");
-
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
 
         mSelectedGroups = new ArrayList<GroupData>();
         mSelectedMembers = new ArrayList<GroupMemberData>();
@@ -62,7 +58,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             }
         });
     }
-
+    
     /**
      * Listener for the Action Bar Options Menu.
      *
@@ -70,65 +66,14 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
-
         case android.R.id.home: {
-            sideNavigationView.toggleMenu();
+            finish();
             return true;
         }
-
         default:
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    /**
-     * Listener for the Side Navigation Menu.
-     *
-     * @param itemId: The ID of the list item that was selected.
-     */
-    @Override
-    public void onSideNavigationItemClick(int itemId) {
-
-        switch (itemId) {
-
-        case R.id.side_navigation_menu_item1:
-            invokeActivity(GroupsActivity.class);
-            break;
-
-        case R.id.side_navigation_menu_item2:
-            invokeActivity(MessageActivity.class);
-            break;
-
-        case R.id.side_navigation_menu_item3:
-            invokeActivity(PhotosActivity.class);
-            break;
-
-        case R.id.side_navigation_menu_item4:
-            invokeActivity(EventsActivity.class);
-            break;
-
-        case R.id.side_navigation_menu_item5: {
-            search();
-            break;
-        }
-
-        case R.id.side_navigation_menu_item6: {
-            logOut();
-            break;
-        }
-
-        case R.id.side_navigation_menu_item7: {
-            refresh();
-            break;
-        }
-
-        default:
-            return;
-        }
-
-        finish();
     }
 
     @Override

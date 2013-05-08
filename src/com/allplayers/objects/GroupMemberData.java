@@ -1,10 +1,5 @@
 package com.allplayers.objects;
 
-import java.util.ArrayList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class GroupMemberData extends DataObject {
     private String uuid = "";
     private String fname = "";
@@ -25,27 +20,11 @@ public class GroupMemberData extends DataObject {
     }
 
     public String getName() {
-        return fname + " " + lname;
+    	name = fname + " " + lname;
+        return name;
     }
 
     public String getPicture() {
         return picture;
-    }
-
-    public ArrayList<String> getSerializedList(ArrayList<GroupMemberData> list) {
-
-        ArrayList<String> tbr = new ArrayList<String>();
-
-        String uuid = "";
-        String fname = "";
-        String lname = "";
-        String name = "";
-        String picture = "";
-
-        for (int i = 0; i < list.size(); i++) {
-
-        }
-        return null;
-
     }
 }

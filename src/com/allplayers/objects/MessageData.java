@@ -1,14 +1,9 @@
 package com.allplayers.objects;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import com.google.gson.Gson;
 
 public class MessageData extends DataObject {
     private String thread_id = "";

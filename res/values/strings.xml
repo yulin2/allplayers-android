@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <string name="app_name">AllPlayers.com</string>
-    
-    <!-- Temp Strings for Testing Only -->
-    <string name="mode">Mode</string>
-    <string name="mode_left">Left</string>
-    <string name="mode_right">Right</string>
-    <string name="image_desc">Image</string>
-    
+
+    <string name="groups">Groups</string>
+    <string name="messages">Messages</string>
+    <string name="photos">Photo Albums</string>
+    <string name="events">Events</string>
+    <string name="logout">Log Out</string>
+    <string name="refresh">Refresh</string>
+    <string name="search">Search</string>
+
 </resources>

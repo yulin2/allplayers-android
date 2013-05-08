@@ -1,8 +1,5 @@
 package com.allplayers.objects;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class PhotoData extends DataObject {
     private String uuid = "";
     private String group_uuid = "";

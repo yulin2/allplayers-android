@@ -1,8 +1,5 @@
 package com.allplayers.objects;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class GroupData extends DataObject {
     private String uuid = "";
     private String title = "";
