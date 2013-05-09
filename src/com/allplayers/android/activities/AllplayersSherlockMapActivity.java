@@ -144,6 +144,7 @@ public class AllplayersSherlockMapActivity extends SherlockMapActivity implement
     protected void invokeActivity(Class activity) {
 
         Intent intent = new Intent(this, activity);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
         overridePendingTransition(0, 0); // Disables new activity animation.

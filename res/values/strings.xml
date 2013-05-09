@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">AllPlayers.com</string>
-
     <string name="groups">Groups</string>
     <string name="messages">Messages</string>
     <string name="photos">Photo Albums</string>
@@ -10,5 +9,19 @@
     <string name="logout">Log Out</string>
     <string name="refresh">Refresh</string>
     <string name="search">Search</string>
+    <string name="done">Done</string>
+    <string name="reply">Reply</string>
+    <string name="add_group">Add Group</string>
+    <string name="add_user">Add User</string>
+    <string name="compose">Compose Message</string>
+    <string name="send">Send</string>
+    <string name="login">Login!</string>
+    <string name="password">Password:</string>
+    <string name="username">Username:</string>
+    <string name="date">Date</string>
+    <string name="search_groups">Search Groups</string>
+    <string name="zip">Zipcode:</string>
+    <string name="distance">Distance:</string>
+    <string name="keywords">Keywords:</string>
 
 </resources>

@@ -2,16 +2,16 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 	<LinearLayout
 	  android:orientation="vertical"
-	  android:layout_width="fill_parent"
-	  android:layout_height="fill_parent">
+	  android:layout_width="match_parent"
+	  android:layout_height="match_parent">
 	
 		<LinearLayout
 		  android:id="@+id/text_layout"
-		  android:layout_width="fill_parent"
+		  android:layout_width="match_parent"
 		  android:layout_height="wrap_content"
 		  android:orientation="vertical"
 		  android:gravity="top"
@@ -20,8 +20,8 @@
 			  android:text=""
 			  android:id="@+id/subjectText"
 			  android:layout_height="wrap_content"
-			  android:layout_width="fill_parent"
-			  android:textSize="30px"
+			  android:layout_width="match_parent"
+			  android:textSize="30sp"
 			  android:textColor="#FFFFFF"
 			  android:textStyle="bold">
 			</TextView>
@@ -30,20 +30,20 @@
 			  android:text=""
 			  android:id="@+id/senderText"
 			  android:layout_height="wrap_content"
-			  android:layout_width="fill_parent">
+			  android:layout_width="match_parent">
 			</TextView>
 			
 			<TextView
 			  android:text=""
 			  android:id="@+id/dateText"
 			  android:layout_height="wrap_content"
-			  android:layout_width="fill_parent">
+			  android:layout_width="match_parent">
 			</TextView>
 			
 			<!-- The TextView below is serving as a Horizontal Ruler between the Subject and the Body -->
 			
 			<TextView
-			  android:layout_width="fill_parent"
+			  android:layout_width="match_parent"
 			  android:layout_height="2dip"
 			  android:background="#313431"/>
 			
@@ -51,25 +51,23 @@
 			  android:text=""
 			  android:id="@+id/bodyText"
 			  android:layout_height="wrap_content"
-			  android:layout_width="fill_parent"
+			  android:layout_width="match_parent"
 			  android:autoLink="web">
 			</TextView>
 		</LinearLayout>
 		
 		<LinearLayout
-		  android:layout_below="@id/text_layout"
-		  android:layout_width="fill_parent"
-		  android:layout_height="wrap_content"
-		  android:orientation="vertical"
-		  android:gravity="bottom"
-		  android:layout_weight="1">
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:gravity="bottom"
+		    android:orientation="vertical" >
+
 			<Button 
 			  android:id="@+id/replyButton"
-			  android:layout_alignParentBottom="true"
-			  android:layout_width="fill_parent"
+			  android:layout_width="match_parent"
 			  android:layout_height="wrap_content"
-			  android:text="Reply"
-			  android:layout_weight="0">
+			  android:text="@string/reply">
 			</Button>
 		</LinearLayout>
 	</LinearLayout>
