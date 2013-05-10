@@ -53,9 +53,9 @@ public class GroupData extends DataObject {
         lat = la;
         lon = lo;
     }
-    
+
     @Override
     public String toString() {
-    	return title;
+        return title;
     }
 }

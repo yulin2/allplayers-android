@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class RestApiV1 {
     private static String endpoint = "https://www.allplayers.com/?q=api/v1/rest/";
@@ -180,6 +181,7 @@ public class RestApiV1 {
     }
 
     public static String getUserGroups(int offset, int limit) {
+        Log.d("IC", endpoint + "users/" + sCurrentUserUUID + "/groups.json&offset=" + offset + "&limit=" + limit);
         return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groups.json&offset=" + offset + "&limit=" + limit);
     }
 

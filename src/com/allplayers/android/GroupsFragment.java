@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -38,8 +37,7 @@ public class GroupsFragment extends ListFragment {
 
         mProgressBar = new ProgressBar(parentActivity);
 
-        GetUserGroupsTask helper = new GetUserGroupsTask();
-        helper.execute();
+        new GetUserGroupsTask().execute();
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -83,7 +81,7 @@ public class GroupsFragment extends ListFragment {
     /** Populates the list of groups to display to the UI thread. */
     protected void updateGroupData() {
         if (!mGroupList.isEmpty()) {
-        	mAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
             // If we did not load 8 groups, we are at the end of the list, so signal
             // not to try to load more groups.
             if (mGroupList.size() - mCurrentAmountShown < 8) {
@@ -93,8 +91,8 @@ public class GroupsFragment extends ListFragment {
 
             hasGroups = true;
         } else {
-        	ArrayAdapter<String> blankAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
-        	blankAdapter.add("no groups to display");
+            ArrayAdapter<String> blankAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
+            blankAdapter.add("no groups to display");
             getListView().setAdapter(blankAdapter);
             getListView().setEnabled(false);
             getListView().removeFooterView(mProgressBar);
@@ -110,9 +108,13 @@ public class GroupsFragment extends ListFragment {
         }
 
         protected void onPostExecute(String jsonResult) {
-            GroupsMap groups = new GroupsMap(jsonResult);
-            mGroupList.addAll(groups.getGroupData());
-            updateGroupData();
+            if (!jsonResult.equals("error")) {
+                GroupsMap groups = new GroupsMap(jsonResult);
+                mGroupList.addAll(groups.getGroupData());
+                updateGroupData();
+            } else {
+                getListView().removeFooterView(mProgressBar);
+            }
         }
     }
 }
