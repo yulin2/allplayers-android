@@ -23,7 +23,7 @@ public class GroupsFragment extends ListFragment {
     private boolean hasGroups = false, loadMore = true;
     private int mPageNumber = 0;
     private int mCurrentAmountShown = 0;
-    private ArrayAdapter<String> mAdapter;
+    private ArrayAdapter<GroupData> mAdapter;
     private ProgressBar mProgressBar;
 
     private Activity parentActivity;
@@ -34,7 +34,7 @@ public class GroupsFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         parentActivity = this.getActivity();
         mGroupList = new ArrayList<GroupData>();
-        mAdapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1);
+        mAdapter = new ArrayAdapter<GroupData>(parentActivity, android.R.layout.simple_list_item_1, mGroupList);
 
         mProgressBar = new ProgressBar(parentActivity);
 
@@ -83,36 +83,20 @@ public class GroupsFragment extends ListFragment {
     /** Populates the list of groups to display to the UI thread. */
     protected void updateGroupData() {
         if (!mGroupList.isEmpty()) {
-
-            // Counter to check if a full 8 new groups were loaded.
-            int counter = 0;
-            for (int i = mCurrentAmountShown; i < mGroupList.size(); i++) {
-                mAdapter.add(mGroupList.get(mCurrentAmountShown).getTitle());
-                mCurrentAmountShown++;
-                counter++;
-            }
-
+        	mAdapter.notifyDataSetChanged();
             // If we did not load 8 groups, we are at the end of the list, so signal
             // not to try to load more groups.
-            if (counter < 8) {
+            if (mGroupList.size() - mCurrentAmountShown < 8) {
                 loadMore = false;
-                try {
-                    getListView().removeFooterView(mProgressBar);
-                } catch (IllegalStateException e) {
-                    Log.e("IllegalState", e.getMessage());
-                }
+                getListView().removeFooterView(mProgressBar);
             }
 
             hasGroups = true;
-            // Check for default of no groups to display.
-            if (mAdapter.getPosition("no groups to display") >= 0) {
-                mAdapter.remove("no groups to display");
-            }
         } else {
-            hasGroups = false;
-            if (mAdapter.getPosition("no groups to display") < 0) {
-                mAdapter.add("no groups to display");
-            }
+        	ArrayAdapter<String> blankAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
+        	blankAdapter.add("no groups to display");
+            getListView().setAdapter(blankAdapter);
+            getListView().setEnabled(false);
             getListView().removeFooterView(mProgressBar);
         }
     }
@@ -122,7 +106,6 @@ public class GroupsFragment extends ListFragment {
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
-            // @TODO: Move to asynchronous loading.
             return RestApiV1.getUserGroups(mPageNumber++ * 8, 8);
         }
 
