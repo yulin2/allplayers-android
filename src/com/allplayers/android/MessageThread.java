@@ -9,9 +9,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.MessageData;
@@ -28,6 +33,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
     private ArrayList<HashMap<String, String>> mInfoList = new ArrayList<HashMap<String, String>>(2);
     private MessageData mMessage;
     private ProgressBar mLoadingIndicator;
+    private SimpleAdapter mAdapter;
 
     /**
      * Called when the activity is first created, this sets up some variables,
@@ -55,6 +61,27 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
         PutAndGetMessagesTask helper = new PutAndGetMessagesTask();
         helper.execute(threadID);
+
+        getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
+                PopupMenu menu = new PopupMenu(getBaseContext(), view);
+                menu.inflate(R.menu.message_thread_menu);
+                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(android.view.MenuItem item) {
+                        switch (item.getItemId()) {
+                        case R.id.delete:
+                            new DeleteMessageTask(position).execute();
+                            break;
+                        }
+                        return true;
+                    }
+                });
+                menu.show();
+                return true;
+            }
+        });
     }
 
     /**
@@ -134,9 +161,34 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
             int[] to = { android.R.id.text1, android.R.id.text2 };
 
-            SimpleAdapter adapter = new SimpleAdapter(MessageThread.this, mInfoList, android.R.layout.simple_list_item_2, from, to);
-            setListAdapter(adapter);
+            mAdapter = new SimpleAdapter(MessageThread.this, mInfoList, android.R.layout.simple_list_item_2, from, to);
+            setListAdapter(mAdapter);
             mLoadingIndicator.setVisibility(View.GONE);
+        }
+    }
+
+    public class DeleteMessageTask extends AsyncTask<Void, Void, String> {
+        private int position;
+
+        public DeleteMessageTask(int i) {
+            position = i;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            //return RestApiV1.deleteMessage(mMessageThreadList.get(position).getId(), "msg");
+            return "error";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("done")) {
+                mMessageThreadList.remove(position);
+                mInfoList.remove(position);
+                mAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(getBaseContext(), "Currently can not delete a single message", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

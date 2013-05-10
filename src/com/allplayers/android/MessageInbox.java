@@ -9,9 +9,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ProgressBar;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.ProgressBar;
 
 import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.MessageData;
@@ -24,6 +27,8 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
     private ArrayList<MessageData> mMessageList;
     private boolean hasMessages = false;
     private ProgressBar mLoadingIndicator;
+    private ListView mList;
+    private MessageAdapter mAdapter;
 
     /** Called when the activity is first created. */
     @Override
@@ -51,8 +56,8 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
 
         Collections.reverse(mMessageList);
 
-        ListView list = (ListView) findViewById(R.id.customListView);
-        list.setClickable(true);
+        mList = (ListView) findViewById(R.id.customListView);
+        mList.setClickable(true);
 
         if (!mMessageList.isEmpty()) {
             hasMessages = true;
@@ -61,9 +66,9 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
         }
 
         final List<MessageData> messageList2 = mMessageList;
-        MessageAdapter adapter = new MessageAdapter(MessageInbox.this, messageList2);
+        mAdapter = new MessageAdapter(MessageInbox.this, messageList2);
 
-        list.setOnItemClickListener(new OnItemClickListener() {
+        mList.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
                 if (hasMessages) {
                     // Go to the message thread.
@@ -72,8 +77,32 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
                 }
             }
         });
+        mList.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-        list.setAdapter(adapter);
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+            final int position, long id) {
+                PopupMenu menu = new PopupMenu(getBaseContext(), view);
+                menu.inflate(R.menu.message_thread_menu);
+                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(android.view.MenuItem item) {
+                        switch (item.getItemId()) {
+                        case R.id.delete:
+                            new DeleteMessageThreadTask(position).execute();
+                            //Toast.makeText(getBaseContext(), "Deleting message", Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                        return true;
+                    }
+                });
+                menu.show();
+                return false;
+            }
+
+        });
+
+        mList.setAdapter(mAdapter);
     }
 
     public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
@@ -85,5 +114,27 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
             populateInbox(jsonResult);
             mLoadingIndicator.setVisibility(View.GONE);
         }
+    }
+
+    public class DeleteMessageThreadTask extends AsyncTask<Void, Void, String> {
+        private int position;
+
+        public DeleteMessageThreadTask(int i) {
+            position = i;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return RestApiV1.deleteMessageThread(mMessageList.get(position).getId());
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("done")) {
+                mMessageList.remove(position);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+
     }
 }

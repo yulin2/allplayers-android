@@ -68,6 +68,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupMembersActivity.this,
                     android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
+            getListView().setEnabled(false);
             mProgressBar.setVisibility(View.GONE);
         }
     }

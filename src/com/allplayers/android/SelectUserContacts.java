@@ -42,7 +42,7 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
 
         actionbar.setTitle("Compose Message");
         actionbar.setSubtitle("Select Individual Recipients");
-        
+
         sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);

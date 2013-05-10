@@ -23,5 +23,8 @@
     <string name="zip">Zipcode:</string>
     <string name="distance">Distance:</string>
     <string name="keywords">Keywords:</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove_recip">Remove Recipient</string>
 
 </resources>

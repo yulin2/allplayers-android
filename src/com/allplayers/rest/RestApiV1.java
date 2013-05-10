@@ -105,11 +105,8 @@ public class RestApiV1 {
         }
     }
 
-    public static String deleteMessage(int threadId, String type) {
-        // String[][] contents = new String[1][2];
-        // Type: thread or message (default = thread)
-
-        return makeAuthenticatedDelete(endpoint + "messages/" + threadId + ".json");
+    public static String deleteMessageThread(String id) {
+        return makeAuthenticatedDelete(endpoint + "messages/" + id);
     }
 
     // Change read/unread status
@@ -316,10 +313,10 @@ public class RestApiV1 {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-            connection.setDoOutput(true);
             connection.setRequestMethod("DELETE");
             connection.setRequestProperty("Content-Type",
                                           "application/x-www-form-urlencoded");
+            connection.getResponseCode();
 
             return "done";
         } catch (Exception ex) {

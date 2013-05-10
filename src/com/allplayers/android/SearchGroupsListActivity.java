@@ -41,8 +41,7 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
         int zipcode = router.getIntentSearchZipcode();
         int distance = router.getIntentSearchDistance();
 
-        SearchGroupsTask helper = new SearchGroupsTask();
-        helper.execute(query, zipcode, distance);
+        new SearchGroupsTask().execute(query, zipcode, distance);
     }
 
     @Override
