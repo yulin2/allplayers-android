@@ -75,8 +75,7 @@ public class MessageSent extends AllplayersSherlockListActivity {
             SimpleAdapter adapter = new SimpleAdapter(this, mInfoList, android.R.layout.simple_list_item_2, from, to);
             setListAdapter(adapter);
         } else {
-            GetUserSentBoxTask helper = new GetUserSentBoxTask();
-            helper.execute();
+            new GetUserSentBoxTask().execute();
         }
     }
 

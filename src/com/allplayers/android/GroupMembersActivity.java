@@ -38,8 +38,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
 
-        GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
-        helper.execute(group);
+        new GetGroupMembersByGroupIdTask().execute(group);
     }
 
     /*

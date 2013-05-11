@@ -183,8 +183,8 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
 
         @Override
         public int compare(Object lhs, Object rhs) {
-            NameComparator helper = new NameComparator();
-            return helper.compare(((GroupMemberData) lhs).getName(), ((GroupMemberData) rhs).getName());
+            NameComparator comp = new NameComparator();
+            return comp.compare(((GroupMemberData) lhs).getName(), ((GroupMemberData) rhs).getName());
         }
 
     }

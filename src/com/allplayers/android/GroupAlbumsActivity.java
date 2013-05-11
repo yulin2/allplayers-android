@@ -39,8 +39,7 @@ public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
 
-        GetGroupAlbumsByGroupIdTask helper = new GetGroupAlbumsByGroupIdTask();
-        helper.execute(group);
+        new GetGroupAlbumsByGroupIdTask().execute(group);
     }
 
     @Override

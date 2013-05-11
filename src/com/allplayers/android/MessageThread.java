@@ -59,8 +59,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
 
-        PutAndGetMessagesTask helper = new PutAndGetMessagesTask();
-        helper.execute(threadID);
+        new PutAndGetMessagesTask().execute(threadID);
 
         getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override

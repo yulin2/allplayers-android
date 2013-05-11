@@ -43,8 +43,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
 
-        GetIntentGroupTask helper = new GetIntentGroupTask();
-        helper.execute(group);
+        new GetIntentGroupTask().execute(group);
     }
 
     @Override

@@ -50,8 +50,7 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
 
         mSelectedMembers = new ArrayList<GroupMemberData>();
 
-        GetUserGroupmatesTask helper = new GetUserGroupmatesTask();
-        helper.execute();
+        new GetUserGroupmatesTask().execute();
 
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {

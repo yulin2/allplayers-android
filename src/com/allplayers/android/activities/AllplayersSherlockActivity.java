@@ -163,8 +163,7 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
      */
     protected void logOut() {
 
-        LogOutTask helper = new LogOutTask();
-        helper.execute();
+        new LogOutTask().execute();
 
         AccountManager manager = AccountManager.get(this.getBaseContext());
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");

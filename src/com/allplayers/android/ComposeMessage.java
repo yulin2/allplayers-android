@@ -72,8 +72,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
                 mMessageBody = bodyField.getText().toString();
                 mMessageSubject = subjectField.getText().toString();
 
-                createNewMessageTask helper = new createNewMessageTask();
-                helper.execute(mMessageSubject, mMessageBody);
+                new createNewMessageTask().execute(mMessageSubject, mMessageBody);
 
                 Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
                 toast.show();

@@ -91,8 +91,7 @@ public class Login extends Activity {
                 String unencryptedPassword = textEncryptor.decrypt(storedPassword);
 
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                AttemptLoginTask helper = new AttemptLoginTask();
-                helper.execute(storedEmail, unencryptedPassword);
+                new AttemptLoginTask().execute(storedEmail, unencryptedPassword);
             }
         } else {
             showLoginFields();
@@ -105,8 +104,7 @@ public class Login extends Activity {
                 String password = mPasswordEditText.getText().toString();
 
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                AttemptLoginTask helper = new AttemptLoginTask();
-                helper.execute(email, password);
+                new AttemptLoginTask().execute(email, password);
             }
         });
     }

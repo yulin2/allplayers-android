@@ -163,8 +163,7 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
      */
     protected void logOut() {
 
-        LogOutTask helper = new LogOutTask();
-        helper.execute();
+        new LogOutTask().execute();
 
         AccountManager manager = AccountManager.get(this.getBaseContext());
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");

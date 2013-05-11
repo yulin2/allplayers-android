@@ -53,8 +53,7 @@ public class PhotosFragment extends ListFragment {
                 jsonResult = LocalStorage.readUserGroups(mParentActivity.getBaseContext());
                 populateGroupAlbums(jsonResult);
             } else {
-                GetUserGroupsTask helper = new GetUserGroupsTask();
-                helper.execute();
+                new GetUserGroupsTask().execute();
             }
         }
 
@@ -87,8 +86,7 @@ public class PhotosFragment extends ListFragment {
             mGroupCount = groupList.size();
             for (int i = 0; i < mGroupCount; i++) {
                 group_uuid = groupList.get(i).getUUID();
-                GetGroupAlbumsByGroupIdTask helper = new GetGroupAlbumsByGroupIdTask();
-                helper.execute(group_uuid);
+                new GetGroupAlbumsByGroupIdTask().execute(group_uuid);
             }
         }
     }

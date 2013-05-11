@@ -37,8 +37,7 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
         setContentView(R.layout.inboxlist);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        GetUserInboxTask helper = new GetUserInboxTask();
-        helper.execute();
+        new GetUserInboxTask().execute();
 
         actionbar.setTitle("Messages");
         actionbar.setSubtitle("Inbox");

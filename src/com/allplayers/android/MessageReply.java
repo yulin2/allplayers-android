@@ -59,8 +59,7 @@ public class MessageReply extends AllplayersSherlockActivity {
             public void onClick(View v) {
                 mMessageBody = bodyField.getText().toString();
 
-                PostMessageTask helper = new PostMessageTask();
-                helper.execute(Integer.parseInt(mThreadId), mMessageBody);
+                new PostMessageTask().execute(Integer.parseInt(mThreadId), mMessageBody);
 
                 Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
                 toast.show();

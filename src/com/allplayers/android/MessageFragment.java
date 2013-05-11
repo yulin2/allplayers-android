@@ -29,8 +29,7 @@ public class MessageFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         parentActivity = this.getActivity();
 
-        GetUserInboxTask helper = new GetUserInboxTask();
-        helper.execute();
+        new GetUserInboxTask().execute();
     }
 
     @Override
