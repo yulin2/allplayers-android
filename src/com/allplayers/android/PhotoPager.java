@@ -1,16 +1,20 @@
 package com.allplayers.android;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.util.LruCache;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 
 import com.allplayers.android.activities.AllplayersSherlockActivity;
@@ -35,13 +39,13 @@ public class PhotoPager extends AllplayersSherlockActivity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);  
 
         if (savedInstanceState != null) {
             mCurrentPhotoIndex = savedInstanceState.getInt("photoToStart");
         }
 
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.photo_pager);
 
         mCurrentPhoto = (new Router(this)).getIntentPhoto();
@@ -79,7 +83,8 @@ public class PhotoPager extends AllplayersSherlockActivity {
      */
     public class PhotoPagerAdapter extends PagerAdapter {
 
-        private ImageView[] images;
+        private LruCache<String, Bitmap> mImageCache;
+        private Context mContext;
         private List<PhotoData> photos;
 
         /**
@@ -88,6 +93,17 @@ public class PhotoPager extends AllplayersSherlockActivity {
          * @param item:
          */
         public PhotoPagerAdapter(Context context, PhotoData item) {
+        	mContext = context;
+        	final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        	final int cacheSize = maxMemory / 8;
+        	mImageCache = new LruCache<String, Bitmap>(cacheSize) {
+                @Override
+                protected int sizeOf(String key, Bitmap bitmap) {
+                    // The cache size will be measured in kilobytes rather than
+                    // number of items.
+                    return bitmap.getByteCount() / 1024;
+                }
+            };
 
             photos = new ArrayList<PhotoData>();
 
@@ -111,7 +127,6 @@ public class PhotoPager extends AllplayersSherlockActivity {
                 temp = temp.nextPhoto();
             }
 
-            images = new ImageView[photos.size()];
         }
 
         /**
@@ -121,21 +136,18 @@ public class PhotoPager extends AllplayersSherlockActivity {
          */
         @Override
         public Object instantiateItem(View collection, int position) {
-
-            ImageView image = new ImageView(PhotoPager.this);
+        	ImageView image = new ImageView(mContext);
             image.setImageResource(R.drawable.backgroundstate);
 
-            if (images[position] != null) {
-                ((ViewPager) collection).addView(images[position], 0);
-                return images[position];
+            if (mImageCache.get(position+"") != null) {
+            	image.setImageBitmap(mImageCache.get(position+""));
+                ((ViewPager) collection).addView(image, 0);
+                return image;
             }
+            new GetRemoteImageTask(image, position).execute(photos.get(position).getPhotoFull());
+            ((ViewPager) collection).addView(image, 0);
 
-            images[position] = image;
-
-            new GetRemoteImageTask().execute(photos.get(position).getPhotoFull(), position);
-            ((ViewPager) collection).addView(images[position], 0);
-
-            return images[position];
+            return image;
         }
 
         /**
@@ -174,26 +186,39 @@ public class PhotoPager extends AllplayersSherlockActivity {
          * Get's a user's image using a rest call and displays it.
          */
         public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
-
-            int index;
+        	private final WeakReference<ImageView> viewReference;
+        	private int index;
+            
+            GetRemoteImageTask(ImageView im, int ind) {
+            	viewReference = new WeakReference<ImageView>(im);
+            	index = ind;
+            }
+            
+            @Override
+            protected void onPreExecute() {
+            	((Activity) mContext).setProgressBarIndeterminateVisibility(true);
+            }
 
             /**
              * Gets the requested image using a REST call.
              * @param photoUrl: The URL of the photo to fetch.
              */
             protected Bitmap doInBackground(Object... photoUrl) {
-
-                index = (Integer) photoUrl[1];
-
-                return RestApiV1.getRemoteImage((String) photoUrl[0]);
+            	Bitmap b = RestApiV1.getRemoteImage((String) photoUrl[0]);
+            	mImageCache.put(index+"", b);
+                return b;
             }
 
             /**
              * Adds the fetched image to an array of the album's images.
              * @param image: The image to be added.
              */
-            protected void onPostExecute(Bitmap image) {
-                images[index].setImageBitmap(image);
+            protected void onPostExecute(Bitmap bm) {
+            	((Activity) mContext).setProgressBarIndeterminateVisibility(false);
+            	ImageView imageView = viewReference.get();
+                if( imageView != null ) {
+                  imageView.setImageBitmap(bm);
+                }
             }
         }
     }
