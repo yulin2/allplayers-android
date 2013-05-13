@@ -32,5 +32,6 @@
     <string name="email">Email Address:</string>
     <string name="gender">Gender:</string>
     <string name="register">Register</string>
+    <string name="captcha">Please solve this simple math problem:</string>
 
 </resources>
