@@ -101,7 +101,7 @@ public class PhotoPager extends AllplayersSherlockActivity {
                 protected int sizeOf(String key, Bitmap bitmap) {
                     // The cache size will be measured in kilobytes rather than
                     // number of items.
-                    return bitmap.getByteCount() / 1024;
+                    return (bitmap.getRowBytes() * bitmap.getHeight()) / 1024;
                 }
             };
 
