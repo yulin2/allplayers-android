@@ -17,6 +17,7 @@
     <string name="send">Send</string>
     <string name="login">Login!</string>
     <string name="password">Password:</string>
+    <string name="verify_pass">Verify Password:</string>
     <string name="username">Username:</string>
     <string name="date">Date</string>
     <string name="search_groups">Search Groups</string>
@@ -26,5 +27,10 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="remove_recip">Remove Recipient</string>
+    <string name="first_name">First Name:</string>
+    <string name="last_name">Last Name:</string>
+    <string name="email">Email Address:</string>
+    <string name="gender">Gender:</string>
+    <string name="register">Register</string>
 
 </resources>
