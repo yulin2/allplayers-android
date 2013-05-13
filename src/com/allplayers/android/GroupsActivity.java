@@ -30,4 +30,9 @@ public class GroupsActivity extends AllplayersSherlockFragmentActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }

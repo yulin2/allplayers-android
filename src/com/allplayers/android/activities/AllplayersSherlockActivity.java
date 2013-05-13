@@ -30,7 +30,7 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);  
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
@@ -147,7 +147,7 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
     protected void invokeActivity(Class activity) {
 
         Intent intent = new Intent(this, activity);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(32768 | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
 
         overridePendingTransition(0, 0); // Disables new activity animation.

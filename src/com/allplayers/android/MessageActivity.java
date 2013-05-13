@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import com.allplayers.android.activities.AllplayersSherlockFragmentActivity;
 import com.devspark.sidenavigation.SideNavigationView;
@@ -28,5 +29,10 @@ public class MessageActivity extends AllplayersSherlockFragmentActivity {
         sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }

@@ -39,7 +39,7 @@ public class PhotoPager extends AllplayersSherlockActivity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);  
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         if (savedInstanceState != null) {
             mCurrentPhotoIndex = savedInstanceState.getInt("photoToStart");
@@ -93,10 +93,10 @@ public class PhotoPager extends AllplayersSherlockActivity {
          * @param item:
          */
         public PhotoPagerAdapter(Context context, PhotoData item) {
-        	mContext = context;
-        	final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        	final int cacheSize = maxMemory / 8;
-        	mImageCache = new LruCache<String, Bitmap>(cacheSize) {
+            mContext = context;
+            final int maxMemory = (int)(Runtime.getRuntime().maxMemory() / 1024);
+            final int cacheSize = maxMemory / 8;
+            mImageCache = new LruCache<String, Bitmap>(cacheSize) {
                 @Override
                 protected int sizeOf(String key, Bitmap bitmap) {
                     // The cache size will be measured in kilobytes rather than
@@ -136,11 +136,11 @@ public class PhotoPager extends AllplayersSherlockActivity {
          */
         @Override
         public Object instantiateItem(View collection, int position) {
-        	ImageView image = new ImageView(mContext);
+            ImageView image = new ImageView(mContext);
             image.setImageResource(R.drawable.backgroundstate);
 
-            if (mImageCache.get(position+"") != null) {
-            	image.setImageBitmap(mImageCache.get(position+""));
+            if (mImageCache.get(position + "") != null) {
+                image.setImageBitmap(mImageCache.get(position + ""));
                 ((ViewPager) collection).addView(image, 0);
                 return image;
             }
@@ -186,17 +186,17 @@ public class PhotoPager extends AllplayersSherlockActivity {
          * Get's a user's image using a rest call and displays it.
          */
         public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
-        	private final WeakReference<ImageView> viewReference;
-        	private int index;
-            
+            private final WeakReference<ImageView> viewReference;
+            private int index;
+
             GetRemoteImageTask(ImageView im, int ind) {
-            	viewReference = new WeakReference<ImageView>(im);
-            	index = ind;
+                viewReference = new WeakReference<ImageView>(im);
+                index = ind;
             }
-            
+
             @Override
             protected void onPreExecute() {
-            	((Activity) mContext).setProgressBarIndeterminateVisibility(true);
+                ((Activity) mContext).setProgressBarIndeterminateVisibility(true);
             }
 
             /**
@@ -204,8 +204,8 @@ public class PhotoPager extends AllplayersSherlockActivity {
              * @param photoUrl: The URL of the photo to fetch.
              */
             protected Bitmap doInBackground(Object... photoUrl) {
-            	Bitmap b = RestApiV1.getRemoteImage((String) photoUrl[0]);
-            	mImageCache.put(index+"", b);
+                Bitmap b = RestApiV1.getRemoteImage((String) photoUrl[0]);
+                mImageCache.put(index + "", b);
                 return b;
             }
 
@@ -214,10 +214,10 @@ public class PhotoPager extends AllplayersSherlockActivity {
              * @param image: The image to be added.
              */
             protected void onPostExecute(Bitmap bm) {
-            	((Activity) mContext).setProgressBarIndeterminateVisibility(false);
-            	ImageView imageView = viewReference.get();
-                if( imageView != null ) {
-                  imageView.setImageBitmap(bm);
+                ((Activity) mContext).setProgressBarIndeterminateVisibility(false);
+                ImageView imageView = viewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(bm);
                 }
             }
         }
