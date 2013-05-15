@@ -33,5 +33,12 @@
     <string name="gender">Gender:</string>
     <string name="register">Register</string>
     <string name="captcha">Please solve this simple math problem:</string>
+    <string name="sort">Sort:</string>
+    
+    <string-array name="sort_method">
+        <item>Activity</item>
+        <item>Alpha Asc.</item>
+        <item>Alpha Desc.</item>
+    </string-array>
 
 </resources>

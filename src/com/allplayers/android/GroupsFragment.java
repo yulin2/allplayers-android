@@ -13,6 +13,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
@@ -24,8 +25,8 @@ public class GroupsFragment extends ListFragment {
     private int mCurrentAmountShown = 0;
     private ArrayAdapter<GroupData> mAdapter;
     private ProgressBar mProgressBar;
-
     private Activity parentActivity;
+    private String mSortType = "radioactive";
 
     /** Called when the activity is first created. */
     @Override
@@ -34,9 +35,14 @@ public class GroupsFragment extends ListFragment {
         parentActivity = this.getActivity();
         mGroupList = new ArrayList<GroupData>();
         mAdapter = new ArrayAdapter<GroupData>(parentActivity, android.R.layout.simple_list_item_1, mGroupList);
-
+        if (getArguments() != null) {
+            if (getArguments().containsKey("sort")) {
+                mSortType = getArguments().getString("sort");
+            }
+        }
         mProgressBar = new ProgressBar(parentActivity);
 
+        Toast.makeText(parentActivity, mSortType, Toast.LENGTH_LONG).show();
         new GetUserGroupsTask().execute();
     }
 
@@ -104,6 +110,7 @@ public class GroupsFragment extends ListFragment {
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
+            // TODO: add in the sort
             return RestApiV1.getUserGroups(mPageNumber++ * 8, 8);
         }
 
