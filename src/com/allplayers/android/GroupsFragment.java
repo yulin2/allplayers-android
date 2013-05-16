@@ -57,7 +57,7 @@ public class GroupsFragment extends ListFragment {
                         previousTotal = totalItemCount;
                     }
                 }
-                if (loadMore && !loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {   
+                if (loadMore && !loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                     new GetUserGroupsTask().execute();
                     loading = true;
                 }
@@ -87,8 +87,8 @@ public class GroupsFragment extends ListFragment {
             // not to try to load more groups.
             if (mGroupList.size() - mCurrentAmountShown < 8) {
                 loadMore = false;
-                if(getListView() != null) {
-                	getListView().removeFooterView(mProgressBar);
+                if (getListView() != null) {
+                    getListView().removeFooterView(mProgressBar);
                 }
             }
 
@@ -107,12 +107,12 @@ public class GroupsFragment extends ListFragment {
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(mPageNumber++ * 8, 8, mSortType);
+            return RestApiV1.getUserGroups(mPageNumber++ * 15, 15, mSortType);
         }
 
         protected void onPostExecute(String jsonResult) {
             if (!jsonResult.equals("error")) {
-                GroupsMap groups = new GroupsMap(jsonResult);               
+                GroupsMap groups = new GroupsMap(jsonResult);
                 mCurrentAmountShown = mGroupList.size();
                 mGroupList.addAll(groups.getGroupData());
                 updateGroupData();
