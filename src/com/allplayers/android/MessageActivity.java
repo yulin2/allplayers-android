@@ -1,7 +1,6 @@
 package com.allplayers.android;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
 
 import com.allplayers.android.activities.AllplayersSherlockFragmentActivity;
 import com.devspark.sidenavigation.SideNavigationView;
