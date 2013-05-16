@@ -56,6 +56,7 @@ public class EventDetailActivity extends AllplayersSherlockListActivity {
         int[] to = { android.R.id.text1, android.R.id.text2 };
         SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
+        getListView().setEnabled(false);
 
         mActionBar.setTitle(mEvent.getTitle());
 

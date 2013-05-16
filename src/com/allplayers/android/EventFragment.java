@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
 import com.allplayers.objects.EventData;
@@ -22,13 +23,29 @@ public class EventFragment extends ListFragment {
     private boolean hasEvents = false;
     private String mJsonResult;
     private Activity mParentActivity;
+    private static final String LINE_ONE_KEY = "line1";
+    private static final String LINE_TWO_KEY = "line2";
+    private SimpleAdapter mAdapter;
+    private ProgressBar mLoadingIndicator;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mParentActivity = this.getActivity();
+
+        String[] from = {LINE_ONE_KEY, LINE_TWO_KEY};
+        int[] to = {android.R.id.text1, android.R.id.text2};
+        mAdapter = new SimpleAdapter(mParentActivity, mTimeList, android.R.layout.simple_list_item_2, from, to);
+
         new GetUserEventsTask().execute();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        mLoadingIndicator = new ProgressBar(mParentActivity);
+        getListView().addFooterView(mLoadingIndicator);
+        setListAdapter(mAdapter);
     }
 
     @Override
@@ -58,28 +75,23 @@ public class EventFragment extends ListFragment {
         if (!mEventsList.isEmpty()) {
             for (int i = 0; i < mEventsList.size(); i++) {
                 map = new HashMap<String, String>();
-                map.put("line1", mEventsList.get(i).getTitle());
+                map.put(LINE_ONE_KEY, mEventsList.get(i).getTitle());
 
                 String start = mEventsList.get(i).getStartDateString();
-                map.put("line2", start);
+                map.put(LINE_TWO_KEY, start);
                 mTimeList.add(map);
             }
-
+            mAdapter.notifyDataSetChanged();
             hasEvents = true;
         } else {
             map = new HashMap<String, String>();
-            map.put("line1", "No events to display.");
-            map.put("line2", "");
+            map.put(LINE_ONE_KEY, "No events to display.");
+            map.put(LINE_TWO_KEY, "");
             mTimeList.add(map);
+            mAdapter.notifyDataSetChanged();
             hasEvents = false;
         }
-
-        String[] from = {"line1", "line2"};
-
-        int[] to = {android.R.id.text1, android.R.id.text2};
-
-        SimpleAdapter adapter = new SimpleAdapter(mParentActivity, mTimeList, android.R.layout.simple_list_item_2, from, to);
-        setListAdapter(adapter);
+        getListView().removeFooterView(mLoadingIndicator);
     }
 
     /*
@@ -88,12 +100,11 @@ public class EventFragment extends ListFragment {
     public class GetUserEventsTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {
-            // @TODO: Move to asynchronous loading.
             return RestApiV1.getUserEvents(0);
         }
 
         protected void onPostExecute(String jsonResult) {
-            EventFragment.this.mJsonResult = jsonResult;
+            mJsonResult = jsonResult;
             setEventsMap();
         }
     }

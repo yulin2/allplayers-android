@@ -10,6 +10,7 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.GroupData;
@@ -19,6 +20,8 @@ public class PhotosFragment extends ListFragment {
     private ArrayList<AlbumData> mAlbumList = new ArrayList<AlbumData>();
     private static Activity mParentActivity;
     private int mGroupCount, mNumGroupsLoaded;
+    private AlbumAdapter mAdapter;
+    private ProgressBar mLoadingIndicator;
 
 
     /** Called when the activity is first created. */
@@ -26,6 +29,8 @@ public class PhotosFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mParentActivity = this.getActivity();
+        mAdapter = new AlbumAdapter(mParentActivity, R.layout.albumlistitem, mAlbumList);
+        mLoadingIndicator = new ProgressBar(mParentActivity);
 
         String jsonResult;
 
@@ -48,15 +53,14 @@ public class PhotosFragment extends ListFragment {
                 }
             }
         } else {
-            //check local storage
-            if (LocalStorage.getTimeSinceLastModification("UserGroups") / 1000 / 60 < 60) { //more recent than 60 minutes
-                jsonResult = LocalStorage.readUserGroups(mParentActivity.getBaseContext());
-                populateGroupAlbums(jsonResult);
-            } else {
-                new GetUserGroupsTask().execute();
-            }
+            new GetUserGroupsTask().execute();
         }
+    }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        getListView().addFooterView(mLoadingIndicator);
+        setListAdapter(mAdapter);
     }
 
     @Override
@@ -97,7 +101,7 @@ public class PhotosFragment extends ListFragment {
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(0, 0, null);
+            return RestApiV1.getUserGroups(0, 15, null);
         }
 
         protected void onPostExecute(String jsonResult) {
@@ -126,16 +130,12 @@ public class PhotosFragment extends ListFragment {
                 for (int j = 0; j < newAlbumList.size(); j++) {
                     mAlbumList.add(newAlbumList.get(j));
                 }
+                mAdapter.notifyDataSetChanged();
             }
             if (mAlbumList.isEmpty() && mNumGroupsLoaded == mGroupCount) {
                 String[] values = new String[] {"no albums to display"};
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(PhotosFragment.mParentActivity,
                         android.R.layout.simple_list_item_1, values);
-                setListAdapter(adapter);
-            } else {
-                //Create a customized ArrayAdapter
-                // TODO Fix to use only one adapter and push new items into it.
-                AlbumAdapter adapter = new AlbumAdapter(PhotosFragment.mParentActivity.getApplicationContext(), R.layout.albumlistitem, mAlbumList);
                 setListAdapter(adapter);
             }
         }
