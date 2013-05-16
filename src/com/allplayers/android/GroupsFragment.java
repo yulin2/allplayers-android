@@ -106,22 +106,16 @@ public class GroupsFragment extends ListFragment {
      * Fetches the groups a user belongs to and stores the data locally.
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
-        int iteration = mPageNumber;
         protected String doInBackground(Void... args) {
             return RestApiV1.getUserGroups(mPageNumber++ * 8, 8, mSortType);
         }
 
         protected void onPostExecute(String jsonResult) {
             if (!jsonResult.equals("error")) {
-                GroupsMap groups = new GroupsMap(jsonResult);
-                if (iteration > 0) {
-                    mGroupList.addAll(groups.getGroupData());
-                    updateGroupData();
-                } else {
-                	mCurrentAmountShown = mGroupList.size();
-                    mGroupList.addAll(groups.getGroupData());
-                    updateGroupData();
-                }
+                GroupsMap groups = new GroupsMap(jsonResult);               
+                mCurrentAmountShown = mGroupList.size();
+                mGroupList.addAll(groups.getGroupData());
+                updateGroupData();
             } else {
                 getListView().removeFooterView(mProgressBar);
             }
