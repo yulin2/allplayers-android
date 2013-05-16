@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
@@ -26,6 +26,7 @@ public class GroupsFragment extends ListFragment {
     private ArrayAdapter<GroupData> mAdapter;
     private ProgressBar mProgressBar;
     private Activity parentActivity;
+    private boolean mFirstCallComplete = false;
     private String mSortType = "radioactive";
 
     /** Called when the activity is first created. */
@@ -39,8 +40,6 @@ public class GroupsFragment extends ListFragment {
             mSortType = getArguments().getString("sort");
         }
         mProgressBar = new ProgressBar(parentActivity);
-
-        Toast.makeText(parentActivity, mSortType, Toast.LENGTH_LONG).show();
         new GetUserGroupsTask().execute();
     }
 
@@ -54,6 +53,7 @@ public class GroupsFragment extends ListFragment {
             private boolean loading = true;
             public void onScroll(AbsListView view, int firstVisibleItem,
             int visibleItemCount, int totalItemCount) {
+                Log.d("IC", "On Scroll called \n loading = " + loading + "\n first = " + firstVisibleItem + "\n visibleCount = " + visibleItemCount + "\n total item = " + totalItemCount);
                 if (loading) {
                     if (totalItemCount > previousTotal) {
                         loading = false;
@@ -107,16 +107,26 @@ public class GroupsFragment extends ListFragment {
      * Fetches the groups a user belongs to and stores the data locally.
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
+        int iteration = mPageNumber;
         protected String doInBackground(Void... args) {
             // TODO: add in the sort
-            return RestApiV1.getUserGroups(mPageNumber++ * 8, 8, null);
+            return RestApiV1.getUserGroups(mPageNumber++ * 8, 8, mSortType);
         }
 
         protected void onPostExecute(String jsonResult) {
             if (!jsonResult.equals("error")) {
                 GroupsMap groups = new GroupsMap(jsonResult);
-                mGroupList.addAll(groups.getGroupData());
-                updateGroupData();
+                if (iteration > 0) {
+                    // Hacky way to wait for first call to finish to ensure proper sorting. Only an
+                    // issue when the first 2 sets of groups load.
+                    while (!mFirstCallComplete) {}
+                    mGroupList.addAll(groups.getGroupData());
+                    updateGroupData();
+                } else {
+                    mGroupList.addAll(groups.getGroupData());
+                    updateGroupData();
+                    mFirstCallComplete = true;
+                }
             } else {
                 getListView().removeFooterView(mProgressBar);
             }

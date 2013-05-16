@@ -171,7 +171,7 @@ public class AllplayersSherlockListActivity extends SherlockListActivity impleme
             manager.removeAccount(accounts[0], null, null);
         }
 
-        startActivity(new Intent(this, Login.class));
+        invokeActivity(Login.class);
         finish();
     }
 

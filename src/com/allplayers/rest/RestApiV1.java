@@ -40,7 +40,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public class RestApiV1 {
-    private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
+    private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
     private static final String CAP_TOKEN_NAME = "X-ALLPLAYERS-CAPTCHA-TOKEN";
     private static final String CAP_SOLUTION_NAME = "X-ALLPLAYERS-CAPTCHA-SOLUTION";
     private static String sCurrentUserUUID = "";
@@ -149,8 +149,8 @@ public class RestApiV1 {
                                        capToken, capResponse);
     }
 
-    public static String deleteMessageThread(String id) {
-        return makeAuthenticatedDelete(ENDPOINT + "messages/" + id);
+    public static String deleteMessage(String id, String type) {
+        return makeAuthenticatedDelete(ENDPOINT + "messages/" + id + "&type=" + type);
     }
 
     // Change read/unread status

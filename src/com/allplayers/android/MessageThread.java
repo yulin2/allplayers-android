@@ -175,8 +175,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            //return RestApiV1.deleteMessage(mMessageThreadList.get(position).getId(), "msg");
-            return "error";
+            return RestApiV1.deleteMessage(mMessageThreadList.get(position).getId(), "msg");
         }
 
         @Override
@@ -186,7 +185,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
                 mInfoList.remove(position);
                 mAdapter.notifyDataSetChanged();
             } else {
-                Toast.makeText(getBaseContext(), "Currently can not delete a single message", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "There was an error deleting the message.\n" + result, Toast.LENGTH_LONG).show();
             }
         }
     }

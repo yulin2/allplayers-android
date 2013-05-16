@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 
@@ -89,7 +90,6 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
                         switch (item.getItemId()) {
                         case R.id.delete:
                             new DeleteMessageThreadTask(position).execute();
-                            //Toast.makeText(getBaseContext(), "Deleting message", Toast.LENGTH_LONG).show();
                             break;
                         }
                         return true;
@@ -124,7 +124,7 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
 
         @Override
         protected String doInBackground(Void... params) {
-            return RestApiV1.deleteMessageThread(mMessageList.get(position).getId());
+            return RestApiV1.deleteMessage(mMessageList.get(position).getId(), "thread");
         }
 
         @Override
@@ -132,6 +132,8 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
             if (result.equals("done")) {
                 mMessageList.remove(position);
                 mAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(getBaseContext(), "There was an error deleting the message.", Toast.LENGTH_LONG).show();
             }
         }
 
