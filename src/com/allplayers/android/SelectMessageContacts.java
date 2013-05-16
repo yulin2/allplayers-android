@@ -51,13 +51,13 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         }
         setContentView(R.layout.selectmessagecontacts);
 
-        actionbar.setTitle("Compose Messsage");
-        actionbar.setSubtitle("Recipients");
+        mActionBar.setTitle("Compose Messsage");
+        mActionBar.setSubtitle("Recipients");
 
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         setListAdapter(mAdapter);

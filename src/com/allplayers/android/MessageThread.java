@@ -52,12 +52,12 @@ public class MessageThread extends AllplayersSherlockListActivity {
         setContentView(R.layout.message_thread);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        actionbar.setTitle("Messages");
+        mActionBar.setTitle("Messages");
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
         new PutAndGetMessagesTask().execute(threadID);
 
@@ -129,7 +129,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
             MessageThreadMap messages = new MessageThreadMap(jsonResult);
             mMessageThreadList = messages.getMessageThreadData();
 
-            actionbar.setSubtitle("Thread started by " + mMessageThreadList.get(0).getSenderName());
+            mActionBar.setSubtitle("Thread started by " + mMessageThreadList.get(0).getSenderName());
 
             Collections.sort(mMessageThreadList, new Comparator<Object>() {
                 public int compare(Object o1, Object o2) {

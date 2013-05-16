@@ -34,13 +34,13 @@ public class MessageSent extends AllplayersSherlockListActivity {
         setContentView(R.layout.message_sent);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        actionbar.setTitle("Messages");
-        actionbar.setSubtitle("Sent");
+        mActionBar.setTitle("Messages");
+        mActionBar.setSubtitle("Sent");
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
         //check local storage
         if (LocalStorage.getTimeSinceLastModification("Sentbox") / 1000 / 60 < 15) { //more recent than 15 minutes

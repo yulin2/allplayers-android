@@ -57,11 +57,11 @@ public class EventDetailActivity extends AllplayersSherlockListActivity {
         SimpleAdapter adapter = new SimpleAdapter(this, list, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
 
-        actionbar.setTitle(mEvent.getTitle());
+        mActionBar.setTitle(mEvent.getTitle());
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
     }
 }

@@ -36,13 +36,13 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        actionbar.setTitle("Compose Message");
-        actionbar.setSubtitle("Select Group Recipients");
+        mActionBar.setTitle("Compose Message");
+        mActionBar.setSubtitle("Select Group Recipients");
 
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
         mSelectedGroups = new ArrayList<GroupData>();
         mSelectedMembers = new ArrayList<GroupMemberData>();

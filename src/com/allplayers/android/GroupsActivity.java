@@ -43,7 +43,7 @@ public class GroupsActivity extends AllplayersSherlockFragmentActivity {
         groupFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.container, groupFragment).addToBackStack(null).commit();
 
-        actionbar.setTitle("Groups");
+        mActionBar.setTitle("Groups");
 
         ViewGroup sorter = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.sort_method_layout, null);
         mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.sort_method,
@@ -82,13 +82,13 @@ public class GroupsActivity extends AllplayersSherlockFragmentActivity {
                 // TODO Auto-generated method stub
             }
         });
-        actionbar.setCustomView(sorter, new LayoutParams(Gravity.RIGHT));
-        actionbar.setDisplayShowCustomEnabled(true);
+        mActionBar.setCustomView(sorter, new LayoutParams(Gravity.RIGHT));
+        mActionBar.setDisplayShowCustomEnabled(true);
 
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
     }
 
     @Override

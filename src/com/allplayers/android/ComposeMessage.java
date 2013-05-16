@@ -32,13 +32,13 @@ public class ComposeMessage extends AllplayersSherlockActivity {
 
         setContentView(R.layout.composemessage);
 
-        actionbar.setTitle("Compose Message");
-        actionbar.setSubtitle("New Message");
+        mActionBar.setTitle("Compose Message");
+        mActionBar.setSubtitle("New Message");
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
         Intent intent = getIntent();
         if (intent.hasExtra("userData")) {

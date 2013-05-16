@@ -30,13 +30,13 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
 
         GroupData group = (new Router(this)).getIntentGroup();
 
-        actionbar.setTitle(group.getTitle());
-        actionbar.setSubtitle("Members");
+        mActionBar.setTitle(group.getTitle());
+        mActionBar.setSubtitle("Members");
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
         new GetGroupMembersByGroupIdTask().execute(group);
     }

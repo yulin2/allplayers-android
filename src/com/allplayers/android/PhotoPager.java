@@ -55,12 +55,12 @@ public class PhotoPager extends AllplayersSherlockActivity {
         mViewPager.setAdapter(mPhotoAdapter);
         mViewPager.setCurrentItem(mCurrentPhotoIndex);
 
-        actionbar.setTitle(getIntent().getStringExtra("album title"));
+        mActionBar.setTitle(getIntent().getStringExtra("album title"));
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
     }
 

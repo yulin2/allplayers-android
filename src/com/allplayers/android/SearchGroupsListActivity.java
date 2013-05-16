@@ -29,12 +29,12 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
         setContentView(R.layout.search_groups_list);
 
-        actionbar.setTitle("Search");
+        mActionBar.setTitle("Search");
 
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
         Router router = new Router(this);
         String query = router.getIntentSearchQuery();
@@ -78,9 +78,9 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
             mGroupList = groups.getGroupData();
 
             if (mGroupList.size() == 1) {
-                actionbar.setSubtitle("1 Result");
+                mActionBar.setSubtitle("1 Result");
             } else {
-                actionbar.setSubtitle(mGroupList.size() + " Results");
+                mActionBar.setSubtitle(mGroupList.size() + " Results");
             }
 
             String[] values;

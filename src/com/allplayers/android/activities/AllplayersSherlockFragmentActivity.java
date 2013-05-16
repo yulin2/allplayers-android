@@ -23,14 +23,14 @@ import com.devspark.sidenavigation.SideNavigationView;
 
 public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity implements ISideNavigationCallback {
 
-    protected SideNavigationView sideNavigationView;
-    protected ActionBar actionbar;
+    protected SideNavigationView mSideNavigationView;
+    protected ActionBar mActionBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
+        mActionBar = getSupportActionBar();
+        mActionBar.setIcon(R.drawable.menu_icon);
     }
 
     /**
@@ -77,7 +77,7 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
         switch (item.getItemId()) {
 
         case android.R.id.home: {
-            sideNavigationView.toggleMenu();
+            mSideNavigationView.toggleMenu();
             return true;
         }
 

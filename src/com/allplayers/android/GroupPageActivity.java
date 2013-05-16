@@ -54,7 +54,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         setContentView(R.layout.grouppage);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        actionbar.setDisplayShowTitleEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
 
         TextView title = new TextView(this);
         title.setText(mGroup.getTitle());
@@ -65,13 +65,13 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         title.setEllipsize(TextUtils.TruncateAt.END);
         title.setPadding(0, 15, 0, 0);
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(Gravity.CENTER);
-        actionbar.setCustomView(title, params);
-        actionbar.setDisplayShowCustomEnabled(true);
+        mActionBar.setCustomView(title, params);
+        mActionBar.setDisplayShowCustomEnabled(true);
 
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
         new GetGroupMembersByGroupIdTask().execute(mGroup.getUUID());
         new GetGroupLocationTask().execute(mGroup.getUUID());
     }

@@ -26,12 +26,12 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
 
         setContentView(R.layout.findgroups);
 
-        actionbar.setTitle("Search");
+        mActionBar.setTitle("Search");
 
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
         mSearchEditText = (EditText)findViewById(R.id.searchGroupsField);
         mZipcodeEditText = (EditText)findViewById(R.id.searchGroupsZipcodeField);

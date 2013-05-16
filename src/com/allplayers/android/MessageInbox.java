@@ -39,13 +39,13 @@ public class MessageInbox extends AllplayersSherlockActivity implements ISideNav
 
         new GetUserInboxTask().execute();
 
-        actionbar.setTitle("Messages");
-        actionbar.setSubtitle("Inbox");
+        mActionBar.setTitle("Messages");
+        mActionBar.setSubtitle("Inbox");
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
     }
 

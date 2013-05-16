@@ -57,12 +57,12 @@ public class MessageViewSingle extends AllplayersSherlockActivity {
             }
         });
 
-        actionbar.setTitle("Messages");
-        actionbar.setSubtitle("Message From: " + messageThreadList.getSenderName());
+        mActionBar.setTitle("Messages");
+        mActionBar.setSubtitle("Message From: " + messageThreadList.getSenderName());
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
     }
 }
