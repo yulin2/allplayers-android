@@ -35,10 +35,8 @@ public class GroupsFragment extends ListFragment {
         parentActivity = this.getActivity();
         mGroupList = new ArrayList<GroupData>();
         mAdapter = new ArrayAdapter<GroupData>(parentActivity, android.R.layout.simple_list_item_1, mGroupList);
-        if (getArguments() != null) {
-            if (getArguments().containsKey("sort")) {
-                mSortType = getArguments().getString("sort");
-            }
+        if (getArguments() != null && getArguments().containsKey("sort")) {
+            mSortType = getArguments().getString("sort");
         }
         mProgressBar = new ProgressBar(parentActivity);
 
@@ -111,7 +109,7 @@ public class GroupsFragment extends ListFragment {
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
             // TODO: add in the sort
-            return RestApiV1.getUserGroups(mPageNumber++ * 8, 8);
+            return RestApiV1.getUserGroups(mPageNumber++ * 8, 8, null);
         }
 
         protected void onPostExecute(String jsonResult) {

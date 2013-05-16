@@ -221,80 +221,6 @@ public class RestApiV1 {
      * getUserGroups().
      * API call to fetch the currently logged in user's groups.
      *
-     * @return: Result from API.
-     *
-     */
-    public static String getUserGroups() {
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/groups.json");
-    }
-
-    /**
-     * getUserGroups().
-     * API call to fetch the currently logged in user's groups.
-     *
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @return: Result from API.
-     *
-     */
-    public static String getUserGroups(int offset) {
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/groups.json&offset=" + offset);
-    }
-
-    /**
-     * getUserGroups().
-     * API call to fetch the currently logged in user's groups.
-     *
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @param limit: The number of results the API will return.
-     * @return: Result from API.
-     *
-     */
-    public static String getUserGroups(int offset, int limit) {
-        Log.d("IC", ENDPOINT + "users/" + sCurrentUserUUID
-              + "/groups.json&offset=" + offset + "&limit=" + limit);
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/groups.json&offset=" + offset + "&limit=" + limit);
-    }
-
-    /**
-     * getUserGroups().
-     * API call to fetch the currently logged in user's groups.
-     *
-     * @param sort: The method that the data should be sorted by:
-     *      "radioactivity": Sort the data by group activity (radioactivity).
-     *      "alphabetical_ascending": Sort the data in alphabetically ascending order.
-     *      "alphabetical_descending": Sort the data in alphabetically descending order.
-     * @return: Result from API.
-     *
-     */
-    public static String getUserGroups(String sort) {
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/groups.json&sort=" + sort);
-    }
-
-    /**
-     * getUserGroups().
-     * API call to fetch the currently logged in user's groups.
-     *
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @param sort: The method that the data should be sorted by:
-     *      "radioactivity": Sort the data by group activity (radioactivity).
-     *      "alphabetical_ascending": Sort the data in alphabetically ascending order.
-     *      "alphabetical_descending": Sort the data in alphabetically descending order.
-     * @return: Result from API.
-     *
-     */
-    public static String getUserGroups(int offset, String sort) {
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/groups.json&offset=" + offset + "&sort=" + sort);
-    }
-
-    /**
-     * getUserGroups().
-     * API call to fetch the currently logged in user's groups.
-     *
      * @param offset: Determines at what point the API returns data (starts after 'offset' results).
      * @param limit: The number of results the API will return.
      * @param sort: The method that the data should be sorted by:
@@ -305,11 +231,17 @@ public class RestApiV1 {
      *
      */
     public static String getUserGroups(int offset, int limit, String sort) {
-        Log.d("IC", ENDPOINT + "users/" + sCurrentUserUUID
-              + "/groups.json&offset=" + offset + "&limit=" + limit);
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/groups.json&offset=" + offset + "&limit=" + limit + "&sort="
-                                    + sort);
+        String query = ENDPOINT + "users/" + sCurrentUserUUID + "/groups.json";
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        if (sort != null && !sort.equals("")) {
+            query += ("&sort=" + sort);
+        }
+        return makeAuthenticatedGet(query);
     }
 
     public static String getUserFriends() {

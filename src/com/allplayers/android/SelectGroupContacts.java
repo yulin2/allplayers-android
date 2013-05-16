@@ -79,7 +79,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(0, 0);
+            return RestApiV1.getUserGroups(0, 0, null);
         }
 
         protected void onPostExecute(String jsonResult) {
