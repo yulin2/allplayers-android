@@ -4,8 +4,12 @@ import java.util.ArrayList;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -17,25 +21,44 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class GroupMembersActivity extends AllplayersSherlockListActivity {
-    private ProgressBar loading;
-
-    private ArrayList<GroupMemberData> membersList;
-    private GroupData mGroup;
-    
+	
+    private ProgressBar mLoadingIndicator;
+    private ArrayList<GroupMemberData> mMembersList;
+    private Button mLoadMoreButton;
+    private GroupData mGroup;    
     private int mOffset;
     private boolean mEndOfData;
+    private ArrayAdapter<GroupMemberData> mAdapter;
+    private ListView mListView;
+    private ViewGroup mFooter;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.members_list);
+
 
         mOffset = 0;
         mEndOfData = false;
-        membersList = new ArrayList<GroupMemberData>();
+        mMembersList = new ArrayList<GroupMemberData>();
+        mListView = getListView();
+        mAdapter = new ArrayAdapter<GroupMemberData>(this, android.R.layout.simple_list_item_1, mMembersList);
+        mFooter = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.load_more, null);
+        mLoadMoreButton = (Button) mFooter.findViewById(R.id.load_more_button);
+        mLoadingIndicator = (ProgressBar) mFooter.findViewById(R.id.loading_indicator);
         
-        setContentView(R.layout.members_list);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+        mLoadMoreButton.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				mLoadMoreButton.setVisibility(View.GONE);
+				mLoadingIndicator.setVisibility(View.VISIBLE);
+				new GetGroupMembersByGroupIdTask().execute(mGroup);
+			}
+		});
+        
+        mListView.addFooterView(mFooter);
+        setListAdapter(mAdapter);        
 
         mGroup = (new Router(this)).getIntentGroup();
 
@@ -52,17 +75,6 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         // Populate the list with the first 8 members.
         new GetGroupMembersByGroupIdTask().execute(mGroup);
     }
-    
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        
-        // Check if they pressed the "load more" button.
-        if (position == membersList.size()) {
-            new GetGroupMembersByGroupIdTask().execute(mGroup); 
-            
-        }
-    
-    }
 
     /*
      * Gets a group's members using a rest call and populates an array with the data.
@@ -75,30 +87,29 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
 
         protected void onPostExecute(String jsonResult) {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
-            if (groupMembers.size() < 8) {
+            if(groupMembers.size() == 0) {
                 mEndOfData = true;
-            }
-            
-            membersList.addAll(groupMembers.getGroupMemberData());
-            
-            ArrayList<String> values;
-            if (!membersList.isEmpty()) {
-                values = new ArrayList<String>();
-                for (int i = 0; i < membersList.size(); i++) {
-                    values.add( membersList.get(i).getName());
+                if(mMembersList.size() == 0) {
+                	GroupMemberData blank = new GroupMemberData();
+                	blank.setName("No members to display");
+                	mMembersList.add(blank);
+                	mAdapter.notifyDataSetChanged();
                 }
             } else {
-                values = new ArrayList<String>();
-                values.add("No Members to Display");
+            	if (groupMembers.size() < 8) {
+            		mEndOfData = true;
+            	}
+            
+            	mMembersList.addAll(groupMembers.getGroupMemberData());
+            	mAdapter.notifyDataSetChanged();
+            	if(!mEndOfData) {
+            		mLoadMoreButton.setVisibility(View.VISIBLE);
+            		mLoadingIndicator.setVisibility(View.GONE);
+            		mOffset += 8;
+            	} else {
+            		mListView.removeFooterView(mFooter);
+            	}
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupMembersActivity.this,
-                    android.R.layout.simple_list_item_1, values);
-            if(!mEndOfData) {
-                adapter.add("--Load More Data--");
-                mOffset += 8;
-            }
-            setListAdapter(adapter);
-            loading.setVisibility(View.GONE);
         }
     }
 }

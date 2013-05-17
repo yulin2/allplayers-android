@@ -20,11 +20,22 @@ public class GroupMemberData extends DataObject {
     }
 
     public String getName() {
-        name = fname + " " + lname;
-        return name;
+        return fname + " " + lname;
+    }
+    
+    public void setName(String s) {
+    	name = s;
     }
 
     public String getPicture() {
         return picture;
+    }
+    
+    @Override
+    public String toString() {
+    	if(getName().equals(" ")) {
+    		return name;
+    	}
+    	return getName();
     }
 }

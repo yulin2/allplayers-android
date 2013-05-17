@@ -34,6 +34,7 @@
     <string name="register">Register</string>
     <string name="captcha">Please solve this simple math problem:</string>
     <string name="sort">Sort:</string>
+    <string name="load_more">Load More</string>
     
     <string-array name="sort_method">
         <item>Activity</item>
