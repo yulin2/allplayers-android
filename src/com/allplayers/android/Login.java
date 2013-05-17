@@ -94,6 +94,7 @@ public class Login extends Activity {
                 new AttemptLoginTask().execute(storedEmail, unencryptedPassword);
             }
         } else {
+            // TODO: Clear user saved data as well
             showLoginFields();
         }
 

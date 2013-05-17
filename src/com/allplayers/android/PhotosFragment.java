@@ -32,8 +32,6 @@ public class PhotosFragment extends ListFragment {
         mAdapter = new AlbumAdapter(mParentActivity, R.layout.albumlistitem, mAlbumList);
         mLoadingIndicator = new ProgressBar(mParentActivity);
 
-        String jsonResult;
-
         if (LocalStorage.getTimeSinceLastModification("UserAlbums") / 1000 / 60 < 60) { //more recent than 60 minutes
             AlbumsMap albums;
             ArrayList<AlbumData> newAlbumList;
