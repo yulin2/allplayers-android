@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
@@ -19,20 +20,28 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
     private ProgressBar loading;
 
     private ArrayList<GroupMemberData> membersList;
+    private GroupData mGroup;
+    
+    private int mOffset;
+    private boolean mEndOfData;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mOffset = 0;
+        mEndOfData = false;
+        membersList = new ArrayList<GroupMemberData>();
+        
         setContentView(R.layout.members_list);
         loading = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        GroupData group = (new Router(this)).getIntentGroup();
+        mGroup = (new Router(this)).getIntentGroup();
 
         actionbar = getSupportActionBar();
         actionbar.setIcon(R.drawable.menu_icon);
-        actionbar.setTitle(group.getTitle());
+        actionbar.setTitle(mGroup.getTitle());
         actionbar.setSubtitle("Members");
 
         sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
@@ -40,8 +49,19 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         sideNavigationView.setMenuClickCallback(this);
         sideNavigationView.setMode(Mode.LEFT);
 
-        GetGroupMembersByGroupIdTask helper = new GetGroupMembersByGroupIdTask();
-        helper.execute(group);
+        // Populate the list with the first 8 members.
+        new GetGroupMembersByGroupIdTask().execute(mGroup);
+    }
+    
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        
+        // Check if they pressed the "load more" button.
+        if (position == membersList.size()) {
+            new GetGroupMembersByGroupIdTask().execute(mGroup); 
+            
+        }
+    
     }
 
     /*
@@ -50,25 +70,33 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
     public class GetGroupMembersByGroupIdTask extends AsyncTask<GroupData, Void, String> {
 
         protected String doInBackground(GroupData... groups) {
-            // @TODO: Move to asynchronous loading.
-            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID(), 1000);
+            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID(), 8, mOffset);
         }
 
         protected void onPostExecute(String jsonResult) {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
-            membersList = groupMembers.getGroupMemberData();
-
-            String[] values;
+            if (groupMembers.size() < 8) {
+                mEndOfData = true;
+            }
+            
+            membersList.addAll(groupMembers.getGroupMemberData());
+            
+            ArrayList<String> values;
             if (!membersList.isEmpty()) {
-                values = new String[membersList.size()];
+                values = new ArrayList<String>();
                 for (int i = 0; i < membersList.size(); i++) {
-                    values[i] = membersList.get(i).getName();
+                    values.add( membersList.get(i).getName());
                 }
             } else {
-                values = new String[] {"No members to display"};
+                values = new ArrayList<String>();
+                values.add("No Members to Display");
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupMembersActivity.this,
                     android.R.layout.simple_list_item_1, values);
+            if(!mEndOfData) {
+                adapter.add("--Load More Data--");
+                mOffset += 8;
+            }
             setListAdapter(adapter);
             loading.setVisibility(View.GONE);
         }
