@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.provider.MediaStore.Audio.Genres.Members;
+
 import com.allplayers.objects.GroupMemberData;
 import com.google.gson.Gson;
 
@@ -34,5 +36,9 @@ public class GroupMembersMap {
 
     public ArrayList<GroupMemberData> getGroupMemberData() {
         return mMembersList;
+    }
+    
+    public int size() {
+        return mMembersList.size();
     }
 }
