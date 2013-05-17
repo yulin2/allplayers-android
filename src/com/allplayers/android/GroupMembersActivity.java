@@ -38,7 +38,6 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.members_list);
 
-
         mOffset = 0;
         mEndOfData = false;
         mMembersList = new ArrayList<GroupMemberData>();
