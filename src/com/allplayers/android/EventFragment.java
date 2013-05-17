@@ -9,7 +9,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
@@ -18,8 +22,8 @@ import com.allplayers.objects.EventData;
 import com.allplayers.rest.RestApiV1;
 
 public class EventFragment extends ListFragment {
-    private ArrayList<EventData> mEventsList;
-    private ArrayList<HashMap<String, String>> mTimeList = new ArrayList<HashMap<String, String>>(2);
+    private ArrayList<EventData> mEventsList = new ArrayList<EventData>();
+    private ArrayList<HashMap<String, String>> mTimeList = new ArrayList<HashMap<String, String>>();
     private boolean hasEvents = false;
     private String mJsonResult;
     private Activity mParentActivity;
@@ -27,6 +31,11 @@ public class EventFragment extends ListFragment {
     private static final String LINE_TWO_KEY = "line2";
     private SimpleAdapter mAdapter;
     private ProgressBar mLoadingIndicator;
+    private ViewGroup mFooter;
+    private Button mLoadMoreButton;
+    private int mEventCount = 0;
+    private boolean mCanRemoveFooter = false;
+
 
     /** Called when the activity is first created. */
     @Override
@@ -43,8 +52,18 @@ public class EventFragment extends ListFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mLoadingIndicator = new ProgressBar(mParentActivity);
-        getListView().addFooterView(mLoadingIndicator);
+        mFooter = (ViewGroup) LayoutInflater.from(mParentActivity).inflate(R.layout.load_more, null);
+        mLoadMoreButton = (Button) mFooter.findViewById(R.id.load_more_button);
+        mLoadingIndicator = (ProgressBar) mFooter.findViewById(R.id.loading_indicator);
+
+        mLoadMoreButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLoadMoreButton.setVisibility(View.GONE);
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+            }
+        });
+        getListView().addFooterView(mFooter);
         setListAdapter(mAdapter);
     }
 
@@ -69,10 +88,16 @@ public class EventFragment extends ListFragment {
      */
     protected void setEventsMap() {
         EventsMap events = new EventsMap(mJsonResult);
-        mEventsList = events.getEventData();
         HashMap<String, String> map;
+        if (events.size() != 0) {
+            mEventsList.addAll(events.getEventData());
+            mEventCount += events.size();
+            if (events.size() < 10) {
+                mCanRemoveFooter  = true;
+            }
 
-        if (!mEventsList.isEmpty()) {
+
+
             for (int i = 0; i < mEventsList.size(); i++) {
                 map = new HashMap<String, String>();
                 map.put(LINE_ONE_KEY, mEventsList.get(i).getTitle());
@@ -82,16 +107,23 @@ public class EventFragment extends ListFragment {
                 mTimeList.add(map);
             }
             mAdapter.notifyDataSetChanged();
+            if (mCanRemoveFooter) {
+                getListView().removeFooterView(mFooter);
+            } else {
+                mLoadMoreButton.setVisibility(View.VISIBLE);
+                mLoadingIndicator.setVisibility(View.GONE);
+            }
             hasEvents = true;
         } else {
-            map = new HashMap<String, String>();
-            map.put(LINE_ONE_KEY, "No events to display.");
-            map.put(LINE_TWO_KEY, "");
-            mTimeList.add(map);
-            mAdapter.notifyDataSetChanged();
-            hasEvents = false;
+            if (mEventsList.isEmpty()) {
+                map = new HashMap<String, String>();
+                map.put(LINE_ONE_KEY, "No events to display.");
+                map.put(LINE_TWO_KEY, "");
+                mTimeList.add(map);
+                mAdapter.notifyDataSetChanged();
+                hasEvents = false;
+            }
         }
-        getListView().removeFooterView(mLoadingIndicator);
     }
 
     /*
@@ -100,7 +132,7 @@ public class EventFragment extends ListFragment {
     public class GetUserEventsTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserEvents(0);
+            return RestApiV1.getUserEvents(mEventCount, 10);
         }
 
         protected void onPostExecute(String jsonResult) {

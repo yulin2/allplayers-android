@@ -254,7 +254,7 @@ public class RestApiV1 {
                                     + "/groupmates.json&limit=" + limit);
     }
 
-    public static String getUserGroupmates(int limit, int offset) {
+    public static String getUserGroupmates(int offset, int limit) {
         return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
                                     + "/groupmates.json&limit=" + limit + "&offset=" + offset);
     }
@@ -264,7 +264,7 @@ public class RestApiV1 {
                                     + "/events/upcoming.json&limit=" + limit);
     }
 
-    public static String getUserEvents(int limit, int offset) {
+    public static String getUserEvents(int offset, int limit) {
         return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
                                     + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
     }
@@ -278,8 +278,8 @@ public class RestApiV1 {
                                     + "/albums.json&limit=" + limit);
     }
 
-    public static String getGroupAlbumsByGroupId(String group_uuid, int limit,
-            int offset) {
+    public static String getGroupAlbumsByGroupId(String group_uuid, int offset,
+            int limit) {
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
                                     + "/albums.json&limit=" + limit + "&offset=" + offset);
     }
@@ -289,8 +289,8 @@ public class RestApiV1 {
                                     + "/events/upcoming.json&limit=" + limit);
     }
 
-    public static String getGroupEventsByGroupId(String group_uuid, int limit,
-            int offset) {
+    public static String getGroupEventsByGroupId(String group_uuid, int offset,
+            int limit) {
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
                                     + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
     }
@@ -300,8 +300,8 @@ public class RestApiV1 {
                                     + "/members.json&limit=" + limit);
     }
 
-    public static String getGroupMembersByGroupId(String group_uuid, int limit,
-            int offset) {
+    public static String getGroupMembersByGroupId(String group_uuid, int offset,
+            int limit) {
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
                                     + "/members.json&limit=" + limit + "&offset=" + offset);
     }
@@ -319,8 +319,8 @@ public class RestApiV1 {
                                     + "/photos.json&limit=" + limit);
     }
 
-    public static String getAlbumPhotosByAlbumId(String album_uuid, int limit,
-            int offset) {
+    public static String getAlbumPhotosByAlbumId(String album_uuid, int offset,
+            int limit) {
         return makeAuthenticatedGet(ENDPOINT + "albums/" + album_uuid
                                     + "/photos.json&offset=" + offset + "&limit=" + limit);
     }

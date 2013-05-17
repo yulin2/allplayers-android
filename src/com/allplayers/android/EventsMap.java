@@ -42,4 +42,8 @@ public class EventsMap {
     public ArrayList<EventData> getEventData() {
         return mEventsList;
     }
+
+    public int size() {
+        return mEventsList.size();
+    }
 }

@@ -37,7 +37,7 @@ public class GroupMembersMap {
     public ArrayList<GroupMemberData> getGroupMemberData() {
         return mMembersList;
     }
-    
+
     public int size() {
         return mMembersList.size();
     }

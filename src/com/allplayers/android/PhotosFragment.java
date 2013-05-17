@@ -9,14 +9,13 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.allplayers.android.GroupMembersActivity.GetGroupMembersByGroupIdTask;
 import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
@@ -28,9 +27,9 @@ public class PhotosFragment extends ListFragment {
     private int mNumGroupsLoaded = 0;
     private AlbumAdapter mAdapter;
     private ProgressBar mLoadingIndicator;
-	private ViewGroup mFooter;
-	private Button mLoadMoreButton;
-	private boolean mCanRemoveFooter = false;
+    private ViewGroup mFooter;
+    private Button mLoadMoreButton;
+    private boolean mCanRemoveFooter = false;
 
 
     /** Called when the activity is first created. */
@@ -43,21 +42,21 @@ public class PhotosFragment extends ListFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {        
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         mFooter = (ViewGroup) LayoutInflater.from(mParentActivity).inflate(R.layout.load_more, null);
         mLoadMoreButton = (Button) mFooter.findViewById(R.id.load_more_button);
         mLoadingIndicator = (ProgressBar) mFooter.findViewById(R.id.loading_indicator);
-        
-        mLoadMoreButton.setOnClickListener(new OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				mLoadMoreButton.setVisibility(View.GONE);
-				mLoadingIndicator.setVisibility(View.VISIBLE);
-		        new GetUserGroupsTask().execute();
-			}
-		});
+
+        mLoadMoreButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLoadMoreButton.setVisibility(View.GONE);
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                new GetUserGroupsTask().execute();
+            }
+        });
         getListView().addFooterView(mFooter);
-        setListAdapter(mAdapter);       
+        setListAdapter(mAdapter);
     }
 
     @Override
@@ -85,8 +84,8 @@ public class PhotosFragment extends ListFragment {
 
             LocalStorage.writeUserAlbums(mParentActivity.getBaseContext(), "", true);
             mGroupCount += groupList.size();
-            if(groupList.size() < 15) {
-            	mCanRemoveFooter = true;
+            if (groupList.size() < 15) {
+                mCanRemoveFooter = true;
             }
             for (int i = 0; i < groupList.size(); i++) {
                 group_uuid = groupList.get(i).getUUID();
@@ -119,8 +118,8 @@ public class PhotosFragment extends ListFragment {
         }
 
         protected void onPostExecute(String jsonResult) {
-        	mNumGroupsLoaded++;
-        	
+            mNumGroupsLoaded++;
+
             AlbumsMap albums;
             ArrayList<AlbumData> newAlbumList;
             albums = new AlbumsMap(jsonResult);
@@ -136,14 +135,14 @@ public class PhotosFragment extends ListFragment {
                         android.R.layout.simple_list_item_1, values);
                 setListAdapter(adapter);
             }
-            if(mNumGroupsLoaded == mGroupCount) {
-            	if(mCanRemoveFooter) {
-            		getListView().removeFooterView(mFooter);
-            	} else {
-            		mLoadMoreButton.setVisibility(View.VISIBLE);
-            		mLoadingIndicator.setVisibility(View.GONE);
-            	}
-        	}
+            if (mNumGroupsLoaded == mGroupCount) {
+                if (mCanRemoveFooter) {
+                    getListView().removeFooterView(mFooter);
+                } else {
+                    mLoadMoreButton.setVisibility(View.VISIBLE);
+                    mLoadingIndicator.setVisibility(View.GONE);
+                }
+            }
         }
     }
 }
