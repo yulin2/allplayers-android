@@ -52,17 +52,22 @@ public class EventFragment extends ListFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        // Inflate and get a handle on our load more and loading indicator footer for our list.
         mFooter = (ViewGroup) LayoutInflater.from(mParentActivity).inflate(R.layout.load_more, null);
         mLoadMoreButton = (Button) mFooter.findViewById(R.id.load_more_button);
         mLoadingIndicator = (ProgressBar) mFooter.findViewById(R.id.loading_indicator);
 
+        // When the load button is clicked, show the loading indicator and load more events.
         mLoadMoreButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
+                new GetUserEventsTask().execute();
             }
         });
+
+        // Add our footer to the bottom of the list and set our adapter.
         getListView().addFooterView(mFooter);
         setListAdapter(mAdapter);
     }
@@ -73,10 +78,11 @@ public class EventFragment extends ListFragment {
 
         Intent intent;
         if (hasEvents) {
+            // If the event has a loaction and we are on the correct API level, show a map.
             if ((!(mEventsList.get(position).getLatitude().equals("")
                     && mEventsList.get(position).getLatitude().equals(""))) && (!(Build.VERSION.SDK_INT < 11))) {
                 intent = (new Router(mParentActivity)).getEventDisplayActivityIntent(mEventsList.get(position));
-            } else {
+            } else {// If we do not meet those conditions, launch only the more detailed event page.
                 intent = (new Router(mParentActivity)).getEventDetailActivityIntent(mEventsList.get(position));
             }
             startActivity(intent);
@@ -90,15 +96,14 @@ public class EventFragment extends ListFragment {
         EventsMap events = new EventsMap(mJsonResult);
         HashMap<String, String> map;
         if (events.size() != 0) {
+            // Add new events to our list.
             mEventsList.addAll(events.getEventData());
-            mEventCount += events.size();
+            // If we did not load a full set of groups, we can remove our load more button.
             if (events.size() < 10) {
                 mCanRemoveFooter  = true;
             }
-
-
-
-            for (int i = 0; i < mEventsList.size(); i++) {
+            // Create the list items for each event.
+            for (int i = mEventCount; i < mEventsList.size(); i++) {
                 map = new HashMap<String, String>();
                 map.put(LINE_ONE_KEY, mEventsList.get(i).getTitle());
 
@@ -106,15 +111,21 @@ public class EventFragment extends ListFragment {
                 map.put(LINE_TWO_KEY, start);
                 mTimeList.add(map);
             }
+            // Increment our count of how many events we have.
+            mEventCount += events.size();
+            // Update the ListView.
             mAdapter.notifyDataSetChanged();
+            // Remove our load more button if we can.
             if (mCanRemoveFooter) {
                 getListView().removeFooterView(mFooter);
-            } else {
+            } else { // Reset the load more button.
                 mLoadMoreButton.setVisibility(View.VISIBLE);
                 mLoadingIndicator.setVisibility(View.GONE);
             }
             hasEvents = true;
         } else {
+            // If we did not load any new events and no previous events were there,
+            // we create a blank list item and indicate no events loaded.
             if (mEventsList.isEmpty()) {
                 map = new HashMap<String, String>();
                 map.put(LINE_ONE_KEY, "No events to display.");
