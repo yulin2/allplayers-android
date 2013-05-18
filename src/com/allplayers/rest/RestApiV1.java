@@ -243,27 +243,43 @@ public class RestApiV1 {
         return makeAuthenticatedGet(query);
     }
 
+    /**
+     * getUserFriends()
+     * API call to fetch the currently logged in user's friends.
+     *
+     * @return: Result from API.
+     */
     public static String getUserFriends() {
         String jsonResult = makeAuthenticatedGet(ENDPOINT + "users/"
                             + sCurrentUserUUID + "/friends.json");
         return jsonResult.replaceAll("&#039;", "'");
     }
 
-    public static String getUserGroupmates(int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/groupmates.json&limit=" + limit);
-    }
-
+    /**
+     * getUserGroupmates().
+     * API call to fetch the currently logged in user's groups.
+     *
+     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit: The number of results the API will return.
+     *
+     * @return: Result from API.
+     *
+     */
     public static String getUserGroupmates(int offset, int limit) {
         return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
                                     + "/groupmates.json&limit=" + limit + "&offset=" + offset);
     }
 
-    public static String getUserEvents(int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/events/upcoming.json&limit=" + limit);
-    }
-
+    /**
+     * getUserEvents().
+     * API call to fetch the currently logged in user's groups.
+     *
+     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit: The number of results the API will return.
+     *
+     * @return: Result from API.
+     *
+     */
     public static String getUserEvents(int offset, int limit) {
         return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
                                     + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
@@ -273,33 +289,53 @@ public class RestApiV1 {
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid + ".json");
     }
 
-    public static String getGroupAlbumsByGroupId(String group_uuid, int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
-                                    + "/albums.json&limit=" + limit);
-    }
 
+    /**
+     * getGroupAlbumsByGroupId().
+     * API call to fetch the currently logged in user's groups.
+     *
+     * @param group_uuid: The unique id of the group.
+     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit: The number of results the API will return.
+     *
+     * @return: Result from API.
+     *
+     */
     public static String getGroupAlbumsByGroupId(String group_uuid, int offset,
             int limit) {
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
                                     + "/albums.json&limit=" + limit + "&offset=" + offset);
     }
 
-    public static String getGroupEventsByGroupId(String group_uuid, int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
-                                    + "/events/upcoming.json&limit=" + limit);
-    }
-
+    /**
+     * getGroupEventsByGroupId().
+     * API call to fetch the currently logged in user's groups.
+     *
+     * @param group_uuid: The unique id of the group.
+     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit: The number of results the API will return.
+     *
+     * @return: Result from API.
+     *
+     */
     public static String getGroupEventsByGroupId(String group_uuid, int offset,
             int limit) {
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
                                     + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
     }
 
-    public static String getGroupMembersByGroupId(String group_uuid, int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
-                                    + "/members.json&limit=" + limit);
-    }
 
+    /**
+     * getGroupMembersByGroupId().
+     * API call to fetch the currently logged in user's groups.
+     *
+     * @param group_uuid: The unique id of the group.
+     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit: The number of results the API will return.
+     *
+     * @return: Result from API.
+     *
+     */
     public static String getGroupMembersByGroupId(String group_uuid, int offset,
             int limit) {
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid

@@ -114,7 +114,7 @@ public class PhotosFragment extends ListFragment {
     public class GetGroupAlbumsByGroupIdTask extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... group_uuid) {
-            return RestApiV1.getGroupAlbumsByGroupId(group_uuid[0], 100);
+            return RestApiV1.getGroupAlbumsByGroupId(group_uuid[0], 0, 100);
         }
 
         protected void onPostExecute(String jsonResult) {
