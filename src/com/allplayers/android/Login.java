@@ -65,13 +65,6 @@ public class Login extends Activity {
         passwordLabel = (TextView)findViewById(R.id.passwordLabel);
         usernameLabel = (TextView)findViewById(R.id.usernameLabel);
         progressSpinner = (ProgressBar) findViewById(R.id.ctrlActivityIndicator);
-
-        // Clear any UUID that may be saved from a previous user.
-        // @TODO: This is not an elegant solution though is the only apparent one due to the way that
-        //  RestApiV1 is currently set up.
-        SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("UUID", "");
         
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
         // There should only be one allplayers type account in the device at once.
@@ -96,6 +89,13 @@ public class Login extends Activity {
             }
         } else {
             showLoginFields();
+            
+            // Clear any UUID that may be saved from a previous user.
+            // @TODO: This is not an elegant solution though is the only apparent one due to the way that
+            //  RestApiV1 is currently set up.
+            SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("UUID", "");
         }
 
         button.setOnClickListener(new View.OnClickListener() {

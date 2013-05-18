@@ -56,4 +56,8 @@ public class MessagesMap {
     public ArrayList<MessageData> getMessageData() {
         return mail;
     }
+    
+    public int size() {
+        return mail.size();
+    }
 }

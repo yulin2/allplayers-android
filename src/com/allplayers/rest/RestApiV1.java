@@ -260,9 +260,21 @@ public class RestApiV1 {
     public static String getUserInbox() {
         return makeAuthenticatedGet(endpoint + "messages.json&box=inbox");
     }
+    
+    public static String getUserInbox(int limit) {
+        return makeAuthenticatedGet(endpoint + "messages.json&box=inbox&limit=" + limit);
+    }
+    
+    public static String getUserInbox(int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "messages.json&box=inbox&limit=" + limit + "&offset=" + offset);
+    }
 
     public static String getUserSentBox() {
         return makeAuthenticatedGet(endpoint + "messages.json&box=sent");
+    }
+    
+    public static String getUserSentBox(int offset, int limit) {
+        return makeAuthenticatedGet(endpoint + "messages.json&box=sent&offset=" + offset + "&limit=" + limit);
     }
 
     public static String getUserMessagesByThreadId(String thread_id) {
