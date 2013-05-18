@@ -149,23 +149,6 @@ public class RestApiV1 {
                                        capToken, capResponse);
     }
 
-    public static String deleteMessage(String id, String type) {
-        return makeAuthenticatedDelete(ENDPOINT + "messages/" + id + "&type=" + type);
-    }
-
-    // Change read/unread status
-    public static String putMessage(int threadId, int status, String type) {
-        String[][] contents = new String[2][2];
-        // Status: 1=unread, 0=read
-        contents[0][0] = "status";
-        contents[0][1] = "" + status;
-        // Type: thread or msg (default = thread)
-        contents[1][0] = "type";
-        contents[1][1] = type;
-        return makeAuthenticatedPut(
-                   ENDPOINT + "messages/" + threadId + ".json", contents);
-    }
-
     public String validateLogin(String username, String password) {
         String[][] contents = new String[2][2];
         contents[0][0] = "username";
@@ -176,6 +159,55 @@ public class RestApiV1 {
         return makeAuthenticatedPost(ENDPOINT + "users/login.json", contents);
     }
 
+    /**
+     * deleteMessage()
+     * API call to delete a message or message thread.
+     *
+     * @param id: The unique id of the thread or message.
+     * @param type: Whether you want to delete a message or thread.
+     *      "thread": Thread.
+     *      "msg": Message.
+     * @return
+     */
+    public static String deleteMessage(String id, String type) {
+        return makeAuthenticatedDelete(ENDPOINT + "messages/" + id + "&type=" + type);
+    }
+
+    /**
+     * putMessage()
+     * API call to update a message or message thread status.
+     *
+     * @param id: The unique id of the thread or message.
+     * @param status: The status you want to update to.
+     *      1: Unread.
+     *      2: Read.
+     * @param type: Whether a message or thread is to be updated.
+     *      "thread": Thread.
+     *      "msg": Message.
+     *
+     * @return: Result from API.
+     */
+    public static String putMessage(int id, int status, String type) {
+        String[][] contents = new String[2][2];
+
+        contents[0][0] = "status";
+        contents[0][1] = "" + status;
+
+        contents[1][0] = "type";
+        contents[1][1] = type;
+        return makeAuthenticatedPut(
+                   ENDPOINT + "messages/" + id + ".json", contents);
+    }
+
+    /**
+     * postMessage()
+     * API call to create a message reply.
+     *
+     * @param threadId: The id of the thread to reply to.
+     * @param body: The actual body of the message.
+     *
+     * @return: Result from API.
+     */
     public static String postMessage(int threadId, String body) {
         String[][] contents = new String[2][2];
         contents[0][0] = "thread_id";
@@ -186,6 +218,16 @@ public class RestApiV1 {
         return makeAuthenticatedPost(ENDPOINT + "messages.json", contents);
     }
 
+    /**
+     * createNewMessage()
+     * API call to create a new message to recipients.
+     *
+     * @param uuids: An array of recipient uuids.
+     * @param subject: The subject of the message.
+     * @param body: The body of the message.
+     *
+     * @return: Result from API.
+     */
     public static String createNewMessage(String[] uuids, String subject,
                                           String body) {
         String[][] contents = new String[uuids.length + 2][2];
@@ -257,7 +299,7 @@ public class RestApiV1 {
 
     /**
      * getUserGroupmates().
-     * API call to fetch the currently logged in user's groups.
+     * API call to fetch the currently logged in user's groupmates.
      *
      * @param offset: Determines at what point the API returns data (starts after 'offset' results).
      * @param limit: The number of results the API will return.
@@ -272,7 +314,7 @@ public class RestApiV1 {
 
     /**
      * getUserEvents().
-     * API call to fetch the currently logged in user's groups.
+     * API call to fetch the currently logged in user's events.
      *
      * @param offset: Determines at what point the API returns data (starts after 'offset' results).
      * @param limit: The number of results the API will return.
@@ -292,7 +334,7 @@ public class RestApiV1 {
 
     /**
      * getGroupAlbumsByGroupId().
-     * API call to fetch the currently logged in user's groups.
+     * API call to fetch a group's list of albums.
      *
      * @param group_uuid: The unique id of the group.
      * @param offset: Determines at what point the API returns data (starts after 'offset' results).
@@ -309,7 +351,7 @@ public class RestApiV1 {
 
     /**
      * getGroupEventsByGroupId().
-     * API call to fetch the currently logged in user's groups.
+     * API call to fetch a group's list of events.
      *
      * @param group_uuid: The unique id of the group.
      * @param offset: Determines at what point the API returns data (starts after 'offset' results).
@@ -327,7 +369,7 @@ public class RestApiV1 {
 
     /**
      * getGroupMembersByGroupId().
-     * API call to fetch the currently logged in user's groups.
+     * API call to fetch a group's list of members.
      *
      * @param group_uuid: The unique id of the group.
      * @param offset: Determines at what point the API returns data (starts after 'offset' results).
@@ -342,6 +384,14 @@ public class RestApiV1 {
                                     + "/members.json&limit=" + limit + "&offset=" + offset);
     }
 
+    /**
+     * getGroupPhotosByGroupId()
+     * API call to fetch a group's photo albums.
+     *
+     * @param group_uuid: The unique id of the group.
+     *
+     * @return: Result from API.
+     */
     public static String getGroupPhotosByGroupId(String group_uuid) {
         return makeAuthenticatedGet(ENDPOINT + "groups/photos.json");
     }
@@ -350,11 +400,17 @@ public class RestApiV1 {
         return makeAuthenticatedGet(ENDPOINT + "albums/" + album_uuid + ".json");
     }
 
-    public static String getAlbumPhotosByAlbumId(String album_uuid, int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "albums/" + album_uuid
-                                    + "/photos.json&limit=" + limit);
-    }
-
+    /**
+     * getAlbumPhotosByAlbumId().
+     * API call to fetch an album's list of photos.
+     *
+     * @param group_uuid: The unique id of the group.
+     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit: The number of results the API will return.
+     *
+     * @return: Result from API.
+     *
+     */
     public static String getAlbumPhotosByAlbumId(String album_uuid, int offset,
             int limit) {
         return makeAuthenticatedGet(ENDPOINT + "albums/" + album_uuid
@@ -365,14 +421,34 @@ public class RestApiV1 {
         return makeAuthenticatedGet(ENDPOINT + "photos/" + photo_uuid + ".json");
     }
 
+    /**
+     * getUserInbox()
+     * API call to fetch the currently logged in user's message inbox.
+     *
+     * @return: Result from API.
+     */
     public static String getUserInbox() {
         return makeAuthenticatedGet(ENDPOINT + "messages.json&box=inbox");
     }
 
+    /**
+     * getUserSentBox()
+     * API call to fetch the currently logged in user's message sent box.
+     *
+     * @return: Result from API.
+     */
     public static String getUserSentBox() {
         return makeAuthenticatedGet(ENDPOINT + "messages.json&box=sent");
     }
 
+    /**
+     * getUserMessagesByThreadId()
+     * API call to fetch a list of messages in a specific thread.
+     *
+     * @param thread_id: The unique id of the thread to fetch.
+     *
+     * @return: Result from API.
+     */
     public static String getUserMessagesByThreadId(String thread_id) {
         return makeAuthenticatedGet(ENDPOINT + "messages/" + thread_id
                                     + ".json");
