@@ -58,6 +58,6 @@ public class MessagesMap {
     }
     
     public int size() {
-        return mail.size();
+        return mMessageList.size();
     }
 }
