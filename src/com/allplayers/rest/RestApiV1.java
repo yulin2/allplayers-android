@@ -442,13 +442,12 @@ public class RestApiV1 {
     /**
      * getUserSentBox()
      * API call to fetch the currently logged in user's message sent box.
+     * 
+     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit: The number of results the API will return.
      *
      * @return: Result from API.
-     */
-    public static String getUserSentBox() {
-        return makeAuthenticatedGet(ENDPOINT + "messages.json&box=sent");
-    }
-    
+     */    
     public static String getUserSentBox(int offset, int limit) {
         return makeAuthenticatedGet(ENDPOINT + "messages.json&box=sent&offset=" + offset + "&limit=" + limit);
     }
