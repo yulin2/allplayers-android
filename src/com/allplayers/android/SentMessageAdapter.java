@@ -28,10 +28,10 @@ public class SentMessageAdapter extends BaseAdapter {
                                       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.sentboxrow, null);
         }
-        
+
         TextView subject = (TextView) convertView.findViewById(R.id.subject);
         subject.setText(entry.getSubject());
-        
+
         TextView senderName = (TextView) convertView.findViewById(R.id.last_sender);
         senderName.setText("Last sent from " + entry.getLastSender());
 

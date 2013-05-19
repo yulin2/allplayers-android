@@ -22,20 +22,20 @@ public class GroupMemberData extends DataObject {
     public String getName() {
         return fname + " " + lname;
     }
-    
+
     public void setName(String s) {
-    	name = s;
+        name = s;
     }
 
     public String getPicture() {
         return picture;
     }
-    
+
     @Override
     public String toString() {
-    	if(getName().equals(" ")) {
-    		return name;
-    	}
-    	return getName();
+        if (getName().equals(" ")) {
+            return name;
+        }
+        return getName();
     }
 }

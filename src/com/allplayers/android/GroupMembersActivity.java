@@ -20,13 +20,13 @@ import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-public class GroupMembersActivity extends AllplayersSherlockListActivity {	
+public class GroupMembersActivity extends AllplayersSherlockListActivity {
     private ProgressBar mLoadingIndicator;
-    private ArrayList<GroupMemberData> mMembersList;
+    private ArrayList<GroupMemberData> mMembersList = new ArrayList<GroupMemberData>();
     private Button mLoadMoreButton;
-    private GroupData mGroup;    
-    private int mOffset;
-    private boolean mEndOfData;
+    private GroupData mGroup;
+    private int mOffset = 0;
+    private boolean mEndOfData = false;
     private ArrayAdapter<GroupMemberData> mAdapter;
     private ListView mListView;
     private ViewGroup mFooter;
@@ -37,15 +37,18 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.members_list);
 
-        mOffset = 0;
-        mEndOfData = false;
-        mMembersList = new ArrayList<GroupMemberData>();
+        // Get a handle on the ListView.
         mListView = getListView();
+        // Create our adapter for the ListView.
         mAdapter = new ArrayAdapter<GroupMemberData>(this, android.R.layout.simple_list_item_1, mMembersList);
+
+        // Inflate and get a handle on our loading button and indicator.
         mFooter = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.load_more, null);
         mLoadMoreButton = (Button) mFooter.findViewById(R.id.load_more_button);
         mLoadingIndicator = (ProgressBar) mFooter.findViewById(R.id.loading_indicator);
 
+        // When the load more button is clicked, show the loading indicator and load more
+        // group members.
         mLoadMoreButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,16 +58,19 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
             }
         });
 
+        // Add our loading button and indicator to the ListView.
         mListView.addFooterView(mFooter);
-        setListAdapter(mAdapter);        
+        // Set our ListView adapter.
+        setListAdapter(mAdapter);
 
+        // Pull the current group out of the current intent.
         mGroup = (new Router(this)).getIntentGroup();
 
-        mActionBar = getSupportActionBar();
-        mActionBar.setIcon(R.drawable.menu_icon);
+        // Set up the ActionBar.
         mActionBar.setTitle(mGroup.getTitle());
         mActionBar.setSubtitle("Members");
 
+        // Set up the Side Navigation List.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
@@ -80,33 +86,40 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
     public class GetGroupMembersByGroupIdTask extends AsyncTask<GroupData, Void, String> {
 
         protected String doInBackground(GroupData... groups) {
-            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID(), 8, mOffset);
+            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID(), mOffset, 10);
         }
 
         protected void onPostExecute(String jsonResult) {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
-            if(groupMembers.size() == 0) {
+
+            if (groupMembers.size() == 0) {
+                // If the newly pulled group members is empty, indicate the end of data.
                 mEndOfData = true;
-                if(mMembersList.size() == 0) {
-                	GroupMemberData blank = new GroupMemberData();
-                	blank.setName("No members to display");
-                	mMembersList.add(blank);
-                	mAdapter.notifyDataSetChanged();
+                // If the members list is also empty, there are no group members, so add
+                // a blank indicator showing so.
+                if (mMembersList.size() == 0) {
+                    GroupMemberData blank = new GroupMemberData();
+                    blank.setName("No members to display");
+                    mMembersList.add(blank);
+                    mAdapter.notifyDataSetChanged();
                 }
             } else {
-            	if (groupMembers.size() < 8) {
-            		mEndOfData = true;
-            	}
-            
-            	mMembersList.addAll(groupMembers.getGroupMemberData());
-            	mAdapter.notifyDataSetChanged();
-            	if(!mEndOfData) {
-            		mLoadMoreButton.setVisibility(View.VISIBLE);
-            		mLoadingIndicator.setVisibility(View.GONE);
-            		mOffset += 8;
-            	} else {
-            		mListView.removeFooterView(mFooter);
-            	}
+                // If we pulled less than 10 new members, indicate we are at the end of data.
+                if (groupMembers.size() < 10) {
+                    mEndOfData = true;
+                }
+
+                // Add all the new members to our list and update our ListView.
+                mMembersList.addAll(groupMembers.getGroupMemberData());
+                mAdapter.notifyDataSetChanged();
+            }
+            // If we are not at the end of data, show our load more button and increase our offset.
+            if (!mEndOfData) {
+                mLoadMoreButton.setVisibility(View.VISIBLE);
+                mLoadingIndicator.setVisibility(View.GONE);
+                mOffset += groupMembers.size();
+            } else { // If we are at the end of data, remove the load more button.
+                mListView.removeFooterView(mFooter);
             }
         }
     }

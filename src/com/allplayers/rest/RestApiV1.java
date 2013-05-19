@@ -38,6 +38,7 @@ import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class RestApiV1 {
     private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
@@ -380,6 +381,8 @@ public class RestApiV1 {
      */
     public static String getGroupMembersByGroupId(String group_uuid, int offset,
             int limit) {
+        Log.d("IC", ENDPOINT + "groups/" + group_uuid
+              + "/members.json&limit=" + limit + "&offset=" + offset);
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
                                     + "/members.json&limit=" + limit + "&offset=" + offset);
     }
@@ -430,11 +433,11 @@ public class RestApiV1 {
     public static String getUserInbox() {
         return makeAuthenticatedGet(ENDPOINT + "messages.json&box=inbox");
     }
-    
+
     public static String getUserInbox(int limit) {
         return makeAuthenticatedGet(ENDPOINT + "messages.json&box=inbox&limit=" + limit);
     }
-    
+
     public static String getUserInbox(int limit, int offset) {
         return makeAuthenticatedGet(ENDPOINT + "messages.json&box=inbox&limit=" + limit + "&offset=" + offset);
     }
@@ -442,12 +445,12 @@ public class RestApiV1 {
     /**
      * getUserSentBox()
      * API call to fetch the currently logged in user's message sent box.
-     * 
+     *
      * @param offset: Determines at what point the API returns data (starts after 'offset' results).
      * @param limit: The number of results the API will return.
      *
      * @return: Result from API.
-     */    
+     */
     public static String getUserSentBox(int offset, int limit) {
         return makeAuthenticatedGet(ENDPOINT + "messages.json&box=sent&offset=" + offset + "&limit=" + limit);
     }

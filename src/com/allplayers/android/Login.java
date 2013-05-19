@@ -88,7 +88,7 @@ public class Login extends Activity {
         } else {
             // TODO: Clear user saved data as well
             showLoginFields();
-            
+
             // Clear any UUID that may be saved from a previous user.
             // @TODO: This is not an elegant solution though is the only apparent one due to the way that
             //  RestApiV1 is currently set up.

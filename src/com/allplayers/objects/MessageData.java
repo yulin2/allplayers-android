@@ -100,7 +100,7 @@ public class MessageData extends DataObject {
     public String getNew() {
         return is_new;
     }
-    
+
     public void setLastSender(String lastSender) {
         last_message_sender = lastSender;
     }
