@@ -1,39 +1,56 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 
-import com.allplayers.android.activities.AllplayersSherlockListActivity;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.MessageData;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-public class MessageSent extends AllplayersSherlockListActivity {
-
+/**
+ * MessageInbox.
+ * User's messages sent mail box.
+ *
+ */
+public class MessageSent extends AllplayersSherlockActivity {
+    
+    private final int LIMIT = 15;
     private ArrayList<MessageData> mMessageList;
-    private boolean hasMessages;
-    private String mJsonResult = "";
+    private Button mLoadMoreButton;
+    private ListView mListView;
+    private SentMessageAdapter mMessageListAdapter;
     private ProgressBar mLoadingIndicator;
-    ArrayList<HashMap<String, String>> mInfoList = new ArrayList<HashMap<String, String>>(2);
+    private ViewGroup mFooter;
+    private boolean mEndOfData;
+    private int mOffset;
 
-    /** Called when the activity is first created. */
+    /**
+     * onCreate().
+     * Called when the activity is first created. 
+     * 
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.message_sent);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
-
+        //setContentView(R.layout.inboxlist);
+        
+        mActionBar = getSupportActionBar();
+        mActionBar.setIcon(R.drawable.menu_icon);
         mActionBar.setTitle("Messages");
         mActionBar.setSubtitle("Sent");
 
@@ -42,94 +59,102 @@ public class MessageSent extends AllplayersSherlockListActivity {
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
-        //check local storage
-        if (LocalStorage.getTimeSinceLastModification("Sentbox") / 1000 / 60 < 15) { //more recent than 15 minutes
-            mJsonResult = LocalStorage.readSentbox(getBaseContext());
-            HashMap<String, String> map;
-
-            MessagesMap messages = new MessagesMap(mJsonResult);
-            mMessageList = messages.getMessageData();
-
-            if (!mMessageList.isEmpty()) {
-                hasMessages = true;
-
-                for (int i = 0; i < mMessageList.size(); i++) {
-                    map = new HashMap<String, String>();
-                    map.put("line1", mMessageList.get(i).getSubject());
-                    map.put("line2", "Last sent from: " + mMessageList.get(i).getLastSender());
-                    mInfoList.add(map);
-                }
-            } else {
-                hasMessages = false;
-
-                map = new HashMap<String, String>();
-                map.put("line1", "You have no sent messages.");
-                map.put("line2", "");
-                mInfoList.add(map);
+        // Load the user's sentbox.
+        new GetUserSentboxTask().execute();
+        
+        mMessageList = new ArrayList<MessageData>();
+        mListView = (ListView) findViewById(R.id.customListView);
+        mMessageListAdapter = new SentMessageAdapter(MessageSent.this, mMessageList);
+        mFooter = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.load_more, null);
+        mLoadMoreButton = (Button) mFooter.findViewById(R.id.load_more_button);
+        mLoadingIndicator = (ProgressBar) mFooter.findViewById(R.id.loading_indicator);
+        
+        // Set up the "load more" button.
+        mLoadMoreButton.setOnClickListener(new OnClickListener() {          
+            @Override
+            public void onClick(View v) {
+                mLoadMoreButton.setVisibility(View.GONE);
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                new GetUserSentboxTask().execute();
             }
-
-            String[] from = { "line1", "line2" };
-
-            int[] to = { android.R.id.text1, android.R.id.text2 };
-
-            SimpleAdapter adapter = new SimpleAdapter(this, mInfoList, android.R.layout.simple_list_item_2, from, to);
-            setListAdapter(adapter);
-        } else {
-            new GetUserSentBoxTask().execute();
-        }
+        });
+        
+        // Set up the list view that will show all of the data.
+        mListView.addFooterView(mFooter);
+        mListView.setAdapter(mMessageListAdapter);
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+ 
+                Intent intent = (new Router(MessageSent.this)).getMessageThreadIntent(mMessageList.get(position));
+                startActivity(intent);
+            }
+        });
     }
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        if (hasMessages) {
-            // Go to the message thread.
-            Intent intent = (new Router(MessageSent.this)).getMessageThreadIntent(mMessageList.get(position));
-            startActivity(intent);
-        }
-    }
-
-    /*
-     * Gets a user's sent mail box and populates a hash map with the data.
+    /**
+     * GetUserInboxTask.
+     * Fetches the user's message inbox asynchronously.
+     *
      */
-    public class GetUserSentBoxTask extends AsyncTask<Void, Void, String> {
+    public class GetUserSentboxTask extends AsyncTask<Void, Void, String> {
+        
+        /**
+         * doInBackground().
+         * Fetch the user's message inbox.
+         * 
+         */
+        @Override
         protected String doInBackground(Void... Args) {
-            return RestApiV1.getUserSentBox();
+            return RestApiV1.getUserSentBox(mOffset, LIMIT);
         }
 
+        /**
+         * onPoseExecute().
+         * Take the JSON result from fetching the user's inbox and make it into useful data.
+         * 
+         */
+        @Override
         protected void onPostExecute(String jsonResult) {
-            LocalStorage.writeSentbox(getBaseContext(), jsonResult, false);
-            HashMap<String, String> map;
-
             MessagesMap messages = new MessagesMap(jsonResult);
-            mMessageList = messages.getMessageData();
-
-            if (!mMessageList.isEmpty()) {
-                hasMessages = true;
-
-                for (int i = 0; i < mMessageList.size(); i++) {
-                    map = new HashMap<String, String>();
-                    map.put("line1", mMessageList.get(i).getSubject());
-                    map.put("line2", "Last sent from: " + mMessageList.get(i).getLastSender());
-                    mInfoList.add(map);
+            
+            // Check if there was any data returned. If there wasn't, either all of the data has
+            // been fetched already or there wasn't any to fetch in the beginning.
+            if(messages.size() == 0) {
+                mEndOfData = true;
+                
+                // Check if the list of messages is empty. If so, there was never any data to be
+                // fetched.
+                if(mMessageList.size() == 0) {
+                    
+                    // We need to display to the user that there aren't any messanges. We do this
+                    // by making a blank MessageData object and setting its last_message_sender
+                    // field to a notification. We use this field because it is the most prominent.
+                    MessageData blank = new MessageData();
+                    blank.setLastSender("No messages to display");
+                    mMessageListAdapter.notifyDataSetChanged();
                 }
-            } else {
-                hasMessages = false;
-
-                map = new HashMap<String, String>();
-                map.put("line1", "You have no sent messages.");
-                map.put("line2", "");
-                mInfoList.add(map);
+            } 
+            
+            // If we made it here we know that there was at least part of a set of data fetched.
+            else {
+                
+                // If the size of the returned data is less than the maximum size we specified, we
+                // know that we have reached the end of the data to be fetched.
+                if (messages.size() < LIMIT) {
+                    mEndOfData = true;
+                }
+                
+                mMessageList.addAll(messages.getMessageData());
+                mMessageListAdapter.notifyDataSetChanged();
+                if (!mEndOfData) {
+                    mLoadMoreButton.setVisibility(View.VISIBLE);
+                    mLoadingIndicator.setVisibility(View.GONE);
+                    mOffset += LIMIT;
+                } else {
+                    mListView.removeFooterView(mFooter);
+                }
             }
-
-            String[] from = { "line1", "line2" };
-
-            int[] to = { android.R.id.text1, android.R.id.text2 };
-
-            SimpleAdapter adapter = new SimpleAdapter(MessageSent.this, mInfoList, android.R.layout.simple_list_item_2, from, to);
-            setListAdapter(adapter);
-            mLoadingIndicator.setVisibility(View.GONE);
+            
         }
     }
 }

@@ -1,8 +1,5 @@
 package com.allplayers.android;
 
-import com.allplayers.objects.PhotoData;
-import com.allplayers.rest.RestApiV1;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import com.allplayers.objects.PhotoData;
+import com.allplayers.rest.RestApiV1;
 
 public class PhotoAdapter extends BaseAdapter {
     private ImageView[] mPhotosImages;

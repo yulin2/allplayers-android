@@ -20,12 +20,11 @@ import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-public class GroupMembersActivity extends AllplayersSherlockListActivity {
-
+public class GroupMembersActivity extends AllplayersSherlockListActivity {	
     private ProgressBar mLoadingIndicator;
     private ArrayList<GroupMemberData> mMembersList;
     private Button mLoadMoreButton;
-    private GroupData mGroup;
+    private GroupData mGroup;    
     private int mOffset;
     private boolean mEndOfData;
     private ArrayAdapter<GroupMemberData> mAdapter;
@@ -57,7 +56,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         });
 
         mListView.addFooterView(mFooter);
-        setListAdapter(mAdapter);
+        setListAdapter(mAdapter);        
 
         mGroup = (new Router(this)).getIntentGroup();
 
@@ -86,28 +85,28 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
 
         protected void onPostExecute(String jsonResult) {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
-            if (groupMembers.size() == 0) {
+            if(groupMembers.size() == 0) {
                 mEndOfData = true;
-                if (mMembersList.size() == 0) {
-                    GroupMemberData blank = new GroupMemberData();
-                    blank.setName("No members to display");
-                    mMembersList.add(blank);
-                    mAdapter.notifyDataSetChanged();
+                if(mMembersList.size() == 0) {
+                	GroupMemberData blank = new GroupMemberData();
+                	blank.setName("No members to display");
+                	mMembersList.add(blank);
+                	mAdapter.notifyDataSetChanged();
                 }
             } else {
-                if (groupMembers.size() < 8) {
-                    mEndOfData = true;
-                }
-
-                mMembersList.addAll(groupMembers.getGroupMemberData());
-                mAdapter.notifyDataSetChanged();
-                if (!mEndOfData) {
-                    mLoadMoreButton.setVisibility(View.VISIBLE);
-                    mLoadingIndicator.setVisibility(View.GONE);
-                    mOffset += 8;
-                } else {
-                    mListView.removeFooterView(mFooter);
-                }
+            	if (groupMembers.size() < 8) {
+            		mEndOfData = true;
+            	}
+            
+            	mMembersList.addAll(groupMembers.getGroupMemberData());
+            	mAdapter.notifyDataSetChanged();
+            	if(!mEndOfData) {
+            		mLoadMoreButton.setVisibility(View.VISIBLE);
+            		mLoadingIndicator.setVisibility(View.GONE);
+            		mOffset += 8;
+            	} else {
+            		mListView.removeFooterView(mFooter);
+            	}
             }
         }
     }
