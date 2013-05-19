@@ -32,14 +32,17 @@ public class ComposeMessage extends AllplayersSherlockActivity {
 
         setContentView(R.layout.composemessage);
 
+        // Set up the ActionBar.
         mActionBar.setTitle("Compose Message");
         mActionBar.setSubtitle("New Message");
 
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
+        // Pull the list of recipients from the intent.
         Intent intent = getIntent();
         if (intent.hasExtra("userData")) {
             try {
@@ -47,6 +50,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
                 if (jsonArray.length() > 0) {
                     // Used to create GroupMemberData objects from json.
                     Gson gson = new Gson();
+                    // Add in the user's uuids into the recipient list.
                     for (int i = 0; i < jsonArray.length(); i++) {
                         GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
                         mRecipientUuidList.add(member.getUUID());
@@ -69,27 +73,28 @@ public class ComposeMessage extends AllplayersSherlockActivity {
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+            	// Pull the body and subject from the form.
                 mMessageBody = bodyField.getText().toString();
                 mMessageSubject = subjectField.getText().toString();
 
+                // Spawn a thread to send the message.
                 new createNewMessageTask().execute(mMessageSubject, mMessageBody);
 
-                Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
-                toast.show();
+                // Show a popup message that the message is being sent.
+                Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG).show();
 
+                // End the activity.
                 finish();
             }
         });
     }
 
-    /*
+    /**
      * Posts a user's message using a rest call.
-     * It was necessary to use an "Object" due to the fact that you cannot pass
-     *      variables of different type into doIbBackground.
      */
-    public class createNewMessageTask extends AsyncTask<Object, Void, Void> {
-        protected Void doInBackground(Object... args) {
-            RestApiV1.createNewMessage(mRecipientUuidList.toArray(new String[mRecipientUuidList.size()]), (String)args[0], (String)args[1]);
+    public class createNewMessageTask extends AsyncTask<String, Void, Void> {
+        protected Void doInBackground(String... params) {
+            RestApiV1.createNewMessage(mRecipientUuidList.toArray(new String[mRecipientUuidList.size()]), params[0], params[1]);
             return null;
         }
     }
