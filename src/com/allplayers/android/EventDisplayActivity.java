@@ -36,16 +36,19 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eventdetail);
 
-
+        // Pull the event from the current intent.
         mEvent = (new Router(this)).getIntentEvent();
 
+        // Set up the ActionBar.
         mActionBar.setTitle(mEvent.getTitle());
 
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
+        // Pull the event latitude and longitude.
         mLatitude = mEvent.getLatitude();
         mLongitude = mEvent.getLongitude();
 
@@ -53,20 +56,26 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
     }
 
     private void createGoogleMap() {
+    	// Create the map fragment.
         GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        // Create a location object from our lat and long.
         LatLng location = new LatLng((Float.parseFloat(mLatitude)), (Float.parseFloat(mLongitude)));
+        // Focus in on our event location.
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7));
+        // Create a marker on our event location.
         MarkerOptions marker = new MarkerOptions()
         .position(location)
         .title(mEvent.getTitle())
         .snippet("Start: " + mEvent.getStartDateString() + "\nEnd: " + mEvent.getEndDateString());
 
+        // Add our marker to the map.
         map.setInfoWindowAdapter(new CustomInfoAdapter(getLayoutInflater()));
         map.addMarker(marker).showInfoWindow();
 
         map.setOnMarkerClickListener(new OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+            	// Go to the more detailed event page.
                 Intent intent = (new Router(EventDisplayActivity.this)).getEventDetailActivityIntent(mEvent);
                 startActivity(intent);
                 return false;
@@ -75,6 +84,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
+            	// Go to the more detailed event page.
                 Intent intent = (new Router(EventDisplayActivity.this)).getEventDetailActivityIntent(mEvent);
                 startActivity(intent);
             }
@@ -92,16 +102,13 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         public View getInfoContents(Marker marker) {
             View infoWindow = inflater.inflate(R.layout.event_marker_info_window, null);
 
-            TextView textView = (TextView)infoWindow.findViewById(R.id.title);
-            textView.setText(marker.getTitle());
-            textView = (TextView)infoWindow.findViewById(R.id.snippet);
-            textView.setText(marker.getSnippet());
+            ((TextView)infoWindow.findViewById(R.id.title)).setText(marker.getTitle());
+            ((TextView)infoWindow.findViewById(R.id.snippet)).setText(marker.getSnippet());
             return infoWindow;
         }
 
         @Override
         public View getInfoWindow(Marker marker) {
-            // TODO Auto-generated method stub
             return null;
         }
 
