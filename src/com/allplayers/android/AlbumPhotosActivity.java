@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ProgressBar;
@@ -19,9 +20,10 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class AlbumPhotosActivity extends AllplayersSherlockActivity {
-    private ArrayList<PhotoData> mPhotoList;
+    private ArrayList<PhotoData> mPhotoList = new ArrayList<PhotoData>();
     private PhotoAdapter mPhotoAdapter;
     private GridView mGridView;
+    private AlbumData mAlbum;
     private ProgressBar mProgressBar;
 
     /**
@@ -33,48 +35,37 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.albumdisplay);
+        
         mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        final AlbumData album = (new Router(this)).getIntentAlbum();
-        mPhotoList = new ArrayList<PhotoData>();
+        // Pull the album info from the current intent.
+        mAlbum = (new Router(this)).getIntentAlbum();
+        
+        // Create our GridView and set its click listener.
         mGridView = (GridView) findViewById(R.id.gridview);
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mGridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 if (mPhotoList.get(position) != null) {
                     // Display the group page for the selected group
                     Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoPagerActivityIntent(mPhotoList.get(position));
-                    intent.putExtra("album title", album.getTitle());
+                    intent.putExtra("album title", mAlbum.getTitle());
                     startActivity(intent);
                 }
             }
         });
 
-        mActionBar.setTitle(album.getTitle());
+        // Set up the ActionBar.
+        mActionBar.setTitle(mAlbum.getTitle());
 
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
-        new GetAlbumPhotosByAlbumIdTask().execute(album);
-    }
-
-    /**
-     * Creates an array adapter to store the album's photos.
-     */
-    public void setAdapter() {
-
-        if (mPhotoList.isEmpty()) {
-            String[] values = new String[] {"no photos to display"};
-
-            mGridView.setAdapter(new ArrayAdapter<String>(AlbumPhotosActivity.this,
-                                 android.R.layout.simple_list_item_1, values));
-        } else {
-            mPhotoAdapter = new PhotoAdapter(getApplicationContext());
-            mGridView.setAdapter(mPhotoAdapter);
-        }
+        // Load the photos for the album.
+        new GetAlbumPhotosByAlbumIdTask().execute(mAlbum);
     }
 
     /**
@@ -82,14 +73,18 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
      * @param jsonResult The album's photos.
      */
     public void updateAlbumPhotos(String jsonResult) {
-
+    	// Create the photo list from the json.
         PhotosMap photos = new PhotosMap(jsonResult);
         mPhotoList.addAll(photos.getPhotoData());
 
-        setAdapter();
-
-        if (mPhotoList.size() != 0) {
-            mPhotoAdapter.addAll(mPhotoList);
+        // If there are no photos, create a blank adapter showing so.
+        if (mPhotoList.isEmpty()) {
+            String[] values = new String[] {"no photos to display"};
+            mGridView.setAdapter(new ArrayAdapter<String>(AlbumPhotosActivity.this,
+                                 android.R.layout.simple_list_item_1, values));
+        } else { // If there are photos, create a custom adapter for the GridView.
+            mPhotoAdapter = new PhotoAdapter(getApplicationContext(), mPhotoList);            
+            mGridView.setAdapter(mPhotoAdapter);
         }
     }
 

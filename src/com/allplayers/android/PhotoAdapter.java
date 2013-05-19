@@ -23,7 +23,9 @@ public class PhotoAdapter extends BaseAdapter {
 
     public PhotoAdapter(Context context, List<PhotoData> objects) {
         mContext = context;
-        this.mPhotos = objects;
+        mPhotos = objects;
+        mPhotoCount = mPhotos.size();
+        mPhotosImages = new ImageView[mPhotoCount];
     }
 
     public PhotoAdapter(Context context) {
