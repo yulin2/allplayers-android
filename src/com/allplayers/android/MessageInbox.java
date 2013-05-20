@@ -116,6 +116,7 @@ public class MessageInbox extends AllplayersSherlockActivity {
         /**
          * onPoseExecute().
          * Take the JSON result from fetching the user's inbox and make it into useful data.
+         * @param jsonResult: Result of fetching the user's inbox.
          * 
          */
         @Override
