@@ -33,7 +33,8 @@ public class EventFragment extends ListFragment {
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
     private Button mLoadMoreButton;
-    private int mEventCount = 0;
+    private int mOffset = 0;
+    private int mLimit = 10;
     private boolean mCanRemoveFooter = false;
 
 
@@ -95,15 +96,15 @@ public class EventFragment extends ListFragment {
     protected void setEventsMap() {
         EventsMap events = new EventsMap(mJsonResult);
         HashMap<String, String> map;
-        if (events.size() != 0) {
+        if (!events.isEmpty()) {
             // Add new events to our list.
             mEventsList.addAll(events.getEventData());
             // If we did not load a full set of groups, we can remove our load more button.
-            if (events.size() < 10) {
+            if (events.size() < mLimit) {
                 mCanRemoveFooter  = true;
             }
             // Create the list items for each event.
-            for (int i = mEventCount; i < mEventsList.size(); i++) {
+            for (int i = mOffset; i < mEventsList.size(); i++) {
                 map = new HashMap<String, String>();
                 map.put(LINE_ONE_KEY, mEventsList.get(i).getTitle());
 
@@ -112,7 +113,7 @@ public class EventFragment extends ListFragment {
                 mTimeList.add(map);
             }
             // Increment our count of how many events we have.
-            mEventCount += events.size();
+            mOffset += events.size();
             // Update the ListView.
             mAdapter.notifyDataSetChanged();
             // Remove our load more button if we can.
@@ -133,6 +134,8 @@ public class EventFragment extends ListFragment {
                 mTimeList.add(map);
                 mAdapter.notifyDataSetChanged();
                 hasEvents = false;
+                // Remove our footer.
+                getListView().removeFooterView(mFooter);
             }
         }
     }
@@ -143,7 +146,7 @@ public class EventFragment extends ListFragment {
     public class GetUserEventsTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserEvents(mEventCount, 10);
+            return RestApiV1.getUserEvents(mOffset, mLimit);
         }
 
         protected void onPostExecute(String jsonResult) {

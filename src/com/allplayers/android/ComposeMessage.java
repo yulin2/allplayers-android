@@ -73,7 +73,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	// Pull the body and subject from the form.
+                // Pull the body and subject from the form.
                 mMessageBody = bodyField.getText().toString();
                 mMessageSubject = subjectField.getText().toString();
 

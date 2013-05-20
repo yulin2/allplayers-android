@@ -46,4 +46,8 @@ public class EventsMap {
     public int size() {
         return mEventsList.size();
     }
+
+    public boolean isEmpty() {
+        return mEventsList.size() == 0;
+    }
 }

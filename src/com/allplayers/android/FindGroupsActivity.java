@@ -26,18 +26,22 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
 
         setContentView(R.layout.findgroups);
 
+        // Set up the ActionBar.
         mActionBar.setTitle("Search");
 
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
+        // Get a handle on our text inputs and the label for adding a distance to the search.
         mSearchEditText = (EditText)findViewById(R.id.searchGroupsField);
         mZipcodeEditText = (EditText)findViewById(R.id.searchGroupsZipcodeField);
         mDistanceEditText = (EditText)findViewById(R.id.searchGroupsDistanceField);
         mDistanceLabel = (TextView)findViewById(R.id.distanceLabel);
 
+        // Add a watcher for the zipcode input to allow distance search if a valid zip is given.
         mZipcodeEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -59,16 +63,19 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
             }
         });
 
-        final Button logOnButton = (Button) findViewById(R.id.searchGroupsButton);
-        logOnButton.setOnClickListener(new View.OnClickListener() {
+        final Button searchButton = (Button) findViewById(R.id.searchGroupsButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                // Get the text input.
                 String query = mSearchEditText.getText().toString().trim();
                 String zipcodeString = mZipcodeEditText.getText().toString().trim();
                 String distanceString = mDistanceEditText.getText().toString().trim();
 
+                // Set a default zipcode and distance.
                 int zipcode = 0;
                 int distance = 10;
 
+                // Validate the zipcode input.
                 if (zipcodeString.length() == 5) {
                     for (int i = 0; i < 5; i++) {
                         if (!Character.isDigit(zipcodeString.charAt(i))) {
@@ -79,6 +86,7 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
                     }
                 }
 
+                // Validate the distance input.
                 if (distanceString.length() >= 1) {
                     for (int i = 0; i < distanceString.length(); i++) {
                         if (!Character.isDigit(distanceString.charAt(i))) {
@@ -89,7 +97,7 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
                     }
                 }
 
-
+                // Start the activity to display the search results.
                 Intent intent = (new Router(FindGroupsActivity.this)).getSearchGroupsListActivityIntent(query, zipcode, distance);
                 startActivity(intent);
             }

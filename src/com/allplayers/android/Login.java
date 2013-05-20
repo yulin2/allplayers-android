@@ -183,6 +183,7 @@ public class Login extends Activity {
                 Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
                 invalidLogin.show();
                 mLoadingIndicator.setVisibility(View.INVISIBLE);
+                showLoginFields();
             } else if (ex.equals("noInternetConnection")) {
                 showLoginFields();
                 Toast noInternetConnection = Toast.makeText(getApplicationContext(), "No Connection \nCheck Internet Connectivity", Toast.LENGTH_LONG);

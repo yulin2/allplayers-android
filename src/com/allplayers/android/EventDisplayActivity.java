@@ -56,7 +56,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
     }
 
     private void createGoogleMap() {
-    	// Create the map fragment.
+        // Create the map fragment.
         GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         // Create a location object from our lat and long.
         LatLng location = new LatLng((Float.parseFloat(mLatitude)), (Float.parseFloat(mLongitude)));
@@ -75,7 +75,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         map.setOnMarkerClickListener(new OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-            	// Go to the more detailed event page.
+                // Go to the more detailed event page.
                 Intent intent = (new Router(EventDisplayActivity.this)).getEventDetailActivityIntent(mEvent);
                 startActivity(intent);
                 return false;
@@ -84,7 +84,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-            	// Go to the more detailed event page.
+                // Go to the more detailed event page.
                 Intent intent = (new Router(EventDisplayActivity.this)).getEventDetailActivityIntent(mEvent);
                 startActivity(intent);
             }

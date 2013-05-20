@@ -26,19 +26,24 @@ public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Set up the UI.
         setContentView(R.layout.albums_list);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
 
+        // Get the group information from the current intent.
         GroupData group = (new Router(this)).getIntentGroup();
 
+        // Set up the ActionBar.
         mActionBar.setTitle(group.getTitle());
         mActionBar.setSubtitle("Photo Albums");
 
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
+        // Load the group's first set of albums.
         new GetGroupAlbumsByGroupIdTask().execute(group);
     }
 
@@ -53,13 +58,13 @@ public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
         }
     }
 
-    /*
+    /**
      * Gets the photo albums for a group by using the groups ID with a rest call.
      */
     public class GetGroupAlbumsByGroupIdTask extends AsyncTask<GroupData, Void, String> {
 
         protected String doInBackground(GroupData... groups) {
-            // @TODO: Move to asynchronous loading.
+            // Pull the group's albums from the API.
             return RestApiV1.getGroupAlbumsByGroupId(groups[0].getUUID(), 0, 0);
         }
 
@@ -67,16 +72,18 @@ public class GroupAlbumsActivity  extends AllplayersSherlockListActivity {
             AlbumsMap albums = new AlbumsMap(jsonResult);
             mAlbumList = albums.getAlbumData();
 
+            // If our list of loaded albums is empty, create a blank adapter.
             if (mAlbumList.isEmpty()) {
                 String[] values = new String[] {"no albums to display"};
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(GroupAlbumsActivity.this,
+                ArrayAdapter<String> blankAdapter = new ArrayAdapter<String>(GroupAlbumsActivity.this,
                         android.R.layout.simple_list_item_1, values);
-                setListAdapter(adapter);
+                setListAdapter(blankAdapter);
             } else {
-                //Create a customized ArrayAdapter
+                //Create a customized AlbumAdapter.
                 AlbumAdapter adapter = new AlbumAdapter(getApplicationContext(), R.layout.albumlistitem, mAlbumList);
                 setListAdapter(adapter);
             }
+            // Hide the loading indicator.
             mProgressBar.setVisibility(View.GONE);
         }
     }

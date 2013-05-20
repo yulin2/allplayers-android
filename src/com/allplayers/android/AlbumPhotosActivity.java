@@ -36,12 +36,12 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.albumdisplay);
-        
+
         mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
 
         // Pull the album info from the current intent.
         mAlbum = (new Router(this)).getIntentAlbum();
-        
+
         // Create our GridView and set its click listener.
         mGridView = (GridView) findViewById(R.id.gridview);
         mGridView.setOnItemClickListener(new OnItemClickListener() {
@@ -73,7 +73,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
      * @param jsonResult The album's photos.
      */
     public void updateAlbumPhotos(String jsonResult) {
-    	// Create the photo list from the json.
+        // Create the photo list from the json.
         PhotosMap photos = new PhotosMap(jsonResult);
         mPhotoList.addAll(photos.getPhotoData());
 
@@ -83,7 +83,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
             mGridView.setAdapter(new ArrayAdapter<String>(AlbumPhotosActivity.this,
                                  android.R.layout.simple_list_item_1, values));
         } else { // If there are photos, create a custom adapter for the GridView.
-            mPhotoAdapter = new PhotoAdapter(getApplicationContext(), mPhotoList);            
+            mPhotoAdapter = new PhotoAdapter(getApplicationContext(), mPhotoList);
             mGridView.setAdapter(mPhotoAdapter);
         }
     }

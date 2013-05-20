@@ -478,6 +478,7 @@ public class RestApiV1 {
     }
 
     private static String makeAuthenticatedGet(String urlString) {
+    	Log.d("GET", urlString);
         if (!isLoggedIn()) {
             return "You are not logged in";
         }
@@ -577,6 +578,8 @@ public class RestApiV1 {
     }
 
     private static String makeUnauthenticatedGet(String urlString) {
+    	Log.d("GET", urlString);
+
         // Make and return from unauthenticated get call
         try {
             URL url = new URL(urlString);
