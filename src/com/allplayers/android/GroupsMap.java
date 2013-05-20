@@ -23,15 +23,15 @@ public class GroupsMap {
                 for (int i = 0; i < jsonResult.length(); i++) {
                     GroupData group = gson.fromJson(jsonArray.getString(i), GroupData.class);
                     try {
-                    // Used to set the groups lat and long because gson will not.
-                    JSONObject groupInfo = new JSONObject(jsonArray.getString(i));
-                    group.setZip(groupInfo.getJSONObject("location").getString("zip"));
-                    group.setLatLon(groupInfo.getJSONObject("location").getString("latitude"), groupInfo.getJSONObject("location").getString("longitude"));
-                    } catch(JSONException ex) {
-                    	// If the group does not have a location, ignore this exception.
+                        // Used to set the groups lat and long because gson will not.
+                        JSONObject groupInfo = new JSONObject(jsonArray.getString(i));
+                        group.setZip(groupInfo.getJSONObject("location").getString("zip"));
+                        group.setLatLon(groupInfo.getJSONObject("location").getString("latitude"), groupInfo.getJSONObject("location").getString("longitude"));
+                    } catch (JSONException ex) {
+                        // If the group does not have a location, ignore this exception.
                     }
                     //if (group.isNew(mGroupsList)) {
-                        mGroupsList.add(group);
+                    mGroupsList.add(group);
                     //}
                 }
             }

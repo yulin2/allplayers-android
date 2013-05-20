@@ -1,11 +1,14 @@
 package com.allplayers.android;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +20,24 @@ import com.allplayers.objects.AlbumData;
 import com.allplayers.rest.RestApiV1;
 
 public class AlbumAdapter extends ArrayAdapter<AlbumData> {
-    private List<ImageView> mCoverPhotos = new ArrayList<ImageView>();
+    private LruCache<String, Bitmap> mImageCache;
     private TextView mAlbumTitle;
     private TextView mAlbumExtraInfo;
     private List<AlbumData> mAlbums = new ArrayList<AlbumData>();
 
     public AlbumAdapter(Context context, int textViewResourceId, List<AlbumData> objects) {
         super(context, textViewResourceId, objects);
-        this.mAlbums = objects;
+        mAlbums = objects;
+        final int maxMemory = (int)(Runtime.getRuntime().maxMemory() / 1024);
+        final int cacheSize = maxMemory / 8;
+        mImageCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return (bitmap.getRowBytes() * bitmap.getHeight()) / 1024;
+            }
+        };
     }
 
     public int getCount() {
@@ -48,7 +61,8 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         AlbumData album = getItem(position);
 
         //Get reference to ImageView
-        mCoverPhotos.add(position, (ImageView)row.findViewById(R.id.albumCoverPhoto));
+        ImageView image = (ImageView)row.findViewById(R.id.albumCoverPhoto);
+        image.setImageResource(R.drawable.backgroundstate);
 
         //Get reference to TextView - albumTitle
         mAlbumTitle = (TextView)row.findViewById(R.id.albumTitle);
@@ -59,11 +73,15 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         //Set album title
         mAlbumTitle.setText(album.getTitle());
 
-        //Set cover photo icon
-        String imageURL = album.getCoverPhoto();
+        if (mImageCache.get(position + "") != null) {
+            image.setImageBitmap(mImageCache.get(position + ""));
+        } else {
+            //Set cover photo icon
+            String imageURL = album.getCoverPhoto();
 
-        if (!imageURL.trim().equals("")) {
-            new GetRemoteImageTask(position).execute(album);
+            if (!imageURL.trim().equals("")) {
+                new GetRemoteImageTask(image, position).execute(imageURL);
+            }
         }
 
         //@TODO: Fix API bug causing the incorrect number of photos in an album to be displayed.
@@ -72,23 +90,38 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         return row;
     }
 
-    /*
-     * Gets an albums cover photo with a rest call.
+    /**
+     * Get's a user's image using a rest call and displays it.
      */
-    public class GetRemoteImageTask extends AsyncTask<AlbumData, Void, Bitmap> {
-        int row;
+    public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
+        private final WeakReference<ImageView> viewReference;
+        private int index;
 
-        public GetRemoteImageTask(int r) {
-            this.row = r;
+        GetRemoteImageTask(ImageView im, int ind) {
+            viewReference = new WeakReference<ImageView>(im);
+            index = ind;
         }
 
-        protected Bitmap doInBackground(AlbumData... albums) {
-            AlbumData album = (AlbumData)albums[0];
-            return RestApiV1.getRemoteImage(album.getCoverPhoto());
+        /**
+         * Gets the requested image using a REST call.
+         * @param photoUrl: The URL of the photo to fetch.
+         */
+        protected Bitmap doInBackground(String... photoUrl) {
+            Bitmap b = RestApiV1.getRemoteImage(photoUrl[0]);
+            mImageCache.put(index + "", b);
+            return b;
         }
 
-        protected void onPostExecute(Bitmap bitmap) {
-            mCoverPhotos.get(row).setImageBitmap(bitmap);
+        /**
+         * Adds the fetched image to an array of the album's images.
+         * @param image: The image to be added.
+         */
+        protected void onPostExecute(Bitmap bm) {
+            ImageView imageView = viewReference.get();
+            if (imageView != null) {
+                Log.d("PHOTO", "SETTING BITMAP");
+                imageView.setImageBitmap(bm);
+            }
         }
     }
 }

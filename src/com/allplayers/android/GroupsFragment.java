@@ -32,30 +32,30 @@ public class GroupsFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         // Get a handle on our containing activity.
         mParentActivity = this.getActivity();
-        
+
         // Create our adapter.
         mAdapter = new ArrayAdapter<GroupData>(mParentActivity, android.R.layout.simple_list_item_1, mGroupList);
-        
+
         // Load our sort type from the arguments.
         if (getArguments() != null && getArguments().containsKey("sort")) {
             mSortType = getArguments().getString("sort");
         }
-        
+
         // Load the first set of groups.
         new GetUserGroupsTask().execute();
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
-    	// Set up our loading indicator at the foot of the ListView.
+        // Set up our loading indicator at the foot of the ListView.
         mProgressBar = new ProgressBar(mParentActivity);
         getListView().addFooterView(mProgressBar, null, false);
         // Set our adapter.
         setListAdapter(mAdapter);
 
-        // Set a scroll listener to load more if we are at the end of our list 
+        // Set a scroll listener to load more if we are at the end of our list
         // and less than two items are offscreen.
         getListView().setOnScrollListener(new OnScrollListener() {
             private int visibleThreshold = 2;
@@ -106,7 +106,7 @@ public class GroupsFragment extends ListFragment {
 
             hasGroups = true;
         } else {
-        	// If we do not have any groups, create a blank list item and remove our loading footer.
+            // If we do not have any groups, create a blank list item and remove our loading footer.
             ArrayAdapter<String> blankAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
             blankAdapter.add("no groups to display");
             getListView().setAdapter(blankAdapter);
@@ -125,13 +125,13 @@ public class GroupsFragment extends ListFragment {
 
         protected void onPostExecute(String jsonResult) {
             if (!jsonResult.equals("error")) {
-            	// Create the new group data objects and add them to our list.
+                // Create the new group data objects and add them to our list.
                 GroupsMap groups = new GroupsMap(jsonResult);
                 mCurrentAmountShown = mGroupList.size();
-                mGroupList.addAll(groups.getGroupData());               
-            } 
+                mGroupList.addAll(groups.getGroupData());
+            }
             // Update the ListView.
-            updateGroupData(); 
+            updateGroupData();
         }
     }
 }

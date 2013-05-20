@@ -185,7 +185,7 @@ public class PhotoPager extends AllplayersSherlockActivity {
         /**
          * Get's a user's image using a rest call and displays it.
          */
-        public class GetRemoteImageTask extends AsyncTask<Object, Void, Bitmap> {
+        public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
             private final WeakReference<ImageView> viewReference;
             private int index;
 
@@ -203,8 +203,8 @@ public class PhotoPager extends AllplayersSherlockActivity {
              * Gets the requested image using a REST call.
              * @param photoUrl: The URL of the photo to fetch.
              */
-            protected Bitmap doInBackground(Object... photoUrl) {
-                Bitmap b = RestApiV1.getRemoteImage((String) photoUrl[0]);
+            protected Bitmap doInBackground(String... photoUrl) {
+                Bitmap b = RestApiV1.getRemoteImage(photoUrl[0]);
                 mImageCache.put(index + "", b);
                 return b;
             }
