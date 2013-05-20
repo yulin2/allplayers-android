@@ -381,8 +381,6 @@ public class RestApiV1 {
      */
     public static String getGroupMembersByGroupId(String group_uuid, int offset,
             int limit) {
-        Log.d("IC", ENDPOINT + "groups/" + group_uuid
-              + "/members.json&limit=" + limit + "&offset=" + offset);
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
                                     + "/members.json&limit=" + limit + "&offset=" + offset);
     }
@@ -478,7 +476,6 @@ public class RestApiV1 {
     }
 
     private static String makeAuthenticatedGet(String urlString) {
-        Log.d("GET", urlString);
         if (!isLoggedIn()) {
             return "You are not logged in";
         }
@@ -529,7 +526,7 @@ public class RestApiV1 {
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/makeAuthenticatedDelete/"
                                + ex);
-            return ex.toString();
+            return "Failed to complete the delete.";
         }
     }
 
@@ -578,8 +575,6 @@ public class RestApiV1 {
     }
 
     private static String makeUnauthenticatedGet(String urlString) {
-        Log.d("GET", urlString);
-
         // Make and return from unauthenticated get call
         try {
             URL url = new URL(urlString);
