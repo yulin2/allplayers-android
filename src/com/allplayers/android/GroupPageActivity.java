@@ -3,6 +3,9 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -77,6 +80,28 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
 
         // Load the group members so we can set up the UI.
         new GetGroupMembersByGroupIdTask().execute(mGroup.getUUID());
+        new GetGroupLocationTask().execute(mGroup.getUUID());
+    }
+
+    /**
+     * Gets the group's location because it has not been previously pulled.
+     *
+     */
+    public class GetGroupLocationTask extends AsyncTask<String, Void, String> {
+        protected String doInBackground(String... group_uuid) {
+            return RestApiV1.getGroupInformationByGroupId(group_uuid[0]);
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            try {
+                JSONObject groupInfo = new JSONObject(jsonResult);
+                mGroup.setZip(groupInfo.getJSONObject("location").getString("zip"));
+                mGroup.setLatLon(groupInfo.getJSONObject("location").getString("latitude"), groupInfo.getJSONObject("location").getString("longitude"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     /**

@@ -38,6 +38,7 @@ import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class RestApiV1 {
     private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
@@ -475,6 +476,7 @@ public class RestApiV1 {
     }
 
     private static String makeAuthenticatedGet(String urlString) {
+        Log.d("IC", urlString);
         if (!isLoggedIn()) {
             return "You are not logged in";
         }
