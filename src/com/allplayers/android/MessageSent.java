@@ -11,10 +11,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.allplayers.android.MessageInbox.DeleteMessageTask;
 import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.MessageData;
 import com.allplayers.rest.RestApiV1;
@@ -89,6 +95,28 @@ public class MessageSent extends AllplayersSherlockActivity {
                 startActivity(intent);
             }
         });
+        
+        // Check for a user long clicking on a list item
+        mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
+                PopupMenu menu = new PopupMenu(getBaseContext(), view);
+                menu.inflate(R.menu.message_thread_menu);
+                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(android.view.MenuItem item) {
+                        switch (item.getItemId()) {
+                        case R.id.delete:
+                            new DeleteMessageTask(position).execute();
+                            break;
+                        }
+                        return true;
+                    }
+                });
+                menu.show();
+                return true;
+            }
+        });
     }
 
     /**
@@ -129,11 +157,10 @@ public class MessageSent extends AllplayersSherlockActivity {
                     // We need to display to the user that there aren't any messanges. We do this
                     // by making a blank MessageData object and setting its last_message_sender
                     // field to a notification. We use this field because it is the most prominent.
-                    MessageData blank = new MessageData();
-                    blank.setLastSender("No messages to display");
-                    mMessageList.add(blank);
+                    String[] blankMessage = {"No messages to display"};
+                    ArrayAdapter<String> blank = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, blankMessage);
+                    mListView.setAdapter(blank);
                     mListView.setEnabled(false);
-                    mMessageListAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -157,6 +184,28 @@ public class MessageSent extends AllplayersSherlockActivity {
                 }
             }
 
+        }
+    }
+    public class DeleteMessageTask extends AsyncTask<Void, Void, String> {
+        private int position;
+
+        public DeleteMessageTask(int i) {
+            position = i;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return RestApiV1.deleteMessage(mMessageList.get(position).getId(), "msg");
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("done")) {
+                mMessageList.remove(position);
+                mMessageListAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(getBaseContext(), "There was an error deleting the message.\n" + result, Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

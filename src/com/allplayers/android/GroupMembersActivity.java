@@ -31,6 +31,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
     private ListView mListView;
     private ViewGroup mFooter;
 
+    private final int LIMIT = 15;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
     public class GetGroupMembersByGroupIdTask extends AsyncTask<GroupData, Void, String> {
 
         protected String doInBackground(GroupData... groups) {
-            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID(), mOffset, 10);
+            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID(), mOffset, LIMIT);
         }
 
         protected void onPostExecute(String jsonResult) {
@@ -105,7 +106,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
                 }
             } else {
                 // If we pulled less than 10 new members, indicate we are at the end of data.
-                if (groupMembers.size() < 10) {
+                if (groupMembers.size() < LIMIT) {
                     mEndOfData = true;
                 }
 
