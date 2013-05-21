@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -58,9 +59,6 @@ public class MessageInbox extends AllplayersSherlockActivity {
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
-        // Load the user's inbox.
-        new GetUserInboxTask().execute();
-
         mMessageList = new ArrayList<MessageData>();
         mListView = (ListView) findViewById(R.id.customListView);
         mMessageListAdapter = new MessageAdapter(MessageInbox.this, mMessageList);
@@ -88,6 +86,9 @@ public class MessageInbox extends AllplayersSherlockActivity {
                 startActivity(intent);
             }
         });
+
+        // Load the user's inbox.
+        new GetUserInboxTask().execute();
     }
 
     /**
@@ -122,19 +123,18 @@ public class MessageInbox extends AllplayersSherlockActivity {
             // been fetched already or there wasn't any to fetch in the beginning.
             if (messages.size() == 0) {
                 mEndOfData = true;
+                mListView.removeFooterView(mFooter);
 
                 // Check if the list of messages is empty. If so, there was never any data to be
                 // fetched.
                 if (mMessageList.size() == 0) {
-
-                    // We need to display to the user that there aren't any messanges. We do this
+                    // We need to display to the user that there aren't any messages. We do this
                     // by making a blank MessageData object and setting its last_message_sender
                     // field to a notification. We use this field because it is the most prominent.
-                    MessageData blank = new MessageData();
-                    blank.setLastSender("No messages to display");
-                    mMessageList.add(blank);
+                    String[] blankMessage = {"No messages to display"};
+                    ArrayAdapter<String> blank = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, blankMessage);
+                    mListView.setAdapter(blank);
                     mListView.setEnabled(false);
-                    mMessageListAdapter.notifyDataSetChanged();
                 }
             }
 

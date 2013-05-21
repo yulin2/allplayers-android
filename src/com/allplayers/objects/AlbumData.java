@@ -55,8 +55,8 @@ public class AlbumData extends DataObject {
     public String getCoverPhoto() {
         return rep_photo;
     }
-    
+
     public void setTitle(String t) {
-    	title = t;
+        title = t;
     }
 }

@@ -104,4 +104,13 @@ public class MessageData extends DataObject {
     public void setLastSender(String lastSender) {
         last_message_sender = lastSender;
     }
+
+    public void setRead(boolean isRead) {
+        if (isRead) {
+            is_new = "0";
+        } else {
+            is_new = "1";
+        }
+    }
+
 }

@@ -107,11 +107,13 @@ public class GroupsFragment extends ListFragment {
             hasGroups = true;
         } else {
             // If we do not have any groups, create a blank list item and remove our loading footer.
-            ArrayAdapter<String> blankAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
+            ArrayAdapter<String> blankAdapter = new ArrayAdapter<String>(mParentActivity, android.R.layout.simple_list_item_1);
             blankAdapter.add("no groups to display");
-            getListView().setAdapter(blankAdapter);
-            getListView().setEnabled(false);
-            getListView().removeFooterView(mProgressBar);
+            if (getListView() != null) {
+                getListView().setAdapter(blankAdapter);
+                getListView().setEnabled(false);
+                getListView().removeFooterView(mProgressBar);
+            }
         }
     }
 
