@@ -132,6 +132,8 @@ public class MessageInbox extends AllplayersSherlockActivity {
                     // field to a notification. We use this field because it is the most prominent.
                     MessageData blank = new MessageData();
                     blank.setLastSender("No messages to display");
+                    mMessageList.add(blank);
+                    mListView.setEnabled(false);
                     mMessageListAdapter.notifyDataSetChanged();
                 }
             }

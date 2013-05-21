@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.GroupData;
-import com.allplayers.objects.MessageData;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
@@ -137,10 +136,11 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
                 if (mAlbumList.size() == 0) {
 
                     // We need to display to the user that there aren't any messages. We do this
-                    // by making a blank MessageData object and setting its last_message_sender
-                    // field to a notification. We use this field because it is the most prominent.
-                    MessageData blank = new MessageData();
-                    blank.setLastSender("No messages to display");
+                    // by making a blank AlbumData object.
+                    AlbumData blank = new AlbumData();
+                    blank.setTitle("No albums to display.");
+                    mAlbumList.add(blank);
+                    mListView.setEnabled(false);
                     mAlbumListAdapter.notifyDataSetChanged();
                 }
             }
