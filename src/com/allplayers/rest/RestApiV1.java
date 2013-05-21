@@ -38,7 +38,6 @@ import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 public class RestApiV1 {
     private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";

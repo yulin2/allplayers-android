@@ -35,4 +35,8 @@ public class AlbumsMap {
     public ArrayList<AlbumData> getAlbumData() {
         return albums;
     }
+    
+    public int size() {
+        return albums.size();
+    }
 }
