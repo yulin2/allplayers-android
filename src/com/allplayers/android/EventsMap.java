@@ -1,14 +1,11 @@
 package com.allplayers.android;
 
-import com.allplayers.objects.DataObject;
-
-import com.allplayers.objects.EventData;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
-
+import com.allplayers.objects.EventData;
 import com.google.gson.Gson;
 
 public class EventsMap {
@@ -25,8 +22,9 @@ public class EventsMap {
                 for (int i = 0; i < jsonResult.length(); i++) {
                     EventData event = gson.fromJson(jsonArray.getString(i), EventData.class);
                     try {
-                        event.setLatitude(gson.fromJson(jsonArray.getJSONObject(i).getJSONObject("resource").getJSONObject("location").getString("latitude"), String.class));
-                        event.setLongitude(gson.fromJson(jsonArray.getJSONObject(i).getJSONObject("resource").getJSONObject("location").getString("longitude"), String.class));
+                        event.setLatitude(jsonArray.getJSONObject(i).getJSONObject("resource").getJSONObject("location").getString("latitude"));
+                        event.setLongitude(jsonArray.getJSONObject(i).getJSONObject("resource").getJSONObject("location").getString("longitude"));
+                        event.setZip(jsonArray.getJSONObject(i).getJSONObject("resource").getJSONObject("location").getString("zip"));
                     } catch (JSONException ex) {
                         // If the latitude and longitude don't exist for the specified element then do not set them
                     }

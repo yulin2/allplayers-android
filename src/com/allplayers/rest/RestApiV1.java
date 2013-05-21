@@ -1,15 +1,5 @@
 package com.allplayers.rest;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,7 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -30,6 +19,18 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class RestApiV1 {
     private static String endpoint = "https://www.allplayers.com/?q=api/v1/rest/";
@@ -114,12 +115,13 @@ public class RestApiV1 {
 
     // Change read/unread status
     public static String putMessage(int threadId, int status, String type) {
-        String[][] contents = new String[1][2];
+        String[][] contents = new String[2][2];
         // Status: 1=unread, 0=read
         contents[0][0] = "status";
         contents[0][1] = "" + status;
-        // Type: thread or message (default = thread)
-
+        // Type: thread or msg (default = thread)
+        contents[1][0] = "type";
+        contents[1][1] = type;
         return makeAuthenticatedPut(endpoint + "messages/" + threadId + ".json", contents);
     }
 
@@ -140,6 +142,19 @@ public class RestApiV1 {
         contents[1][0] = "body";
         contents[1][1] = body;
 
+        return makeAuthenticatedPost(endpoint + "messages.json", contents);
+    }
+
+    public static String createNewMessage(String[] uuids, String subject, String body) {
+        String[][] contents = new String[uuids.length + 2][2];
+        for (int i = 0; i < uuids.length; i++) {
+            contents[i][0] = "recipients[" + i + "]";
+            contents[i][1] = uuids[i];
+        }
+        contents[uuids.length][0] = "subject";
+        contents[uuids.length][1] = subject;
+        contents[uuids.length + 1][0] = "body";
+        contents[uuids.length + 1][1] = body;
         return makeAuthenticatedPost(endpoint + "messages.json", contents);
     }
 
@@ -173,31 +188,52 @@ public class RestApiV1 {
     }
 
     public static String getUserFriends() {
-        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/friends.json");
+        String jsonResult = makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/friends.json");
+        return jsonResult.replaceAll("&#039;", "'");
     }
 
-    public static String getUserGroupmates() {
-        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groupmates.json");
+    public static String getUserGroupmates(int limit) {
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groupmates.json&limit=" + limit);
     }
 
-    public static String getUserEvents() {
-        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/events/upcoming.json");
+    public static String getUserGroupmates(int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/groupmates.json&limit=" + limit + "&offset=" + offset);
+    }
+
+    public static String getUserEvents(int limit) {
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/events/upcoming.json&limit=" + limit);
+    }
+
+    public static String getUserEvents(int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "users/" + sCurrentUserUUID + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
     }
 
     public static String getGroupInformationByGroupId(String group_uuid) {
         return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + ".json");
     }
 
-    public static String getGroupAlbumsByGroupId(String group_uuid) {
-        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/albums.json");
+    public static String getGroupAlbumsByGroupId(String group_uuid, int limit) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/albums.json&limit=" + limit);
     }
 
-    public static String getGroupEventsByGroupId(String group_uuid) {
-        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/events/upcoming.json");
+    public static String getGroupAlbumsByGroupId(String group_uuid, int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/albums.json&limit=" + limit + "&offset=" + offset);
     }
 
-    public static String getGroupMembersByGroupId(String group_uuid) {
-        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/members.json");
+    public static String getGroupEventsByGroupId(String group_uuid, int limit) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/events/upcoming.json&limit=" + limit);
+    }
+
+    public static String getGroupEventsByGroupId(String group_uuid, int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
+    }
+
+    public static String getGroupMembersByGroupId(String group_uuid, int limit) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/members.json&limit=" + limit);
+    }
+
+    public static String getGroupMembersByGroupId(String group_uuid, int limit, int offset) {
+        return makeAuthenticatedGet(endpoint + "groups/" + group_uuid + "/members.json&limit=" + limit + "&offset=" + offset);
     }
 
     public static String getGroupPhotosByGroupId(String group_uuid) {
@@ -208,15 +244,11 @@ public class RestApiV1 {
         return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + ".json");
     }
 
-    public static String getAlbumPhotosByAlbumId(String album_uuid) {
-        return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json");
+    public static String getAlbumPhotosByAlbumId(String album_uuid, int limit) {
+        return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json&limit=" + limit);
     }
 
-    public static String getAlbumPhotosByAlbumId(String album_uuid, int offset) {
-        return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json&offset=" + offset);
-    }
-
-    public static String getAlbumPhotosByAlbumId(String album_uuid, int offset, int limit) {
+    public static String getAlbumPhotosByAlbumId(String album_uuid, int limit, int offset) {
         return makeAuthenticatedGet(endpoint + "albums/" + album_uuid + "/photos.json&offset=" + offset
                                     + "&limit=" + limit);
     }
@@ -334,8 +366,7 @@ public class RestApiV1 {
             printout.writeBytes(content);
             printout.flush();
             printout.close();
-
-            return "done";
+            return connection.getResponseMessage();
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/makeAuthenticatedPut/" + ex);
             return ex.toString();
@@ -471,11 +502,19 @@ public class RestApiV1 {
         return null;
     }
 
-    public void setCurrentUserUUID(String uuid) {
+    public static void setCurrentUserUUID(String uuid) {
         sCurrentUserUUID = uuid;
     }
 
     public static String getCurrentUserUUID() {
         return sCurrentUserUUID;
+    }
+
+    public static void setCookieHandler(CookieHandler cookieHandler) {
+        sCookieHandler = cookieHandler;
+    }
+
+    public static CookieHandler getCookieHandler() {
+        return sCookieHandler;
     }
 }

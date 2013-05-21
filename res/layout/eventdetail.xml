@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
-
-    <TextView
-	  android:editable="false"
-	  android:text=""
-	  android:id="@+id/eventInfo"
-	  android:layout_width="match_parent"
-	  android:layout_height="wrap_content"/>
     
-	<com.google.android.maps.MapView
-	  xmlns:android="http://schemas.android.com/apk/res/android"
-	  android:id="@+id/eventMap"
-	  android:layout_width="fill_parent"
-	  android:layout_height="fill_parent"
-	  android:clickable="false"
-	  android:apiKey="ABQIAAAANsRgZUtbZ4O0V9iwuRMLMxTRS53tAxjcm04z57TaRLWlR_VmQRQry5iuVXk5P5dzjvy1f5IikvOuAw"/>
+	<fragment
+      android:id="@+id/map"
+      android:name="com.google.android.gms.maps.MapFragment"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
 	
-</LinearLayout>
+	<com.devspark.sidenavigation.SideNavigationView
+            android:id="@+id/side_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+</RelativeLayout>

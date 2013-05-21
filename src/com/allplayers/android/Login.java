@@ -1,17 +1,20 @@
 package com.allplayers.android;
 
-import com.allplayers.rest.RestApiV1;
+import org.jasypt.util.text.BasicTextEncryptor;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -20,12 +23,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.accounts.AccountManager;
-import android.accounts.Account;
-import android.widget.Toast;
-import org.jasypt.util.text.BasicTextEncryptor;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import com.allplayers.rest.RestApiV1;
 
 /**
  * Initial activity to handle login.
@@ -67,6 +66,13 @@ public class Login extends Activity {
         usernameLabel = (TextView)findViewById(R.id.usernameLabel);
         progressSpinner = (ProgressBar) findViewById(R.id.ctrlActivityIndicator);
 
+        // Clear any UUID that may be saved from a previous user.
+        // @TODO: This is not an elegant solution though is the only apparent one due to the way that
+        //  RestApiV1 is currently set up.
+        SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("UUID", "");
+
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
         // There should only be one allplayers type account in the device at once.
         if (accounts.length == 1) {
@@ -97,8 +103,6 @@ public class Login extends Activity {
 
                 String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                System.out.println(email);
-                System.out.println(password);
 
                 progressSpinner.setVisibility(View.VISIBLE);
                 AttemptLoginTask helper = new AttemptLoginTask();
@@ -142,7 +146,7 @@ public class Login extends Activity {
                     return "noInternetConnection";
                 }
                 if (RestApiV1.isLoggedIn()) {
-                    Intent intent = new Intent(Login.this, MainScreen.class);
+                    Intent intent = new Intent(Login.this, GroupsActivity.class);
                     startActivity(intent);
                     finish();
                     return "validLogin";
@@ -166,7 +170,7 @@ public class Login extends Activity {
                 Account account = new Account(email, "com.allplayers.android");
                 manager.addAccountExplicitly(account, encryptedPassword, null);
 
-                Intent intent = new Intent(Login.this, MainScreen.class);
+                Intent intent = new Intent(Login.this, GroupsActivity.class);
                 startActivity(intent);
                 finish();
                 return "validLogin";

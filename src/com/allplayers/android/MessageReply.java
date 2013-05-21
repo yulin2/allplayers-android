@@ -1,9 +1,5 @@
 package com.allplayers.android;
 
-import com.allplayers.objects.MessageData;
-import com.allplayers.rest.RestApiV1;
-
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +8,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MessageReply extends Activity {
+import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.allplayers.objects.MessageData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
+
+public class MessageReply extends AllplayersSherlockActivity {
     private String threadID;
     private String sendBody;
 
@@ -22,6 +24,16 @@ public class MessageReply extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.replymessage);
+
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
+        actionbar.setTitle("Messages");
+        actionbar.setSubtitle("Reply");
+
+        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        sideNavigationView.setMenuClickCallback(this);
+        sideNavigationView.setMode(Mode.LEFT);
 
         MessageData message = (new Router(this)).getIntentMessage();
 
@@ -63,6 +75,7 @@ public class MessageReply extends Activity {
             }
         });
     }
+
     /*
      * Posts a user's message using a rest call.
      * It was necessary to use an "Object" due to the fact that you cannot pass

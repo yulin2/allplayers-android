@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/side_navigation_menu_item1"
+        android:icon="@drawable/groups_icon"
+        android:title="Groups"/>
+    <item
+        android:id="@+id/side_navigation_menu_item2"
+        android:icon="@drawable/messages_icon"
+        android:title="Messages"/>
+    <item
+        android:id="@+id/side_navigation_menu_item3"
+        android:icon="@drawable/photos_icon"
+        android:title="Photo Albums"/>
+    <item
+        android:id="@+id/side_navigation_menu_item4"
+        android:icon="@drawable/events_icon"
+        android:title="Events"/>
+    <item
+        android:id="@+id/side_navigation_menu_item5"
+        android:icon="@drawable/search_200x200"
+        android:title="Search"/>
+    <item
+        android:id="@+id/side_navigation_menu_item6"
+        android:icon="@drawable/logout_200x200"
+        android:title="Log Out"/>
+    <item
+        android:id="@+id/side_navigation_menu_item7"
+        android:icon="@drawable/refresh_200x200"
+        android:title="Refresh"/>
+</menu>

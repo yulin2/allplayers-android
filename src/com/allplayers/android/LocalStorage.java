@@ -1,9 +1,5 @@
 package com.allplayers.android;
 
-import android.content.Context;
-
-import org.jasypt.util.text.BasicTextEncryptor;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
 import java.util.Random;
+
+import android.content.Context;
 
 //Local Storage for JSON Strings
 //

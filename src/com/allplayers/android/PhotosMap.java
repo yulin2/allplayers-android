@@ -1,13 +1,12 @@
 package com.allplayers.android;
 
-import com.allplayers.objects.DataObject;
-import com.allplayers.objects.PhotoData;
-import com.google.gson.Gson;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
+import com.allplayers.objects.PhotoData;
+import com.google.gson.Gson;
 
 public class PhotosMap {
     private ArrayList<PhotoData> photos = new ArrayList<PhotoData>();

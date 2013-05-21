@@ -1,14 +1,12 @@
 package com.allplayers.android;
 
-import com.allplayers.objects.AlbumData;
-import com.allplayers.objects.DataObject;
-import com.allplayers.objects.MessageData;
-import com.google.gson.Gson;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
+import com.allplayers.objects.AlbumData;
+import com.google.gson.Gson;
 
 public class AlbumsMap {
     private ArrayList<AlbumData> albums = new ArrayList<AlbumData>();

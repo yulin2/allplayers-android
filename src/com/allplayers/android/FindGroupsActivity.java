@@ -1,6 +1,5 @@
 package com.allplayers.android;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,7 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class FindGroupsActivity extends Activity {
+import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
+
+public class FindGroupsActivity extends AllplayersSherlockActivity {
     EditText searchEditText;
     EditText zipcodeEditText;
     EditText distanceEditText;
@@ -20,7 +23,18 @@ public class FindGroupsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.findgroups);
+
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
+        actionbar.setTitle("Search");
+
+        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        sideNavigationView.setMenuClickCallback(this);
+        sideNavigationView.setMode(Mode.LEFT);
+
         searchEditText = (EditText)findViewById(R.id.searchGroupsField);
         zipcodeEditText = (EditText)findViewById(R.id.searchGroupsZipcodeField);
         distanceEditText = (EditText)findViewById(R.id.searchGroupsDistanceField);

@@ -1,45 +1,50 @@
 package com.allplayers.android;
 
-import com.allplayers.objects.MessageData;
-import com.allplayers.rest.RestApiV1;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.allplayers.objects.MessageData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.ISideNavigationCallback;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-public class MessageInbox extends Activity {
+public class MessageInbox extends AllplayersSherlockActivity implements ISideNavigationCallback {
     private ArrayList<MessageData> messageList;
-    private String jsonResult = "";
     private boolean hasMessages = false;
+    private ProgressBar loading;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inboxlist);
+        loading = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        try {
-            Bundle bundle = this.getIntent().getExtras();
-            jsonResult = bundle.getString("inboxJSON");
-        } catch (Throwable t) {
-        }
+        GetUserInboxTask helper = new GetUserInboxTask();
+        helper.execute();
 
-        if (jsonResult.equals("")) {
-            GetUserInboxTask helper = new GetUserInboxTask();
-            helper.execute();
-        } else {
-            populateInbox(jsonResult);
-        }
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
+        actionbar.setTitle("Messages");
+        actionbar.setSubtitle("Inbox");
+
+        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        sideNavigationView.setMenuClickCallback(this);
+        sideNavigationView.setMode(Mode.LEFT);
+
     }
 
     public void populateInbox(String json) {
@@ -75,11 +80,12 @@ public class MessageInbox extends Activity {
 
     public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... Args) {
-            return jsonResult = RestApiV1.getUserInbox();
+            return RestApiV1.getUserInbox();
         }
 
         protected void onPostExecute(String jsonResult) {
             populateInbox(jsonResult);
+            loading.setVisibility(View.GONE);
         }
     }
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    
+	<LinearLayout
+	  android:orientation="vertical"
+	  android:layout_width="fill_parent"
+	  android:layout_height="fill_parent">
+	
+		<EditText
+		  android:text=""
+		  android:id="@+id/subjectField"
+		  android:layout_height="0dp"
+		  android:layout_width="fill_parent"
+		  android:layout_weight=".1"
+		  android:inputType="textEmailSubject"
+		  android:hint="Message Subject"
+		  android:textSize="30px"
+		  android:textColor="#FFFFFF"
+		  android:textStyle="bold">
+		</EditText>
+		
+		<!-- The TextView below is serving as a Horizontal Ruler between the Subject and the Body -->
+		
+		<TextView
+		  android:layout_width="fill_parent"
+		  android:layout_height="0dp"
+		  android:layout_weight=".01"
+		  android:background="#313431" />
+		
+		<EditText
+		  android:id="@+id/bodyField"
+		  android:layout_width="fill_parent"
+		  android:layout_height="0dp"
+		  android:layout_weight=".79"
+          android:inputType="textLongMessage"
+          android:hint="Message Body"
+          android:textSize="18sp"
+		  android:gravity="top">
+		</EditText>
+		
+		<Button
+		  android:id="@+id/sendMessageButton"
+		  android:layout_width="fill_parent"
+		  android:layout_height="0dp"
+		  android:layout_weight=".1"
+		  android:text="Send"
+		  android:gravity="center">
+		</Button>
+	
+	</LinearLayout>
+	<com.devspark.sidenavigation.SideNavigationView
+        android:id="@+id/side_navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</RelativeLayout>

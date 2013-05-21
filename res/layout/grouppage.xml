@@ -1,73 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
-	<ImageView
-	  android:id="@+id/groupLogo"
-	  android:layout_width="match_parent"
-	  android:layout_height="0dip"
-	  android:layout_gravity="center"
-	  android:scaleType="centerInside"
-	  android:layout_weight="1"
-	  android:paddingLeft="5px"
-	  android:paddingRight="5px"
-	  android:paddingTop="25px"
-	  android:paddingBottom="10px">
-	</ImageView>
-	<TextView
-	  android:editable="false"
-	  android:text=""
-	  android:id="@+id/groupDetails"
-	  android:layout_width="match_parent"
-	  android:layout_height="wrap_content"
-	  android:layout_weight="0"
-	  android:gravity="left|center_vertical"
-	  android:paddingLeft="5px"
-	  android:paddingRight="5px"
-	  android:paddingTop="10px"
-	  android:paddingBottom="10px">
-	</TextView>
-	
-	<LinearLayout
-	  android:layout_width="fill_parent"
-	  android:layout_height="wrap_content"
-	  android:gravity="center_horizontal|bottom"
-	  android:orientation="vertical"
-	  android:layout_weight=".75"
-	  android:paddingLeft="5px"
-	  android:paddingRight="5px"
-	  android:paddingTop="10px"
-	  android:paddingBottom="25px">
-		<Button
-		  android:visibility="gone"
-		  android:id="@+id/groupMembersButton"
-		  android:layout_width="fill_parent"
-		  android:layout_height="wrap_content"
-		  android:text="Group Members"
-		  android:gravity="center"
-		  android:layout_weight="0">
-		  
-		</Button>
-		<Button
-		  android:visibility="gone"
-		  android:id="@+id/groupEventsButton"
-		  android:layout_width="fill_parent"
-		  android:layout_height="wrap_content"
-		  android:text="Group Events"
-		  android:gravity="center"
-		  android:layout_weight="0">
-		</Button>
-		<Button
-		  android:visibility="gone"
-		  android:id="@+id/groupPhotosButton"
-		  android:layout_width="fill_parent"
-		  android:layout_height="wrap_content"
-		  android:text="Group Photos"
-		  android:gravity="center"
-		  android:layout_weight="0">
-		</Button>
-	</LinearLayout>
-	
-</LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/groupLogo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight=".5"
+            android:scaleType="fitCenter" >
+        </ImageView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_weight=".25"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/groupMembersButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight=".5"
+                android:adjustViewBounds="true"
+                android:background="@drawable/backgroundstate"
+                android:padding="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/members_400x400"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/groupPhotosButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight=".5"
+                android:adjustViewBounds="true"
+                android:background="@drawable/backgroundstate"
+                android:padding="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/photos_400x400"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_weight=".25"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/groupEventsButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight=".5"
+                android:adjustViewBounds="true"
+                android:background="@drawable/backgroundstate"
+                android:padding="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/events_400x400"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/groupLocationButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight=".5"
+                android:adjustViewBounds="true"
+                android:background="@drawable/backgroundstate"
+                android:padding="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/location_400x400"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.devspark.sidenavigation.SideNavigationView
+        android:id="@+id/side_navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ProgressBar
+        android:id="@+id/progress_indicator"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_centerInParent="true"
+        android:indeterminateOnly="true"
+        android:keepScreenOn="true" />
+
+</RelativeLayout>

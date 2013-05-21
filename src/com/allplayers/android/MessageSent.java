@@ -1,32 +1,49 @@
 package com.allplayers.android;
 
-import com.allplayers.android.MessageInbox.GetUserInboxTask;
-import com.allplayers.objects.MessageData;
-import com.allplayers.rest.RestApiV1;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
+import com.allplayers.android.activities.AllplayersSherlockListActivity;
+import com.allplayers.objects.MessageData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-public class MessageSent extends ListActivity {
+public class MessageSent extends AllplayersSherlockListActivity {
+
     private ArrayList<MessageData> messageList;
     private boolean hasMessages;
     private String jsonResult = "";
+    private ProgressBar loading;
 
     ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.message_sent);
+        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
+        actionbar.setTitle("Messages");
+        actionbar.setSubtitle("Sent");
+
+        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        sideNavigationView.setMenuClickCallback(this);
+        sideNavigationView.setMode(Mode.LEFT);
 
         //check local storage
         if (LocalStorage.getTimeSinceLastModification("Sentbox") / 1000 / 60 < 15) { //more recent than 15 minutes
@@ -116,6 +133,7 @@ public class MessageSent extends ListActivity {
 
             SimpleAdapter adapter = new SimpleAdapter(MessageSent.this, list, android.R.layout.simple_list_item_2, from, to);
             setListAdapter(adapter);
+            loading.setVisibility(View.GONE);
         }
     }
 }

@@ -1,45 +1,66 @@
 package com.allplayers.android;
 
-import com.allplayers.objects.EventData;
-import com.allplayers.objects.GroupData;
-
-import com.allplayers.rest.RestApiV1;
-
-import android.app.ListActivity;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GroupEventsActivity extends ListActivity {
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
+
+import com.allplayers.android.activities.AllplayersSherlockListActivity;
+import com.allplayers.objects.EventData;
+import com.allplayers.objects.GroupData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
+
+public class GroupEventsActivity extends AllplayersSherlockListActivity {
     private ArrayList<EventData> eventsList;
     private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
     private boolean hasEvents = false;
+    private ProgressBar loading;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.events_list);
+        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+
         GroupData group = (new Router(this)).getIntentGroup();
+
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
+        actionbar.setTitle(group.getTitle());
+        actionbar.setSubtitle("Events");
+
+        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        sideNavigationView.setMenuClickCallback(this);
+        sideNavigationView.setMode(Mode.LEFT);
 
         GetIntentGroupTask helper = new GetIntentGroupTask();
         helper.execute(group);
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
+        Intent intent;
         if (hasEvents) {
-            // Can be used to display map or full details.
-            Intent intent = (new Router(this)).getEventDisplayActivityIntent(eventsList.get(position));
+            if ((!(eventsList.get(position).getLatitude().equals("")
+                    && eventsList.get(position).getLatitude().equals(""))) && (!(Build.VERSION.SDK_INT < 11))) {
+                intent = (new Router(this)).getEventDisplayActivityIntent(eventsList.get(position));
+            } else {
+                intent = (new Router(this)).getEventDetailActivityIntent(eventsList.get(position));
+            }
             startActivity(intent);
         }
     }
@@ -50,12 +71,14 @@ public class GroupEventsActivity extends ListActivity {
     public class GetIntentGroupTask extends AsyncTask<GroupData, Void, String> {
 
         protected String doInBackground(GroupData... groups) {
-            return RestApiV1.getGroupEventsByGroupId(groups[0].getUUID());
+            // @TODO: Move to asynchronous loading.
+            return RestApiV1.getGroupEventsByGroupId(groups[0].getUUID(), 0);
         }
 
         protected void onPostExecute(String jsonResult) {
             EventsMap events = new EventsMap(jsonResult);
             eventsList = events.getEventData();
+
             HashMap<String, String> map;
             if (!eventsList.isEmpty()) {
                 for (int i = 0; i < eventsList.size(); i++) {
@@ -78,6 +101,7 @@ public class GroupEventsActivity extends ListActivity {
             int[] to = {android.R.id.text1, android.R.id.text2};
             SimpleAdapter adapter = new SimpleAdapter(GroupEventsActivity.this, list, android.R.layout.simple_list_item_2, from, to);
             setListAdapter(adapter);
+            loading.setVisibility(View.GONE);
         }
     }
 }

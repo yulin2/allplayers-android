@@ -1,15 +1,14 @@
 package com.allplayers.android;
 
+import android.app.Activity;
+import android.content.Intent;
+
 import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.EventData;
 import com.allplayers.objects.GroupData;
 import com.allplayers.objects.MessageData;
 import com.allplayers.objects.MessageThreadData;
 import com.allplayers.objects.PhotoData;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 
 /**
  * Handle routing the user and data between activities by type matching
@@ -55,6 +54,12 @@ public class Router {
         return intent;
     }
 
+    public Intent getEventDetailActivityIntent(EventData event) {
+        Intent intent = new Intent(mActivity, EventDetailActivity.class);
+        intent.putExtra(EXTRA_EVENT, event);
+        return intent;
+    }
+
     private Intent getGroupIntent(Class<?> cls, GroupData group) {
         Intent intent = new Intent(mActivity, cls);
         intent.putExtra(EXTRA_GROUP, group);
@@ -73,6 +78,10 @@ public class Router {
 
     public Intent getGroupAlbumsActivityIntent(GroupData group) {
         return getGroupIntent(GroupAlbumsActivity.class, group);
+    }
+
+    public Intent getGroupLocationActivityIntent(GroupData group) {
+        return getGroupIntent(GroupLocationActivity.class, group);
     }
 
     public Intent getGroupEventsActivityIntent(GroupData group) {

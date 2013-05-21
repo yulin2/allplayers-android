@@ -1,9 +1,8 @@
+
 package com.allplayers.android;
 
-import com.allplayers.objects.GroupData;
-import com.allplayers.rest.RestApiV1;
+import java.util.ArrayList;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,9 +11,14 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import com.allplayers.android.activities.AllplayersSherlockListActivity;
+import com.allplayers.objects.GroupData;
+import com.allplayers.rest.RestApiV1;
+import com.devspark.sidenavigation.SideNavigationView;
+import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-public class SearchGroupsListActivity extends ListActivity {
+public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
+
     private ArrayList<GroupData> groupList;
     private boolean hasGroups = false;
 
@@ -22,6 +26,17 @@ public class SearchGroupsListActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.search_groups_list);
+
+        actionbar = getSupportActionBar();
+        actionbar.setIcon(R.drawable.menu_icon);
+        actionbar.setTitle("Search");
+
+        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        sideNavigationView.setMenuClickCallback(this);
+        sideNavigationView.setMode(Mode.LEFT);
 
         Router router = new Router(this);
         String query = router.getIntentSearchQuery();
@@ -37,7 +52,7 @@ public class SearchGroupsListActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (hasGroups) {
-            //Display the group page for the selected group
+            // Display the group page for the selected group
             Intent intent = (new Router(this)).getGroupPageActivityIntent(groupList.get(position));
             startActivity(intent);
         }
@@ -54,16 +69,22 @@ public class SearchGroupsListActivity extends ListActivity {
 
     /*
      * Searches for a group using a rest call and the user's specified
-     *      parameters.
+     * parameters.
      */
     public class SearchGroupsTask extends AsyncTask<Object, Void, String> {
         protected String doInBackground(Object... args) {
-            return RestApiV1.searchGroups((String)args[0], (Integer)args[1], (Integer)args[2]);
+            return RestApiV1.searchGroups((String) args[0], (Integer) args[1], (Integer) args[2]);
         }
 
         protected void onPostExecute(String jsonResult) {
             GroupsMap groups = new GroupsMap(jsonResult);
             groupList = groups.getGroupData();
+
+            if (groupList.size() == 1) {
+                actionbar.setSubtitle("1 Result");
+            } else {
+                actionbar.setSubtitle(groupList.size() + " Results");
+            }
 
             String[] values;
 
@@ -76,7 +97,9 @@ public class SearchGroupsListActivity extends ListActivity {
 
                 hasGroups = true;
             } else {
-                values = new String[] {"no groups to display"};
+                values = new String[] {
+                    "no groups to display"
+                };
                 hasGroups = false;
             }
 
