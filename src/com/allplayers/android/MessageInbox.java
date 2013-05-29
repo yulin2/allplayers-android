@@ -12,15 +12,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.allplayers.android.MessageThread.DeleteMessageTask;
 import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.MessageData;
 import com.allplayers.rest.RestApiV1;
@@ -84,7 +83,7 @@ public class MessageInbox extends AllplayersSherlockActivity {
         // Set up the list view that will show all of the data.
         mListView.addFooterView(mFooter);
         mListView.setAdapter(mMessageListAdapter);
-        
+
         // Check for a user clicking on a list item
         mListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
@@ -93,7 +92,7 @@ public class MessageInbox extends AllplayersSherlockActivity {
                 startActivity(intent);
             }
         });
-        
+
         // Check for a user long clicking on a list item
         mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
@@ -189,7 +188,7 @@ public class MessageInbox extends AllplayersSherlockActivity {
 
         }
     }
-    
+
     public class DeleteMessageTask extends AsyncTask<Void, Void, String> {
         private int position;
 

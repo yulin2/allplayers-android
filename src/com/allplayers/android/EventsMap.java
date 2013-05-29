@@ -28,10 +28,7 @@ public class EventsMap {
                     } catch (JSONException ex) {
                         // If the latitude and longitude don't exist for the specified element then do not set them
                     }
-
-                    if (event.isNew(mEventsList)) {
-                        mEventsList.add(event);
-                    }
+                    mEventsList.add(event);
                 }
             }
         } catch (JSONException ex) {

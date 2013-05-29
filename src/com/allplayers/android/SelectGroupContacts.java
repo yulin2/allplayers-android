@@ -94,9 +94,8 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
                     values[i] = mGroupsList.get(i).getTitle();
                 }
             } else {
-                values = new String[] {
-                    "No groups to display"
-                };
+                values = new String[] {"No groups to display"};
+                getListView().setEnabled(false);
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(SelectGroupContacts.this,
                     android.R.layout.simple_list_item_1, values);

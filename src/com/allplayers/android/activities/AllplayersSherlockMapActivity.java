@@ -168,8 +168,8 @@ public class AllplayersSherlockMapActivity extends SherlockMapActivity implement
         AccountManager manager = AccountManager.get(this.getBaseContext());
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
 
-        if (accounts.length == 1) {
-            manager.removeAccount(accounts[0], null, null);
+        for(int i = 0; i < accounts.length; i++) {
+            manager.removeAccount(accounts[i], null, null);
         }
 
         invokeActivity(Login.class);

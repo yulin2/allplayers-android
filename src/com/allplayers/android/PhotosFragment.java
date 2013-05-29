@@ -30,6 +30,7 @@ public class PhotosFragment extends ListFragment {
     private ViewGroup mFooter;
     private Button mLoadMoreButton;
     private boolean mCanRemoveFooter = false;
+    private ListView mListView;
 
 
     /** Called when the activity is first created. */
@@ -55,7 +56,8 @@ public class PhotosFragment extends ListFragment {
                 new GetUserGroupsTask().execute();
             }
         });
-        getListView().addFooterView(mFooter);
+        mListView = getListView();
+        mListView.addFooterView(mFooter);
         setListAdapter(mAdapter);
     }
 
@@ -84,13 +86,19 @@ public class PhotosFragment extends ListFragment {
 
             LocalStorage.writeUserAlbums(mParentActivity.getBaseContext(), "", true);
             mGroupCount += groupList.size();
-            if (groupList.size() < 15) {
+            if (groupList.size() < 15) {           	
                 mCanRemoveFooter = true;
             }
             for (int i = 0; i < groupList.size(); i++) {
                 group_uuid = groupList.get(i).getUUID();
                 new GetGroupAlbumsByGroupIdTask().execute(group_uuid);
             }
+        } else if (mGroupCount == 0) {
+            String[] blankMessage = {"No photos to display"};
+            ArrayAdapter<String> blank = new ArrayAdapter<String>(mParentActivity, android.R.layout.simple_list_item_1, blankMessage);
+            mListView.setAdapter(blank);
+            mListView.setEnabled(false);
+            mListView.removeFooterView(mFooter);
         }
     }
 
@@ -130,14 +138,14 @@ public class PhotosFragment extends ListFragment {
                 mAdapter.notifyDataSetChanged();
             }
             if (mAlbumList.isEmpty() && mNumGroupsLoaded == mGroupCount) {
-                String[] values = new String[] {"no albums to display"};
+                String[] values = new String[] {"No albums to display"};
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(PhotosFragment.mParentActivity,
                         android.R.layout.simple_list_item_1, values);
                 setListAdapter(adapter);
             }
             if (mNumGroupsLoaded == mGroupCount) {
                 if (mCanRemoveFooter) {
-                    getListView().removeFooterView(mFooter);
+                    mListView.removeFooterView(mFooter);
                 } else {
                     mLoadMoreButton.setVisibility(View.VISIBLE);
                     mLoadingIndicator.setVisibility(View.GONE);

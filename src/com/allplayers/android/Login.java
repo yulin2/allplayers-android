@@ -95,6 +95,7 @@ public class Login extends Activity {
             SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("UUID", "");
+            editor.commit();
         }
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {

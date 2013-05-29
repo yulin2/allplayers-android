@@ -32,4 +32,9 @@
         android:indeterminateOnly="true"
         android:keepScreenOn="true" />
 
+    <com.devspark.sidenavigation.SideNavigationView
+        android:id="@+id/side_navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </RelativeLayout>

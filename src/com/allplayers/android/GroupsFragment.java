@@ -108,7 +108,7 @@ public class GroupsFragment extends ListFragment {
         } else {
             // If we do not have any groups, create a blank list item and remove our loading footer.
             ArrayAdapter<String> blankAdapter = new ArrayAdapter<String>(mParentActivity, android.R.layout.simple_list_item_1);
-            blankAdapter.add("no groups to display");
+            blankAdapter.add("No groups to display");
             if (getListView() != null) {
                 getListView().setAdapter(blankAdapter);
                 getListView().setEnabled(false);
