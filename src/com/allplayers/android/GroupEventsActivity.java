@@ -29,7 +29,6 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
     private SimpleAdapter mAdapter;
     private int mOffset = 0;
     private int mLimit = 10;
-    private boolean mHasEvents = false;
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
     private Button mLoadMoreButton;
@@ -91,7 +90,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
         super.onListItemClick(l, v, position, id);
 
         Intent intent;
-        if (mHasEvents) {
+
             // If the event has a location and the API is correct, load the map event display.
             if ((!(mEventsList.get(position).getLatitude().equals("")
                     && mEventsList.get(position).getLongitude().equals(""))) && (!(Build.VERSION.SDK_INT < 11))) {
@@ -100,7 +99,6 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
                 intent = (new Router(this)).getEventDetailActivityIntent(mEventsList.get(position));
             }
             startActivity(intent);
-        }
     }
 
     /**
@@ -137,7 +135,6 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
                         mAdapterList.add(map);
                     }
                     mOffset = mEventsList.size();
-                    mHasEvents = true;
                 }
             } else { // If the group has no events make a blank list item.
                 if (mEventsList.isEmpty()) {
@@ -146,7 +143,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
                     map.put("line2", "");
                     mAdapterList.add(map);
                     mAdapter.notifyDataSetChanged();
-                    mHasEvents = false;
+                    getListView().setEnabled(false);
                     // Remove our footer.
                     getListView().removeFooterView(mFooter);
                 }

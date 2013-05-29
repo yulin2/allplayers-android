@@ -103,6 +103,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
                     blank.setName("No members to display");
                     mMembersList.add(blank);
                     mAdapter.notifyDataSetChanged();
+                    mListView.setEnabled(false);
                 }
             } else {
                 // If we pulled less than 10 new members, indicate we are at the end of data.
