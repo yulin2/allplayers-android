@@ -31,6 +31,7 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
         super.onCreate(savedInstanceState);
         mActionBar = getSupportActionBar();
         mActionBar.setIcon(R.drawable.menu_icon);
+        mActionBar.setHomeButtonEnabled(true);
     }
 
     /**

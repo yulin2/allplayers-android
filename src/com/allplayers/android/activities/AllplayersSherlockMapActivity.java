@@ -31,6 +31,7 @@ public class AllplayersSherlockMapActivity extends SherlockMapActivity implement
         super.onCreate(savedInstanceState);
         mActionBar = getSupportActionBar();
         mActionBar.setIcon(R.drawable.menu_icon);
+        mActionBar.setHomeButtonEnabled(true);
     }
 
     /**

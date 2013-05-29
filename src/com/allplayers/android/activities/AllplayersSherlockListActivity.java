@@ -30,6 +30,7 @@ public class AllplayersSherlockListActivity extends SherlockListActivity impleme
         super.onCreate(savedInstanceState);
         mActionBar = getSupportActionBar();
         mActionBar.setIcon(R.drawable.menu_icon);
+        mActionBar.setHomeButtonEnabled(true);
     }
 
     /**

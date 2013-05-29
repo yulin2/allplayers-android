@@ -34,6 +34,7 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
 
         mActionBar = getSupportActionBar();
         mActionBar.setIcon(R.drawable.menu_icon);
+        mActionBar.setHomeButtonEnabled(true);
     }
 
     /**
