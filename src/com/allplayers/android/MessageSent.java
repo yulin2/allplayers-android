@@ -12,15 +12,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.allplayers.android.MessageInbox.DeleteMessageTask;
 import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.MessageData;
 import com.allplayers.rest.RestApiV1;
@@ -95,7 +94,7 @@ public class MessageSent extends AllplayersSherlockActivity {
                 startActivity(intent);
             }
         });
-        
+
         // Check for a user long clicking on a list item
         mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
@@ -149,6 +148,8 @@ public class MessageSent extends AllplayersSherlockActivity {
             // been fetched already or there wasn't any to fetch in the beginning.
             if (messages.size() == 0) {
                 mEndOfData = true;
+                mListView.removeFooterView(mFooter);
+
 
                 // Check if the list of messages is empty. If so, there was never any data to be
                 // fetched.

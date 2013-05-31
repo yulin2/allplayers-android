@@ -21,9 +21,7 @@ public class GroupsMap {
                 Gson gson = new Gson();
                 for (int i = 0; i < jsonResult.length(); i++) {
                     GroupData group = gson.fromJson(jsonArray.getString(i), GroupData.class);
-                    //if (group.isNew(mGroupsList)) {
                     mGroupsList.add(group);
-                    //}
                 }
             }
         } catch (JSONException ex) {

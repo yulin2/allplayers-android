@@ -129,13 +129,14 @@ public class EventFragment extends ListFragment {
             // we create a blank list item and indicate no events loaded.
             if (mEventsList.isEmpty()) {
                 map = new HashMap<String, String>();
-                map.put(LINE_ONE_KEY, "No events to display.");
+                map.put(LINE_ONE_KEY, "No events to display");
                 map.put(LINE_TWO_KEY, "");
                 mTimeList.add(map);
                 mAdapter.notifyDataSetChanged();
                 hasEvents = false;
                 // Remove our footer.
                 getListView().removeFooterView(mFooter);
+                getListView().setEnabled(false);
             }
         }
     }

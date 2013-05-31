@@ -8,7 +8,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -114,7 +113,6 @@ public class PhotoAdapter extends BaseAdapter {
         protected void onPostExecute(Bitmap bm) {
             ImageView imageView = viewReference.get();
             if (imageView != null) {
-                Log.d("PHOTO", "SETTING BITMAP");
                 imageView.setImageBitmap(bm);
             }
         }

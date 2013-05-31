@@ -100,6 +100,7 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
                 }
             } else {
                 values = new String[] {"No members to display"};
+                getListView().setEnabled(false);
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(SelectUserContacts.this,
                     android.R.layout.simple_list_item_1, values);

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,7 +118,6 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         protected void onPostExecute(Bitmap bm) {
             ImageView imageView = viewReference.get();
             if (imageView != null) {
-                Log.d("PHOTO", "SETTING BITMAP");
                 imageView.setImageBitmap(bm);
             }
         }

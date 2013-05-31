@@ -79,7 +79,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
 
         // If there are no photos, create a blank adapter showing so.
         if (mPhotoList.isEmpty()) {
-            String[] values = new String[] {"no photos to display"};
+            String[] values = new String[] {"No photos to display"};
             mGridView.setAdapter(new ArrayAdapter<String>(AlbumPhotosActivity.this,
                                  android.R.layout.simple_list_item_1, values));
         } else { // If there are photos, create a custom adapter for the GridView.
