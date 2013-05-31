@@ -27,6 +27,7 @@ public class GroupsFragment extends ListFragment {
     private Activity mParentActivity;
     private String mSortType = "radioactive";
     private int mAmountToLoad = 15;
+    private ListView mListView;
 
     /** Called when the activity is first created. */
     @Override
@@ -51,13 +52,14 @@ public class GroupsFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Set up our loading indicator at the foot of the ListView.
         mProgressBar = new ProgressBar(mParentActivity);
-        getListView().addFooterView(mProgressBar, null, false);
+        mListView = getListView();
+        mListView.addFooterView(mProgressBar, null, false);
         // Set our adapter.
         setListAdapter(mAdapter);
 
         // Set a scroll listener to load more if we are at the end of our list
         // and less than two items are offscreen.
-        getListView().setOnScrollListener(new OnScrollListener() {
+        mListView.setOnScrollListener(new OnScrollListener() {
             private int visibleThreshold = 2;
             private int previousTotal = 1;
             private boolean loading = true;
@@ -99,8 +101,8 @@ public class GroupsFragment extends ListFragment {
             // not to try to load more groups.
             if (mGroupList.size() - mCurrentAmountShown < mAmountToLoad) {
                 loadMore = false;
-                if (getListView() != null) {
-                    getListView().removeFooterView(mProgressBar);
+                if (mListView != null) {
+                    mListView.removeFooterView(mProgressBar);
                 }
             }
 
@@ -109,10 +111,10 @@ public class GroupsFragment extends ListFragment {
             // If we do not have any groups, create a blank list item and remove our loading footer.
             ArrayAdapter<String> blankAdapter = new ArrayAdapter<String>(mParentActivity, android.R.layout.simple_list_item_1);
             blankAdapter.add("No groups to display");
-            if (getListView() != null) {
-                getListView().setAdapter(blankAdapter);
-                getListView().setEnabled(false);
-                getListView().removeFooterView(mProgressBar);
+            if (mListView != null) {
+                mListView.setAdapter(blankAdapter);
+                mListView.setEnabled(false);
+                mListView.removeFooterView(mProgressBar);
             }
         }
     }
