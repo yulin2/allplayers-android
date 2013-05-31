@@ -113,6 +113,27 @@
             android:textColor="#33B5E5"
             android:visibility="gone" >
         </Button>
+        
+        <Button
+            android:id="@+id/newAccountButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/loginButton"
+            android:gravity="center"
+            android:text="@string/sign_up"
+            android:textColor="#33B5E5"
+            android:visibility="gone" >
+        </Button>
+        
+        <TextView
+            android:id="@+id/account_create_success"
+            android:layout_below="@id/newAccountButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/account_create_success"
+            android:textColor="#33B5E5"
+            android:visibility="gone" >
+        </TextView>
 
         <ProgressBar
             android:id="@+id/ctrlActivityIndicator"

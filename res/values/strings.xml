@@ -15,7 +15,8 @@
     <string name="add_user">Add User</string>
     <string name="compose">Compose Message</string>
     <string name="send">Send</string>
-    <string name="login">Login!</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
     <string name="password">Password:</string>
     <string name="verify_pass">Verify Password:</string>
     <string name="username">Username:</string>
@@ -31,11 +32,16 @@
     <string name="last_name">Last Name:</string>
     <string name="email">Email Address:</string>
     <string name="gender">Gender:</string>
+    <string name="birthdate">Birthdate:</string>
     <string name="register">Register</string>
     <string name="captcha">Please solve this simple math problem:</string>
     <string name="sort">Sort:</string>
     <string name="load_more">Load More</string>
-
+    <string name="account_create_success">Thanks for joining AllPlayers.com! We have sent you an email with instructions on how to verify your account with us.</string>
+    <string name="invalid_age">I am sorry, but AllPlayers.com cannot create an account for you at this time. To create an AllPlayers.com account, you must be 13 years of age or older. This is in compliance with out COPPA+ Guardian Watch.</string>
+    <string name="invalid_gender">Please select a gender.</string>
+    
+    
     <string-array name="sort_method">
         <item>Activity</item>
         <item>Alpha Asc.</item>

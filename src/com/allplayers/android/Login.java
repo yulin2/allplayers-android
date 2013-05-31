@@ -38,6 +38,8 @@ public class Login extends Activity {
     private TextView mPasswordLabel;
     private TextView mUsernameLabel;
     private Button mLoginButton;
+    private Button mNewAccountButton;
+    private TextView mAccountCreateSuccess;
     private ProgressBar mLoadingIndicator;
     private AccountManager mAccountManager;
     private Context mContext;
@@ -59,10 +61,12 @@ public class Login extends Activity {
         mContext = this.getBaseContext();
         mAccountManager = AccountManager.get(mContext);
         mLoginButton = (Button)findViewById(R.id.loginButton);
+        mNewAccountButton = (Button)findViewById(R.id.newAccountButton);
         mUsernameEditText = (EditText)findViewById(R.id.usernameField);
         mPasswordEditText = (EditText)findViewById(R.id.passwordField);
         mPasswordLabel = (TextView)findViewById(R.id.passwordLabel);
         mUsernameLabel = (TextView)findViewById(R.id.usernameLabel);
+        mAccountCreateSuccess = (TextView)findViewById(R.id.account_create_success);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.ctrlActivityIndicator);
 
         Account[] accounts = mAccountManager.getAccountsByType("com.allplayers.android");
@@ -107,8 +111,28 @@ public class Login extends Activity {
                 new AttemptLoginTask().execute(email, password);
             }
         });
-    }
+        
+        mNewAccountButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
 
+                    Intent intent = new Intent(Login.this, NewAccountActivity.class);
+                    startActivityForResult(intent, 0);
+            }
+        });
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 || requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                mUsernameEditText.setText(data.getStringArrayExtra("login credentials")[0]);
+                mPasswordEditText.setText(data.getStringArrayExtra("login credentials")[1]);
+                mAccountCreateSuccess.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+    
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU) {
@@ -121,6 +145,7 @@ public class Login extends Activity {
 
     public void showLoginFields() {
         mLoginButton.setVisibility(View.VISIBLE);
+        mNewAccountButton.setVisibility(View.VISIBLE);
         mUsernameEditText.setVisibility(View.VISIBLE);
         mPasswordEditText.setVisibility(View.VISIBLE);
         mPasswordLabel.setVisibility(View.VISIBLE);

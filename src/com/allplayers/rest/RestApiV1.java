@@ -146,7 +146,7 @@ public class RestApiV1 {
         contents[5][0] = "password";
         contents[5][1] = password;
 
-        return makeUnauthenticatedPost(ENDPOINT + "users.json", contents,
+        return makeUnauthenticatedPost("https://www.pdup.allplayers.com/api/v1/rest/users.json", contents,
                                        capToken, capResponse);
     }
 
@@ -673,13 +673,18 @@ public class RestApiV1 {
         for (int i = 0; i < contents.length; i++) {
             request.add(new BasicNameValuePair(contents[i][0], contents[i][1]));
         }
+        //request.set(4, new BasicNameValuePair("birthday", "1980-01-20"));
+        Log.d("request", request.toString());
+        Log.d("Sending Birth Date", contents[4][1]);
         try {
             post.setEntity(new UrlEncodedFormEntity(request));
+            Log.d("IC", EntityUtils.toString(post.getEntity()));
             if (captchaToken != null) {
                 post.addHeader(CAP_TOKEN_NAME, captchaToken);
                 post.addHeader(CAP_SOLUTION_NAME, captchaResponse);
             }
             HttpResponse response = client.execute(post);
+            Log.d("Unathenticated Post", urlString + "HEADERS" + captchaToken + " | | " + captchaResponse + contents.toString());
             HttpEntity entity = response.getEntity();
             if (null != entity) {
                 String text = EntityUtils.toString(entity);
