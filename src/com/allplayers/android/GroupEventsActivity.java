@@ -139,7 +139,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
             } else { // If the group has no events make a blank list item.
                 if (mEventsList.isEmpty()) {
                     map = new HashMap<String, String>();
-                    map.put("line1", "No events to display.");
+                    map.put("line1", "No events to display");
                     map.put("line2", "");
                     mAdapterList.add(map);
                     mAdapter.notifyDataSetChanged();
