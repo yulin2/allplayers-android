@@ -54,7 +54,7 @@ public class GroupLocationActivity extends AllplayersSherlockMapActivity {
         }
 
         LatLng location = new LatLng((Float.parseFloat(lat)), (Float.parseFloat(lon)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 9));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 11));
         mMap.addMarker(new MarkerOptions()
                        .position(location)
                        .title(group.getTitle())
