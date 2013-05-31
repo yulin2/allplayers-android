@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.allplayers.android.activities.AllplayersSherlockActivity;
+import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
@@ -25,6 +26,10 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.findgroups);
+        
+        if(RestApiV1.getCurrentUserUUID().equals("")) {
+            mActionBar.setHomeButtonEnabled(false);
+        }
 
         // Set up the ActionBar.
         mActionBar.setTitle("Search");
