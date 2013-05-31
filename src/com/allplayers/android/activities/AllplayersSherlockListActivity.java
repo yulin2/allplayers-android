@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Window;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -28,6 +29,7 @@ public class AllplayersSherlockListActivity extends SherlockListActivity impleme
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         mActionBar = getSupportActionBar();
         mActionBar.setIcon(R.drawable.menu_icon);
         mActionBar.setHomeButtonEnabled(true);

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
@@ -45,12 +46,12 @@ public class MessageThread extends AllplayersSherlockListActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         mMessage = (new Router(this)).getIntentMessage();
         String threadID = mMessage.getThreadID();
 
         setContentView(R.layout.message_thread);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
+        
 
         mActionBar.setTitle("Messages");
 
@@ -61,7 +62,9 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
         new PutAndGetMessagesTask().execute(threadID);
 
-        getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+        // It has been found that deleting a message through the API completely obliterates it from 
+        // the site. This is not expected functionality and needs to be researched more.
+        /*getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
                 PopupMenu menu = new PopupMenu(getBaseContext(), view);
@@ -80,7 +83,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
                 menu.show();
                 return true;
             }
-        });
+        });*/
     }
 
     /**
@@ -170,6 +173,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
         private int position;
 
         public DeleteMessageTask(int i) {
+            setProgressBarIndeterminateVisibility(false);
             position = i;
         }
 
@@ -187,6 +191,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
             } else {
                 Toast.makeText(getBaseContext(), "There was an error deleting the message.\n" + result, Toast.LENGTH_LONG).show();
             }
+            setProgressBarIndeterminateVisibility(false);
         }
     }
 }

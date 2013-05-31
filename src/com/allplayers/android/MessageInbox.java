@@ -193,6 +193,7 @@ public class MessageInbox extends AllplayersSherlockActivity {
         private int position;
 
         public DeleteMessageTask(int i) {
+            setProgressBarIndeterminateVisibility(true);
             position = i;
         }
 
@@ -209,6 +210,7 @@ public class MessageInbox extends AllplayersSherlockActivity {
             } else {
                 Toast.makeText(getBaseContext(), "There was an error deleting the message.\n" + result, Toast.LENGTH_LONG).show();
             }
+            setProgressBarIndeterminateVisibility(false);
         }
     }
 }
