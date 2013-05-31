@@ -39,6 +39,7 @@ public class Login extends Activity {
     private TextView mUsernameLabel;
     private Button mLoginButton;
     private Button mNewAccountButton;
+    private Button mGroupSearchButton;
     private TextView mAccountCreateSuccess;
     private ProgressBar mLoadingIndicator;
     private AccountManager mAccountManager;
@@ -62,6 +63,7 @@ public class Login extends Activity {
         mAccountManager = AccountManager.get(mContext);
         mLoginButton = (Button)findViewById(R.id.loginButton);
         mNewAccountButton = (Button)findViewById(R.id.newAccountButton);
+        mGroupSearchButton = (Button)findViewById(R.id.groupSearchButton);
         mUsernameEditText = (EditText)findViewById(R.id.usernameField);
         mPasswordEditText = (EditText)findViewById(R.id.passwordField);
         mPasswordLabel = (TextView)findViewById(R.id.passwordLabel);
@@ -120,6 +122,12 @@ public class Login extends Activity {
                     startActivityForResult(intent, 0);
             }
         });
+        
+        mGroupSearchButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(Login.this, FindGroupsActivity.class));
+            }
+        });
     }
     
     @Override
@@ -147,6 +155,7 @@ public class Login extends Activity {
     public void showLoginFields() {
         mLoginButton.setVisibility(View.VISIBLE);
         mNewAccountButton.setVisibility(View.VISIBLE);
+        mGroupSearchButton.setVisibility(View.VISIBLE);
         mUsernameEditText.setVisibility(View.VISIBLE);
         mPasswordEditText.setVisibility(View.VISIBLE);
         mPasswordLabel.setVisibility(View.VISIBLE);

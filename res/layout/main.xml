@@ -139,13 +139,25 @@
             android:id="@+id/ctrlActivityIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/loginButton"
+            android:layout_below="@id/newAccountButton"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:indeterminateOnly="true"
             android:keepScreenOn="true"
             android:visibility="gone" />
+        <Button
+            android:id="@+id/groupSearchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:drawableLeft="@drawable/search_25x25"
+            android:gravity="left"
+            android:text="Search for Groups"
+            android:textColor="#33B5E5"
+            android:visibility="gone" >
+        </Button>
     </RelativeLayout>
 
 </LinearLayout>

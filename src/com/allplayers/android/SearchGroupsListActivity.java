@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.GroupData;
@@ -21,6 +22,7 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
     private ArrayList<GroupData> mGroupList;
     private boolean hasGroups = false;
+    private ProgressBar mProgressBar;
 
     /** Called when the activity is first created. */
     @Override
@@ -36,6 +38,9 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.VISIBLE);
+        
         Router router = new Router(this);
         String query = router.getIntentSearchQuery();
         int zipcode = router.getIntentSearchZipcode();
@@ -103,6 +108,7 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(SearchGroupsListActivity.this,
                     android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }
