@@ -48,13 +48,9 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
 
-        if (row == null) {
-            //Row Inflation
-            LayoutInflater inflater = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.albumlistitem, parent, false);
-        }
+        LayoutInflater inflater = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View row = inflater.inflate(R.layout.albumlistitem, parent, false);
 
         //Get item
         AlbumData album = getItem(position);

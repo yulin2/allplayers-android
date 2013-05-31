@@ -86,7 +86,7 @@ public class PhotosFragment extends ListFragment {
 
             LocalStorage.writeUserAlbums(mParentActivity.getBaseContext(), "", true);
             mGroupCount += groupList.size();
-            if (groupList.size() < 15) {           	
+            if (groupList.size() < 15) {
                 mCanRemoveFooter = true;
             }
             for (int i = 0; i < groupList.size(); i++) {

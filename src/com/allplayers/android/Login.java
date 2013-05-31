@@ -114,12 +114,12 @@ public class Login extends Activity {
                 new AttemptLoginTask().execute(email, password);
             }
         });
-        
+
         mNewAccountButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                    Intent intent = new Intent(Login.this, NewAccountActivity.class);
-                    startActivityForResult(intent, 0);
+                Intent intent = new Intent(Login.this, NewAccountActivity.class);
+                startActivityForResult(intent, 0);
             }
         });
         
@@ -129,7 +129,7 @@ public class Login extends Activity {
             }
         });
     }
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -141,7 +141,7 @@ public class Login extends Activity {
             }
         }
     }
-    
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU) {
