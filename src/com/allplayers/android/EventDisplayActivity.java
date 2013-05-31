@@ -61,7 +61,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         // Create a location object from our lat and long.
         LatLng location = new LatLng((Float.parseFloat(mLatitude)), (Float.parseFloat(mLongitude)));
         // Focus in on our event location.
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
         // Create a marker on our event location.
         MarkerOptions marker = new MarkerOptions()
         .position(location)

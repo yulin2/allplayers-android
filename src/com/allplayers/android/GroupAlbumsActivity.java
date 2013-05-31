@@ -138,7 +138,7 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
                     // We need to display to the user that there aren't any messages. We do this
                     // by making a blank AlbumData object.
                     AlbumData blank = new AlbumData();
-                    blank.setTitle("No albums to display.");
+                    blank.setTitle("No albums to display");
                     mAlbumList.add(blank);
                     mListView.setEnabled(false);
                     mAlbumListAdapter.notifyDataSetChanged();
