@@ -168,7 +168,7 @@ public class AllplayersSherlockListActivity extends SherlockListActivity impleme
         AccountManager manager = AccountManager.get(this.getBaseContext());
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
 
-        for(int i = 0; i < accounts.length; i++) {
+        for (int i = 0; i < accounts.length; i++) {
             manager.removeAccount(accounts[i], null, null);
         }
 

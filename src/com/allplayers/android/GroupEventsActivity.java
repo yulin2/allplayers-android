@@ -91,14 +91,14 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
 
         Intent intent;
 
-            // If the event has a location and the API is correct, load the map event display.
-            if ((!(mEventsList.get(position).getLatitude().equals("")
-                    && mEventsList.get(position).getLongitude().equals(""))) && (!(Build.VERSION.SDK_INT < 11))) {
-                intent = (new Router(this)).getEventDisplayActivityIntent(mEventsList.get(position));
-            } else { // If these conditions are not met, load the textual event information display.
-                intent = (new Router(this)).getEventDetailActivityIntent(mEventsList.get(position));
-            }
-            startActivity(intent);
+        // If the event has a location and the API is correct, load the map event display.
+        if ((!(mEventsList.get(position).getLatitude().equals("")
+                && mEventsList.get(position).getLongitude().equals(""))) && (!(Build.VERSION.SDK_INT < 11))) {
+            intent = (new Router(this)).getEventDisplayActivityIntent(mEventsList.get(position));
+        } else { // If these conditions are not met, load the textual event information display.
+            intent = (new Router(this)).getEventDetailActivityIntent(mEventsList.get(position));
+        }
+        startActivity(intent);
     }
 
     /**

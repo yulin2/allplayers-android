@@ -171,6 +171,7 @@ public class RestApiV1 {
      * @return
      */
     public static String deleteMessage(String id, String type) {
+        Log.d("IC MESSAGE", ENDPOINT + "messages/" + id + "&type=" + type);
         return makeAuthenticatedDelete(ENDPOINT + "messages/" + id + "&type=" + type);
     }
 
