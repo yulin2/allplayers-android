@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -31,6 +32,10 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
         setContentView(R.layout.search_groups_list);
 
+        if(RestApiV1.getCurrentUserUUID().equals("")) {
+            mActionBar.setHomeButtonEnabled(false);
+        }
+        
         mActionBar.setTitle("Search");
 
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
@@ -79,6 +84,7 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
         }
 
         protected void onPostExecute(String jsonResult) {
+            Log.d("IC", jsonResult);
             GroupsMap groups = new GroupsMap(jsonResult);
             mGroupList = groups.getGroupData();
 

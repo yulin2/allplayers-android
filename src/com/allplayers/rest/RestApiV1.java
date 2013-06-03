@@ -247,16 +247,23 @@ public class RestApiV1 {
     public static String searchGroups(String search, int zipcode, int distance) {
         String searchTerms = ENDPOINT + "groups.json";
         if (search.length() != 0) {
+            try {
+                search = URLEncoder.encode(search, "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             searchTerms += ("&search=\"" + search + "\"");
         }
         // As of right now, the input distance will only matter if a zipcode is
         // given,
         // so it is only considered in that case.
         // TODO Add in considering the distance as "Distance from my location"
-        if (zipcode != 0) {
-            searchTerms += ("&distance[postal_code]=" + zipcode
-                            + "&distance[search_distance]=" + distance + "&distance[search_units]=mile");
-        }
+        //if (zipcode != 0) {
+        //    searchTerms += ("&distance[postal_code]=" + zipcode
+        //                    + "&distance[search_distance]=" + distance + "&distance[search_units]=mile");
+        //}
+        Log.d("OC", searchTerms);
         return makeUnauthenticatedGet(searchTerms);
     }
 
@@ -580,6 +587,7 @@ public class RestApiV1 {
         // Make and return from unauthenticated get call
         try {
             URL url = new URL(urlString);
+            Log.d("IC", urlString + "\n" + url);
             HttpURLConnection connection = (HttpURLConnection) url
                                            .openConnection();
             connection.setDoInput(true);
