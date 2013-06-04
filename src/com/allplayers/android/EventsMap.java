@@ -9,7 +9,7 @@ import com.allplayers.objects.EventData;
 import com.google.gson.Gson;
 
 public class EventsMap {
-    private ArrayList<EventData> events = new ArrayList<EventData>();
+    private ArrayList<EventData> mEventsList = new ArrayList<EventData>();
 
     public EventsMap(String jsonResult) {
         try {
@@ -28,10 +28,7 @@ public class EventsMap {
                     } catch (JSONException ex) {
                         // If the latitude and longitude don't exist for the specified element then do not set them
                     }
-
-                    if (event.isNew(events)) {
-                        events.add(event);
-                    }
+                    mEventsList.add(event);
                 }
             }
         } catch (JSONException ex) {
@@ -40,6 +37,14 @@ public class EventsMap {
     }
 
     public ArrayList<EventData> getEventData() {
-        return events;
+        return mEventsList;
+    }
+
+    public int size() {
+        return mEventsList.size();
+    }
+
+    public boolean isEmpty() {
+        return mEventsList.size() == 0;
     }
 }

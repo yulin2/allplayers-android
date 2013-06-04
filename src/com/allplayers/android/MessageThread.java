@@ -9,9 +9,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.MessageData;
@@ -21,13 +27,14 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class MessageThread extends AllplayersSherlockListActivity {
-    private ArrayList<MessageThreadData> messageThreadList;
+    private ArrayList<MessageThreadData> mMessageThreadList;
     private boolean hasMessages = false;
-    private String jsonResult = "";
-    private int threadIDInt;
-    private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(2);
-    private MessageData message;
-    private ProgressBar loading;
+    private String mJsonResult = "";
+    private int mThreadId;
+    private ArrayList<HashMap<String, String>> mInfoList = new ArrayList<HashMap<String, String>>(2);
+    private MessageData mMessage;
+    private ProgressBar mLoadingIndicator;
+    private SimpleAdapter mAdapter;
 
     /**
      * Called when the activity is first created, this sets up some variables,
@@ -39,24 +46,44 @@ public class MessageThread extends AllplayersSherlockListActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-        message = (new Router(this)).getIntentMessage();
-        String threadID = message.getThreadID();
+        mMessage = (new Router(this)).getIntentMessage();
+        String threadID = mMessage.getThreadID();
 
         setContentView(R.layout.message_thread);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
-        actionbar.setTitle("Messages");
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mActionBar.setTitle("Messages");
 
-        PutAndGetMessagesTask helper = new PutAndGetMessagesTask();
-        helper.execute(threadID);
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
+
+        new PutAndGetMessagesTask().execute(threadID);
+
+        // It has been found that deleting a message through the API completely obliterates it from
+        // the site. This is not expected functionality and needs to be researched more.
+        /*getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
+                PopupMenu menu = new PopupMenu(getBaseContext(), view);
+                menu.inflate(R.menu.message_thread_menu);
+                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(android.view.MenuItem item) {
+                        switch (item.getItemId()) {
+                        case R.id.delete:
+                            new DeleteMessageTask(position).execute();
+                            break;
+                        }
+                        return true;
+                    }
+                });
+                menu.show();
+                return true;
+            }
+        });*/
     }
 
     /**
@@ -72,7 +99,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
         super.onListItemClick(l, v, position, id);
 
         if (hasMessages) {
-            Intent intent = (new Router(this)).getMessageViewSingleIntent(message, messageThreadList.get(position));
+            Intent intent = (new Router(this)).getMessageViewSingleIntent(mMessage, mMessageThreadList.get(position));
             startActivity(intent);
         }
     }
@@ -85,12 +112,12 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
         protected String doInBackground(String... threadID) {
 
-            threadIDInt = Integer.parseInt(threadID[0]);
-            RestApiV1.putMessage(threadIDInt, 0, "thread");
+            mThreadId = Integer.parseInt(threadID[0]);
+            RestApiV1.putMessage(mThreadId, 0, "thread");
 
-            jsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
+            mJsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
 
-            return jsonResult;
+            return mJsonResult;
         }
 
         /**
@@ -103,11 +130,11 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
             HashMap<String, String> map;
             MessageThreadMap messages = new MessageThreadMap(jsonResult);
-            messageThreadList = messages.getMessageThreadData();
+            mMessageThreadList = messages.getMessageThreadData();
 
-            actionbar.setSubtitle("Thread started by " + messageThreadList.get(0).getSenderName());
+            mActionBar.setSubtitle("Thread started by " + mMessageThreadList.get(0).getSenderName());
 
-            Collections.sort(messageThreadList, new Comparator<Object>() {
+            Collections.sort(mMessageThreadList, new Comparator<Object>() {
                 public int compare(Object o1, Object o2) {
                     MessageThreadData m1 = (MessageThreadData) o1;
                     MessageThreadData m2 = (MessageThreadData) o2;
@@ -115,13 +142,13 @@ public class MessageThread extends AllplayersSherlockListActivity {
                 }
             });
 
-            if (!messageThreadList.isEmpty()) {
+            if (!mMessageThreadList.isEmpty()) {
                 hasMessages = true;
-                for (int i = 0; i < messageThreadList.size(); i++) {
+                for (int i = 0; i < mMessageThreadList.size(); i++) {
                     map = new HashMap<String, String>();
-                    map.put("line1", messageThreadList.get(i).getMessageBody());
-                    map.put("line2", "From: " + messageThreadList.get(i).getSenderName() + " - " + messageThreadList.get(i).getDateString());
-                    list.add(map);
+                    map.put("line1", mMessageThreadList.get(i).getMessageBody());
+                    map.put("line2", "From: " + mMessageThreadList.get(i).getSenderName() + " - " + mMessageThreadList.get(i).getDateString());
+                    mInfoList.add(map);
                 }
             } else {
                 hasMessages = false;
@@ -129,16 +156,42 @@ public class MessageThread extends AllplayersSherlockListActivity {
                 map = new HashMap<String, String>();
                 map.put("line1", "You have no new messages.");
                 map.put("line2", "");
-                list.add(map);
+                mInfoList.add(map);
             }
 
             String[] from = { "line1", "line2" };
 
             int[] to = { android.R.id.text1, android.R.id.text2 };
 
-            SimpleAdapter adapter = new SimpleAdapter(MessageThread.this, list, android.R.layout.simple_list_item_2, from, to);
-            setListAdapter(adapter);
-            loading.setVisibility(View.GONE);
+            mAdapter = new SimpleAdapter(MessageThread.this, mInfoList, android.R.layout.simple_list_item_2, from, to);
+            setListAdapter(mAdapter);
+            mLoadingIndicator.setVisibility(View.GONE);
+        }
+    }
+
+    public class DeleteMessageTask extends AsyncTask<Void, Void, String> {
+        private int position;
+
+        public DeleteMessageTask(int i) {
+            setProgressBarIndeterminateVisibility(false);
+            position = i;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return RestApiV1.deleteMessage(mMessageThreadList.get(position).getId(), "msg");
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("done")) {
+                mMessageThreadList.remove(position);
+                mInfoList.remove(position);
+                mAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(getBaseContext(), "There was an error deleting the message.\n" + result, Toast.LENGTH_LONG).show();
+            }
+            setProgressBarIndeterminateVisibility(false);
         }
     }
 }

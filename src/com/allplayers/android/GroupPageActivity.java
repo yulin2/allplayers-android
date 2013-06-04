@@ -32,11 +32,11 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class GroupPageActivity extends AllplayersSherlockActivity {
 
-    private GroupData group;
-    private ArrayList<GroupMemberData> membersList;
+    private GroupData mGroup;
+    private ArrayList<GroupMemberData> mMembersList;
     private boolean isMember = false, isLoggedIn = false;
-    private ProgressBar loading;
-    private AllplayersSherlockActivity parentActivity = this;
+    private ProgressBar mProgressBar;
+    private AllplayersSherlockActivity mParentActivity = this;
 
     /**
      * Called when the activity is first created, this creates the Action Bar
@@ -47,19 +47,21 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        group = (new Router(this)).getIntentGroup();
-
         setContentView(R.layout.grouppage);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
-        actionbar.setDisplayShowTitleEnabled(false);
 
+        // Get the group information from the current intent.
+        mGroup = (new Router(this)).getIntentGroup();
+
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
+
+        // Hide the default title: needed to style our title.
+        mActionBar.setDisplayShowTitleEnabled(false);
+
+        // Create, style, and add our custom title to the ActionBar.
         TextView title = new TextView(this);
-        title.setText(group.getTitle());
+        title.setText(mGroup.getTitle());
         title.setTextSize(20);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setTextColor(Color.WHITE);
@@ -67,82 +69,28 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         title.setEllipsize(TextUtils.TruncateAt.END);
         title.setPadding(0, 15, 0, 0);
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(Gravity.CENTER);
-        actionbar.setCustomView(title, params);
-        actionbar.setDisplayShowCustomEnabled(true);
+        mActionBar.setCustomView(title, params);
+        mActionBar.setDisplayShowCustomEnabled(true);
 
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
-        new GetGroupMembersByGroupIdTask().execute(group.getUUID());
-        new GetGroupLocationTask().execute(group.getUUID());
+        // Set up the Side Navigation Menu.
+        mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
+
+        // Load the group members so we can set up the UI.
+        if (!RestApiV1.getCurrentUserUUID().equals("")) {
+            new GetGroupMembersByGroupIdTask().execute(mGroup.getUUID());
+            new GetGroupLocationTask().execute(mGroup.getUUID());
+        } else {
+            new GetRemoteImageTask().execute(mGroup.getLogo());
+        }
     }
 
     /**
-     * Gets a remote image using a REST call.
+     * Gets the group's location because it has not been previously pulled.
+     *
      */
-    public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        protected Bitmap doInBackground(String... logoURL) {
-
-            return RestApiV1.getRemoteImage(logoURL[0]);
-        }
-
-        protected void onPostExecute(Bitmap logo) {
-            loading.setVisibility(View.GONE);
-            ImageView imView = (ImageView) findViewById(R.id.groupLogo);
-            if (logo == null) {
-                imView.setImageResource(R.drawable.group_default_logo);
-            } else {
-                imView.setImageBitmap(logo);
-            }
-
-            final ImageButton groupMembersButton = (ImageButton) findViewById(R.id.groupMembersButton);
-            if (isMember && isLoggedIn) groupMembersButton.setVisibility(View.VISIBLE);
-            groupMembersButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = (new Router(GroupPageActivity.this))
-                                    .getGroupMembersActivityIntent(group);
-                    startActivity(intent);
-                }
-            });
-
-            final ImageButton groupEventsButton = (ImageButton) findViewById(R.id.groupEventsButton);
-            if (isMember && isLoggedIn) groupEventsButton.setVisibility(View.VISIBLE);
-            groupEventsButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = (new Router(GroupPageActivity.this))
-                                    .getGroupEventsActivityIntent(group);
-                    startActivity(intent);
-                }
-            });
-
-            final ImageButton groupPhotosButton = (ImageButton) findViewById(R.id.groupPhotosButton);
-            if (isMember && isLoggedIn) groupPhotosButton.setVisibility(View.VISIBLE);
-            groupPhotosButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = (new Router(GroupPageActivity.this))
-                                    .getGroupAlbumsActivityIntent(group);
-                    startActivity(intent);
-                }
-            });
-
-            final ImageButton groupLocationButton = (ImageButton) findViewById(R.id.groupLocationButton);
-            if (isMember && isLoggedIn) groupLocationButton.setVisibility(View.VISIBLE);
-            groupLocationButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    if (!(Build.VERSION.SDK_INT < 11)) {
-                        Intent intent = (new Router(GroupPageActivity.this))
-                                        .getGroupLocationActivityIntent(group);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(parentActivity, "This feature is not supported on your device.", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-        }
-    }
-
     public class GetGroupLocationTask extends AsyncTask<String, Void, String> {
         protected String doInBackground(String... group_uuid) {
             return RestApiV1.getGroupInformationByGroupId(group_uuid[0]);
@@ -151,8 +99,8 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         protected void onPostExecute(String jsonResult) {
             try {
                 JSONObject groupInfo = new JSONObject(jsonResult);
-                group.setZip(groupInfo.getJSONObject("location").getString("zip"));
-                group.setLatLon(groupInfo.getJSONObject("location").getString("latitude"), groupInfo.getJSONObject("location").getString("longitude"));
+                mGroup.setZip(groupInfo.getJSONObject("location").getString("zip"));
+                mGroup.setLatLon(groupInfo.getJSONObject("location").getString("latitude"), groupInfo.getJSONObject("location").getString("longitude"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -160,28 +108,105 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         }
     }
 
-    /*
+    /**
+     * Gets a remote image using a REST call.
+     */
+    public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
+
+        protected Bitmap doInBackground(String... logoURL) {
+            return RestApiV1.getRemoteImage(logoURL[0]);
+        }
+
+        protected void onPostExecute(Bitmap logo) {
+            // Hide the loading indicator.
+            mProgressBar.setVisibility(View.GONE);
+
+            // Set the image for the group's logo.
+            ImageView imView = (ImageView) findViewById(R.id.groupLogo);
+            if (logo == null) {
+                imView.setImageResource(R.drawable.group_default_logo);
+            } else {
+                imView.setImageBitmap(logo);
+            }
+
+            // If this person is a member of the current group and is logged in, show the button
+            // that launches the Group Member viewing page.
+            final ImageButton groupMembersButton = (ImageButton) findViewById(R.id.groupMembersButton);
+            if (isMember && isLoggedIn) groupMembersButton.setVisibility(View.VISIBLE);
+            groupMembersButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = (new Router(GroupPageActivity.this))
+                                    .getGroupMembersActivityIntent(mGroup);
+                    startActivity(intent);
+                }
+            });
+
+            // If this person is a member of the current group and is logged in, show the button
+            // that launches the Group Event viewing page.
+            final ImageButton groupEventsButton = (ImageButton) findViewById(R.id.groupEventsButton);
+            if (isMember && isLoggedIn) groupEventsButton.setVisibility(View.VISIBLE);
+            groupEventsButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = (new Router(GroupPageActivity.this))
+                                    .getGroupEventsActivityIntent(mGroup);
+                    startActivity(intent);
+                }
+            });
+
+            // If this person is a member of the current group and is logged in, show the button
+            // that launches the Group Photos viewing page.
+            final ImageButton groupPhotosButton = (ImageButton) findViewById(R.id.groupPhotosButton);
+            if (isMember && isLoggedIn) groupPhotosButton.setVisibility(View.VISIBLE);
+            groupPhotosButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = (new Router(GroupPageActivity.this))
+                                    .getGroupAlbumsActivityIntent(mGroup);
+                    startActivity(intent);
+                }
+            });
+
+            // If this person is a member of the current group and is logged in, show the button
+            // that launches the Group Location viewing page.
+            final ImageButton groupLocationButton = (ImageButton) findViewById(R.id.groupLocationButton);
+            if (isMember && isLoggedIn) groupLocationButton.setVisibility(View.VISIBLE);
+            groupLocationButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (!(Build.VERSION.SDK_INT < 11)) {
+                        Intent intent = (new Router(GroupPageActivity.this))
+                                        .getGroupLocationActivityIntent(mGroup);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(mParentActivity, "This feature is not supported on your device.", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
+
+    /**
      * Checks if the user is a group member. If the user is a group member the
      * group page interface is set up.
      */
     public class GetGroupMembersByGroupIdTask extends AsyncTask<String, Void, String> {
         protected String doInBackground(String... group_uuid) {
-            // @TODO: Move to asynchronous loading.
-            return RestApiV1.getGroupMembersByGroupId(group_uuid[0], 0);
+            return RestApiV1.getGroupMembersByGroupId(group_uuid[0], 0, 0);
         }
 
         protected void onPostExecute(String jsonResult) {
             isLoggedIn = RestApiV1.isLoggedIn();
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
-            membersList = groupMembers.getGroupMemberData();
+            mMembersList = groupMembers.getGroupMemberData();
             String currentUUID = RestApiV1.getCurrentUserUUID();
-            for (int i = 0; i < membersList.size(); i++) {
-                if (membersList.get(i).getUUID().equals(currentUUID)) {
+            // Compare the current UUID to all the group members' to check if the logged
+            // in user is a member of the group.
+            for (int i = 0; i < mMembersList.size(); i++) {
+                if (mMembersList.get(i).getUUID().equals(currentUUID)) {
                     isMember = true;
                     break;
                 }
             }
-            new GetRemoteImageTask().execute(group.getLogo());
+            // Load the logo and then set up the UI.
+            new GetRemoteImageTask().execute(mGroup.getLogo());
         }
     }
 }

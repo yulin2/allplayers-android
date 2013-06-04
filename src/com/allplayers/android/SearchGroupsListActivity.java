@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.allplayers.android.activities.AllplayersSherlockListActivity;
 import com.allplayers.objects.GroupData;
@@ -19,8 +21,9 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
-    private ArrayList<GroupData> groupList;
+    private ArrayList<GroupData> mGroupList;
     private boolean hasGroups = false;
+    private ProgressBar mProgressBar;
 
     /** Called when the activity is first created. */
     @Override
@@ -29,22 +32,26 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
         setContentView(R.layout.search_groups_list);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
-        actionbar.setTitle("Search");
+        if (RestApiV1.getCurrentUserUUID().equals("")) {
+            mActionBar.setHomeButtonEnabled(false);
+        }
 
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mActionBar.setTitle("Search");
+
+        mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
+
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.VISIBLE);
 
         Router router = new Router(this);
         String query = router.getIntentSearchQuery();
         int zipcode = router.getIntentSearchZipcode();
         int distance = router.getIntentSearchDistance();
 
-        SearchGroupsTask helper = new SearchGroupsTask();
-        helper.execute(query, zipcode, distance);
+        new SearchGroupsTask().execute(query, zipcode, distance);
     }
 
     @Override
@@ -53,7 +60,7 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
         if (hasGroups) {
             // Display the group page for the selected group
-            Intent intent = (new Router(this)).getGroupPageActivityIntent(groupList.get(position));
+            Intent intent = (new Router(this)).getGroupPageActivityIntent(mGroupList.get(position));
             startActivity(intent);
         }
     }
@@ -77,22 +84,23 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
         }
 
         protected void onPostExecute(String jsonResult) {
+            Log.d("IC", jsonResult);
             GroupsMap groups = new GroupsMap(jsonResult);
-            groupList = groups.getGroupData();
+            mGroupList = groups.getGroupData();
 
-            if (groupList.size() == 1) {
-                actionbar.setSubtitle("1 Result");
+            if (mGroupList.size() == 1) {
+                mActionBar.setSubtitle("1 Result");
             } else {
-                actionbar.setSubtitle(groupList.size() + " Results");
+                mActionBar.setSubtitle(mGroupList.size() + " Results");
             }
 
             String[] values;
 
-            if (!groupList.isEmpty()) {
-                values = new String[groupList.size()];
+            if (!mGroupList.isEmpty()) {
+                values = new String[mGroupList.size()];
 
-                for (int i = 0; i < groupList.size(); i++) {
-                    values[i] = groupList.get(i).getTitle();
+                for (int i = 0; i < mGroupList.size(); i++) {
+                    values[i] = mGroupList.get(i).getTitle();
                 }
 
                 hasGroups = true;
@@ -106,6 +114,7 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(SearchGroupsListActivity.this,
                     android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }

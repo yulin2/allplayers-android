@@ -14,7 +14,6 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -55,20 +54,18 @@ public class GroupLocationActivity extends AllplayersSherlockMapActivity {
         }
 
         LatLng location = new LatLng((Float.parseFloat(lat)), (Float.parseFloat(lon)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 11));
         mMap.addMarker(new MarkerOptions()
                        .position(location)
                        .title(group.getTitle())
                        .snippet(group.getZip())
                       ).showInfoWindow();
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
-        actionbar.setTitle(group.getTitle());
+        mActionBar.setTitle(group.getTitle());
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
     }
 }

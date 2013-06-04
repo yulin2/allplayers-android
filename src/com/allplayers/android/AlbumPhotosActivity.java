@@ -7,11 +7,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.PhotoData;
@@ -20,12 +20,11 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 public class AlbumPhotosActivity extends AllplayersSherlockActivity {
-    private ArrayList<PhotoData> photoList;
-    private ArrayAdapter blankAdapter = null;
-    private PhotoAdapter photoAdapter;
-    private GridView grid;
-    private ActionBar actionbar;
-    private ProgressBar loading;
+    private ArrayList<PhotoData> mPhotoList = new ArrayList<PhotoData>();
+    private PhotoAdapter mPhotoAdapter;
+    private GridView mGridView;
+    private AlbumData mAlbum;
+    private ProgressBar mProgressBar;
 
     /**
      * Called when the activity is first created, this sets up some variables,
@@ -35,53 +34,38 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.albumdisplay);
-        loading = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        final AlbumData album = (new Router(this)).getIntentAlbum();
-        photoList = new ArrayList<PhotoData>();
-        grid = (GridView) findViewById(R.id.gridview);
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
+
+        // Pull the album info from the current intent.
+        mAlbum = (new Router(this)).getIntentAlbum();
+
+        // Create our GridView and set its click listener.
+        mGridView = (GridView) findViewById(R.id.gridview);
+        mGridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                if (photoList.get(position) != null) {
+                if (mPhotoList.get(position) != null) {
                     // Display the group page for the selected group
-                    Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoPagerActivityIntent(photoList.get(position));
-                    intent.putExtra("album title", album.getTitle());
+                    Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoPagerActivityIntent(mPhotoList.get(position));
+                    intent.putExtra("album title", mAlbum.getTitle());
                     startActivity(intent);
                 }
             }
         });
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
-        actionbar.setTitle(album.getTitle());
+        // Set up the ActionBar.
+        mActionBar.setTitle(mAlbum.getTitle());
 
-        sideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        // Set up the Side Navigation Menu.
+        mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
-        new GetAlbumPhotosByAlbumIdTask().execute(album);
-    }
-
-    /**
-     * Creates an array adapter to store the album's photos.
-     */
-    public void setAdapter() {
-
-        if (photoList.isEmpty()) {
-            String[] values = new String[] {"no photos to display"};
-
-            blankAdapter = new ArrayAdapter<String>(AlbumPhotosActivity.this,
-                                                    android.R.layout.simple_list_item_1, values);
-            grid.setAdapter(blankAdapter);
-        } else {
-            photoAdapter = new PhotoAdapter(getApplicationContext());
-            grid.setAdapter(photoAdapter);
-        }
+        // Load the photos for the album.
+        new GetAlbumPhotosByAlbumIdTask().execute(mAlbum);
     }
 
     /**
@@ -89,14 +73,18 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
      * @param jsonResult The album's photos.
      */
     public void updateAlbumPhotos(String jsonResult) {
-
+        // Create the photo list from the json.
         PhotosMap photos = new PhotosMap(jsonResult);
-        photoList.addAll(photos.getPhotoData());
+        mPhotoList.addAll(photos.getPhotoData());
 
-        setAdapter();
-
-        if (photoList.size() != 0) {
-            photoAdapter.addAll(photoList);
+        // If there are no photos, create a blank adapter showing so.
+        if (mPhotoList.isEmpty()) {
+            String[] values = new String[] {"No photos to display"};
+            mGridView.setAdapter(new ArrayAdapter<String>(AlbumPhotosActivity.this,
+                                 android.R.layout.simple_list_item_1, values));
+        } else { // If there are photos, create a custom adapter for the GridView.
+            mPhotoAdapter = new PhotoAdapter(getApplicationContext(), mPhotoList);
+            mGridView.setAdapter(mPhotoAdapter);
         }
     }
 
@@ -109,7 +97,6 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
          * Gets the photos in a specified album using a rest call.
          */
         protected String doInBackground(AlbumData... album) {
-
             return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID(), 0, 0);
         }
 
@@ -117,9 +104,8 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
          * Calls a method to organize the fetched photos into a map.
          */
         protected void onPostExecute(String jsonResult) {
-
             updateAlbumPhotos(jsonResult);
-            loading.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -19,36 +18,50 @@ import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
 
 public class GroupsFragment extends ListFragment {
-    private ArrayList<GroupData> groupList;
+    private ArrayList<GroupData> mGroupList = new ArrayList<GroupData>();
     private boolean hasGroups = false, loadMore = true;
-    private int pageNumber = 0;
-    private int currentAmountShown = 0;
-    private ArrayAdapter<String> adapter;
-    private ProgressBar loadingMore;
-
-    private Activity parentActivity;
+    private int mPageNumber = 0;
+    private int mCurrentAmountShown = 0;
+    private ArrayAdapter<GroupData> mAdapter;
+    private ProgressBar mProgressBar;
+    private Activity mParentActivity;
+    private String mSortType = "radioactive";
+    private int mAmountToLoad = 15;
+    private ListView mListView;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        parentActivity = this.getActivity();
-        groupList = new ArrayList<GroupData>();
-        adapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1);
 
-        loadingMore = new ProgressBar(parentActivity);
+        // Get a handle on our containing activity.
+        mParentActivity = this.getActivity();
 
-        GetUserGroupsTask helper = new GetUserGroupsTask();
-        helper.execute();
+        // Create our adapter.
+        mAdapter = new ArrayAdapter<GroupData>(mParentActivity, android.R.layout.simple_list_item_1, mGroupList);
+
+        // Load our sort type from the arguments.
+        if (getArguments() != null && getArguments().containsKey("sort")) {
+            mSortType = getArguments().getString("sort");
+        }
+
+        // Load the first set of groups.
+        new GetUserGroupsTask().execute();
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        getListView().addFooterView(loadingMore, null, false);
-        setListAdapter(adapter);
+        // Set up our loading indicator at the foot of the ListView.
+        mProgressBar = new ProgressBar(mParentActivity);
+        mListView = getListView();
+        mListView.addFooterView(mProgressBar, null, false);
+        // Set our adapter.
+        setListAdapter(mAdapter);
 
-        getListView().setOnScrollListener(new OnScrollListener() {
+        // Set a scroll listener to load more if we are at the end of our list
+        // and less than two items are offscreen.
+        mListView.setOnScrollListener(new OnScrollListener() {
             private int visibleThreshold = 2;
-            private int previousTotal = 0;
+            private int previousTotal = 1;
             private boolean loading = true;
             public void onScroll(AbsListView view, int firstVisibleItem,
             int visibleItemCount, int totalItemCount) {
@@ -73,47 +86,36 @@ public class GroupsFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if (hasGroups && position < groupList.size()) {
+        if (hasGroups && position < mGroupList.size()) {
             //Display the group page for the selected group
-            Intent intent = (new Router(parentActivity)).getGroupPageActivityIntent(groupList.get(position));
+            Intent intent = (new Router(mParentActivity)).getGroupPageActivityIntent(mGroupList.get(position));
             startActivity(intent);
         }
     }
 
     /** Populates the list of groups to display to the UI thread. */
     protected void updateGroupData() {
-        if (!groupList.isEmpty()) {
-
-            // Counter to check if a full 8 new groups were loaded.
-            int counter = 0;
-            for (int i = currentAmountShown; i < groupList.size(); i++) {
-                adapter.add(groupList.get(currentAmountShown).getTitle());
-                currentAmountShown++;
-                counter++;
-            }
-
-            // If we did not load 8 groups, we are at the end of the list, so signal
+        if (!mGroupList.isEmpty()) {
+            mAdapter.notifyDataSetChanged();
+            // If we did not load 15 groups, we are at the end of the list, so signal
             // not to try to load more groups.
-            if (counter < 8) {
+            if (mGroupList.size() - mCurrentAmountShown < mAmountToLoad) {
                 loadMore = false;
-                try {
-                    getListView().removeFooterView(loadingMore);
-                } catch (IllegalStateException e) {
-                    Log.e("IllegalState", e.getMessage());
+                if (mListView != null) {
+                    mListView.removeFooterView(mProgressBar);
                 }
             }
 
             hasGroups = true;
-            // Check for default of no groups to display.
-            if (adapter.getPosition("no groups to display") >= 0) {
-                adapter.remove("no groups to display");
-            }
         } else {
-            hasGroups = false;
-            if (adapter.getPosition("no groups to display") < 0) {
-                adapter.add("no groups to display");
+            // If we do not have any groups, create a blank list item and remove our loading footer.
+            ArrayAdapter<String> blankAdapter = new ArrayAdapter<String>(mParentActivity, android.R.layout.simple_list_item_1);
+            blankAdapter.add("No groups to display");
+            if (mListView != null) {
+                mListView.setAdapter(blankAdapter);
+                mListView.setEnabled(false);
+                mListView.removeFooterView(mProgressBar);
             }
-            getListView().removeFooterView(loadingMore);
         }
     }
 
@@ -122,13 +124,17 @@ public class GroupsFragment extends ListFragment {
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... args) {
-            // @TODO: Move to asynchronous loading.
-            return RestApiV1.getUserGroups(pageNumber++ * 8, 8);
+            return RestApiV1.getUserGroups(mPageNumber++ * mAmountToLoad, mAmountToLoad, mSortType);
         }
 
         protected void onPostExecute(String jsonResult) {
-            GroupsMap groups = new GroupsMap(jsonResult);
-            groupList.addAll(groups.getGroupData());
+            if (!jsonResult.equals("error")) {
+                // Create the new group data objects and add them to our list.
+                GroupsMap groups = new GroupsMap(jsonResult);
+                mCurrentAmountShown = mGroupList.size();
+                mGroupList.addAll(groups.getGroupData());
+            }
+            // Update the ListView.
             updateGroupData();
         }
     }

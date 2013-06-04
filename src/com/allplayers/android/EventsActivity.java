@@ -18,18 +18,22 @@ public class EventsActivity extends AllplayersSherlockFragmentActivity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.events);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
-        actionbar.setTitle("Events");
+        // Set up the ActionBar.
+        mActionBar.setTitle("Events");
 
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        // Set up the Side Navigation Menu.
+        mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // This is used to fix a problem with the activity stack on API 10.
+        moveTaskToBack(true);
     }
 }

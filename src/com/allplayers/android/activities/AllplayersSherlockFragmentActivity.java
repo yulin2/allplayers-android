@@ -1,7 +1,5 @@
 package com.allplayers.android.activities;
 
-import java.net.CookieHandler;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Intent;
@@ -22,16 +20,18 @@ import com.allplayers.android.R;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.ISideNavigationCallback;
 import com.devspark.sidenavigation.SideNavigationView;
-import com.google.gson.Gson;
 
 public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity implements ISideNavigationCallback {
 
-    protected SideNavigationView sideNavigationView;
-    protected ActionBar actionbar;
+    protected SideNavigationView mSideNavigationView;
+    protected ActionBar mActionBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActionBar = getSupportActionBar();
+        mActionBar.setIcon(R.drawable.menu_icon);
+        mActionBar.setHomeButtonEnabled(true);
     }
 
     /**
@@ -78,7 +78,7 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
         switch (item.getItemId()) {
 
         case android.R.id.home: {
-            sideNavigationView.toggleMenu();
+            mSideNavigationView.toggleMenu();
             return true;
         }
 
@@ -97,33 +97,33 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
 
         switch (itemId) {
 
-        case R.id.side_navigation_menu_item1:
+        case R.id.groups:
             invokeActivity(GroupsActivity.class);
             break;
 
-        case R.id.side_navigation_menu_item2:
+        case R.id.messages:
             invokeActivity(MessageActivity.class);
             break;
 
-        case R.id.side_navigation_menu_item3:
+        case R.id.photos:
             invokeActivity(PhotosActivity.class);
             break;
 
-        case R.id.side_navigation_menu_item4:
+        case R.id.events:
             invokeActivity(EventsActivity.class);
             break;
 
-        case R.id.side_navigation_menu_item5: {
+        case R.id.search: {
             search();
             break;
         }
 
-        case R.id.side_navigation_menu_item6: {
+        case R.id.log_out: {
             logOut();
             break;
         }
 
-        case R.id.side_navigation_menu_item7: {
+        case R.id.refresh: {
             refresh();
             break;
         }
@@ -145,6 +145,7 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
     protected void invokeActivity(Class activity) {
 
         Intent intent = new Intent(this, activity);
+        intent.addFlags(32768 | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
 
         overridePendingTransition(0, 0); // Disables new activity animation.
@@ -163,17 +164,16 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
      */
     protected void logOut() {
 
-        LogOutTask helper = new LogOutTask();
-        helper.execute();
+        new LogOutTask().execute();
 
         AccountManager manager = AccountManager.get(this.getBaseContext());
         Account[] accounts = manager.getAccountsByType("com.allplayers.android");
 
-        if (accounts.length == 1) {
-            manager.removeAccount(accounts[0], null, null);
+        for (int i = 0; i < accounts.length; i++) {
+            manager.removeAccount(accounts[i], null, null);
         }
 
-        startActivity(new Intent(this, Login.class));
+        invokeActivity(Login.class);
         finish();
     }
 
@@ -181,7 +181,6 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
      * Refreshes the current activity to update information.
      */
     protected void refresh() {
-
         finish();
         startActivity(getIntent());
     }

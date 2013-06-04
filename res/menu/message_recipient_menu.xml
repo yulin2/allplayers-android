@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/removeRecipient"
-          android:title="Remove Recipient" />
+          android:title="@string/remove_recip" />
     <item android:id="@+id/cancel"
-          android:title="Cancel" />
+          android:title="@string/cancel" />
 </menu>

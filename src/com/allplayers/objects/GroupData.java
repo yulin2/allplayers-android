@@ -1,8 +1,5 @@
 package com.allplayers.objects;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class GroupData extends DataObject {
     private String uuid = "";
     private String title = "";
@@ -55,5 +52,10 @@ public class GroupData extends DataObject {
     public void setLatLon(String la, String lo) {
         lat = la;
         lon = lo;
+    }
+
+    @Override
+    public String toString() {
+        return title;
     }
 }

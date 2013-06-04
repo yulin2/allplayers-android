@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,10 +24,9 @@ import com.google.gson.Gson;
  */
 public class SelectUserContacts extends AllplayersSherlockListActivity {
 
-    private ArrayList<GroupMemberData> membersList;
-    private ArrayList<GroupMemberData> selectedMembers;
-    private Intent parentIntent;
-    private ProgressBar spinner;
+    private ArrayList<GroupMemberData> mMembersList;
+    private ArrayList<GroupMemberData> mSelectedMembers;
+    private ProgressBar mLoadingIndicator;
 
     /**
      * This sets up the action bar, side navigation interface, and page UI.
@@ -40,31 +38,28 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         // Set up the page UI
         setContentView(R.layout.selectusercontacts);
 
-        spinner = (ProgressBar) findViewById(R.id.progress_indicator);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
-        actionbar = getSupportActionBar();
-        actionbar.setIcon(R.drawable.menu_icon);
-        actionbar.setTitle("Compose Message");
-        actionbar.setSubtitle("Select Individual Recipients");
+        mActionBar.setTitle("Compose Message");
+        mActionBar.setSubtitle("Select Individual Recipients");
 
-        sideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
-        sideNavigationView.setMenuItems(R.menu.side_navigation_menu);
-        sideNavigationView.setMenuClickCallback(this);
-        sideNavigationView.setMode(Mode.LEFT);
+        mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
+        mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
+        mSideNavigationView.setMenuClickCallback(this);
+        mSideNavigationView.setMode(Mode.LEFT);
 
-        selectedMembers = new ArrayList<GroupMemberData>();
+        mSelectedMembers = new ArrayList<GroupMemberData>();
 
-        GetUserGroupmatesTask helper = new GetUserGroupmatesTask();
-        helper.execute();
+        new GetUserGroupmatesTask().execute();
 
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                parentIntent = new Intent();
                 Gson gson = new Gson();
-                String userData = gson.toJson(selectedMembers);
-                parentIntent.putExtra("userData", userData);
-                setResult(Activity.RESULT_OK, parentIntent);
+                String userData = gson.toJson(mSelectedMembers);
+                Intent intent = new Intent();
+                intent.putExtra("userData", userData);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });
@@ -72,12 +67,12 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        if (!selectedMembers.contains(membersList.get(position))) {
+        if (!mSelectedMembers.contains(mMembersList.get(position))) {
             v.setBackgroundResource(R.color.android_blue);
-            selectedMembers.add(membersList.get(position));
+            mSelectedMembers.add(mMembersList.get(position));
         } else {
             v.setBackgroundResource(R.drawable.backgroundstate);
-            selectedMembers.remove(membersList.get(position));
+            mSelectedMembers.remove(mMembersList.get(position));
         }
     }
 
@@ -88,29 +83,29 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     public class GetUserGroupmatesTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... args) {
-            // @TODO: Move to asynchronous loading.
-            return RestApiV1.getUserGroupmates(0);
+            return RestApiV1.getUserGroupmates(0, 0);
         }
 
         protected void onPostExecute(String jsonResult) {
             jsonResult = jsonResult.replaceAll("firstname", "fname");
             jsonResult = jsonResult.replaceAll("lastname", "lname");
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
-            membersList = groupMembers.getGroupMemberData();
+            mMembersList = groupMembers.getGroupMemberData();
             String[] values;
 
-            if (!membersList.isEmpty()) {
-                values = new String[membersList.size()];
-                for (int i = 0; i < membersList.size(); i++) {
-                    values[i] = membersList.get(i).getName();
+            if (!mMembersList.isEmpty()) {
+                values = new String[mMembersList.size()];
+                for (int i = 0; i < mMembersList.size(); i++) {
+                    values[i] = mMembersList.get(i).getName();
                 }
             } else {
                 values = new String[] {"No members to display"};
+                getListView().setEnabled(false);
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(SelectUserContacts.this,
                     android.R.layout.simple_list_item_1, values);
             setListAdapter(adapter);
-            spinner.setVisibility(View.GONE);
+            mLoadingIndicator.setVisibility(View.GONE);
         }
     }
 }

@@ -1,14 +1,9 @@
 package com.allplayers.objects;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import com.google.gson.Gson;
 
 public class MessageData extends DataObject {
     private String thread_id = "";
@@ -105,4 +100,17 @@ public class MessageData extends DataObject {
     public String getNew() {
         return is_new;
     }
+
+    public void setLastSender(String lastSender) {
+        last_message_sender = lastSender;
+    }
+
+    public void setRead(boolean isRead) {
+        if (isRead) {
+            is_new = "0";
+        } else {
+            is_new = "1";
+        }
+    }
+
 }

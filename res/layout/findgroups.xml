@@ -10,25 +10,22 @@
         android:orientation="vertical" >
 
         <TableLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingBottom="0px"
-            android:paddingLeft="5px"
-            android:paddingRight="5px"
-            android:paddingTop="10px" >
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp" >
 
             <TableRow>
 
                 <TextView
                     android:id="@+id/groupLabel"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="0"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="Keywords:     "
+                    android:text="@string/keywords"
                     android:textSize="14sp" >
                 </TextView>
 
@@ -37,7 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="textMultiLine" >
+                    android:inputType="text" >
                 </EditText>
             </TableRow>
 
@@ -45,11 +42,10 @@
 
                 <TextView
                     android:id="@+id/zipcodeLabel"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="0"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="Zip Code:     "
+                    android:text="@string/zip"
                     android:textSize="14sp"
                     android:visibility="gone" >
                 </TextView>
@@ -68,11 +64,11 @@
 
                 <TextView
                     android:id="@+id/distanceLabel"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_weight="0"
                     android:gravity="center_vertical"
-                    android:text="Distance:     "
+                    android:text="@string/distance"
                     android:textSize="14sp"
                     android:visibility="gone" >
                 </TextView>
@@ -92,7 +88,7 @@
             android:id="@+id/searchGroupsButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Search Groups" >
+            android:text="@string/search_groups" >
         </Button>
     </LinearLayout>
 

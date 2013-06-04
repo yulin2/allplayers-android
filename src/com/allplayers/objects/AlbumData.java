@@ -1,8 +1,5 @@
 package com.allplayers.objects;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -57,5 +54,9 @@ public class AlbumData extends DataObject {
 
     public String getCoverPhoto() {
         return rep_photo;
+    }
+
+    public void setTitle(String t) {
+        title = t;
     }
 }

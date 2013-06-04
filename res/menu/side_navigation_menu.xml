@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
-        android:id="@+id/side_navigation_menu_item1"
+        android:id="@+id/groups"
         android:icon="@drawable/groups_icon"
-        android:title="Groups"/>
+        android:title="@string/groups"/>
     <item
-        android:id="@+id/side_navigation_menu_item2"
+        android:id="@+id/messages"
         android:icon="@drawable/messages_icon"
-        android:title="Messages"/>
+        android:title="@string/messages"/>
     <item
-        android:id="@+id/side_navigation_menu_item3"
+        android:id="@+id/photos"
         android:icon="@drawable/photos_icon"
-        android:title="Photo Albums"/>
+        android:title="@string/photos"/>
     <item
-        android:id="@+id/side_navigation_menu_item4"
+        android:id="@+id/events"
         android:icon="@drawable/events_icon"
-        android:title="Events"/>
+        android:title="@string/events"/>
     <item
-        android:id="@+id/side_navigation_menu_item5"
+        android:id="@+id/search"
         android:icon="@drawable/search_200x200"
-        android:title="Search"/>
+        android:title="@string/search"/>
     <item
-        android:id="@+id/side_navigation_menu_item6"
+        android:id="@+id/log_out"
         android:icon="@drawable/logout_200x200"
-        android:title="Log Out"/>
+        android:title="@string/logout"/>
     <item
-        android:id="@+id/side_navigation_menu_item7"
+        android:id="@+id/refresh"
         android:icon="@drawable/refresh_200x200"
-        android:title="Refresh"/>
+        android:title="@string/refresh"/>
+
 </menu>

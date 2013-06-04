@@ -10,23 +10,23 @@ import com.allplayers.objects.MessageThreadData;
 import com.google.gson.Gson;
 
 public class MessageThreadMap {
-    private ArrayList<MessageThreadData> mail = new ArrayList<MessageThreadData>();
-    private String[] names;
+    private ArrayList<MessageThreadData> mMessageList = new ArrayList<MessageThreadData>();
+    private String[] mNames;
 
     public MessageThreadMap(String jsonResult) {
         try {
             JSONObject jsonObject = new JSONObject(jsonResult);
 
-            names = getNames(jsonObject);
+            mNames = getNames(jsonObject);
 
             // Used to create MessageThreadData objects from json.
             Gson gson = new Gson();
-            if (names.length > 0) {
-                for (int i = 0; i < names.length; i++) {
-                    MessageThreadData message = gson.fromJson(jsonObject.getString(names[i]), MessageThreadData.class);
+            if (mNames.length > 0) {
+                for (int i = 0; i < mNames.length; i++) {
+                    MessageThreadData message = gson.fromJson(jsonObject.getString(mNames[i]), MessageThreadData.class);
 
-                    if (message.isNew(mail)) {
-                        mail.add(message);
+                    if (message.isNew(mMessageList)) {
+                        mMessageList.add(message);
                     }
                 }
             }
@@ -54,6 +54,6 @@ public class MessageThreadMap {
     }
 
     public ArrayList<MessageThreadData> getMessageThreadData() {
-        return mail;
+        return mMessageList;
     }
 }
