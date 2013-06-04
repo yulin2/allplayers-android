@@ -61,6 +61,6 @@ public class GroupData extends DataObject {
 
     public void setTitle(String string) {
         title = string;
-        
+
     }
 }

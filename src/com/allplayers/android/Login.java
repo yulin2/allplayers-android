@@ -122,7 +122,7 @@ public class Login extends Activity {
                 startActivityForResult(intent, 0);
             }
         });
-        
+
         mGroupSearchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(Login.this, FindGroupsActivity.class));

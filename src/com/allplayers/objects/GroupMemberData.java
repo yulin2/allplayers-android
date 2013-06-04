@@ -15,15 +15,15 @@ public class GroupMemberData extends DataObject {
     public boolean isSelected() {
         return mSelected;
     }
-    
+
     public void setSelected() {
         mSelected = false;
     }
-    
+
     public void setNotSelected() {
         mSelected = true;
     }
-    
+
     public String getUUID() {
         return uuid;
     }

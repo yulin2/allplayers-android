@@ -37,7 +37,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
     private ListView mListView;
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
-    
+
     private final int LIMIT = 15;
     private boolean mEndOfData = false;
     private int mOffset = 0;
@@ -45,10 +45,10 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
     /**
      * Called when the activity is starting. Handles variable initialization, and sets up the
      * interface.
-     * @param savedInstanceState: If the activity is being re-initialized after previously being 
-     * shut down then this Bundle contains the data it most recently supplied in 
+     * @param savedInstanceState: If the activity is being re-initialized after previously being
+     * shut down then this Bundle contains the data it most recently supplied in
      * onSaveInstanceState(Bundle). Otherwise it is null.
-     * 
+     *
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
         // Get a handle on the ListView.
         mListView = getListView();
-        
+
         // Create our adapter for the ListView.
         mAdapter = new ArrayAdapter<GroupData>(this, android.R.layout.simple_list_item_multiple_choice, mGroupsList);
 
@@ -84,11 +84,11 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         // When the load more button is clicked, show the loading indicator and load more
         // groups.
         mLoadMoreButton.setOnClickListener(new OnClickListener() {
-            
+
             /**
              * Called when the button is clicked.
              * @param v: The view that was clicked.
-             * 
+             *
              */
             @Override
             public void onClick(View v) {
@@ -100,18 +100,18 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
         // Add our loading button and indicator to the ListView.
         mListView.addFooterView(mFooter);
-        
+
         // Set our ListView adapter.
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         setListAdapter(mAdapter);
-        
+
         final Button doneButton = (Button)findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
-            
+
             /**
              * Called when the button is clicked.
              * @param v: The view that was clicked.
-             * 
+             *
              */
             @SuppressWarnings("unchecked")
             @Override
@@ -121,14 +121,14 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
                     finish();
                 } else {
                     mLoadingIndicator.setVisibility(View.VISIBLE);
-                    
+
                     // The serialization and finishing of this activity is handled in the async
                     // thread.
                     new GetGroupMembersByGroupIdTask().execute(mSelectedGroups);
                 }
             }
         });
-        
+
         // Get the first 15 groups.
         new GetUserGroupsTask().execute();
     }
@@ -139,7 +139,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
      * @param v: The view that was clicked within the ListView.
      * @param position: The position of the view in the list.
      * @param id: The row id of the item that was clicked.
-     * 
+     *
      */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -163,7 +163,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
         protected void onPostExecute(String jsonResult) {
             GroupsMap groups = new GroupsMap(jsonResult);
-            
+
             if (groups.size() == 0) {
                 // If the newly pulled group members is empty, indicate the end of data.
                 mEndOfData = true;

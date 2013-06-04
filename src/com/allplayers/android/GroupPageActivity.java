@@ -79,7 +79,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         mSideNavigationView.setMode(Mode.LEFT);
 
         // Load the group members so we can set up the UI.
-        if(!RestApiV1.getCurrentUserUUID().equals("")) {
+        if (!RestApiV1.getCurrentUserUUID().equals("")) {
             new GetGroupMembersByGroupIdTask().execute(mGroup.getUUID());
             new GetGroupLocationTask().execute(mGroup.getUUID());
         } else {
