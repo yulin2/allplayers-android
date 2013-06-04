@@ -58,4 +58,9 @@ public class GroupData extends DataObject {
     public String toString() {
         return title;
     }
+
+    public void setTitle(String string) {
+        title = string;
+        
+    }
 }
