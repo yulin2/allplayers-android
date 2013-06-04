@@ -32,10 +32,10 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
         setContentView(R.layout.search_groups_list);
 
-        if(RestApiV1.getCurrentUserUUID().equals("")) {
+        if (RestApiV1.getCurrentUserUUID().equals("")) {
             mActionBar.setHomeButtonEnabled(false);
         }
-        
+
         mActionBar.setTitle("Search");
 
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
@@ -45,7 +45,7 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.VISIBLE);
-        
+
         Router router = new Router(this);
         String query = router.getIntentSearchQuery();
         int zipcode = router.getIntentSearchZipcode();

@@ -26,8 +26,8 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.findgroups);
-        
-        if(RestApiV1.getCurrentUserUUID().equals("")) {
+
+        if (RestApiV1.getCurrentUserUUID().equals("")) {
             mActionBar.setHomeButtonEnabled(false);
         }
 

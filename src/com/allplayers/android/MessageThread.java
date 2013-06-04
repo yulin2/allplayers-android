@@ -51,7 +51,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
         setContentView(R.layout.message_thread);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
-        
+
 
         mActionBar.setTitle("Messages");
 
@@ -62,7 +62,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
         new PutAndGetMessagesTask().execute(threadID);
 
-        // It has been found that deleting a message through the API completely obliterates it from 
+        // It has been found that deleting a message through the API completely obliterates it from
         // the site. This is not expected functionality and needs to be researched more.
         /*getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
