@@ -339,6 +339,13 @@ public class RestApiV1 {
     public static String getGroupInformationByGroupId(String group_uuid) {
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid + ".json");
     }
+    
+    /**
+     * 
+     */
+    public static String getUserRolesInGroup(String groupUuid, String userUuid) {
+        return makeAuthenticatedGet(ENDPOINT+ "groups/" + groupUuid + "/roles/" + userUuid + ".json");
+    }
 
 
     /**

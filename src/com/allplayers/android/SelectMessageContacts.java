@@ -10,6 +10,7 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -45,9 +46,17 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        
+        // Check if there is any data already in a previous version of this activity.
         if (icicle != null) {
             String currentRecipients = icicle.getString("currentRecipients");
             addRecipientsToList(currentRecipients);
+        }
+        
+        // Check if any data was sent in from a GroupPageActivity broadcast.
+        if (getIntent().getExtras() != null) {
+            addRecipientsToList(getIntent().getExtras().getString("broadcastRecipients"));
         }
         setContentView(R.layout.selectmessagecontacts);
 
@@ -59,7 +68,6 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         setListAdapter(mAdapter);
 
         getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
