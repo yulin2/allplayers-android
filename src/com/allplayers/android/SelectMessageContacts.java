@@ -96,7 +96,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         });
 
         // "Add User Recipient" button.
-        final Button addUserRecipientButton = (Button)findViewById(R.id.addUserRecipientButton);
+        final Button addUserRecipientButton = (Button)findViewById(R.id.addGroupmatesRecipientButton);
         addUserRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectUserContacts.class);
@@ -104,11 +104,11 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
             }
         });
 
-        // "Add Group Recipient" button.
-        final Button addGroupRecipientButton = (Button)findViewById(R.id.addGroupRecipientButton);
+        // "Add Friend Recipient" button.
+        final Button addGroupRecipientButton = (Button)findViewById(R.id.addFriendsRecipientButton);
         addGroupRecipientButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(SelectMessageContacts.this, SelectGroupContacts.class);
+                Intent intent = new Intent(SelectMessageContacts.this, SelectFriendContacts.class);
                 startActivityForResult(intent, 1);
             }
         });

@@ -11,8 +11,8 @@
     <string name="search">Search</string>
     <string name="done">Done</string>
     <string name="reply">Reply</string>
-    <string name="add_group">Add Group</string>
-    <string name="add_user">Add User</string>
+    <string name="add_groupmates">Add Groupmates</string>
+    <string name="add_friends">Add Friends</string>
     <string name="compose">Compose Message</string>
     <string name="send">Send</string>
     <string name="login">Login</string>

@@ -22,19 +22,19 @@
             android:orientation="horizontal" >
 
             <Button
-                android:id="@+id/addUserRecipientButton"
+                android:id="@+id/addGroupmatesRecipientButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
-                android:text="@string/add_user" >
+                android:text="@string/add_groupmates" >
             </Button>
 
             <Button
-                android:id="@+id/addGroupRecipientButton"
+                android:id="@+id/addFriendsRecipientButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
-                android:text="@string/add_group" >
+                android:text="@string/add_friends" >
             </Button>
         </LinearLayout>
 

@@ -305,6 +305,12 @@ public class RestApiV1 {
                             + sCurrentUserUUID + "/friends.json");
         return jsonResult.replaceAll("&#039;", "'");
     }
+    
+    public static String getUserFriends(int offset, int limit) {
+        String jsonResult = makeAuthenticatedGet(ENDPOINT + "users/"
+                + sCurrentUserUUID + "/friends.json&offset=" + offset + "&limit=" + limit);
+        return jsonResult.replaceAll("&#039;", "'");
+    }
 
     /**
      * getUserGroupmates().

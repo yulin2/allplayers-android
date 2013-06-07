@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.util.Log;
+
 import com.allplayers.objects.GroupMemberData;
 import com.google.gson.Gson;
 
@@ -21,7 +23,7 @@ public class GroupMembersMap {
                 Gson gson = new Gson();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
-
+                    Log.d("Putting Data in Map", jsonArray.getString(i));
                     if (member.isNew(mMembersList)) {
                         mMembersList.add(member);
                     }
