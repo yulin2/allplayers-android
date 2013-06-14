@@ -45,6 +45,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
         // Create our GridView and set its click listener.
         mGridView = (GridView) findViewById(R.id.gridview);
         mGridView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 if (mPhotoList.get(position) != null) {
                     // Display the group page for the selected group
@@ -96,6 +97,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
         /**
          * Gets the photos in a specified album using a rest call.
          */
+        @Override
         protected String doInBackground(AlbumData... album) {
             return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID(), 0, 0);
         }
@@ -103,6 +105,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
         /**
          * Calls a method to organize the fetched photos into a map.
          */
+        @Override
         protected void onPostExecute(String jsonResult) {
             updateAlbumPhotos(jsonResult);
             mProgressBar.setVisibility(View.GONE);

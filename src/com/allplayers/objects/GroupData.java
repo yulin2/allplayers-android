@@ -17,6 +17,7 @@ public class GroupData extends DataObject {
         return uuid;
     }
 
+    @Override
     public String getId() {
         return uuid;
     }

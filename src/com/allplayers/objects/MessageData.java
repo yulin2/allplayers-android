@@ -81,6 +81,7 @@ public class MessageData extends DataObject {
         return thread_id;
     }
 
+    @Override
     public String getId() {
         return thread_id;
     }

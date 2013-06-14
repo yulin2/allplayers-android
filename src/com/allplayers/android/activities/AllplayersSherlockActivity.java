@@ -11,6 +11,7 @@ import android.view.Window;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.allplayers.android.ContactsActivity;
 import com.allplayers.android.EventsActivity;
 import com.allplayers.android.FindGroupsActivity;
 import com.allplayers.android.GroupsActivity;
@@ -103,6 +104,10 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
         case R.id.groups:
             invokeActivity(GroupsActivity.class);
             break;
+            
+        case R.id.contacts:
+            invokeActivity(ContactsActivity.class);
+            break;
 
         case R.id.messages:
             invokeActivity(MessageActivity.class);
@@ -194,6 +199,7 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
      */
     protected class LogOutTask extends AsyncTask<Void, Void, Void> {
 
+        @Override
         protected Void doInBackground(Void... args) {
 
             RestApiV1.logOut();

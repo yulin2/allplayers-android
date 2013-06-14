@@ -6,6 +6,10 @@
         android:icon="@drawable/groups_icon"
         android:title="@string/groups"/>
     <item
+        android:id="@+id/contacts"
+        android:icon="@drawable/contacts_icon"
+        android:title="@string/contacts"/>
+    <item
         android:id="@+id/messages"
         android:icon="@drawable/messages_icon"
         android:title="@string/messages"/>

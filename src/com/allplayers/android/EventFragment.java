@@ -146,10 +146,12 @@ public class EventFragment extends ListFragment {
      */
     public class GetUserEventsTask extends AsyncTask<Void, Void, String> {
 
+        @Override
         protected String doInBackground(Void... args) {
             return RestApiV1.getUserEvents(mOffset, mLimit);
         }
 
+        @Override
         protected void onPostExecute(String jsonResult) {
             mJsonResult = jsonResult;
             setEventsMap();

@@ -49,6 +49,7 @@ public class GroupsFragment extends ListFragment {
         new GetUserGroupsTask().execute();
     }
 
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Set up our loading indicator at the foot of the ListView.
         mProgressBar = new ProgressBar(mParentActivity);
@@ -63,6 +64,7 @@ public class GroupsFragment extends ListFragment {
             private int visibleThreshold = 2;
             private int previousTotal = 1;
             private boolean loading = true;
+            @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
             int visibleItemCount, int totalItemCount) {
                 if (loading) {
@@ -123,10 +125,12 @@ public class GroupsFragment extends ListFragment {
      * Fetches the groups a user belongs to and stores the data locally.
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
+        @Override
         protected String doInBackground(Void... args) {
             return RestApiV1.getUserGroups(mPageNumber++ * mAmountToLoad, mAmountToLoad, mSortType);
         }
 
+        @Override
         protected void onPostExecute(String jsonResult) {
             if (!jsonResult.equals("error")) {
                 // Create the new group data objects and add them to our list.

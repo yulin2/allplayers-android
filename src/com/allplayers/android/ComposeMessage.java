@@ -34,7 +34,6 @@ public class ComposeMessage extends AllplayersSherlockActivity {
 
         // Set up the ActionBar.
         mActionBar.setTitle("Compose Message");
-        mActionBar.setSubtitle("New Message");
 
         // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
@@ -60,6 +59,12 @@ public class ComposeMessage extends AllplayersSherlockActivity {
                 e.printStackTrace();
             }
         }
+        
+        if (mRecipientUuidList.size() == 1) {
+            mActionBar.setSubtitle("New Message to 1 recipient");
+        } else {
+            mActionBar.setSubtitle("New Message to " + mRecipientUuidList.size() + " recipients");
+        }
 
         // The field for the message subject.
         final EditText subjectField = (EditText)findViewById(R.id.subjectField);
@@ -72,6 +77,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
         final Button sendButton = (Button)findViewById(R.id.sendMessageButton);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 // Pull the body and subject from the form.
                 mMessageBody = bodyField.getText().toString();
@@ -93,6 +99,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
      * Posts a user's message using a rest call.
      */
     public class createNewMessageTask extends AsyncTask<String, Void, Void> {
+        @Override
         protected Void doInBackground(String... params) {
             RestApiV1.createNewMessage(mRecipientUuidList.toArray(new String[mRecipientUuidList.size()]), params[0], params[1]);
             return null;

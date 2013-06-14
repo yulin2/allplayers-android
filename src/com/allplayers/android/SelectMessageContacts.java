@@ -57,6 +57,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         // Check if any data was sent in from a GroupPageActivity broadcast.
         if (getIntent().getExtras() != null) {
             addRecipientsToList(getIntent().getExtras().getString("broadcastRecipients"));
+            Log.d("SelectMessageContacts_Recieved", getIntent().getExtras().getString("broadcastRecipients"));
         }
         setContentView(R.layout.selectmessagecontacts);
 
@@ -98,6 +99,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         // "Add User Recipient" button.
         final Button addUserRecipientButton = (Button)findViewById(R.id.addGroupmatesRecipientButton);
         addUserRecipientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectUserContacts.class);
                 startActivityForResult(intent, 0);
@@ -107,6 +109,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         // "Add Friend Recipient" button.
         final Button addGroupRecipientButton = (Button)findViewById(R.id.addFriendsRecipientButton);
         addGroupRecipientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectFriendContacts.class);
                 startActivityForResult(intent, 1);
@@ -116,6 +119,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         // "Compose Message" button.
         final Button composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 if (!mRecipientList.isEmpty()) {
                     Intent intent = new Intent(SelectMessageContacts.this, ComposeMessage.class);
@@ -163,7 +167,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                     }
                 }
                 for (int i = previousSize; i < mRecipientList.size(); i++) {
-                    GroupMemberData member = (GroupMemberData) mRecipientList.get(i);
+                    GroupMemberData member = mRecipientList.get(i);
                     mAdapter.add(member.getName());
                 }
             }

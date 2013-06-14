@@ -14,6 +14,7 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 public class EventDetailActivity extends AllplayersSherlockListActivity {
     private EventData mEvent;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_detail_activity_layout);

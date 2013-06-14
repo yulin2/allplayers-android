@@ -85,6 +85,7 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
         mListView.addFooterView(mFooter);
         mListView.setAdapter(mAlbumListAdapter);
         mListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
             public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 
                 Intent intent = (new Router(GroupAlbumsActivity.this)).getAlbumPhotosActivityIntent(mAlbumList.get(position));

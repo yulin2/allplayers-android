@@ -70,6 +70,7 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
 
         final Button searchButton = (Button) findViewById(R.id.searchGroupsButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 // Get the text input.
                 String query = mSearchEditText.getText().toString().trim();

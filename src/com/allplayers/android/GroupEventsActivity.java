@@ -106,11 +106,13 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
      */
     public class GetGroupEventsTask extends AsyncTask<GroupData, Void, String> {
 
+        @Override
         protected String doInBackground(GroupData... groups) {
             // Call the API to return the group's events.
             return RestApiV1.getGroupEventsByGroupId(groups[0].getUUID(), mOffset, mLimit);
         }
 
+        @Override
         protected void onPostExecute(String jsonResult) {
             EventsMap events = new EventsMap(jsonResult);
             HashMap<String, String> map;

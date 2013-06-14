@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -100,7 +101,7 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
         mListView.addFooterView(mFooter);
 
         // Set our ListView adapter.
-        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        getListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         setListAdapter(mAdapter);
 
         final Button doneButton = (Button)findViewById(R.id.done_button);
@@ -159,6 +160,7 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
             return RestApiV1.getUserFriends(mOffset, LIMIT);
         }
 
+        @Override
         protected void onPostExecute(String jsonResult) {
             Log.d("jsonResult Before Replace", jsonResult);
             jsonResult = jsonResult.replaceAll("firstname", "fname");

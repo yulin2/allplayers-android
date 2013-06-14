@@ -39,14 +39,17 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
         };
     }
 
+    @Override
     public int getCount() {
         return mAlbums.size();
     }
 
+    @Override
     public AlbumData getItem(int index) {
         return mAlbums.get(index);
     }
 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -101,6 +104,7 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
          * Gets the requested image using a REST call.
          * @param photoUrl: The URL of the photo to fetch.
          */
+        @Override
         protected Bitmap doInBackground(String... photoUrl) {
             Bitmap b = RestApiV1.getRemoteImage(photoUrl[0]);
             mImageCache.put(index + "", b);
@@ -111,6 +115,7 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
          * Adds the fetched image to an array of the album's images.
          * @param image: The image to be added.
          */
+        @Override
         protected void onPostExecute(Bitmap bm) {
             ImageView imageView = viewReference.get();
             if (imageView != null) {

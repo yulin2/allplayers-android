@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -102,7 +103,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         mListView.addFooterView(mFooter);
 
         // Set our ListView adapter.
-        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        getListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         setListAdapter(mAdapter);
 
         final Button doneButton = (Button)findViewById(R.id.done_button);
@@ -161,6 +162,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             return RestApiV1.getUserGroups(mOffset, LIMIT, "alphabetical_ascending");
         }
 
+        @Override
         protected void onPostExecute(String jsonResult) {
             GroupsMap groups = new GroupsMap(jsonResult);
 
@@ -202,6 +204,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
      */
     public class GetGroupMembersByGroupIdTask extends AsyncTask<ArrayList<GroupData>, Void, String> {
 
+        @Override
         protected String doInBackground(ArrayList<GroupData>... groups) {
             String jsonResult = new String();
             for (int i = 0; i < groups[0].size(); i++) {
@@ -210,6 +213,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             return jsonResult;
         }
 
+        @Override
         protected void onPostExecute(String jsonResult) {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
             mSelectedMembers = groupMembers.getGroupMemberData();

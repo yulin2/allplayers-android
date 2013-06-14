@@ -28,6 +28,7 @@ public class AlbumData extends DataObject {
         return uuid;
     }
 
+    @Override
     public String getId() {
         return uuid;
     }

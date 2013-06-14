@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -55,7 +54,6 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grouppage);
-
 
         // Get the group information from the current intent.
         mGroup = (new Router(this)).getIntentGroup();
@@ -145,10 +143,12 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
      *
      */
     public class GetGroupLocationTask extends AsyncTask<String, Void, String> {
+        @Override
         protected String doInBackground(String... group_uuid) {
             return RestApiV1.getGroupInformationByGroupId(group_uuid[0]);
         }
 
+        @Override
         protected void onPostExecute(String jsonResult) {
             try {
                 JSONObject groupInfo = new JSONObject(jsonResult);
@@ -166,10 +166,12 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
      */
     public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
 
+        @Override
         protected Bitmap doInBackground(String... logoURL) {
             return RestApiV1.getRemoteImage(logoURL[0]);
         }
 
+        @Override
         protected void onPostExecute(Bitmap logo) {
             // Hide the loading indicator.
             mProgressBar.setVisibility(View.GONE);
@@ -187,6 +189,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             final ImageButton groupMembersButton = (ImageButton) findViewById(R.id.groupMembersButton);
             if (isMember && isLoggedIn) groupMembersButton.setVisibility(View.VISIBLE);
             groupMembersButton.setOnClickListener(new View.OnClickListener() {
+                @Override
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
                                     .getGroupMembersActivityIntent(mGroup);
@@ -199,6 +202,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             final ImageButton groupEventsButton = (ImageButton) findViewById(R.id.groupEventsButton);
             if (isMember && isLoggedIn) groupEventsButton.setVisibility(View.VISIBLE);
             groupEventsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
                                     .getGroupEventsActivityIntent(mGroup);
@@ -211,6 +215,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             final ImageButton groupPhotosButton = (ImageButton) findViewById(R.id.groupPhotosButton);
             if (isMember && isLoggedIn) groupPhotosButton.setVisibility(View.VISIBLE);
             groupPhotosButton.setOnClickListener(new View.OnClickListener() {
+                @Override
                 public void onClick(View v) {
                     Intent intent = (new Router(GroupPageActivity.this))
                                     .getGroupAlbumsActivityIntent(mGroup);
@@ -223,6 +228,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             final ImageButton groupLocationButton = (ImageButton) findViewById(R.id.groupLocationButton);
             if (isMember && isLoggedIn) groupLocationButton.setVisibility(View.VISIBLE);
             groupLocationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
                 public void onClick(View v) {
                     if (!(Build.VERSION.SDK_INT < 11)) {
                         Intent intent = (new Router(GroupPageActivity.this))
@@ -241,10 +247,12 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
      * group page interface is set up.
      */
     public class GetGroupMembersByGroupIdTask extends AsyncTask<String, Void, String> {
+        @Override
         protected String doInBackground(String... group_uuid) {
             return RestApiV1.getGroupMembersByGroupId(group_uuid[0], 0, 0);
         }
 
+        @Override
         protected void onPostExecute(String jsonResult) {
             isLoggedIn = RestApiV1.isLoggedIn();
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);

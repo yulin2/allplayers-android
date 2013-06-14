@@ -28,6 +28,7 @@ public class GroupMemberData extends DataObject {
         return uuid;
     }
 
+    @Override
     public String getId() {
         return uuid;
     }

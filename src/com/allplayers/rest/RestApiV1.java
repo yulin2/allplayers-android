@@ -50,14 +50,17 @@ public class RestApiV1 {
     public RestApiV1() {
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+                @Override
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                     return null;
                 }
 
+                @Override
                 public void checkClientTrusted(
                 java.security.cert.X509Certificate[] certs, String authType) {
                 }
 
+                @Override
                 public void checkServerTrusted(
                 java.security.cert.X509Certificate[] certs, String authType) {
                 }
@@ -326,6 +329,26 @@ public class RestApiV1 {
         return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
                                     + "/groupmates.json&limit=" + limit + "&offset=" + offset);
     }
+    
+    /** API call to fetch the currently logged in user's children.
+      * @param offset Determines at what point the API returns data (starts after 'offset' results).
+      * @param limit The number of results the API will return.
+      * @return Result from API.
+      */
+    public static String getUserChildren(int offset, int limit) {
+        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
+                + "/children.json&limit=" + limit + "&offset=" + offset);
+    }
+    
+    /** API call to fetch the currently logged in user's guardians.
+      * @param offset Determines at what point the API returns data (starts after 'offset' results).
+      * @param limit The number of results the API will return.
+      * @return Result from API.
+      */
+   public static String getUserGuardians(int offset, int limit) {
+       return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
+               + "/guardians.json&limit=" + limit + "&offset=" + offset);
+   }
 
     /**
      * getUserEvents().

@@ -104,6 +104,7 @@ public class EventData extends DataObject {
         return uuid;
     }
 
+    @Override
     public String getId() {
         return uuid;
     }

@@ -85,6 +85,7 @@ public class MessageThreadData extends DataObject {
         return mid;
     }
 
+    @Override
     public String getId() {
         return mid;
     }
