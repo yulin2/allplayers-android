@@ -118,9 +118,9 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
                 Gson gson = new Gson();
                 String userData = gson.toJson(mSelectedMembers);
                 Intent intent = new Intent();
-                
+
                 Log.d("User Data", userData);
-                
+
                 intent.putExtra("userData", userData);
                 setResult(Activity.RESULT_OK, intent);
                 finish();

@@ -23,34 +23,34 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
-        
+
         // Set up the action bar (inherited from AllplayersSherlockFragmentActivity).
         mActionBar.setTitle("Contacts");
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        
+
         // Set up the side navigation menu (inherited from AllplayersSherlockFragmentActivity).
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
-        
+
         // Set up the tabs for navigation
         Tab friendsTab = mActionBar.newTab();
         friendsTab.setText("Friends");
         friendsTab.setTabListener(new ContactsTabListener<UserFriendsFragment>(this, "Friends", UserFriendsFragment.class));
         mActionBar.addTab(friendsTab);
-        
+
         Tab groupmatesTab = mActionBar.newTab();
         groupmatesTab.setText("Groupates");
         groupmatesTab.setTabListener(new ContactsTabListener<UserGroupmatesFragment>(this, "Groupmates", UserGroupmatesFragment.class));
         mActionBar.addTab(groupmatesTab);
-        
+
         Tab familyTab = mActionBar.newTab();
         familyTab.setText("Family");
         familyTab.setTabListener(new ContactsTabListener<UserFamilyFragment>(this, "Family", UserFamilyFragment.class));
         mActionBar.addTab(familyTab);
     }
-    
+
     /**
      * Listener for the Action Bar Options Menu.
      *
@@ -70,7 +70,7 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-    
+
     /** Called when the activity has detected the user's press of the back key.
       */
     @Override
@@ -78,7 +78,7 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
         // This is used to fix a problem with the activity stack on API 10.
         moveTaskToBack(true);
     }
-    
+
     public static class ContactsTabListener<T extends Fragment> implements TabListener {
         private Fragment mFragment;
         private final Activity mActivity;
@@ -124,5 +124,5 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
             // User selected the already selected tab. Usually do nothing.
         }
     }
-    
+
 }

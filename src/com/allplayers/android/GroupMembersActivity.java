@@ -84,7 +84,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         // Populate the list with the first 8 members.
         new GetGroupMembersByGroupIdTask().execute(mGroup);
     }
-    
+
     /** This method will be called when an item in the list is selected.
      * @param l The ListView where the click happened.
      * @param v The view that was clicked within the ListView.
@@ -111,17 +111,17 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
                     switch (item.getItemId()) {
 
                         // Go to SelectMessageContacts.class with the selected user autopopulated.
-                        case R.id.send_message: {
-                            Gson gson = new Gson();
-                            ArrayList<GroupMemberData> selectedUser = 
-                                    new ArrayList<GroupMemberData>();
-                            selectedUser.add(mMembersList.get(selectedPosition));
-                            String broadcastRecipients = gson.toJson(selectedUser);
-                            Intent intent = new Intent(GroupMembersActivity.this, 
-                                    SelectMessageContacts.class);
-                            intent.putExtra("broadcastRecipients", broadcastRecipients);
-                            startActivity(intent); 
-                        }
+                    case R.id.send_message: {
+                        Gson gson = new Gson();
+                        ArrayList<GroupMemberData> selectedUser =
+                            new ArrayList<GroupMemberData>();
+                        selectedUser.add(mMembersList.get(selectedPosition));
+                        String broadcastRecipients = gson.toJson(selectedUser);
+                        Intent intent = new Intent(GroupMembersActivity.this,
+                                                   SelectMessageContacts.class);
+                        intent.putExtra("broadcastRecipients", broadcastRecipients);
+                        startActivity(intent);
+                    }
                     }
                     return true;
                 }

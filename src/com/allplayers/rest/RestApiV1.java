@@ -308,10 +308,10 @@ public class RestApiV1 {
                             + sCurrentUserUUID + "/friends.json");
         return jsonResult.replaceAll("&#039;", "'");
     }
-    
+
     public static String getUserFriends(int offset, int limit) {
         String jsonResult = makeAuthenticatedGet(ENDPOINT + "users/"
-                + sCurrentUserUUID + "/friends.json&offset=" + offset + "&limit=" + limit);
+                            + sCurrentUserUUID + "/friends.json&offset=" + offset + "&limit=" + limit);
         return jsonResult.replaceAll("&#039;", "'");
     }
 
@@ -329,7 +329,7 @@ public class RestApiV1 {
         return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
                                     + "/groupmates.json&limit=" + limit + "&offset=" + offset);
     }
-    
+
     /** API call to fetch the currently logged in user's children.
       * @param offset Determines at what point the API returns data (starts after 'offset' results).
       * @param limit The number of results the API will return.
@@ -337,18 +337,18 @@ public class RestApiV1 {
       */
     public static String getUserChildren(int offset, int limit) {
         return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                + "/children.json&limit=" + limit + "&offset=" + offset);
+                                    + "/children.json&limit=" + limit + "&offset=" + offset);
     }
-    
+
     /** API call to fetch the currently logged in user's guardians.
       * @param offset Determines at what point the API returns data (starts after 'offset' results).
       * @param limit The number of results the API will return.
       * @return Result from API.
       */
-   public static String getUserGuardians(int offset, int limit) {
-       return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-               + "/guardians.json&limit=" + limit + "&offset=" + offset);
-   }
+    public static String getUserGuardians(int offset, int limit) {
+        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
+                                    + "/guardians.json&limit=" + limit + "&offset=" + offset);
+    }
 
     /**
      * getUserEvents().
@@ -368,12 +368,12 @@ public class RestApiV1 {
     public static String getGroupInformationByGroupId(String group_uuid) {
         return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid + ".json");
     }
-    
+
     /**
-     * 
+     *
      */
     public static String getUserRolesInGroup(String groupUuid, String userUuid) {
-        return makeAuthenticatedGet(ENDPOINT+ "groups/" + groupUuid + "/roles/" + userUuid + ".json");
+        return makeAuthenticatedGet(ENDPOINT + "groups/" + groupUuid + "/roles/" + userUuid + ".json");
     }
 
 

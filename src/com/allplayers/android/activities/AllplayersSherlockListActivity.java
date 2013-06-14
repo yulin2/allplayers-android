@@ -102,7 +102,7 @@ public class AllplayersSherlockListActivity extends SherlockListActivity impleme
         case R.id.groups:
             invokeActivity(GroupsActivity.class);
             break;
-            
+
         case R.id.contacts:
             invokeActivity(ContactsActivity.class);
             break;

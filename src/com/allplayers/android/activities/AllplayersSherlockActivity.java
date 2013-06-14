@@ -104,7 +104,7 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
         case R.id.groups:
             invokeActivity(GroupsActivity.class);
             break;
-            
+
         case R.id.contacts:
             invokeActivity(ContactsActivity.class);
             break;

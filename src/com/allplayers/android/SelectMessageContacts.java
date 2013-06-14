@@ -47,13 +47,13 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         super.onCreate(icicle);
 
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        
+
         // Check if there is any data already in a previous version of this activity.
         if (icicle != null) {
             String currentRecipients = icicle.getString("currentRecipients");
             addRecipientsToList(currentRecipients);
         }
-        
+
         // Check if any data was sent in from a GroupPageActivity broadcast.
         if (getIntent().getExtras() != null) {
             addRecipientsToList(getIntent().getExtras().getString("broadcastRecipients"));

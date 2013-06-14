@@ -26,7 +26,7 @@ import com.google.gson.Gson;
   * message.
   */
 public class UserGroupmatesFragment extends ListFragment {
-    
+
     private ArrayAdapter<GroupMemberData> mAdapter;
     private ArrayList<GroupMemberData> mMembersList;
     private Button mLoadMoreButton;
@@ -35,12 +35,12 @@ public class UserGroupmatesFragment extends ListFragment {
     private ViewGroup mFooter;
 
     private final int LIMIT = 15;
-    
+
     private boolean mDoneLoading = false;
     private boolean mEndOfData = false;
     private boolean mLoadedOnce = false;
     private int mOffset = 0;
-    
+
     private Activity mParentActivity;
 
     /** Called to do initial creation of a fragment. This is called after onAttach(Activity) and
@@ -49,33 +49,33 @@ public class UserGroupmatesFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         // Get the parent activity.
         mParentActivity = getActivity();
 
         // Variable initialization.
-        mMembersList = new ArrayList<GroupMemberData>();  
-        
+        mMembersList = new ArrayList<GroupMemberData>();
+
         // Get the first 15 groupmates.
         new GetUserGroupmatesTask().execute();
     }
-    
+
     /** Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but
       * before any saved state has been restored in to the view.
       */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        
+
         // Get a handle on the ListView.
         mListView = getListView();
 
         // Create our adapter for the ListView.
-        mAdapter = new ArrayAdapter<GroupMemberData>(mParentActivity, 
+        mAdapter = new ArrayAdapter<GroupMemberData>(mParentActivity,
                 android.R.layout.simple_list_item_1, mMembersList);
 
         // Inflate and get a handle on our loading button and indicator.
         mFooter = (ViewGroup) LayoutInflater.from(mParentActivity)
-                .inflate(R.layout.load_more, null);
+                  .inflate(R.layout.load_more, null);
         mLoadMoreButton = (Button) mFooter.findViewById(R.id.load_more_button);
         mLoadingIndicator = (ProgressBar) mFooter.findViewById(R.id.loading_indicator);
 
@@ -95,7 +95,7 @@ public class UserGroupmatesFragment extends ListFragment {
         });
 
         // Determine if we should add the loading indicator and load more button to the bottom of
-        // the listview. 
+        // the listview.
         if (!mDoneLoading && mLoadedOnce) {
             mListView.addFooterView(mFooter);
             mLoadMoreButton.setVisibility(View.VISIBLE);
@@ -107,7 +107,7 @@ public class UserGroupmatesFragment extends ListFragment {
         // Set our ListView adapter.
         setListAdapter(mAdapter);
     }
-    
+
     /** This method will be called when an item in the list is selected.
       * @param l The ListView where the click happened.
       * @param v The view that was clicked within the ListView.
@@ -116,7 +116,7 @@ public class UserGroupmatesFragment extends ListFragment {
       */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        
+
         // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't want to
         // do anything.
         if (!(id == -1)) {
@@ -124,7 +124,7 @@ public class UserGroupmatesFragment extends ListFragment {
             PopupMenu menu = new PopupMenu(mParentActivity, v);
             menu.inflate(R.menu.friend_menu);
             menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                
+
                 /** Called when a menu item has been invoked.
                  * @param item The menu item that was invoked.
                  * @return Return true to consume this click and prevent others from executing.
@@ -134,17 +134,17 @@ public class UserGroupmatesFragment extends ListFragment {
                     switch (item.getItemId()) {
 
                         // Go to SelectMessageContacts.class with the selected user autopopulated.
-                        case R.id.send_message: {
-                            Gson gson = new Gson();
-                            ArrayList<GroupMemberData> selectedUser = 
-                                    new ArrayList<GroupMemberData>();
-                            selectedUser.add(mMembersList.get(selectedPosition));
-                            String broadcastRecipients = gson.toJson(selectedUser);
-                            Intent intent = new Intent(mParentActivity, 
-                                    SelectMessageContacts.class);
-                            intent.putExtra("broadcastRecipients", broadcastRecipients);
-                            startActivity(intent); 
-                        }
+                    case R.id.send_message: {
+                        Gson gson = new Gson();
+                        ArrayList<GroupMemberData> selectedUser =
+                            new ArrayList<GroupMemberData>();
+                        selectedUser.add(mMembersList.get(selectedPosition));
+                        String broadcastRecipients = gson.toJson(selectedUser);
+                        Intent intent = new Intent(mParentActivity,
+                                                   SelectMessageContacts.class);
+                        intent.putExtra("broadcastRecipients", broadcastRecipients);
+                        startActivity(intent);
+                    }
                     }
                     return true;
                 }
@@ -176,10 +176,10 @@ public class UserGroupmatesFragment extends ListFragment {
             jsonResult = jsonResult.replaceAll("lastname", "lname");
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
             if (groupMembers.size() == 0) {
-                
+
                 // If the newly pulled group members is empty, indicate the end of data.
                 mEndOfData = true;
-                
+
                 // If the members list is also empty, there are no group members, so add
                 // a blank indicator showing so.
                 if (mMembersList.size() == 0) {
@@ -190,7 +190,7 @@ public class UserGroupmatesFragment extends ListFragment {
                     mListView.setEnabled(false);
                 }
             } else {
-                
+
                 // If we pulled less than 10 new members, indicate we are at the end of data.
                 if (groupMembers.size() < LIMIT) {
                     mEndOfData = true;
@@ -200,15 +200,15 @@ public class UserGroupmatesFragment extends ListFragment {
                 mMembersList.addAll(groupMembers.getGroupMemberData());
                 mAdapter.notifyDataSetChanged();
             }
-            
+
             if (!mEndOfData) {
-             // If we are not at the end of data, show our load more button and increase our offset.
-                
+                // If we are not at the end of data, show our load more button and increase our offset.
+
                 mLoadMoreButton.setVisibility(View.VISIBLE);
                 mLoadingIndicator.setVisibility(View.GONE);
                 mOffset += groupMembers.size();
-            } else { 
-                
+            } else {
+
                 // If we are at the end of data, remove the load more button.
                 mListView.removeFooterView(mFooter);
                 mDoneLoading = true;

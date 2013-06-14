@@ -42,7 +42,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
     private ProgressBar mProgressBar;
     private AllplayersSherlockActivity mParentActivity = this;
     Menu mAdminMenu;
-    
+
     /**
      * Called when the activity is first created, this creates the Action Bar
      * and sets up the Side Navigation Menu as well as assigning some variables.
@@ -75,9 +75,9 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(Gravity.CENTER);
         mActionBar.setCustomView(title, params);
         mActionBar.setDisplayShowCustomEnabled(true);
-        
+
         // Add the "Admin Toolbox" menu to the actionbar.
-        
+
 
         // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
@@ -93,10 +93,10 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             new GetRemoteImageTask().execute(mGroup.getLogo());
         }
     }
-    
+
     /**
      * Initialize the contents of the Activity's standard options menu.
-     * 
+     *
      * @param menu: The options menu in which you place your items.
      * @return You must return true for the menu to be displayed; if you return false it will not be shown.
      */
@@ -106,9 +106,9 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         new CheckUserAdminPrivalegesAndCreateOptionsMenuTask().execute();
         return true;
     }
-    
-    
-    
+
+
+
     /**
      * Listener for the Action Bar Options Menu.
      *
@@ -124,7 +124,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             mSideNavigationView.toggleMenu();
             return true;
         }
-        
+
         case R.id.menu_broadcast: {
             Gson gson = new Gson();
             String broadcastRecipients = gson.toJson(mMembersList);
@@ -270,26 +270,26 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             new GetRemoteImageTask().execute(mGroup.getLogo());
         }
     }
-    
+
     public class CheckUserAdminPrivalegesAndCreateOptionsMenuTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
             return RestApiV1.getUserRolesInGroup(mGroup.getUUID(), RestApiV1.getCurrentUserUUID());
         }
-        
+
         @Override
         protected void onPostExecute(String jsonResult) {
-            
+
             // The API call we are using will return "error" always if the current user is not a
             // group admin. We can check this condition to see if we want to set up the admin menu.
             if (!jsonResult.equals("error")) {
                 createOptionsMenu();
             }
         }
-        
+
     }
-    
+
     /**
      * Helper for CheckUserAdminPrivalegesAndCreateOptionsMenuTask. Creats the admin options menu.
      */

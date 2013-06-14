@@ -59,7 +59,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
                 e.printStackTrace();
             }
         }
-        
+
         if (mRecipientUuidList.size() == 1) {
             mActionBar.setSubtitle("New Message to 1 recipient");
         } else {
