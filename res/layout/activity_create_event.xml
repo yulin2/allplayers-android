@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" >
+
+	    <!-- Event Title -->
+	    
+	    <EditText 
+	        android:id="@+id/event_title_edit_text"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="10dp"
+	        android:hint="Event Title" />
+	    
+	    <!-- Event Description -->
+	    
+	    <EditText 
+	        android:id="@+id/event_description_edit_text"
+	        android:layout_below="@id/event_title_edit_text"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="10dp"
+	        android:hint="Event Description"/>
+	    
+	    <!-- Start Date and Time -->
+	    
+	    <TextView
+	        android:id="@+id/event_start_time_and_date_header"
+	        android:layout_below="@id/event_description_edit_text"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="left"
+	        android:text="Start Time"
+	        android:textSize="18sp"
+	        android:textColor="#FFFFFF" />
+	    
+	    <View
+	        android:id="@+id/event_start_time_and_date_header_separator"
+	        android:layout_below="@id/event_start_time_and_date_header"
+	        android:layout_width="match_parent"
+	        android:layout_height="2dp"
+	        android:background="@color/android_blue" />
+	    
+	    <TextView
+	        android:id="@+id/event_start_time_and_date_error_message"
+	        android:layout_below="@id/event_start_time_and_date_header_separator"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="The event's start time must be before the event's end time."
+	        android:textColor="@color/red" 
+	        android:visibility="gone" />
+	    
+	    <TextView
+            android:id="@+id/event_start_time_and_date_error_message_2"
+            android:layout_below="@id/event_start_time_and_date_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You must select a start time and date."
+            android:textColor="@color/red" 
+            android:visibility="gone" />
+	    
+	    <LinearLayout
+	        android:id="@+id/event_start_time_and_date_pickers"
+	        android:layout_below="@id/event_start_time_and_date_error_message_2"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+	        
+	        <Button 
+	            android:id="@+id/event_start_time_button"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" 
+	            android:layout_weight=".5"
+	            android:text="Select Start Time" 
+	            android:background="@drawable/btn_default_holo_dark" />
+	        
+	        <Button 
+                android:id="@+id/event_start_date_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:layout_weight=".5"
+                android:text="Select Start Date"
+                android:background="@drawable/btn_default_holo_dark" />
+	        
+	    </LinearLayout>
+	    
+	    <!-- End Date and Time -->
+	    
+	    <TextView
+	        android:id="@+id/event_end_time_and_date_header"
+	        android:layout_below="@id/event_start_time_and_date_pickers"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="left"
+	        android:text="End Time"
+	        android:textSize="18sp"
+            android:textColor="#FFFFFF" />
+	    
+	    <View
+	        android:id="@+id/event_end_time_and_date_header_separator"
+	        android:layout_below="@id/event_end_time_and_date_header"
+	        android:layout_width="match_parent"
+	        android:layout_height="2dp"
+	        android:background="@color/android_blue" />
+	    
+	    <TextView
+            android:id="@+id/event_end_time_and_date_error_message"
+            android:layout_below="@id/event_end_time_and_date_header_separator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="The event's start time must be before the event's end time."
+            android:textColor="@color/red" 
+            android:visibility="gone" />
+	    
+	    <TextView
+            android:id="@+id/event_end_time_and_date_error_message_2"
+            android:layout_below="@id/event_end_time_and_date_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You must select an end time and date."
+            android:textColor="@color/red" 
+            android:visibility="gone" />
+	    
+	    <LinearLayout
+	        android:id="@+id/event_end_time_and_date_pickers"
+	        android:layout_below="@id/event_end_time_and_date_error_message_2"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal" >
+	        
+	        <Button 
+                android:id="@+id/event_end_time_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:layout_weight=".5"
+                android:text="Select End Time" 
+                android:background="@drawable/btn_default_holo_dark" />
+            
+            <Button 
+                android:id="@+id/event_end_date_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:layout_weight=".5"
+                android:text="Select End Date" 
+                android:background="@drawable/btn_default_holo_dark" />
+	        
+	    </LinearLayout>
+	        
+	    <!-- Resource (currently not shown, resources need to be implimented before this can be
+	    useful ) -->
+	    
+	    <TextView
+            android:id="@+id/resource_header"
+            android:layout_below="@id/event_end_time_and_date_pickers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="Resources"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:background="#2d2d2d"
+            
+            android:visibility="gone" />
+        
+        <View
+            android:id="@+id/resource_header_separator"
+            android:layout_below="@id/resource_header"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/android_blue" 
+            android:visibility="gone"/>
+        
+        <ListView
+            android:id="@+id/select_resources_listview"
+            android:layout_below="@id/resource_header_separator"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:visibility="gone" />
+	    
+	    <!-- Done Button -->
+	    
+	    <Button 
+	        android:id="@+id/done_button"
+	        android:layout_below="@id/select_resources_listview"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="20dp"
+	        android:text="Create Event"/>
+	    
+	</RelativeLayout>
+	
+</ScrollView>

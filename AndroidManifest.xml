@@ -37,7 +37,7 @@
             android:required="false" />
 
         <activity
-            android:name="Login"
+            android:name="com.allplayers.android.Login"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -46,14 +46,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
-            android:name="NewAccountActivity"
+            android:name="com.allplayers.android.NewAccountActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
-        
+
         <!--
           <activity android:name="Login" android:label="@string/app_name" android:theme="@style/Theme.Sherlock"/>
           replaced the FirstScreen page with Login (moved search groups to Login)
@@ -63,31 +62,31 @@
              It does fix many issues with orientation changes and fragment but it may be better to use another method.
         -->
         <activity
-            android:name="MainScreen"
+            android:name="com.allplayers.android.MainScreen"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="MessageActivity"
+            android:name="com.allplayers.android.MessageActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="PhotosActivity"
+            android:name="com.allplayers.android.PhotosActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="EventsActivity"
+            android:name="com.allplayers.android.EventsActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="AccountActivity"
+            android:name="com.allplayers.android.AccountActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -95,13 +94,13 @@
 
         <!-- Start Find Groups Activities -->
         <activity
-            android:name="FindGroupsActivity"
+            android:name="com.allplayers.android.FindGroupsActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="SearchGroupsListActivity"
+            android:name="com.allplayers.android.SearchGroupsListActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -111,67 +110,67 @@
 
         <!-- Start Group Activities -->
         <activity
-            android:name="GroupsActivity"
+            android:name="com.allplayers.android.GroupsActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="GroupPageActivity"
+            android:name="com.allplayers.android.GroupPageActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="GroupMembersActivity"
+            android:name="com.allplayers.android.GroupMembersActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="GroupEventsActivity"
+            android:name="com.allplayers.android.GroupEventsActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="GroupLocationActivity"
+            android:name="com.allplayers.android.GroupLocationActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="EventDisplayActivity"
+            android:name="com.allplayers.android.EventDisplayActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="EventDetailActivity"
+            android:name="com.allplayers.android.EventDetailActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="GroupAlbumsActivity"
+            android:name="com.allplayers.android.GroupAlbumsActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="AlbumPhotosActivity"
+            android:name="com.allplayers.android.AlbumPhotosActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="PhotoDisplayActivity"
+            android:name="com.allplayers.android.PhotoDisplayActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="PhotoPager"
+            android:name="com.allplayers.android.PhotoPager"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -181,78 +180,87 @@
 
         <!-- Start Message Activities -->
         <activity
-            android:name="MessageInbox"
+            android:name="com.allplayers.android.MessageInbox"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="MessageSent"
+            android:name="com.allplayers.android.MessageSent"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="MessageViewSingle"
+            android:name="com.allplayers.android.MessageViewSingle"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="MessageReply"
+            android:name="com.allplayers.android.MessageReply"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="MessageThread"
+            android:name="com.allplayers.android.MessageThread"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="SelectUserContacts"
+            android:name="com.allplayers.android.SelectUserContacts"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="SelectFriendContacts"
+            android:name="com.allplayers.android.SelectFriendContacts"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="SelectGroupContacts"
+            android:name="com.allplayers.android.SelectGroupContacts"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="SelectMessageContacts"
+            android:name="com.allplayers.android.SelectMessageContacts"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <activity
-            android:name="ComposeMessage"
+            android:name="com.allplayers.android.ComposeMessage"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <!-- End Message Activities -->
-        
+
         <!-- Start Contacts Activities -->
         <activity
-            android:name="ContactsActivity"
+            android:name="com.allplayers.android.ContactsActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock" />
         <!-- End Contacts Activities -->
+        
+        <!-- Start Admin Toolbar Activityes -->
+        <activity
+            android:name="com.allplayers.android.CreateEventActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_create_event"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock" />
+        <!-- End Admin Toolbar Activityes -->
 
         <service
-            android:name="AuthenticationService"
+            android:name="com.allplayers.android.AuthenticationService"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -266,6 +274,7 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBll0WWzB0cTebDXz2xt98YytdnBIeK0wQ" />
+
     </application>
 
 </manifest>

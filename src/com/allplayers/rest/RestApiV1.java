@@ -41,7 +41,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class RestApiV1 {
-    private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
+    private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
     private static final String CAP_TOKEN_NAME = "X-ALLPLAYERS-CAPTCHA-TOKEN";
     private static final String CAP_SOLUTION_NAME = "X-ALLPLAYERS-CAPTCHA-SOLUTION";
     private static String sCurrentUserUUID = "";
@@ -517,6 +517,40 @@ public class RestApiV1 {
     public static String getUserResourceByResourceId(String resource_id) {
         return makeAuthenticatedGet(ENDPOINT + "resources/" + resource_id
                                     + ".json");
+    }
+    
+    /** Create an event.
+      * @param groupUuid The uuid of the group that the event should be created for.
+      * @param eventTitle The title of the event.
+      * @param eventDescription The description of the event.
+      * @param startDateTime The start time of the event (in the format YYYY-MM-DDTHH:MM:SS).
+      * @param endDateTime The end time of the event (in the format YYYY-MM-DDTHH:MM:SS).
+      * @return Result of the API call.
+     */
+    public static String createEvent(String groupUuid, String eventTitle, String eventDescription, String startDateTime, String endDateTime) {
+        String[][] contents = new String[5][2];
+
+        // Set group
+        contents[0][0] = "groups[0]";
+        contents[0][1] = groupUuid;
+        
+        // Set eventTitle
+        contents[1][0] = "title";
+        contents[1][1] = eventTitle;
+
+        // Set eventDescription
+        contents[2][0] = "description";
+        contents[2][1] = eventDescription;
+
+        // Set eventStartDateTime
+        contents[3][0] = "date_time[start]";
+        contents[3][1] = startDateTime;
+
+        // Set eventEndDateTime
+        contents[4][0] = "date_time[end]";
+        contents[4][1] = endDateTime;
+        
+        return makeAuthenticatedPost(ENDPOINT + "events/", contents);
     }
 
     private static String makeAuthenticatedGet(String urlString) {

@@ -131,6 +131,15 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             Intent intent = new Intent(getBaseContext(), SelectMessageContacts.class);
             intent.putExtra("broadcastRecipients", broadcastRecipients);
             startActivity(intent);
+            return true;
+        }
+        
+        case R.id.menu_create_event: {
+            Gson gson = new Gson();
+            Intent intent = new Intent(getBaseContext(), CreateEventActivity.class);
+            intent.putExtra("Current Group", gson.toJson(mGroup));
+            startActivity(intent);
+            return true;
         }
 
         default:

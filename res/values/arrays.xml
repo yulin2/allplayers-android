@@ -5,4 +5,9 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+    
+    <string-array name="admin_toolbox_spinner_array">
+        <item>Broadcast</item>
+        <item>Create Event</item>
+    </string-array>
 </resources>

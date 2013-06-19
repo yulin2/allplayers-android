@@ -5,4 +5,10 @@
          android:icon="@drawable/broadcast_icon_25x25"
          android:title="Broadcast"
          android:showAsAction="always|withText" />
+    
+    <item 
+         android:id="@+id/menu_create_event"
+         android:icon="@drawable/event_icon_25x25"
+         android:title="Create Event"
+         android:showAsAction="always|withText" />
 </menu>
