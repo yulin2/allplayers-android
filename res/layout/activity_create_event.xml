@@ -150,6 +150,14 @@
                 android:background="@drawable/btn_default_holo_dark" />
 	        
 	    </LinearLayout>
+	    
+	    <TextView
+            android:id="@+id/time_zone_disclaimer"
+            android:layout_below="@id/event_end_time_and_date_pickers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="* time is calculated using your current time zone"
+            android:textColor="@color/android_blue" />
 	        
 	    <!-- Resource (currently not shown, resources need to be implimented before this can be
 	    useful ) -->
