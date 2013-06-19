@@ -50,7 +50,8 @@ public class GroupsActivity extends AllplayersSherlockFragmentActivity {
         // Create a custom dropdown menu for picking our sort type and populate it with our sort options.
         ViewGroup sorter = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.sort_method_layout, null);
         mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.sort_method,
-                          android.R.layout.simple_spinner_dropdown_item);
+                          //android.R.layout.simple_spinner_dropdown_item);
+                            R.layout.spinner_item);
         Spinner spinner = (Spinner) sorter.findViewById(R.id.sort_chooser);
         spinner.setAdapter(mSpinnerAdapter);
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {

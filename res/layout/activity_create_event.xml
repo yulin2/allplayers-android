@@ -36,8 +36,7 @@
 	        android:layout_height="wrap_content"
 	        android:gravity="left"
 	        android:text="Start Time"
-	        android:textSize="18sp"
-	        android:textColor="#FFFFFF" />
+	        android:textSize="18sp" />
 	    
 	    <View
 	        android:id="@+id/event_start_time_and_date_header_separator"
@@ -76,16 +75,14 @@
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content" 
 	            android:layout_weight=".5"
-	            android:text="Select Start Time" 
-	            android:background="@drawable/btn_default_holo_dark" />
+	            android:text="Select Start Time" />
 	        
 	        <Button 
                 android:id="@+id/event_start_date_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" 
                 android:layout_weight=".5"
-                android:text="Select Start Date"
-                android:background="@drawable/btn_default_holo_dark" />
+                android:text="Select Start Date" />
 	        
 	    </LinearLayout>
 	    
@@ -98,8 +95,7 @@
 	        android:layout_height="wrap_content"
 	        android:gravity="left"
 	        android:text="End Time"
-	        android:textSize="18sp"
-            android:textColor="#FFFFFF" />
+	        android:textSize="18sp" />
 	    
 	    <View
 	        android:id="@+id/event_end_time_and_date_header_separator"
@@ -138,16 +134,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" 
                 android:layout_weight=".5"
-                android:text="Select End Time" 
-                android:background="@drawable/btn_default_holo_dark" />
+                android:text="Select End Time" />
             
             <Button 
                 android:id="@+id/event_end_date_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" 
                 android:layout_weight=".5"
-                android:text="Select End Date" 
-                android:background="@drawable/btn_default_holo_dark" />
+                android:text="Select End Date" />
 	        
 	    </LinearLayout>
 	    

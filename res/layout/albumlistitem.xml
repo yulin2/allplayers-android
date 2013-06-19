@@ -21,7 +21,6 @@
             android:id="@+id/albumTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#ffffff"
             android:textSize="16sp"
             android:textStyle="bold" >
         </TextView>
@@ -29,8 +28,7 @@
         <TextView
             android:id="@+id/albumExtraInfo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff" >
+            android:layout_height="wrap_content" >
         </TextView>
     </LinearLayout>
 
