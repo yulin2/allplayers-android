@@ -15,6 +15,7 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
  * Shows the details of an event.
  */
 public class EventDetailActivity extends AllplayersSherlockListActivity {
+    
     private ArrayList<HashMap<String, String>> mList;
     private EventData mEvent;
     private HashMap<String, String> mMap;

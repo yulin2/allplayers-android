@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Display the map for an activity.
  */
 public class EventDisplayActivity extends AllplayersSherlockMapActivity {
+    
     private EventData mEvent;
     private String mLatitude;
     private String mLongitude;
