@@ -9,7 +9,7 @@ import com.allplayers.objects.AlbumData;
 import com.google.gson.Gson;
 
 /**
- * Custom ArrayList used to hold AlbumDal
+ * Custom ArrayList used to hold AlbumData.
  */
 public class AlbumsMap {
     private ArrayList<AlbumData> albums = new ArrayList<AlbumData>();
