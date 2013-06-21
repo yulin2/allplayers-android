@@ -33,5 +33,9 @@
         android:id="@+id/refresh"
         android:icon="@drawable/refresh_200x200"
         android:title="@string/refresh"/>
+    <item
+        android:id="@+id/change_theme"
+        android:icon="@drawable/refresh_200x200"
+        android:title="Change Theme"/>
 
 </menu>

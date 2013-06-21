@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -44,6 +45,7 @@ public class Login extends Activity {
     private ProgressBar mLoadingIndicator;
     private AccountManager mAccountManager;
     private Context mContext;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,14 @@ public class Login extends Activity {
         mUsernameLabel = (TextView)findViewById(R.id.usernameLabel);
         mAccountCreateSuccess = (TextView)findViewById(R.id.account_create_success);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.ctrlActivityIndicator);
+        
+        // If there isn't already a theme set, default to "Holo.Dark"
+        mSharedPreferences = getSharedPreferences("Theme Choice", 0);
+        if (mSharedPreferences.getInt("Theme", 0) == 0) {
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            editor.putInt("Theme", android.R.style.Theme_Holo);
+            editor.commit();
+        }
 
         Account[] accounts = mAccountManager.getAccountsByType("com.allplayers.android");
         // There should only be one allplayers type account in the device at once.
