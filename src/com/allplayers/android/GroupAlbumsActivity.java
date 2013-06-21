@@ -22,8 +22,13 @@ import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
+/**
+ * Interface for the user to view a list of a group's photo albums.
+ */
 public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
 
+    private final int LIMIT = 15;
+    
     private AlbumAdapter mAlbumListAdapter;
     private ArrayList<AlbumData> mAlbumList;
     private Button mLoadMoreButton;
@@ -32,27 +37,31 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
 
-    private final int LIMIT = 15;
     private boolean mEndOfData;
     private int mOffset;
 
     /**
-     * onCreate().
-     * Called when the activity is first created.
-     *
+     * Called when the activity is starting.
+     * 
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.albums_list);
 
+        // Grab the group from the intent.
         mGroup = (new Router(this)).getIntentGroup();
 
+        // Set up the action bar.
         mActionBar = getSupportActionBar();
         mActionBar.setIcon(R.drawable.menu_icon);
         mActionBar.setTitle(mGroup.getTitle());
         mActionBar.setSubtitle("Photo Albums");
 
+        // Set up the side navigation interface.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
@@ -61,9 +70,9 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
         // Get the group's albums.
         new GetGroupAlbumsByGroupIdTask().execute(mGroup);
 
+        // Variable initialization.
         mEndOfData = false;
         mOffset = 0;
-
         mAlbumList = new ArrayList<AlbumData>();
         mListView = (ListView) findViewById(R.id.customListView);
         mAlbumListAdapter = new AlbumAdapter(GroupAlbumsActivity.this, R.layout.albumlistitem, mAlbumList);
@@ -73,6 +82,12 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
 
         // Set up the "load more" button.
         mLoadMoreButton.setOnClickListener(new OnClickListener() {
+            
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that was cliced.
+             */
             @Override
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
@@ -85,8 +100,18 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
         mListView.addFooterView(mFooter);
         mListView.setAdapter(mAlbumListAdapter);
         mListView.setOnItemClickListener(new OnItemClickListener() {
+            
+            /**
+             * Callback method to be invoked when an item in this AdapterView has been clicked.
+             * 
+             * @param parent The AdapterView where the click happened.
+             * @param view The view within the AdapterView that was clicked (this will be a view
+             * provided by the adapter).
+             * @param position The position of the view in the adapter.
+             * @param id The row id of the item that was clicked.
+             */
             @Override
-            public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long index) {
 
                 Intent intent = (new Router(GroupAlbumsActivity.this)).getAlbumPhotosActivityIntent(mAlbumList.get(position));
                 startActivity(intent);
@@ -95,19 +120,15 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
     }
 
     /**
-     * GetGroupAlbumsByGroupIdTask.
      * Fetches the passed group's photo albums asynchronously.
-     *
      */
     public class GetGroupAlbumsByGroupIdTask extends AsyncTask<GroupData, Void, String> {
 
         /**
-         * doInBackground().
          * Fetch the passed in groups albums.
          *
          * @param groups: An array of groups (that only contains one group) of whose albums we need
          * to fetch. (doInBackground()'s super requires an array as the parameter)
-         *
          */
         @Override
         protected String doInBackground(GroupData... groups) {
@@ -115,11 +136,9 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
         }
 
         /**
-         * onPoseExecute().
          * Take the JSON result from fetching the groups albums and turn it into useful data.
          *
          * @param jsonResult: Result of fetching the group's albums.
-         *
          */
         @Override
         protected void onPostExecute(String jsonResult) {
