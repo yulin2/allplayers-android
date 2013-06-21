@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.actionbarsherlock.view.Window;
-import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.android.activities.AllplayersSherlockFragmentActivity;
 import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
@@ -32,13 +31,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-/** Form to create an event for a group.
-  */
+/** 
+ * Form to create an event for a group.
+ */
 public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
     
     // Form elements
@@ -92,11 +91,13 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
     // Toast
     private Toast mToast;
     
-    /** Called when the activity is starting.
-      * @param savedInstanceState If the activity is being re-initialized after previously being 
-      * shut down then this Bundle contains the data it most recently supplied in 
-      * onSaveInstanceState(Bundle). Otherwise it is null.
-      */
+    /** 
+     * Called when the activity is starting.
+     * 
+     * @param savedInstanceState If the activity is being re-initialized after previously being 
+     * shut down then this Bundle contains the data it most recently supplied in 
+     * onSaveInstanceState(Bundle). Otherwise it is null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -129,16 +130,25 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
         // Set up listeners for the time and date picker fragment buttons.
         mEventStartTimeButton.setOnClickListener(new OnClickListener() {
 
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 mEventStartTimePickerFragment = new StartTimePickerFragment();
                 mEventStartTimePickerFragment.show(getSupportFragmentManager(), "Start Time Picker");
             }
-            
         });
         
         mEventStartDateButton.setOnClickListener(new OnClickListener() {
 
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 mEventStartDatePickerFragment = new StartDatePickerFragment();
@@ -149,6 +159,11 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
         
         mEventEndTimeButton.setOnClickListener(new OnClickListener() {
 
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 mEventEndTimePickerFragment = new EndTimePickerFragment();
@@ -159,6 +174,11 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
         
         mEventEndDateButton.setOnClickListener(new OnClickListener() {
 
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 mEventEndDatePickerFragment = new EndDatePickerFragment();
@@ -170,9 +190,10 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
         // Set up the listener for the "Create Event" (done) button.
         mCreateEventButton.setOnClickListener(new OnClickListener() {
 
-            /** Called when a view has been clicked.
-              * @param v The view that was clicked.
-              */
+            /** 
+             * Called when a view has been clicked.
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 
@@ -235,10 +256,8 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
                     mFormCompletionState_date_error = true;
                 }
                 
-                
                 // Get the event start and end dates (unless we've already found an error with the 
                 // dates and times, in that case, don't even bother).
-                
                 if (mFormCompletionState_date_error == false) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss");
                     sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -264,8 +283,8 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
                     mEventStartDateTime = sdf.format(startDate);
                     mEventEndDateTime = sdf.format(endDate);
                     
-                    // Make sure that the start time is before the end time. If not, display an error
-                    // message.
+                    // Make sure that the start time is before the end time. If not, display an
+                    // error message.
                     if (startDate.compareTo(endDate) > 0) {
                         mFormCompletionState_Error = true;
                         mEventStartTimeAndDateHeader.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.indicator_input_error), null);
@@ -290,14 +309,16 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
         });
     }
     
-    /** Sends an API call to have an event be created.
-      */
+    /** 
+     * Sends an API call to have an event be created.
+     */
     public class CreateEventTask extends AsyncTask<Void, Void, String> {
 
         private Toast toast;
         
-        /** Runs on the UI thread before doInBackground(Params...).
-          */
+        /** 
+         * Runs on the UI thread before doInBackground(Params...).
+         */
         @Override
         protected void onPreExecute() {
             setProgressBarIndeterminateVisibility(true);
@@ -306,19 +327,20 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
             toast.show();
         }
         
-        /** Performs a computation on a background thread;
-          */
+        /** 
+         * Performs a computation on a background thread;
+         */
         @Override
         protected String doInBackground(Void... params) {
             return RestApiV1.createEvent(mGroup.getUUID(), mEventTitle, mEventDescription, mEventStartDateTime, mEventEndDateTime);
         }
         
-        /** Runs on the UI thread after doInBackground(Params...). The specified result is the value
-          * returned by doInBackground(Params...).
-          */
+        /** 
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         */
         @Override
         protected void onPostExecute(String jsonResult) {
-            System.out.println(jsonResult);
             setProgressBarIndeterminateVisibility(false);
             toast.cancel();
             
@@ -342,8 +364,22 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
         }
     }
     
+    /**
+     * A fragment that displays a dialog window, floating on top of its activity's window. Contains
+     * a time picker for the user to use in selecting the starting time of their event.
+     */
     public static class StartTimePickerFragment extends DialogFragment implements OnTimeSetListener {
     
+        /**
+         * Override to build your own custom Dialog container. This is typically used to show an
+         * AlertDialog instead of a generic Dialog; when doing so, onCreateView(LayoutInflater,
+         * ViewGroup, Bundle) does not need to be implemented since the AlertDialog takes care of
+         * its own content.
+         * 
+         * @param savedInstanceState The last saved instance state of the Fragment, or null if this
+         * is a freshly created Fragment.
+         * @return Return a new Dialog instance to be displayed by the Fragment.
+         */
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             
@@ -357,6 +393,15 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
                     DateFormat.is24HourFormat(getActivity()));
         }
         
+        /**
+         * The callback used to indicate the user is done filling in the time (they clicked on the
+         * 'Set' button).
+         * 
+         * @param view The view associated with this listener.
+         * @param hourOfDay The hour that was set.
+         * @param minute The minute that was set.
+         */
+        @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             mEventStartHourOfDay = hourOfDay;
             mEventStartMinute = minute;
@@ -369,8 +414,22 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
         }
     }
     
+    /**
+     * A fragment that displays a dialog window, floating on top of its activity's window. Contains
+     * a date picker for the user to use in selecting the starting date of their event.
+     */
     public static class StartDatePickerFragment extends DialogFragment implements OnDateSetListener {
         
+        /**
+         * Override to build your own custom Dialog container. This is typically used to show an
+         * AlertDialog instead of a generic Dialog; when doing so, onCreateView(LayoutInflater,
+         * ViewGroup, Bundle) does not need to be implemented since the AlertDialog takes care of
+         * its own content.
+         * 
+         * @param savedInstanceState The last saved instance state of the Fragment, or null if this
+         * is a freshly created Fragment.
+         * @return Return a new Dialog instance to be displayed by the Fragment.
+         */
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             
@@ -384,6 +443,14 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
             return new DatePickerDialog(getActivity(), this, year, month,day);
         }
         
+        /**
+         * The callback used to indicate the user is done filling in the date.
+         * 
+         * @param view The view associated with this listener.
+         * @param year The year that was set.
+         * @param monthOfYear The month that was set (0-11 for compatibility with Calendar.class).
+         * @param dayOfMonth The day of the month that was set.
+         */
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             mEventStartYear = year;
@@ -398,8 +465,22 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
         }
     }
     
+    /**
+     * A fragment that displays a dialog window, floating on top of its activity's window. Contains
+     * a time picker for the user to use in selecting the ending time of their event.
+     */
     public static class EndTimePickerFragment extends DialogFragment implements OnTimeSetListener {
         
+        /**
+         * Override to build your own custom Dialog container. This is typically used to show an
+         * AlertDialog instead of a generic Dialog; when doing so, onCreateView(LayoutInflater,
+         * ViewGroup, Bundle) does not need to be implemented since the AlertDialog takes care of
+         * its own content.
+         * 
+         * @param savedInstanceState The last saved instance state of the Fragment, or null if this
+         * is a freshly created Fragment.
+         * @return Return a new Dialog instance to be displayed by the Fragment.
+         */
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             
@@ -413,6 +494,15 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
                     DateFormat.is24HourFormat(getActivity()));
         }
         
+        /**
+         * The callback used to indicate the user is done filling in the time (they clicked on the
+         * 'Set' button).
+         * 
+         * @param view The view associated with this listener.
+         * @param hourOfDay The hour that was set.
+         * @param minute The minute that was set.
+         */
+        @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             mEventEndHourOfDay = hourOfDay;
             mEventEndMinute = minute;
@@ -425,8 +515,22 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
         }
     }
     
+    /**
+     * A fragment that displays a dialog window, floating on top of its activity's window. Contains
+     * a date picker for the user to use in selecting the ending date of their event.
+     */
     public static class EndDatePickerFragment extends DialogFragment implements OnDateSetListener {
         
+        /**
+         * Override to build your own custom Dialog container. This is typically used to show an
+         * AlertDialog instead of a generic Dialog; when doing so, onCreateView(LayoutInflater,
+         * ViewGroup, Bundle) does not need to be implemented since the AlertDialog takes care of
+         * its own content.
+         * 
+         * @param savedInstanceState The last saved instance state of the Fragment, or null if this
+         * is a freshly created Fragment.
+         * @return Return a new Dialog instance to be displayed by the Fragment.
+         */
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             
@@ -440,6 +544,14 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
             return new DatePickerDialog(getActivity(), this, year, month,day);
         }
         
+        /**
+         * The callback used to indicate the user is done filling in the date.
+         * 
+         * @param view The view associated with this listener.
+         * @param year The year that was set.
+         * @param monthOfYear The month that was set (0-11 for compatibility with Calendar.class).
+         * @param dayOfMonth The day of the month that was set.
+         */
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             mEventEndYear = year;
