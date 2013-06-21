@@ -1,6 +1,7 @@
 package com.allplayers.objects;
 
 public class GroupMemberData extends DataObject {
+    private boolean mSelected = false;
     private String uuid = "";
     private String fname = "";
     private String lname = "";
@@ -9,6 +10,18 @@ public class GroupMemberData extends DataObject {
 
     public GroupMemberData() {
 
+    }
+
+    public boolean isSelected() {
+        return mSelected;
+    }
+
+    public void setSelected() {
+        mSelected = false;
+    }
+
+    public void setNotSelected() {
+        mSelected = true;
     }
 
     public String getUUID() {
