@@ -20,16 +20,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Display the map for an activity.
+ */
 public class EventDisplayActivity extends AllplayersSherlockMapActivity {
     private EventData mEvent;
     private String mLatitude;
     private String mLongitude;
 
     /**
-     * Called when the activity is first created, this sets up variables,
-     * creates the Action Bar, and sets up the Side Navigation Menu.
-     * @param savedInstanceState: Saved data from the last instance of the
-     * activity.
+     * Called when the activity is starting.
+     * 
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle).Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,16 +56,21 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         mLatitude = mEvent.getLatitude();
         mLongitude = mEvent.getLongitude();
 
+        // Create the map.
         createGoogleMap();
     }
 
     private void createGoogleMap() {
+        
         // Create the map fragment.
         GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        
         // Create a location object from our lat and long.
         LatLng location = new LatLng((Float.parseFloat(mLatitude)), (Float.parseFloat(mLongitude)));
+        
         // Focus in on our event location.
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
+        
         // Create a marker on our event location.
         MarkerOptions marker = new MarkerOptions()
         .position(location)
@@ -73,8 +82,18 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         map.addMarker(marker).showInfoWindow();
 
         map.setOnMarkerClickListener(new OnMarkerClickListener() {
+            
+            /**
+             * Called when a marker has been clicked or tapped.
+             * 
+             * @param marker The marker that was clicked.
+             * @return True if the listener has consumed the event (i.e., the default behavior
+             * should not occur), false otherwise (i.e., the default behavior should occur). The
+             * default behavior is for the camera to move to the map and an info window to appear.
+             */
             @Override
             public boolean onMarkerClick(Marker marker) {
+                
                 // Go to the more detailed event page.
                 Intent intent = (new Router(EventDisplayActivity.this)).getEventDetailActivityIntent(mEvent);
                 startActivity(intent);
@@ -82,8 +101,15 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
             }
         });
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+            
+            /**
+             * Callback for click/tap events on a marker's info window.
+             * 
+             * @param marker The marker of the info window that was clicked.
+             */
             @Override
             public void onInfoWindowClick(Marker marker) {
+                
                 // Go to the more detailed event page.
                 Intent intent = (new Router(EventDisplayActivity.this)).getEventDetailActivityIntent(mEvent);
                 startActivity(intent);
@@ -98,6 +124,13 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
             this.inflater = inflater;
         }
 
+        /**
+         * Provides custom contents for the default info window frame of a marker.
+         * 
+         * @param marker The marker for which an info window is being populated.
+         * @return A custom view to display as contents in the info window for marker, or null to
+         * use the default content rendering instead.
+         */
         @Override
         public View getInfoContents(Marker marker) {
             View infoWindow = inflater.inflate(R.layout.event_marker_info_window, null);
@@ -107,10 +140,15 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
             return infoWindow;
         }
 
+        /**
+         * Provides a custom info window for a marker.
+         * @param marker The marker for which an info window is being populated.
+         * @return A custom info window for marker, or null to use the default info window frame
+         * with custom contents.
+         */
         @Override
         public View getInfoWindow(Marker marker) {
             return null;
         }
-
     }
 }
