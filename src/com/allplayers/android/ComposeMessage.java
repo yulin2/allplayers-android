@@ -22,17 +22,28 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
+/**
+ * Interface for the user to compose a message after selecting its recipients.
+ */
 public class ComposeMessage extends AllplayersSherlockActivity {
+    
+    private Activity mActivity = this;
+    private ArrayList<String> mRecipientUuidList = new ArrayList<String>();
+    private Button mSendButton;
+    
     private String mMessageBody;
     private String mMessageSubject;
-    private ArrayList<String> mRecipientUuidList = new ArrayList<String>();
-    private Activity mActivity = this;
 
-    /** called when the activity is first created. */
+    /**
+     *  Called when the activity is starting.  
+     *  
+     *  @param savedInstanceState If the activity is being re-initialized after previously being
+     *  shut down then this Bundle contains the data it most recently supplied in
+     *  onSaveInstanceState(Bundle). Otherwise it is null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.composemessage);
 
         // Set up the ActionBar.
@@ -62,7 +73,8 @@ public class ComposeMessage extends AllplayersSherlockActivity {
                 e.printStackTrace();
             }
         }
-
+        
+        // Set the subtitle for the action bar depending on how many message recipients there are.
         if (mRecipientUuidList.size() == 1) {
             mActionBar.setSubtitle("New Message to 1 recipient");
         } else {
@@ -77,11 +89,12 @@ public class ComposeMessage extends AllplayersSherlockActivity {
         final EditText bodyField = (EditText)findViewById(R.id.bodyField);
         bodyField.setText("");
 
-        final Button sendButton = (Button)findViewById(R.id.sendMessageButton);
-
-        sendButton.setOnClickListener(new View.OnClickListener() {
+        // Set up the send button.
+        mSendButton  = (Button)findViewById(R.id.sendMessageButton);
+        mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                
                 // Pull the body and subject from the form.
                 mMessageBody = bodyField.getText().toString();
                 mMessageSubject = subjectField.getText().toString();
@@ -93,11 +106,14 @@ public class ComposeMessage extends AllplayersSherlockActivity {
     }
 
     /**
-     * Posts a user's message using a rest call.
+     * Sends the user's message.
      */
     public class createNewMessageTask extends AsyncTask<String, Void, Void> {
         Toast toast;
         
+        /**
+         * Runs on the UI thread before doInBackground(Params...).
+         */
         @Override
         protected void onPreExecute() {
             
@@ -109,12 +125,22 @@ public class ComposeMessage extends AllplayersSherlockActivity {
             toast.show();
         }
         
+        /**
+         * Performs a computation on a background thread.
+         * @param params 
+         *      • params[0] Message sumbject.
+         *      • params[1] Message body.
+         */
         @Override
         protected Void doInBackground(String... params) {
             RestApiV1.createNewMessage(mRecipientUuidList.toArray(new String[mRecipientUuidList.size()]), params[0], params[1]);
             return null;
         }
         
+        /**
+         * Runs on the UI thread after doInBackground(Params...).
+         * @param voids Nothing... Nothing at all.
+         */
         @Override
         protected void onPostExecute(Void voids) {
             toast.cancel();
