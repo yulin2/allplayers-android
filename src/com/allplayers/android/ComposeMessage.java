@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
     private String mMessageBody;
     private String mMessageSubject;
     private ArrayList<String> mRecipientUuidList = new ArrayList<String>();
+    private Activity mActivity = this;
 
     /** called when the activity is first created. */
     @Override
@@ -85,12 +88,6 @@ public class ComposeMessage extends AllplayersSherlockActivity {
 
                 // Spawn a thread to send the message.
                 new createNewMessageTask().execute(mMessageSubject, mMessageBody);
-
-                // Show a popup message that the message is being sent.
-                Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG).show();
-
-                // End the activity.
-                finish();
             }
         });
     }
@@ -99,10 +96,32 @@ public class ComposeMessage extends AllplayersSherlockActivity {
      * Posts a user's message using a rest call.
      */
     public class createNewMessageTask extends AsyncTask<String, Void, Void> {
+        Toast toast;
+        
+        @Override
+        protected void onPreExecute() {
+            
+            // Show the progress spinner and a message so we know that the message is in progress of
+            // being sent.
+            setProgressBarIndeterminateVisibility(true);
+            toast = Toast.makeText(mActivity, "Sending Message...", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+        
         @Override
         protected Void doInBackground(String... params) {
             RestApiV1.createNewMessage(mRecipientUuidList.toArray(new String[mRecipientUuidList.size()]), params[0], params[1]);
             return null;
+        }
+        
+        @Override
+        protected void onPostExecute(Void voids) {
+            toast.cancel();
+            toast = Toast.makeText(mActivity, "Message Sent!", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            mActivity.finish();
         }
     }
 }
