@@ -8,9 +8,17 @@ import org.json.JSONException;
 import com.allplayers.objects.EventData;
 import com.google.gson.Gson;
 
+/**
+ * Custom ArrayList used to hold EventData.
+ */
 public class EventsMap {
     private ArrayList<EventData> mEventsList = new ArrayList<EventData>();
 
+    /**
+     * Constructor.
+     * 
+     * @param jsonResult Result from API call. Used directly to populate the ArrayList.
+     */
     public EventsMap(String jsonResult) {
         try {
             JSONArray jsonArray = new JSONArray(jsonResult);
@@ -36,14 +44,29 @@ public class EventsMap {
         }
     }
 
+    /**
+     * Returns an ArrayList of the API result.
+     *
+     * @return An ArrayList of the API result.
+     */
     public ArrayList<EventData> getEventData() {
         return mEventsList;
     }
 
+    /**
+     * Returns the number of events.
+     * 
+     * @return The number of events.
+     */
     public int size() {
         return mEventsList.size();
     }
 
+    /**
+     * Returns whether or not the ArrayList is empty.
+     * 
+     * @return whether or not the ArrayList is empty.
+     */
     public boolean isEmpty() {
         return mEventsList.size() == 0;
     }
