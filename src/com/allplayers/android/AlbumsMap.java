@@ -8,13 +8,23 @@ import org.json.JSONException;
 import com.allplayers.objects.AlbumData;
 import com.google.gson.Gson;
 
+/**
+ * Custom ArrayList used to hold AlbumDal
+ */
 public class AlbumsMap {
     private ArrayList<AlbumData> albums = new ArrayList<AlbumData>();
 
+    /**
+     * Constructor.
+     * 
+     * @param jsonResult Result from API call. Used directly to populate the ArrayList.
+     */
     public AlbumsMap(String jsonResult) {
 
-        // Used to create AlbumData objects from json.
         Gson gson = new Gson();
+        
+        // Go through the albums in the API result and check if they are already in the list. If
+        // not, add them.
         try {
             JSONArray jsonArray = new JSONArray(jsonResult);
 
@@ -32,10 +42,20 @@ public class AlbumsMap {
         }
     }
 
+    /**
+     * Returns an ArrayList of the API result.
+     *
+     * @return An ArrayList of the API result.
+     */
     public ArrayList<AlbumData> getAlbumData() {
         return albums;
     }
 
+    /**
+     * Returns the number of photos in the album.
+     * 
+     * @return The number of photos in the album.
+     */
     public int size() {
         return albums.size();
     }
