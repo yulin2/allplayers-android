@@ -14,11 +14,21 @@ import com.allplayers.android.activities.AllplayersSherlockFragmentActivity;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
+/**
+ * Base activity to hold the contacts fragments (UserGroupmatesFragment, UserFriendsFragment, and
+ * UserFamilyFragment).
+ */
 public class ContactsActivity extends AllplayersSherlockFragmentActivity {
-
-    /** Called when the activity is first created.
-      * @param savedInstanceState: Saved data from the last instance of the activity.
-      */
+    
+    private Tab mFriendsTab;
+    private Tab mGroupmatesTab;
+    private Tab mFamilyTab;
+    
+    /** 
+     * Called when the activity is first created.
+     * 
+     * @param savedInstanceState: Saved data from the last instance of the activity.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,20 +45,20 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
         mSideNavigationView.setMode(Mode.LEFT);
 
         // Set up the tabs for navigation
-        Tab friendsTab = mActionBar.newTab();
-        friendsTab.setText("Friends");
-        friendsTab.setTabListener(new ContactsTabListener<UserFriendsFragment>(this, "Friends", UserFriendsFragment.class));
-        mActionBar.addTab(friendsTab);
+        mFriendsTab = mActionBar.newTab();
+        mFriendsTab.setText("Friends");
+        mFriendsTab.setTabListener(new ContactsTabListener<UserFriendsFragment>(this, "Friends", UserFriendsFragment.class));
+        mActionBar.addTab(mFriendsTab);
 
-        Tab groupmatesTab = mActionBar.newTab();
-        groupmatesTab.setText("Groupates");
-        groupmatesTab.setTabListener(new ContactsTabListener<UserGroupmatesFragment>(this, "Groupmates", UserGroupmatesFragment.class));
-        mActionBar.addTab(groupmatesTab);
+        mGroupmatesTab = mActionBar.newTab();
+        mGroupmatesTab.setText("Groupates");
+        mGroupmatesTab.setTabListener(new ContactsTabListener<UserGroupmatesFragment>(this, "Groupmates", UserGroupmatesFragment.class));
+        mActionBar.addTab(mGroupmatesTab);
 
-        Tab familyTab = mActionBar.newTab();
-        familyTab.setText("Family");
-        familyTab.setTabListener(new ContactsTabListener<UserFamilyFragment>(this, "Family", UserFamilyFragment.class));
-        mActionBar.addTab(familyTab);
+        mFamilyTab = mActionBar.newTab();
+        mFamilyTab.setText("Family");
+        mFamilyTab.setTabListener(new ContactsTabListener<UserFamilyFragment>(this, "Family", UserFamilyFragment.class));
+        mActionBar.addTab(mFamilyTab);
     }
 
     /**
@@ -71,58 +81,85 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
         }
     }
 
-    /** Called when the activity has detected the user's press of the back key.
-      */
+    /** 
+     * Called when the activity has detected the user's press of the back key.
+     */
     @Override
     public void onBackPressed() {
+        
         // This is used to fix a problem with the activity stack on API 10.
         moveTaskToBack(true);
     }
 
     public static class ContactsTabListener<T extends Fragment> implements TabListener {
-        private Fragment mFragment;
         private final Activity mActivity;
-        private final String mTag;
         private final Class<T> mClass;
+        private final String mTag;
+        
+        private Fragment mFragment;
 
-        /** Constructor used each time a new tab is created.
-          * @param activity  The host Activity, used to instantiate the fragment
-          * @param tag  The identifier tag for the fragment
-          * @param clz  The fragment's Class, used to instantiate the fragment
-          */
+        /** 
+         * Constructor used each time a new tab is created.
+         * 
+         * @param activity  The host Activity, used to instantiate the fragment
+         * @param tag  The identifier tag for the fragment
+         * @param clz  The fragment's Class, used to instantiate the fragment
+         */
         public ContactsTabListener(Activity activity, String tag, Class<T> clz) {
             mActivity = activity;
             mTag = tag;
             mClass = clz;
         }
 
-        /* The following are each of the ActionBar.TabListener callbacks */
-
+        /**
+         * Called when a tab enters the selected state.
+         * 
+         * @param tab The tab that was selected.
+         * @param ft A FragmentTransaction for queuing fragment operations to execute during a tab
+         * switch. The previous tab's unselect and this tab's select will be executed in a single
+         * transaction. This FragmentTransaction does not support being added to the back stack.
+         */
         @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            // Check if the fragment is already initialized
+            
+            // Check if the fragment is already initialized. If not, instantiate and add it to the
+            // activity. If it exists, simply attach it in order to show it.
             if (mFragment == null) {
-                // If not, instantiate and add it to the activity
                 mFragment = Fragment.instantiate(mActivity, mClass.getName());
                 ft.add(R.id.container, mFragment, mTag);
             } else {
-                // If it exists, simply attach it in order to show it
                 ft.attach(mFragment);
             }
         }
 
+        /**
+         * Called when a tab exits the selected state.
+         * 
+         * @param tab The tab that was unselected.
+         * @param ft A FragmentTransaction for queuing fragment operations to execute during a tab
+         * switch. This tab's unselect and the newly selected tab's select will be executed in a
+         * single transaction. This FragmentTransaction does not support being added to the back
+         * stack.
+         */
         @Override
         public void onTabUnselected(Tab tab, FragmentTransaction ft) {
             if (mFragment != null) {
+                
                 // Detach the fragment, because another one is being attached
                 ft.detach(mFragment);
             }
         }
 
+        /**
+         * Called when a tab that is already selected is chosen again by the user.
+         * 
+         * @param tab The tab that was reselected.
+         * @param ft A FragmentTransaction for queuing fragment operations to execute once this
+         * method returns. This FragmentTransaction does not support being added to the back stack.
+         */
         @Override
         public void onTabReselected(Tab tab, FragmentTransaction ft) {
-            // User selected the already selected tab. Usually do nothing.
+            // UNUSED
         }
     }
-
 }
