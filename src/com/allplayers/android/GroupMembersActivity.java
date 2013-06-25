@@ -24,6 +24,9 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
+/**
+ * Displays a list of the group's members.
+ */
 public class GroupMembersActivity extends AllplayersSherlockListActivity {
     private ProgressBar mLoadingIndicator;
     private ArrayList<GroupMemberData> mMembersList = new ArrayList<GroupMemberData>();
@@ -34,9 +37,15 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
     private ArrayAdapter<GroupMemberData> mAdapter;
     private ListView mListView;
     private ViewGroup mFooter;
-
     private final int LIMIT = 15;
-    /** Called when the activity is first created. */
+    
+    /**
+     * Called when the activity is starting.
+     *  
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +53,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
 
         // Get a handle on the ListView.
         mListView = getListView();
+        
         // Create our adapter for the ListView.
         mAdapter = new ArrayAdapter<GroupMemberData>(this, android.R.layout.simple_list_item_1, mMembersList);
 
@@ -55,6 +65,12 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         // When the load more button is clicked, show the loading indicator and load more
         // group members.
         mLoadMoreButton.setOnClickListener(new OnClickListener() {
+            
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that has been clicked.
+             */
             @Override
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
@@ -111,17 +127,17 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
                     switch (item.getItemId()) {
 
                         // Go to SelectMessageContacts.class with the selected user autopopulated.
-                    case R.id.send_message: {
-                        Gson gson = new Gson();
-                        ArrayList<GroupMemberData> selectedUser =
-                            new ArrayList<GroupMemberData>();
-                        selectedUser.add(mMembersList.get(selectedPosition));
-                        String broadcastRecipients = gson.toJson(selectedUser);
-                        Intent intent = new Intent(GroupMembersActivity.this,
-                                                   SelectMessageContacts.class);
-                        intent.putExtra("broadcastRecipients", broadcastRecipients);
-                        startActivity(intent);
-                    }
+                        case R.id.send_message: {
+                            Gson gson = new Gson();
+                            ArrayList<GroupMemberData> selectedUser =
+                                new ArrayList<GroupMemberData>();
+                            selectedUser.add(mMembersList.get(selectedPosition));
+                            String broadcastRecipients = gson.toJson(selectedUser);
+                            Intent intent = new Intent(GroupMembersActivity.this,
+                                                       SelectMessageContacts.class);
+                            intent.putExtra("broadcastRecipients", broadcastRecipients);
+                            startActivity(intent);
+                        }
                     }
                     return true;
                 }
@@ -130,23 +146,36 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         }
     }
 
-    /*
-     * Gets a group's members using a rest call and populates an array with the data.
+    /**
+     * Gets a group's members..
      */
     public class GetGroupMembersByGroupIdTask extends AsyncTask<GroupData, Void, String> {
 
+        /**
+         * Performs a computation on a background thread.
+         * 
+         * @param groups The group whose users need to be fetched.
+         */
         @Override
         protected String doInBackground(GroupData... groups) {
             return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID(), mOffset, LIMIT);
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param jsonResult The result from fetching the group's users.
+         */
         @Override
         protected void onPostExecute(String jsonResult) {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
 
             if (groupMembers.size() == 0) {
+                
                 // If the newly pulled group members is empty, indicate the end of data.
                 mEndOfData = true;
+                
                 // If the members list is also empty, there are no group members, so add
                 // a blank indicator showing so.
                 if (mMembersList.size() == 0) {
@@ -157,6 +186,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
                     mListView.setEnabled(false);
                 }
             } else {
+                
                 // If we pulled less than 10 new members, indicate we are at the end of data.
                 if (groupMembers.size() < LIMIT) {
                     mEndOfData = true;
@@ -166,12 +196,14 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
                 mMembersList.addAll(groupMembers.getGroupMemberData());
                 mAdapter.notifyDataSetChanged();
             }
+            
             // If we are not at the end of data, show our load more button and increase our offset.
+            // If we are at the end of data, remove the load more button.
             if (!mEndOfData) {
                 mLoadMoreButton.setVisibility(View.VISIBLE);
                 mLoadingIndicator.setVisibility(View.GONE);
                 mOffset += groupMembers.size();
-            } else { // If we are at the end of data, remove the load more button.
+            } else {
                 mListView.removeFooterView(mFooter);
             }
         }
