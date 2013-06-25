@@ -8,9 +8,17 @@ import org.json.JSONException;
 import com.allplayers.objects.GroupData;
 import com.google.gson.Gson;
 
+/**
+ * Custom ArrayList used to hold GroupData.
+ */
 public class GroupsMap {
     private ArrayList<GroupData> mGroupsList = new ArrayList<GroupData>();
 
+    /**
+     * Constructor.
+     * 
+     * @param jsonResult Result from API call. Used directly to populate the ArrayList.
+     */
     public GroupsMap(String jsonResult) {
         try {
             JSONArray jsonArray = new JSONArray(jsonResult);
@@ -28,11 +36,19 @@ public class GroupsMap {
             System.err.println("GroupsMap/" + ex);
         }
     }
-
+    
+    /**
+     * Returns the ArrayList. 
+     * @return the ArrayList.
+     */
     public ArrayList<GroupData> getGroupData() {
         return mGroupsList;
     }
 
+    /**
+     * Returns the size of the ArrayList. 
+     * @return The size of the ArrayList.
+     */
     public int size() {
         return mGroupsList.size();
     }
