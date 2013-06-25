@@ -34,6 +34,9 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
+/**
+ * Displays a page with a group's image and buttons to 
+ */
 public class GroupPageActivity extends AllplayersSherlockActivity {
 
     private GroupData mGroup;
@@ -58,6 +61,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         // Get the group information from the current intent.
         mGroup = (new Router(this)).getIntentGroup();
 
+        // Set up the progress bar to indicate loading.
         mProgressBar = (ProgressBar) findViewById(R.id.progress_indicator);
 
         // Hide the default title: needed to style our title.
@@ -75,9 +79,6 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(Gravity.CENTER);
         mActionBar.setCustomView(title, params);
         mActionBar.setDisplayShowCustomEnabled(true);
-
-        // Add the "Admin Toolbox" menu to the actionbar.
-
 
         // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
@@ -107,12 +108,10 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         return true;
     }
 
-
-
     /**
      * Listener for the Action Bar Options Menu.
      *
-     * @param item: The selected menu item.
+     * @param item The selected menu item.
      * @return Return false to allow normal menu processing to proceed, true to consume it here.
      */
     @Override
@@ -120,43 +119,55 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
 
         switch (item.getItemId()) {
 
-        case android.R.id.home: {
-            mSideNavigationView.toggleMenu();
-            return true;
-        }
-
-        case R.id.menu_broadcast: {
-            Gson gson = new Gson();
-            String broadcastRecipients = gson.toJson(mMembersList);
-            Intent intent = new Intent(getBaseContext(), SelectMessageContacts.class);
-            intent.putExtra("broadcastRecipients", broadcastRecipients);
-            startActivity(intent);
-            return true;
-        }
-        
-        case R.id.menu_create_event: {
-            Gson gson = new Gson();
-            Intent intent = new Intent(getBaseContext(), CreateEventActivity.class);
-            intent.putExtra("Current Group", gson.toJson(mGroup));
-            startActivity(intent);
-            return true;
-        }
-
-        default:
-            return super.onOptionsItemSelected(item);
+            case android.R.id.home: {
+                mSideNavigationView.toggleMenu();
+                return true;
+            }
+    
+            case R.id.menu_broadcast: {
+                Gson gson = new Gson();
+                String broadcastRecipients = gson.toJson(mMembersList);
+                Intent intent = new Intent(getBaseContext(), SelectMessageContacts.class);
+                intent.putExtra("broadcastRecipients", broadcastRecipients);
+                startActivity(intent);
+                return true;
+            }
+            
+            case R.id.menu_create_event: {
+                Gson gson = new Gson();
+                Intent intent = new Intent(getBaseContext(), CreateEventActivity.class);
+                intent.putExtra("Current Group", gson.toJson(mGroup));
+                startActivity(intent);
+                return true;
+            }
+    
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     /**
      * Gets the group's location because it has not been previously pulled.
-     *
      */
     public class GetGroupLocationTask extends AsyncTask<String, Void, String> {
+        
+        /**
+         * Performs a computation on a background thread.
+         * 
+         * @param group_uuid Has the UUID of the group.
+         * @return The information from the fetched group.
+         */
         @Override
         protected String doInBackground(String... group_uuid) {
             return RestApiV1.getGroupInformationByGroupId(group_uuid[0]);
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param jsonResult The result of fetching the groups data from the API.
+         */
         @Override
         protected void onPostExecute(String jsonResult) {
             try {
@@ -166,20 +177,31 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
     /**
-     * Gets a remote image using a REST call.
+     * Gets a remote image.
      */
     public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
 
+        /**
+         * Performs a computation on a background thread.
+         * 
+         * @param logoURL The URL of the logo.
+         * @return The bitmap fetched from the API.
+         */
         @Override
         protected Bitmap doInBackground(String... logoURL) {
             return RestApiV1.getRemoteImage(logoURL[0]);
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param logo The logo fetched from the API.
+         */
         @Override
         protected void onPostExecute(Bitmap logo) {
             // Hide the loading indicator.
@@ -256,17 +278,31 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
      * group page interface is set up.
      */
     public class GetGroupMembersByGroupIdTask extends AsyncTask<String, Void, String> {
+        
+        /**
+         * Performs a computation on the background thread.
+         * 
+         * @param group_uuid The uuid of the group whos members will be fetched.
+         * @return The result of getting the group's members.
+         */
         @Override
         protected String doInBackground(String... group_uuid) {
             return RestApiV1.getGroupMembersByGroupId(group_uuid[0], 0, 0);
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param jsonResult The result of getting the group's members.
+         */
         @Override
         protected void onPostExecute(String jsonResult) {
             isLoggedIn = RestApiV1.isLoggedIn();
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
             mMembersList = groupMembers.getGroupMemberData();
             String currentUUID = RestApiV1.getCurrentUserUUID();
+            
             // Compare the current UUID to all the group members' to check if the logged
             // in user is a member of the group.
             for (int i = 0; i < mMembersList.size(); i++) {
@@ -275,6 +311,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
                     break;
                 }
             }
+            
             // Load the logo and then set up the UI.
             new GetRemoteImageTask().execute(mGroup.getLogo());
         }
@@ -282,11 +319,23 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
 
     public class CheckUserAdminPrivalegesAndCreateOptionsMenuTask extends AsyncTask<Void, Void, String> {
 
+        /**
+         * Performs a computation on a background thread. Checks if the current user is a group
+         * admin.
+         * 
+         * @return The result of fetching the user's roles.
+         */
         @Override
         protected String doInBackground(Void... voids) {
             return RestApiV1.getUserRolesInGroup(mGroup.getUUID(), RestApiV1.getCurrentUserUUID());
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param jsonResult The result of fetching the user's roles.
+         */
         @Override
         protected void onPostExecute(String jsonResult) {
 
@@ -296,7 +345,6 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
                 createOptionsMenu();
             }
         }
-
     }
 
     /**
