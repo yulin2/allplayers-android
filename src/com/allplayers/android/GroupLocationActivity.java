@@ -17,31 +17,34 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-
 /**
- * TODO If maps are missing on device image, this activity will crash.
+ * Display a map with the current group's location.
  */
 public class GroupLocationActivity extends AllplayersSherlockMapActivity {
-
     private GoogleMap mMap;
+    
     /**
-     * Called when the activity is first created, this sets up variables,
-     * creates the Action Bar, and sets up the Side Navigation Menu.
-     * @param savedInstanceState: Saved data from the last instance of the
-     * activity.
+     * Called when the activity is starting.
+     * 
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_location);
 
+        // Make a new map
         mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
+        // Grab the group's data from the intent.
         GroupData group = (new Router(this)).getIntentGroup();
 
+        // Set up the latitude and longitude. If that data isn't already in the GroupData object,
+        // we will calculate it ourselves. 
         String lat = group.getLat();
         String lon = group.getLon();
-
         if (lat.equals("") || lon.equals("") || lat.equals("0.000000") || lon.equals("0.000000")) {
             Geocoder geo = new Geocoder(this);
             try {
@@ -52,8 +55,9 @@ public class GroupLocationActivity extends AllplayersSherlockMapActivity {
                 e.printStackTrace();
             }
         }
-
         LatLng location = new LatLng((Float.parseFloat(lat)), (Float.parseFloat(lon)));
+        
+        // Set up the camera location and place a marker at the group location.
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 11));
         mMap.addMarker(new MarkerOptions()
                        .position(location)
