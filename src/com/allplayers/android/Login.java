@@ -28,10 +28,7 @@ import android.widget.Toast;
 import com.allplayers.rest.RestApiV1;
 
 /**
- * Initial activity to handle login.
- *
- * TODO: Replace with AccountManager, loading only as required when an account
- * is needed.
+ * Handles login. Also hosts the link to the registration page.
  */
 public class Login extends Activity {
     private EditText mUsernameEditText;
@@ -47,20 +44,26 @@ public class Login extends Activity {
     private Context mContext;
     private SharedPreferences mSharedPreferences;
 
+    /**
+     * Called when the activity is starting. 
+     * 
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        // TODO - Temporarily disable StrictMode because all networking is
-        // currently in the UI thread. Android now throws exceptions when
-        // obvious IO happens in the UI thread, which is a good thing.
+        // TODO Figure out why we need this! None of the networking is in the ui thread anymore, so
+        // we arent sure what the issue is.
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        // Setup the variables.
         mContext = this.getBaseContext();
         mAccountManager = AccountManager.get(mContext);
         mLoginButton = (Button)findViewById(R.id.loginButton);
@@ -82,6 +85,7 @@ public class Login extends Activity {
         }
 
         Account[] accounts = mAccountManager.getAccountsByType("com.allplayers.android");
+        
         // There should only be one allplayers type account in the device at once.
         if (accounts.length == 1) {
             String storedEmail = accounts[0].name;
@@ -102,11 +106,12 @@ public class Login extends Activity {
                 new AttemptLoginTask().execute(storedEmail, unencryptedPassword);
             }
         } else {
+            
             // TODO: Clear user saved data as well
             showLoginFields();
 
             // Clear any UUID that may be saved from a previous user.
-            // @TODO: This is not an elegant solution though is the only apparent one due to the way that
+            // TODO: This is not an elegant solution though is the only apparent one due to the way that
             //  RestApiV1 is currently set up.
             SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -115,6 +120,13 @@ public class Login extends Activity {
         }
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
+            
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that was clicked.
+             */
+            @Override
             public void onClick(View v) {
 
                 String email = mUsernameEditText.getText().toString();
@@ -126,6 +138,13 @@ public class Login extends Activity {
         });
 
         mNewAccountButton.setOnClickListener(new View.OnClickListener() {
+            
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that was clicked.
+             */
+            @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(Login.this, NewAccountActivity.class);
@@ -134,12 +153,32 @@ public class Login extends Activity {
         });
 
         mGroupSearchButton.setOnClickListener(new View.OnClickListener() {
+            
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that was clicked.
+             */
+            @Override
             public void onClick(View v) {
                 startActivity(new Intent(Login.this, FindGroupsActivity.class));
             }
         });
     }
 
+    /**
+     * Called when an activity you launched exits, giving you the requestCode you started it with,
+     * the resultCode it returned, and any additional data from it. The resultCode will be
+     * RESULT_CANCELED if the activity explicitly returned that, didn't return any result, or
+     * crashed during its operation.
+     * 
+     * @param requestCode The integer request code originally supplied to startActivityForResult(),
+     * allowing you to identify who this result came from.
+     * @param resultCode The integer result code returned by the child activity through its
+     * setResult().
+     * @param data An Intent, which can return result data to the caller (various data can be
+     * attached to Intent "extras").
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -152,6 +191,13 @@ public class Login extends Activity {
         }
     }
 
+    /**
+     * Called when a key was pressed down and not handled by any of the views inside of the
+     * activity.
+     * 
+     * @param keyCode The value in event.getKeyCode().
+     * @param event Description of the key event.
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_SEARCH || keyCode == KeyEvent.KEYCODE_MENU) {
@@ -176,6 +222,14 @@ public class Login extends Activity {
      * Attempt a login, if successful, move to the real main activity.
      */
     public class AttemptLoginTask extends AsyncTask<String, Void, String> {
+        
+        /**
+         * Performs a computation on a background thread. In this case, logs in to the API.
+         * 
+         * @param strings The login credentials.
+         * @return The login status.
+         */
+        @Override
         protected String doInBackground(String... strings) {
 
             String email = strings[0];
@@ -223,6 +277,13 @@ public class Login extends Activity {
             }
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param ex The result of the attempted login.
+         */
+        @Override
         protected void onPostExecute(String ex) {
             if (ex.equals("invalidLogin")) {
                 Toast invalidLogin = Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_LONG);
