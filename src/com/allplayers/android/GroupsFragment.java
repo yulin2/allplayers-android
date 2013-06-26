@@ -21,16 +21,18 @@ import com.allplayers.rest.RestApiV1;
  * Fragment displaying the user's groups.
  */
 public class GroupsFragment extends ListFragment {
-    private ArrayList<GroupData> mGroupList = new ArrayList<GroupData>();
-    private boolean hasGroups = false, loadMore = true;
-    private int mPageNumber = 0;
-    private int mCurrentAmountShown = 0;
-    private ArrayAdapter<GroupData> mAdapter;
-    private ProgressBar mProgressBar;
+    
     private Activity mParentActivity;
-    private String mSortType = "radioactive";
-    private int mAmountToLoad = 15;
+    private ArrayAdapter<GroupData> mAdapter;
+    private ArrayList<GroupData> mGroupList = new ArrayList<GroupData>();
     private ListView mListView;
+    private ProgressBar mProgressBar;
+    
+    private final int LIMIT = 15;
+    private boolean mHasGroups = false, mLoadMore = true;
+    private int mCurrentAmountShown = 0; 
+    private int mPageNumber = 0;
+    private String mSortType = "radioactive";
 
     /**
      * Called to do initial creation of a fragment. This is called after onAttach(Activity) and
@@ -61,6 +63,10 @@ public class GroupsFragment extends ListFragment {
     /**
      * Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but
      * before any saved state has been restored in to the view.
+     * 
+     * @param view The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
+     * saved state as given here.
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -99,7 +105,7 @@ public class GroupsFragment extends ListFragment {
                         previousTotal = totalItemCount;
                     }
                 }
-                if (loadMore && !loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                if (mLoadMore && !loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                     new GetUserGroupsTask().execute();
                     loading = true;
                 }
@@ -123,9 +129,7 @@ public class GroupsFragment extends ListFragment {
     }
 
     /**
-     * This method will be called when an item in the list is selected. Subclasses should override.
-     * Subclasses can call getListView().getItemAtPosition(position) if they need to access the data
-     * associated with the selected item.
+     * This method will be called when an item in the list is selected.
      * 
      * @param l The ListView where the click happened.
      * @param v The view that was clicked within the ListView.
@@ -135,7 +139,7 @@ public class GroupsFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if (hasGroups && position < mGroupList.size()) {
+        if (mHasGroups && position < mGroupList.size()) {
             
             //Display the group page for the selected group
             Intent intent = (new Router(mParentActivity)).getGroupPageActivityIntent(mGroupList.get(position));
@@ -152,13 +156,13 @@ public class GroupsFragment extends ListFragment {
             
             // If we did not load 15 groups, we are at the end of the list, so signal
             // not to try to load more groups.
-            if (mGroupList.size() - mCurrentAmountShown < mAmountToLoad) {
-                loadMore = false;
+            if (mGroupList.size() - mCurrentAmountShown < LIMIT) {
+                mLoadMore = false;
                 if (mListView != null) {
                     mListView.removeFooterView(mProgressBar);
                 }
             }
-            hasGroups = true;
+            mHasGroups = true;
         } else {
             
             // If we do not have any groups, create a blank list item and remove our loading footer.
@@ -173,7 +177,7 @@ public class GroupsFragment extends ListFragment {
     }
 
     /**
-     * Fetches the groups a user belongs to and stores the data locally.
+     * Fetches the groups a user belongs to.
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
         
@@ -184,7 +188,7 @@ public class GroupsFragment extends ListFragment {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(mPageNumber++ * mAmountToLoad, mAmountToLoad, mSortType);
+            return RestApiV1.getUserGroups(mPageNumber++ * LIMIT, LIMIT, mSortType);
         }
 
         /**

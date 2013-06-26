@@ -22,14 +22,10 @@ import com.allplayers.objects.EventData;
 import com.allplayers.rest.RestApiV1;
 
 /**
- * Fragment displayed by EventsActivity. Lists out all of the user's events.
+ * Fragment displaying the user's events.
  */
 public class EventFragment extends ListFragment {
-    
-    private static final int LIMIT = 10;
-    private static final String LINE_ONE_KEY = "line1";
-    private static final String LINE_TWO_KEY = "line2";
-    
+
     private Activity mParentActivity;
     private ArrayList<EventData> mEventsList = new ArrayList<EventData>();
     private ArrayList<HashMap<String, String>> mTimeList = new ArrayList<HashMap<String, String>>();
@@ -38,17 +34,20 @@ public class EventFragment extends ListFragment {
     private SimpleAdapter mAdapter;
     private ViewGroup mFooter;
     
+    private static final int LIMIT = 10;
+    private static final String LINE_ONE_KEY = "line1";
+    private static final String LINE_TWO_KEY = "line2";
     private boolean mCanRemoveFooter = false;
-    private boolean hasEvents = false;
+    private boolean mHasEvents = false;
     private int mOffset = 0;
     private String mJsonResult;
 
-    /** 
-     * Called when the activity is starting.
+    /**
+     * Called to do initial creation of a fragment. This is called after onAttach(Activity) and
+     * before onCreateView(LayoutInflater, ViewGroup, Bundle).
      * 
-     * @param savedInstanceState If the activity is being re-initialized after previously being shut
-     * down then this Bundle contains the data it most recently supplied in
-     * onSaveInstanceState(Bundle). Otherwise it is null.
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state,
+     * this is the state.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,8 @@ public class EventFragment extends ListFragment {
     }
 
     /**
-     * Attach to list view once the view hierarchy has been created.
+     * Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but
+     * before any saved state has been restored in to the view.
      * 
      * @param view The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
      * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
@@ -115,7 +115,7 @@ public class EventFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
 
         Intent intent;
-        if (hasEvents) {
+        if (mHasEvents) {
             
             // If the event has a loaction and we are on the correct API level, show a map. If we do
             // not meet those conditions, launch only the more detailed event page.
@@ -168,7 +168,7 @@ public class EventFragment extends ListFragment {
                 mLoadMoreButton.setVisibility(View.VISIBLE);
                 mLoadingIndicator.setVisibility(View.GONE);
             }
-            hasEvents = true;
+            mHasEvents = true;
         } else {
             
             // If we did not load any new events and no previous events were there,
@@ -179,7 +179,7 @@ public class EventFragment extends ListFragment {
                 map.put(LINE_TWO_KEY, "");
                 mTimeList.add(map);
                 mAdapter.notifyDataSetChanged();
-                hasEvents = false;
+                mHasEvents = false;
                 
                 // Remove our footer.
                 getListView().removeFooterView(mFooter);

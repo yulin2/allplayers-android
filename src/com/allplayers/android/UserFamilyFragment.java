@@ -22,6 +22,9 @@ import com.allplayers.objects.GroupMemberData;
 import com.allplayers.rest.RestApiV1;
 import com.google.gson.Gson;
 
+/**
+ * Fragment displaying the user's family members (children and guardians).
+ */
 public class UserFamilyFragment extends Fragment {
 
     private ArrayAdapter<GroupMemberData> mChildrenAdapter;
@@ -41,16 +44,19 @@ public class UserFamilyFragment extends Fragment {
 
     private boolean mChildrenNoData = false;
     private boolean mGuardiansNoData = false;
-    private boolean mHasBeenLoaded = false;
     private boolean mChildrenDoneLoading = false;
     private boolean mGuardiansDoneLoading = false;
+    private boolean mHasBeenLoaded = false;
 
     private Activity mParentActivity;
 
-    /** Called to do initial creation of a fragment.
-      * @param savedInstanceState If the fragment is being re-created from a previous saved state,
-      * this is the state.
-      */
+    /**
+     * Called to do initial creation of a fragment. This is called after onAttach(Activity) and
+     * before onCreateView(LayoutInflater, ViewGroup, Bundle).
+     * 
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state,
+     * this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,26 +69,30 @@ public class UserFamilyFragment extends Fragment {
         mGuardiansList = new ArrayList<GroupMemberData>();
     }
 
-    /** Called to have the fragment instantiate its user interface view.
-      * @param inflater The LayoutInflater object that can be used to inflate any views in the
-      * fragment.
-      * @param container If non-null, this is the parent view that the fragment's UI should be
-      * attached to.
-      * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
-      * saved state as given here.
-      */
+    /** 
+     * Called to have the fragment instantiate its user interface view.
+     * 
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the
+     * fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be
+     * attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
+     * saved state as given here.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_user_family, null);
     }
 
-    /** Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but
-      * before any saved state has been restored in to the view.
-      * @param view The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
-      * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
-      * saved state as given here.
-      */
+    /**
+     * Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but
+     * before any saved state has been restored in to the view.
+     * 
+     * @param view The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
+     * saved state as given here.
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
@@ -117,12 +127,14 @@ public class UserFamilyFragment extends Fragment {
         // Set up listeners for list item clicks.
         mChildrenListView.setOnItemClickListener(new OnItemClickListener() {
 
-            /** Callback method to be invoked when an item in this AdapterView has been clicked.
-              * @param parent The AdapterView where the click happened.
-              * @param v The view within the AdapterView that was clicked.
-              * @param position The position of the view in the adapter.
-              * @param id The row id of the item that was clicked.
-              */
+            /** 
+             * Callback method to be invoked when an item in this AdapterView has been clicked.
+             * 
+             * @param parent The AdapterView where the click happened.
+             * @param v The view within the AdapterView that was clicked.
+             * @param position The position of the view in the adapter.
+             * @param id The row id of the item that was clicked.
+             */
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
@@ -134,7 +146,9 @@ public class UserFamilyFragment extends Fragment {
                     menu.inflate(R.menu.friend_menu);
                     menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-                        /** Called when a menu item has been invoked.
+                        /** 
+                         * Called when a menu item has been invoked.
+                         * 
                          * @param item The menu item that was invoked.
                          * @return Return true to consume this click and prevent others from
                          * executing.
@@ -145,17 +159,17 @@ public class UserFamilyFragment extends Fragment {
 
                                 // Go to SelectMessageContacts.class with the selected user
                                 // autopopulated.
-                            case R.id.send_message: {
-                                Gson gson = new Gson();
-                                ArrayList<GroupMemberData> selectedUser =
-                                    new ArrayList<GroupMemberData>();
-                                selectedUser.add(mChildrenList.get(selectedPosition));
-                                String broadcastRecipients = gson.toJson(selectedUser);
-                                Intent intent = new Intent(mParentActivity,
-                                                           SelectMessageContacts.class);
-                                intent.putExtra("broadcastRecipients", broadcastRecipients);
-                                startActivity(intent);
-                            }
+                                case R.id.send_message: {
+                                    Gson gson = new Gson();
+                                    ArrayList<GroupMemberData> selectedUser =
+                                        new ArrayList<GroupMemberData>();
+                                    selectedUser.add(mChildrenList.get(selectedPosition));
+                                    String broadcastRecipients = gson.toJson(selectedUser);
+                                    Intent intent = new Intent(mParentActivity,
+                                                               SelectMessageContacts.class);
+                                    intent.putExtra("broadcastRecipients", broadcastRecipients);
+                                    startActivity(intent);
+                                }
                             }
                             return true;
                         }
@@ -167,12 +181,14 @@ public class UserFamilyFragment extends Fragment {
 
         mGuardiansListView.setOnItemClickListener(new OnItemClickListener() {
 
-            /** Callback method to be invoked when an item in this AdapterView has been clicked.
-              * @param parent The AdapterView where the click happened.
-              * @param v The view within the AdapterView that was clicked.
-              * @param position The position of the view in the adapter.
-              * @param id The row id of the item that was clicked.
-              */
+            /** 
+             * Callback method to be invoked when an item in this AdapterView has been clicked.
+             * 
+             * @param parent The AdapterView where the click happened.
+             * @param v The view within the AdapterView that was clicked.
+             * @param position The position of the view in the adapter.
+             * @param id The row id of the item that was clicked.
+             */
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
@@ -184,7 +200,9 @@ public class UserFamilyFragment extends Fragment {
                     menu.inflate(R.menu.friend_menu);
                     menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-                        /** Called when a menu item has been invoked.
+                        /** 
+                         * Called when a menu item has been invoked.
+                         * 
                          * @param item The menu item that was invoked.
                          * @return Return true to consume this click and prevent others from
                          * executing.
@@ -195,17 +213,17 @@ public class UserFamilyFragment extends Fragment {
 
                                 // Go to SelectMessageContacts.class with the selected user
                                 // autopopulated.
-                            case R.id.send_message: {
-                                Gson gson = new Gson();
-                                ArrayList<GroupMemberData> selectedUser =
-                                    new ArrayList<GroupMemberData>();
-                                selectedUser.add(mGuardiansList.get(selectedPosition));
-                                String broadcastRecipients = gson.toJson(selectedUser);
-                                Intent intent = new Intent(mParentActivity,
-                                                           SelectMessageContacts.class);
-                                intent.putExtra("broadcastRecipients", broadcastRecipients);
-                                startActivity(intent);
-                            }
+                                case R.id.send_message: {
+                                    Gson gson = new Gson();
+                                    ArrayList<GroupMemberData> selectedUser =
+                                        new ArrayList<GroupMemberData>();
+                                    selectedUser.add(mGuardiansList.get(selectedPosition));
+                                    String broadcastRecipients = gson.toJson(selectedUser);
+                                    Intent intent = new Intent(mParentActivity,
+                                                               SelectMessageContacts.class);
+                                    intent.putExtra("broadcastRecipients", broadcastRecipients);
+                                    startActivity(intent);
+                                }
                             }
                             return true;
                         }
@@ -233,27 +251,30 @@ public class UserFamilyFragment extends Fragment {
             if (mGuardiansNoData) {
                 mGuardiansListView.setEnabled(false);
             }
-
         }
     }
 
-
-    /** Get's the currently logged in user's children from the API.
-      */
+    /** 
+     * Get's the currently logged in user's children from the API.
+     */
     public class GetUserChildrenTask extends AsyncTask<Void, Void, String> {
 
-        /** Performs a computation on a background thread.
-          * @param params The parameters of the task.
-          * @return Result of computation.
-          */
+        /** 
+         * Performs a computation on a background thread.
+         * 
+         * @param params The parameters of the task.
+         * @return Result of computation.
+         */
         @Override
         protected String doInBackground(Void... params) {
             return RestApiV1.getUserChildren(0, 0);
         }
 
-        /** Runs on the UI thread after doInBackground(Params...).
-          * @param result The result of the operation computed by doInBackground(Params...).
-          */
+        /** 
+         * Runs on the UI thread after doInBackground(Params...).
+         * 
+         * @param result The result of the operation computed by doInBackground(Params...).
+         */
         @Override
         protected void onPostExecute(String result) {
             mChildrenDoneLoading = true;
@@ -286,7 +307,9 @@ public class UserFamilyFragment extends Fragment {
 
     public class GetUserGuardiansTask extends AsyncTask<Void, Void, String> {
 
-        /** Performs a computation on a background thread.
+        /** 
+         * Performs a computation on a background thread.
+         * 
          * @param params The parameters of the task.
          * @return Result of computation.
          */
@@ -297,9 +320,11 @@ public class UserFamilyFragment extends Fragment {
             return RestApiV1.getUserGuardians(0, 0);
         }
 
-        /** Runs on the UI thread after doInBackground(Params...).
-          * @param result The result of the operation computed by doInBackground(Params...).
-          */
+        /** 
+         * Runs on the UI thread after doInBackground(Params...).
+         * 
+         * @param result The result of the operation computed by doInBackground(Params...).
+         */
         @Override
         protected void onPostExecute(String result) {
             mGuardiansDoneLoading = true;

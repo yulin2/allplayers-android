@@ -22,10 +22,12 @@ import com.allplayers.objects.GroupMemberData;
 import com.allplayers.rest.RestApiV1;
 import com.google.gson.Gson;
 
-/** Displays a user's friends in a listview. The user has the option to send any friend a message.
+/**
+ * Fragment displaying the user's friends.
  */
 public class UserFriendsFragment extends ListFragment {
 
+    private Activity mParentActivity;
     private ArrayAdapter<GroupMemberData> mAdapter;
     private ArrayList<GroupMemberData> mMembersList;
     private Button mLoadMoreButton;
@@ -34,17 +36,18 @@ public class UserFriendsFragment extends ListFragment {
     private ViewGroup mFooter;
 
     private final int LIMIT = 15;
-
     private boolean mDoneLoading = false;
     private boolean mEndOfData = false;
     private boolean mLoadedOnce = false;
     private int mOffset = 0;
 
-    private Activity mParentActivity;
-
-    /** Called to do initial creation of a fragment. This is called after onAttach(Activity) and
-      * before onCreateView(LayoutInflater, ViewGroup, Bundle).
-      */
+    /**
+     * Called to do initial creation of a fragment. This is called after onAttach(Activity) and
+     * before onCreateView(LayoutInflater, ViewGroup, Bundle).
+     * 
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state,
+     * this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +62,14 @@ public class UserFriendsFragment extends ListFragment {
         new GetUserFriendsTask().execute();
     }
 
-    /** Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but
-      * before any saved state has been restored in to the view.
-      */
+    /**
+     * Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but
+     * before any saved state has been restored in to the view.
+     * 
+     * @param view The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
+     * saved state as given here.
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
@@ -82,9 +90,11 @@ public class UserFriendsFragment extends ListFragment {
         // group members.
         mLoadMoreButton.setOnClickListener(new OnClickListener() {
 
-            /** Called when the button is clicked.
-              * @param v: The view that was clicked.
-              */
+            /** 
+             * Called when the button is clicked.
+             * 
+             * @param v: The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
@@ -107,7 +117,9 @@ public class UserFriendsFragment extends ListFragment {
         setListAdapter(mAdapter);
     }
 
-    /** This method will be called when an item in the list is selected.
+    /** 
+     * This method will be called when an item in the list is selected.
+     * 
      * @param l The ListView where the click happened.
      * @param v The view that was clicked within the ListView.
      * @param position The position of the view in the list.
@@ -124,7 +136,9 @@ public class UserFriendsFragment extends ListFragment {
             menu.inflate(R.menu.friend_menu);
             menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-                /** Called when a menu item has been invoked.
+                /** 
+                 * Called when a menu item has been invoked.
+                 * 
                  * @param item The menu item that was invoked.
                  * @return Return true to consume this click and prevent others from executing.
                  */
@@ -133,17 +147,17 @@ public class UserFriendsFragment extends ListFragment {
                     switch (item.getItemId()) {
 
                         // Go to SelectMessageContacts.class with the selected user autopopulated.
-                    case R.id.send_message: {
-                        Gson gson = new Gson();
-                        ArrayList<GroupMemberData> selectedUser =
-                            new ArrayList<GroupMemberData>();
-                        selectedUser.add(mMembersList.get(selectedPosition));
-                        String broadcastRecipients = gson.toJson(selectedUser);
-                        Intent intent = new Intent(mParentActivity,
-                                                   SelectMessageContacts.class);
-                        intent.putExtra("broadcastRecipients", broadcastRecipients);
-                        startActivity(intent);
-                    }
+                        case R.id.send_message: {
+                            Gson gson = new Gson();
+                            ArrayList<GroupMemberData> selectedUser =
+                                new ArrayList<GroupMemberData>();
+                            selectedUser.add(mMembersList.get(selectedPosition));
+                            String broadcastRecipients = gson.toJson(selectedUser);
+                            Intent intent = new Intent(mParentActivity,
+                                                       SelectMessageContacts.class);
+                            intent.putExtra("broadcastRecipients", broadcastRecipients);
+                            startActivity(intent);
+                        }
                     }
                     return true;
                 }
@@ -152,11 +166,14 @@ public class UserFriendsFragment extends ListFragment {
         }
     }
 
-    /** Gets a user's friends from the api.
-      */
+    /** 
+     * Gets a user's friends from the api.
+     */
     public class GetUserFriendsTask extends AsyncTask<Void, Void, String> {
 
-        /** Performs a computation on a background thread.
+        /** 
+         * Performs a computation on a background thread.
+         * 
          * @param params The parameters of the task.
          * @return Result of computation.
          */
@@ -165,7 +182,9 @@ public class UserFriendsFragment extends ListFragment {
             return RestApiV1.getUserFriends(mOffset, LIMIT);
         }
 
-        /** Runs on the UI thread after doInBackground(Params...).
+        /** 
+         * Runs on the UI thread after doInBackground(Params...).
+         * 
          * @param result The result of the operation computed by doInBackground(Params...).
          */
         @Override
@@ -201,8 +220,8 @@ public class UserFriendsFragment extends ListFragment {
             }
 
             if (!mEndOfData) {
+                
                 // If we are not at the end of data, show our load more button and increase our offset.
-
                 mLoadMoreButton.setVisibility(View.VISIBLE);
                 mLoadingIndicator.setVisibility(View.GONE);
                 mOffset += groupMembers.size();
