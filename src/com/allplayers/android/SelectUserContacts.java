@@ -25,7 +25,6 @@ import com.google.gson.Gson;
 
 /**
  * Interface to allow a user to select user recipients for a message.
- *
  */
 public class SelectUserContacts extends AllplayersSherlockListActivity {
 
@@ -42,12 +41,11 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     private int mOffset = 0;
 
     /**
-     * Called when the activity is starting. Handles variable initialization, and sets up the
-     * interface.
-     * @param savedInstanceState: If the activity is being re-initialized after previously being
-     * shut down then this Bundle contains the data it most recently supplied in
-     * onSaveInstanceState(Bundle). Otherwise it is null.
+     * Called when the activity is starting.
      *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,9 +82,9 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         mLoadMoreButton.setOnClickListener(new OnClickListener() {
 
             /**
-             * Called when the button is clicked.
+             * Called when a view has been clicked.
+             * 
              * @param v: The view that was clicked.
-             *
              */
             @Override
             public void onClick(View v) {
@@ -107,9 +105,9 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         doneButton.setOnClickListener(new View.OnClickListener() {
 
             /**
-             * Called when the button is clicked.
+             * Called when a view has been clicked.
+             * 
              * @param v: The view that was clicked.
-             *
              */
             @Override
             public void onClick(View v) {
@@ -130,11 +128,11 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
 
     /**
      * This method will be called when an item in the list is selected.
+     * 
      * @param l: The ListView where the click happened.
      * @param v: The view that was clicked within the ListView.
      * @param position: The position of the view in the list.
      * @param id: The row id of the item that was clicked.
-     *
      */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -146,8 +144,7 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     }
 
     /**
-     * Gets a group's members.
-     *
+     * Gets a user's groupmates.
      */
     public class GetUserGroupmatesTask extends AsyncTask<Void, Void, String> {
 
@@ -160,11 +157,13 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         protected void onPostExecute(String jsonResult) {
             jsonResult = jsonResult.replaceAll("firstname", "fname");
             jsonResult = jsonResult.replaceAll("lastname", "lname");
-            GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
+            GroupMembersMap groupmates = new GroupMembersMap(jsonResult);
 
-            if (groupMembers.size() == 0) {
-                // If the newly pulled group members is empty, indicate the end of data.
+            if (groupmates.size() == 0) {
+                
+                // If the newly pulled groupmates list is empty, indicate the end of data.
                 mEndOfData = true;
+                
                 // If the members list is also empty, there are no group members, so add
                 // a blank indicator showing so.
                 if (mMembersList.size() == 0) {
@@ -175,21 +174,24 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
                     mListView.setEnabled(false);
                 }
             } else {
-                // If we pulled less than 10 new members, indicate we are at the end of data.
-                if (groupMembers.size() < LIMIT) {
+                
+                // If we pulled less than 10 new groupmates, indicate we are at the end of data.
+                if (groupmates.size() < LIMIT) {
                     mEndOfData = true;
                 }
 
                 // Add all the new members to our list and update our ListView.
-                mMembersList.addAll(groupMembers.getGroupMemberData());
+                mMembersList.addAll(groupmates.getGroupMemberData());
                 mAdapter.notifyDataSetChanged();
             }
+            
             // If we are not at the end of data, show our load more button and increase our offset.
             if (!mEndOfData) {
                 mLoadMoreButton.setVisibility(View.VISIBLE);
                 mLoadingIndicator.setVisibility(View.GONE);
-                mOffset += groupMembers.size();
-            } else { // If we are at the end of data, remove the load more button.
+                mOffset += groupmates.size();
+            // If we are at the end of data, remove the load more button.
+            } else { 
                 mListView.removeFooterView(mFooter);
             }
         }

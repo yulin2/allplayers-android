@@ -26,7 +26,6 @@ import com.google.gson.Gson;
 
 /**
  * Interface to allow a user to select user recipients for a message.
- *
  */
 public class SelectFriendContacts extends AllplayersSherlockListActivity {
 
@@ -43,23 +42,22 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
     private int mOffset = 0;
 
     /**
-     * Called when the activity is starting. Handles variable initialization, and sets up the
-     * interface.
-     * @param savedInstanceState: If the activity is being re-initialized after previously being
-     * shut down then this Bundle contains the data it most recently supplied in
-     * onSaveInstanceState(Bundle). Otherwise it is null.
+     * Called when the activity is starting.
      *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Set up the page UI
         setContentView(R.layout.selectusercontacts);
 
+        // Set up the ActionBar
         mActionBar.setTitle("Compose Message");
         mActionBar.setSubtitle("Select Individual Recipients");
 
+        // Set up the Side Navigation Menu
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
@@ -85,9 +83,9 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
         mLoadMoreButton.setOnClickListener(new OnClickListener() {
 
             /**
-             * Called when the button is clicked.
+             * Called when a view has been clicked.
+             * 
              * @param v: The view that was clicked.
-             *
              */
             @Override
             public void onClick(View v) {
@@ -108,9 +106,9 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
         doneButton.setOnClickListener(new View.OnClickListener() {
 
             /**
-             * Called when the button is clicked.
+             * Called when a view has been clicked.
+             * 
              * @param v: The view that was clicked.
-             *
              */
             @Override
             public void onClick(View v) {
@@ -128,17 +126,17 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
         });
 
 
-        // Get the first 15 groupmates.
-        new GetUserGroupmatesTask().execute();
+        // Get the first 15 friends.
+        new GetUserFriendsTask().execute();
     }
 
     /**
-     * This method will be called when an item in the list is selected.
+     * This method will be called when an item in the list is selected. 
+     * 
      * @param l: The ListView where the click happened.
      * @param v: The view that was clicked within the ListView.
      * @param position: The position of the view in the list.
      * @param id: The row id of the item that was clicked.
-     *
      */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -150,10 +148,9 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
     }
 
     /**
-     * Gets a group's members.
-     *
+     * Gets a user's friends.
      */
-    public class GetUserGroupmatesTask extends AsyncTask<Void, Void, String> {
+    public class GetUserFriendsTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... args) {
@@ -162,15 +159,15 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
 
         @Override
         protected void onPostExecute(String jsonResult) {
-            Log.d("jsonResult Before Replace", jsonResult);
             jsonResult = jsonResult.replaceAll("firstname", "fname");
             jsonResult = jsonResult.replaceAll("lastname", "lname");
-            Log.d("jsonResult After Replace", jsonResult);
-            GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
+            GroupMembersMap friends = new GroupMembersMap(jsonResult);
 
-            if (groupMembers.size() == 0) {
-                // If the newly pulled group members is empty, indicate the end of data.
+            if (friends.size() == 0) {
+                
+                // If the newly pulled friends list is empty, indicate the end of data.
                 mEndOfData = true;
+                
                 // If the members list is also empty, there are no group members, so add
                 // a blank indicator showing so.
                 if (mMembersList.size() == 0) {
@@ -181,21 +178,25 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
                     mListView.setEnabled(false);
                 }
             } else {
-                // If we pulled less than 10 new members, indicate we are at the end of data.
-                if (groupMembers.size() < LIMIT) {
+                
+                // If we pulled less than 10 new friends, indicate we are at the end of data.
+                if (friends.size() < LIMIT) {
                     mEndOfData = true;
                 }
 
                 // Add all the new members to our list and update our ListView.
-                mMembersList.addAll(groupMembers.getGroupMemberData());
+                mMembersList.addAll(friends.getGroupMemberData());
                 mAdapter.notifyDataSetChanged();
             }
+            
             // If we are not at the end of data, show our load more button and increase our offset.
             if (!mEndOfData) {
                 mLoadMoreButton.setVisibility(View.VISIBLE);
                 mLoadingIndicator.setVisibility(View.GONE);
-                mOffset += groupMembers.size();
-            } else { // If we are at the end of data, remove the load more button.
+                mOffset += friends.size();
+                
+            // If we are at the end of data, remove the load more button.
+            } else { 
                 mListView.removeFooterView(mFooter);
             }
         }
