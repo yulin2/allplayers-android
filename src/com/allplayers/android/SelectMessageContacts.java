@@ -32,15 +32,16 @@ import com.google.gson.Gson;
  * compose the message itself.
  */
 public class SelectMessageContacts extends AllplayersSherlockListActivity {
-    private ArrayList<GroupMemberData> mRecipientList = new ArrayList<GroupMemberData>();
+    
     private ArrayAdapter<String> mAdapter;
+    private ArrayList<GroupMemberData> mRecipientList = new ArrayList<GroupMemberData>();
 
     /**
-     * Called when the activity is created or recreated. This sets up the action bar, side
-     * navigation interface, and page UI. It also controls the flow of data between the message
-     * composition activities.
+     * Called when the activity is starting.
      *
-     * @param savedInstanceState: Passes data from other instances of the same activity.
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle icicle) {
@@ -61,32 +62,51 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         }
         setContentView(R.layout.selectmessagecontacts);
 
+        // Set up the ActionBar.
         mActionBar.setTitle("Compose Messsage");
         mActionBar.setSubtitle("Recipients");
 
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
+        // Set up the page's ListView
         setListAdapter(mAdapter);
 
         getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+            
+            /**
+             * Callback method to be invoked when an item in this view has been clicked and held.
+             * 
+             * @param parent The AbsListView where the click happened.
+             * @param view The view within the AbsListView that was clicked.
+             * @param position The position of the view in the list.
+             * @param id The row id of the item that was clicked.
+             * @return Returns true if the callback consumed the long click, false otherwise.
+             */
             @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long arg3) {
                 PopupMenu menu = new PopupMenu(SelectMessageContacts.this, view);
                 menu.inflate(R.menu.message_recipient_menu);
                 menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                    
+                    /**
+                     * Called when a menu item has been invoked. This is the first code that is
+                     * executed; if it returns true, no other callbacks will be executed.
+                     * 
+                     * @param item The menu item that was invoked.
+                     * @return Return true to consume this click and prevent others from executing.
+                     */
                     @Override
-                    public boolean onMenuItemClick(android.view.MenuItem arg0) {
-                        switch (arg0.getItemId()) {
-                        case R.id.removeRecipient:
-                            mAdapter.remove(mAdapter.getItem(position));
-                            mRecipientList.remove(position);
-                            break;
-                        case R.id.cancel:
-                        }
-                        for (int i = 0; i < mAdapter.getCount(); i++) {
+                    public boolean onMenuItemClick(android.view.MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.removeRecipient:
+                                mAdapter.remove(mAdapter.getItem(position));
+                                mRecipientList.remove(position);
+                                break;
+                            case R.id.cancel:
                         }
                         return true;
                     }
@@ -99,6 +119,12 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         // "Add User Recipient" button.
         final Button addUserRecipientButton = (Button)findViewById(R.id.addGroupmatesRecipientButton);
         addUserRecipientButton.setOnClickListener(new View.OnClickListener() {
+            
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v: The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectUserContacts.class);
@@ -109,6 +135,12 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         // "Add Friend Recipient" button.
         final Button addGroupRecipientButton = (Button)findViewById(R.id.addFriendsRecipientButton);
         addGroupRecipientButton.setOnClickListener(new View.OnClickListener() {
+            
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v: The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SelectMessageContacts.this, SelectFriendContacts.class);
@@ -119,6 +151,12 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         // "Compose Message" button.
         final Button composeMessageButton = (Button)findViewById(R.id.composeMessageButton);
         composeMessageButton.setOnClickListener(new View.OnClickListener() {
+            
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v: The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 if (!mRecipientList.isEmpty()) {
@@ -134,6 +172,19 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         });
     }
 
+    /**
+     * Called when an activity you launched exits, giving you the requestCode you started it with,
+     * the resultCode it returned, and any additional data from it. The resultCode will be
+     * RESULT_CANCELED if the activity explicitly returned that, didn't return any result, or
+     * crashed during its operation.
+     * 
+     * @param requestCode The integer request code originally supplied to startActivityForResult(),
+     * allowing you to identify who this result came from.
+     * @param resultCode The integer result code returned by the child activity through its
+     * setResult().
+     * @param data An Intent, which can return result data to the caller (various data can be
+     * attached to Intent "extras").
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -145,6 +196,13 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         }
     }
 
+    /**
+     * Called to retrieve per-instance state from an activity before being killed so that the state
+     * can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle) (the Bundle populated
+     * by this method will be passed to both).
+     * 
+     * @param icicle Bundle in which to place your saved state.
+     */
     @Override
     protected void onSaveInstanceState(Bundle icicle) {
         super.onSaveInstanceState(icicle);
@@ -153,6 +211,11 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         icicle.putString("currentRecipients", currentRecipients);
     }
 
+    /**
+     * Adds recipients to an ArrayList directly from a json string returned by the API.
+     * 
+     * @param json The recipients to be added to the ArrayList in the form of a json string.
+     */
     public void addRecipientsToList(String json) {
         try {
             int previousSize = mRecipientList.size();
@@ -180,7 +243,20 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         }
     }
 
+    /**
+     * Compares names.
+     */
     public class NameComparator implements Comparator<String> {
+        
+        /**
+         * Compares its two arguments for order. Returns a negative integer, zero, or a positive
+         * integer as the first argument is less than, equal to, or greater than the second.
+         * 
+         * @param lhs First object to compare.
+         * @param rhs Second object to compare.
+         * @return A negative integer, zero, or a positive integer as the first argument is less
+         * than, equal to, or greater than the second.
+         */
         @Override
         public int compare(String lhs, String rhs) {
             int spaceIndex1 = lhs.lastIndexOf(' ');
@@ -191,13 +267,24 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         }
     }
 
+    /**
+     * Conpares recipients.
+     */
     public class RecipientComparator implements Comparator<Object> {
 
+        /**
+         * Compares its two arguments for order. Returns a negative integer, zero, or a positive
+         * integer as the first argument is less than, equal to, or greater than the second.
+         * 
+         * @param lhs First object to compare.
+         * @param rhs Second object to compare.
+         * @return A negative integer, zero, or a positive integer as the first argument is less
+         * than, equal to, or greater than the second.
+         */
         @Override
         public int compare(Object lhs, Object rhs) {
             NameComparator comp = new NameComparator();
             return comp.compare(((GroupMemberData) lhs).getName(), ((GroupMemberData) rhs).getName());
         }
-
     }
 }
