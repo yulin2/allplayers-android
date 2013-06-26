@@ -8,7 +8,7 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 /**
- * Activity made to display EventFragment.java.
+ * Base activity to hold EventsFragment.
  */
 public class EventsActivity extends AllplayersSherlockFragmentActivity {
 
@@ -33,8 +33,7 @@ public class EventsActivity extends AllplayersSherlockFragmentActivity {
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
     }
-    
-    
+       
     /**
      * Called when the activity has detected the user's press of the back key. The default
      * implementation simply finishes the current activity, but you can override this to do whatever

@@ -20,25 +20,28 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
  */
 public class ContactsActivity extends AllplayersSherlockFragmentActivity {
     
+    // Tabs used for navigation between the contacts fragments.
     private Tab mFriendsTab;
     private Tab mGroupmatesTab;
     private Tab mFamilyTab;
     
-    /** 
-     * Called when the activity is first created.
-     * 
-     * @param savedInstanceState: Saved data from the last instance of the activity.
+    /**
+     * Called when the activity is starting.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        // Set up the action bar (inherited from AllplayersSherlockFragmentActivity).
+        // Set up the ActionBar.
         mActionBar.setTitle("Contacts");
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        // Set up the side navigation menu (inherited from AllplayersSherlockFragmentActivity).
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
@@ -62,7 +65,10 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
     }
 
     /**
-     * Listener for the Action Bar Options Menu.
+     * This hook is called whenever an item in your options menu is selected. The default
+     * implementation simply returns false to have the normal processing happen (calling the item's
+     * Runnable or sending a message to its Handler as appropriate). You can use this method for any
+     * items for which you would like to do processing without those other facilities.
      *
      * @param item: The selected menu item.
      */
@@ -71,18 +77,20 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
 
         switch (item.getItemId()) {
 
-        case android.R.id.home: {
-            mSideNavigationView.toggleMenu();
-            return true;
-        }
-
-        default:
-            return super.onOptionsItemSelected(item);
+            case android.R.id.home: {
+                mSideNavigationView.toggleMenu();
+                return true;
+            }
+    
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
-    /** 
-     * Called when the activity has detected the user's press of the back key.
+    /**
+     * Called when the activity has detected the user's press of the back key. The default
+     * implementation simply finishes the current activity, but you can override this to do whatever
+     * you want.
      */
     @Override
     public void onBackPressed() {
@@ -91,24 +99,26 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
         moveTaskToBack(true);
     }
 
+    /**
+     * Custom tab listener used for navigation between the contacts fragments.
+     */
     public static class ContactsTabListener<T extends Fragment> implements TabListener {
-        private final Activity mActivity;
-        private final Class<T> mClass;
-        private final String mTag;
-        
+        private final Activity mHostingActivity;
+        private final Class<T> mFragmentClass;
         private Fragment mFragment;
-
+        private final String mFragmentTag;
+        
         /** 
          * Constructor used each time a new tab is created.
          * 
-         * @param activity  The host Activity, used to instantiate the fragment
-         * @param tag  The identifier tag for the fragment
-         * @param clz  The fragment's Class, used to instantiate the fragment
+         * @param activity  The host Activity, used to instantiate the fragment.
+         * @param tag  The identifier tag for the fragment.
+         * @param fragmentClass  The fragment's Class, used to instantiate the fragment.
          */
-        public ContactsTabListener(Activity activity, String tag, Class<T> clz) {
-            mActivity = activity;
-            mTag = tag;
-            mClass = clz;
+        public ContactsTabListener(Activity activity, String tag, Class<T> fragmentClass) {
+            mHostingActivity = activity;
+            mFragmentTag = tag;
+            mFragmentClass = fragmentClass;
         }
 
         /**
@@ -125,8 +135,8 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
             // Check if the fragment is already initialized. If not, instantiate and add it to the
             // activity. If it exists, simply attach it in order to show it.
             if (mFragment == null) {
-                mFragment = Fragment.instantiate(mActivity, mClass.getName());
-                ft.add(R.id.container, mFragment, mTag);
+                mFragment = Fragment.instantiate(mHostingActivity, mFragmentClass.getName());
+                ft.add(R.id.container, mFragment, mFragmentTag);
             } else {
                 ft.attach(mFragment);
             }
@@ -145,7 +155,7 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
         public void onTabUnselected(Tab tab, FragmentTransaction ft) {
             if (mFragment != null) {
                 
-                // Detach the fragment, because another one is being attached
+                // Detach the fragment, because another one is being attached.
                 ft.detach(mFragment);
             }
         }
@@ -159,7 +169,7 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
          */
         @Override
         public void onTabReselected(Tab tab, FragmentTransaction ft) {
-            // UNUSED
+            // Not being used, but it has to be here.
         }
     }
 }

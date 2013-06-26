@@ -19,24 +19,24 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 /**
- * Displays GroupsFragment.java.
+ * Base activity to hold GroupsFragment.
  */
 public class GroupsActivity extends AllplayersSherlockFragmentActivity {
+    
+    // Variables for sort type spinner.
     private SpinnerAdapter mSpinnerAdapter;
     private String mSortType = "radioactive";
 
     /**
-     * Called when the activity is first created, this creates the Action Bar
-     * and sets up the Side Navigation Menu.
+     * Called when the activity is starting.
      *
-     * @param savedInstanceState: Saved data from the last instance of the
-     *            activity.
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.groups);
 
         // Create the fragment for our groups list and give it the default sort type.
@@ -105,7 +105,7 @@ public class GroupsActivity extends AllplayersSherlockFragmentActivity {
              */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Pretty useless to us... but it has to be here.
+                // Not being used, but it has to be here.
             }
         });
 
