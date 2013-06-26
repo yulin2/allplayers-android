@@ -13,19 +13,29 @@ import com.allplayers.objects.MessageThreadData;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
+/**
+ * Displays the content of a message.
+ */
 public class MessageViewSingle extends AllplayersSherlockActivity {
 
-    /** called when the activity is first created. */
+    /**
+     * Called when the activity is starting.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.viewsinglemessage);
 
+        // Grab the message from the intent.
         Router router = new Router(this);
         MessageThreadData messageThreadList = router.getIntentMessageThread();
         final MessageData message = router.getIntentMessage();
 
+        // Populate the fields.
         String subject = messageThreadList.getSubject();
         String sender = messageThreadList.getSenderName();
         String date = messageThreadList.getDateString();
@@ -48,6 +58,7 @@ public class MessageViewSingle extends AllplayersSherlockActivity {
         bodyText.setText(body);
         bodyText.setMovementMethod(LinkMovementMethod.getInstance());
 
+        // Setup the reply button
         final Button replyButton = (Button)findViewById(R.id.replyButton);
 
         replyButton.setOnClickListener(new View.OnClickListener() {
@@ -57,9 +68,11 @@ public class MessageViewSingle extends AllplayersSherlockActivity {
             }
         });
 
+        // Set up the ActionBar.
         mActionBar.setTitle("Messages");
         mActionBar.setSubtitle("Message From: " + messageThreadList.getSenderName());
 
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
