@@ -53,9 +53,16 @@ public class NewAccountActivity extends Activity {
     String mApiCaptchaResponse;
     String mGeneratedCaptchaProblem;
     String mGeneratedCaptchaResponse;
-    String mGender;
+    String mGender = "U";
     String mBirthDate;
 
+    /**
+     * Called when the activity is starting.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +74,7 @@ public class NewAccountActivity extends Activity {
         // API works.
         setCaptcha();
 
+        // Get a handle on all of the page elements in the XML.
         mFirstNameEditText = (EditText)findViewById(R.id.edit_first_name);
         mLastNameEditText = (EditText)findViewById(R.id.edit_last_name);
         mEmailEditText = (EditText)findViewById(R.id.edit_email);
@@ -80,6 +88,7 @@ public class NewAccountActivity extends Activity {
         mCaptchaEditText = (EditText)findViewById(R.id.captcha_answer);
         mSubmit = (Button)findViewById(R.id.submit);
 
+        // Set up an AccaountRegistrationTask.
         registration = new AccountRegistrationTask();
 
         // Setup the text view for the captcha.
@@ -91,11 +100,21 @@ public class NewAccountActivity extends Activity {
         mGenderSpinner.setAdapter(adapter);
         mGenderSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
+            /**
+             * Callback method to be invoked when an item in this view has been selected. This
+             * callback is invoked only when the newly selected position is different from the
+             * previously selected position or if there was no selected item.
+             * 
+             * @param parent The AdapterView where the selection happened.
+             * @param view The view within the AdapterView that was clicked.
+             * @param position The position of the view in the adapter.
+             * @param id The row id of the item that is selected.
+             */
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 switch (pos) {
                 case 0:
-                        mGender = "U";
+                    mGender = "U";
                     break;
                 case 1:
                     mGender = "M";
@@ -105,12 +124,18 @@ public class NewAccountActivity extends Activity {
                 }
             }
 
+            /**
+             * Callback method to be invoked when the selection disappears from this view. The
+             * selection can disappear for instance when touch is activated or when the adapter
+             * becomes empty.
+             * 
+             * @param parent The AdapterView that now contains no selected item.
+             */
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
                 // Do nothing
             }
         });
-        mGender = "U";
 
         // Set up the birth date picker. Max date can only be set in API 11 and up. We will check
         // later to make sure the date isn't set into the future.
@@ -119,16 +144,19 @@ public class NewAccountActivity extends Activity {
             mDatePicker.setMaxDate(Calendar.getInstance().getTimeInMillis());
         }
 
-
         // Set up the submit button.
         mSubmit.setOnClickListener(new View.OnClickListener() {
 
+            /**
+             * Called when a view has been clicked.
+             *
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
 
                 // Set to true if any of the fields are incorrect.
                 boolean errorOccured = false;
-
 
                 // Make sure error messages are gone. They will be reinstated if necesary later in
                 // this method.
@@ -181,7 +209,7 @@ public class NewAccountActivity extends Activity {
                 // picker in API11 and up.
                 if (dob.after(now)) {
                     errorOccured = true;
-                    Toast.makeText(NewAccountActivity.this, "I'm sorry, but I don't think that it's possible to be born in the future", Toast.LENGTH_LONG).show();
+                    Toast.makeText(NewAccountActivity.this, "I'm sorry, but you have entered a date in the future.", Toast.LENGTH_LONG).show();
                 }
                 int year1 = now.get(Calendar.YEAR);
                 int year2 = dob.get(Calendar.YEAR);
@@ -278,10 +306,8 @@ public class NewAccountActivity extends Activity {
     }
 
     /**
-     * setCaptcha().
      * Creates a captcha problem and solution and assigns the resulting values to the class
      * variables mGeneratedCaptchaProblem and mGeneratedCaptchaAnswer.
-     *
      */
     private void setCaptcha() {
         int num1;
@@ -303,7 +329,6 @@ public class NewAccountActivity extends Activity {
     }
 
     /**
-     * passwordMatchesCriteria().
      * Checks if the user entered password matches the criteria required for a password.
      *    Password must contain at least one letter.
      *    Password must be at least 6 characters in length.
@@ -313,7 +338,6 @@ public class NewAccountActivity extends Activity {
      *
      * @param pass: The password to check for the correct criteria.
      * @return Whether or not the passed password meets the requirements.
-     *
      */
     private boolean passwordMatchesCriteria(String pass) {
         boolean hasLower = false;
@@ -362,10 +386,8 @@ public class NewAccountActivity extends Activity {
     }
 
     /**
-     * onAccountCreateSuccess().
      * Called when an account is successfully created. Handles sending the data to the login page
      * and starting that activity.
-     *
      */
     private void onAccountCreateSuccess() {
         Log.d("Registration Status", "Account successfuly registered.");
@@ -376,25 +398,20 @@ public class NewAccountActivity extends Activity {
     }
 
     /**
-     * firstNameError().
      * Called if there is an error with the entered firstName. Will mark it as an errored field.
-     *
      */
     private void firstNameError() {
         mFirstNameEditText.setError("This field cannot be left blank.");
     }
 
     /**
-     * lastNameError().
      * Called if there is an error with the entered lastName. Will mark it as an errored field.
-     *
      */
     private void lastNameError() {
         mLastNameEditText.setError("This field cannot be left blank.");
     }
 
     /**
-     * emailError().
      * Called if there is an error with the entered email. Will mark it as an errored field.
      *
      * @param errorType: The type of error on the field.
@@ -402,7 +419,6 @@ public class NewAccountActivity extends Activity {
      *          1: Email field left blank.
      *          2: Not a valid email address.
      *          3: Email address already in use.
-     *
      */
     private void emailError(int errorType) {
         switch (errorType) {
@@ -421,16 +437,13 @@ public class NewAccountActivity extends Activity {
     }
 
     /**
-     * birthDateError().
      * If there is an error with the birth date (registrant age < 13), display the error message.
-     *
      */
     private void birthDateError() {
         mDatePickerError.setVisibility(TextView.VISIBLE);
     }
 
     /**
-     * passwordError().
      * Called if there is an error with the entered password. Will mark it as an errored field.
      *
      * @param errorType: The type of error on the field.
@@ -438,7 +451,6 @@ public class NewAccountActivity extends Activity {
      *          1: Password field left blank.
      *          2: Password and verify password don't match.
      *          3: Password is not valid.
-     *
      */
     private void passwordError(int errorType) {
         mPasswordEditText.setText("");
@@ -463,7 +475,6 @@ public class NewAccountActivity extends Activity {
     }
 
     /**
-     * verifyPasswordError().
      * Called if there is an error with the entered password. Will mark it as an errored field.
      *
      * @param errorType: The type of error on the field.
@@ -471,7 +482,6 @@ public class NewAccountActivity extends Activity {
      *          1: Password field left blank.
      *          2: Password and verify password don't match.
      *          3: Password is not valid.
-     *
      */
     private void verifyPasswordError(int errorType) {
         mPasswordEditText.setText("");
@@ -496,21 +506,19 @@ public class NewAccountActivity extends Activity {
     }
 
     /**
-     *
+     * Called if there is an error with the entered Gender. Will mark the spinner with an error.
      */
     private void genderError() {
         mGenderSpinnerError.setVisibility(TextView.VISIBLE);
     }
 
     /**
-     * captchaError().
      * Called if there is an error with the entered captcha. Will mark it as an errored field.
      *
      * @param errorType: The type of error on the field.
      *      Acceptable Values:
      *          1: Captcha field left blank.
      *          2: Captcha incorrect.
-     *
      */
     private void captchaError(int errorType) {
         mCaptchaEditText.setText("");
@@ -532,7 +540,6 @@ public class NewAccountActivity extends Activity {
     public class AccountRegistrationTask extends AsyncTask<String, Void, String> {
 
         /**
-         * doInBackground().
          * Performs a computation on a background thread. In this case, makes an API call.
          *
          * @param signupInformation: The necessary information for a user to register an account.
@@ -544,7 +551,7 @@ public class NewAccountActivity extends Activity {
          *  [5]: password
          *  [6]: captcha token
          *  [7]: captcha response
-         *
+         *  @return The result of the API call.
          */
         @Override
         protected String doInBackground(String... signupInformation) {
@@ -556,6 +563,12 @@ public class NewAccountActivity extends Activity {
             return jsonResult;
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param jsonResult The result of the API call.
+         */
         @Override
         protected void onPostExecute(String jsonResult) {
             try {
@@ -612,23 +625,19 @@ public class NewAccountActivity extends Activity {
     }
 
     /**
-     * GetNewCaptchaTask.
      * Sends a blank registration form through the API to recieve a new captcha. This needs to be
      * done at the beginning of registration and then every time that there is a form error caught
      * by the server (this should never happen because we check all of the registration conditions
      * locally).
-     *
      */
     public class GetNewCaptchaTask extends AsyncTask<Void, Void, String> {
 
         /**
-         * doInBackground().
          * Send a blank registration form with no headers through the API. This will get us a fresh
          * captcha to solve.
          *
          * @param arg0: An array of nothing.
          * @return: The response from the API call.
-         *
          */
         @Override
         protected String doInBackground(Void... arg0) {
@@ -639,13 +648,11 @@ public class NewAccountActivity extends Activity {
         }
 
         /**
-         * onPoseExecute().
          * Take the result from the API call and if it is a "captcha_error" (which it always should
          * be), parse out the math problem and captcha token, solve the math problem, and save the
          * token and math problem answer to be sent with the next API call.
          *
          * @param jsonResult: The result of the API call made in doInBackground().
-         *
          */
         @Override
         protected void onPostExecute(String jsonResult) {
