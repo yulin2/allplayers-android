@@ -41,7 +41,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
 
     private GroupData mGroup;
     private ArrayList<GroupMemberData> mMembersList;
-    private boolean isAdmin = false, isMember = false, isLoggedIn = false;
+    private boolean isMember = false, isLoggedIn = false;
     private ProgressBar mProgressBar;
     private AllplayersSherlockActivity mParentActivity = this;
     Menu mAdminMenu;
