@@ -14,25 +14,37 @@ import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
+/**
+ * Activity for the user to use to reply to a message.
+ */
 public class MessageReply extends AllplayersSherlockActivity {
-    private String mThreadId;
+    
     private String mMessageBody;
-
-    /** called when the activity is first created. */
+    private String mThreadId;
+   
+    /**
+     * Called when the activity is starting.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.replymessage);
 
+        // Set up the ActionBar
         mActionBar.setTitle("Messages");
         mActionBar.setSubtitle("Reply");
 
+        // Set up the Side Navigation Menu
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
+        // Get the message information
         MessageData message = (new Router(this)).getIntentMessage();
 
         String subject = message.getSubject();
@@ -40,6 +52,7 @@ public class MessageReply extends AllplayersSherlockActivity {
         String date = message.getDateString();
         mThreadId = message.getThreadID();
 
+        // Setup the message information on the page.
         final TextView subjectText = (TextView)findViewById(R.id.subjectText);
         subjectText.setText(subject);
 
@@ -49,10 +62,11 @@ public class MessageReply extends AllplayersSherlockActivity {
         final TextView dateText = (TextView)findViewById(R.id.dateText);
         dateText.setText("Last Message: " + date);
 
-
+        // Set up the editable body text field.
         final EditText bodyField = (EditText)findViewById(R.id.bodyField);
         bodyField.setText("");
 
+        // Set up the send button.
         final Button sendButton = (Button)findViewById(R.id.sendButton);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -69,12 +83,16 @@ public class MessageReply extends AllplayersSherlockActivity {
         });
     }
 
-    /*
-     * Posts a user's message using a rest call.
-     * It was necessary to use an "Object" due to the fact that you cannot pass
-     *      variables of different type into doIbBackground.
+    /**
+     * Posts a user's message.
      */
     public class PostMessageTask extends AsyncTask<Object, Void, Void> {
+        
+        /**
+         * Performs a calculation on the background thread. Sends the composed message.
+         * 
+         * @return The result of the API call.
+         */
         protected Void doInBackground(Object... args) {
             RestApiV1.postMessage((Integer)args[0], (String)args[1]);
             return null;
