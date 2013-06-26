@@ -50,13 +50,13 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Set up the page UI
         setContentView(R.layout.selectusercontacts);
 
+        // Set up the ActionBar
         mActionBar.setTitle("Compose Message");
         mActionBar.setSubtitle("Select Individual Recipients");
 
+        // Set up the Side Navigation Menu
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);

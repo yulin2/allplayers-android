@@ -91,7 +91,7 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetUserGroupmatesTask().execute();
+                new GetUserFriendsTask().execute();
             }
         });
 
