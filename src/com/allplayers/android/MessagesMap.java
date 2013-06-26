@@ -11,7 +11,7 @@ import com.allplayers.objects.MessageData;
 import com.google.gson.Gson;
 
 /**
- * Custom ArrayList used to hold AlbumData.
+ * Custom ArrayList used to hold MessageData.
  */
 public class MessagesMap {
     private ArrayList<MessageData> mMessageList = new ArrayList<MessageData>();
