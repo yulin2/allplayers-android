@@ -43,9 +43,9 @@ public class AlbumsMap {
     }
 
     /**
-     * Returns an ArrayList of the API result.
+     * Returns the ArrayList of AlbumData.
      *
-     * @return An ArrayList of the API result.
+     * @return The ArrayList of AlbumData.
      */
     public ArrayList<AlbumData> getAlbumData() {
         return albums;

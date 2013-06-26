@@ -6,13 +6,22 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.allplayers.objects.AlbumData;
 import com.allplayers.objects.MessageData;
 import com.google.gson.Gson;
 
+/**
+ * Custom ArrayList used to hold AlbumData.
+ */
 public class MessagesMap {
     private ArrayList<MessageData> mMessageList = new ArrayList<MessageData>();
     private String[] mNames;
 
+    /**
+     * Constructor.
+     * 
+     * @param jsonResult Result from API call. Used directly to populate the ArrayList.
+     */
     public MessagesMap(String jsonResult) {
         Gson gson = new Gson();
 
@@ -35,6 +44,12 @@ public class MessagesMap {
         }
     }
 
+    /**
+     * Returns all of the name values in the passed in JSONObject.
+     * 
+     * @param jo The JSONObject to be searched for names to return.
+     * @return All of the name values in the passed in JSONObject.
+     */
     private static String[] getNames(JSONObject jo) {
         int length = jo.length();
 
@@ -53,10 +68,20 @@ public class MessagesMap {
         return names;
     }
 
+    /**
+     * Returns the ArrayList of MessageData. 
+     * 
+     * @return The ArrayList of MessageData.
+     */
     public ArrayList<MessageData> getMessageData() {
         return mMessageList;
     }
 
+    /**
+     * Returns the size of the ArrayList of MessageData.
+     * 
+     * @return The size of the ArrayList of MessageData.
+     */
     public int size() {
         return mMessageList.size();
     }
