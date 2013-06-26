@@ -8,9 +8,17 @@ import org.json.JSONException;
 import com.allplayers.objects.PhotoData;
 import com.google.gson.Gson;
 
+/**
+ * Custom ArrayList used to hold PhotoData.
+ */
 public class PhotosMap {
     private ArrayList<PhotoData> mPhotosList = new ArrayList<PhotoData>();
 
+    /**
+     * Constructor.
+     * 
+     * @param jsonResult Result from API call. Used directly to populate the ArrayList.
+     */
     public PhotosMap(String jsonResult) {
         if (!jsonResult.equals("false")) {
             try {
@@ -43,6 +51,11 @@ public class PhotosMap {
         }
     }
 
+    /**
+     * Returns the ArrayList of PhotoData. 
+     * 
+     * @return The ArrayList of PhotoData.
+     */
     public ArrayList<PhotoData> getPhotoData() {
         return mPhotosList;
     }
