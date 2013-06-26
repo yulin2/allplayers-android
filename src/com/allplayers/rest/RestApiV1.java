@@ -149,8 +149,8 @@ public class RestApiV1 {
      * @return The response after making the API call.
      */
     public static String createNewUser(String firstName, String lastName,
-                                       String email, String gender, String birthday, String password,
-                                       String capToken, String capResponse) {
+                                       String email, String gender, String birthday, 
+                                       String password, String capToken, String capResponse) {
 
         String[][] contents = new String[6][2];
 
@@ -182,6 +182,13 @@ public class RestApiV1 {
                                        capToken, capResponse);
     }
 
+    /**
+     * Log-in to the API.
+     * 
+     * @param username The user's entered username (or email).
+     * @param password The user's entered password.
+     * @return The response after making the API call.
+     */
     public String validateLogin(String username, String password) {
         String[][] contents = new String[2][2];
         contents[0][0] = "username";
