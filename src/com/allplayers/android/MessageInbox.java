@@ -27,42 +27,46 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
 /**
- * MessageInbox.
  * User's messages inbox.
- *
  */
 public class MessageInbox extends AllplayersSherlockActivity {
 
-    private final int LIMIT = 15;
     private ArrayList<MessageData> mMessageList;
     private Button mLoadMoreButton;
     private ListView mListView;
     private MessageAdapter mMessageListAdapter;
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
+    
+    private final int LIMIT = 15;
     private boolean mEndOfData;
     private int mOffset;
-
+    
     /**
-     * onCreate().
-     * Called when the activity is first created.
+     * Called when the activity is starting.
      *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inboxlist);
 
+        // Set up the Actionbar.
         mActionBar = getSupportActionBar();
         mActionBar.setIcon(R.drawable.menu_icon);
         mActionBar.setTitle("Messages");
         mActionBar.setSubtitle("Inbox");
 
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
+        // Variable initialization.
         mMessageList = new ArrayList<MessageData>();
         mListView = (ListView) findViewById(R.id.customListView);
         mMessageListAdapter = new MessageAdapter(MessageInbox.this, mMessageList);
@@ -72,6 +76,12 @@ public class MessageInbox extends AllplayersSherlockActivity {
 
         // Set up the "load more" button.
         mLoadMoreButton.setOnClickListener(new OnClickListener() {
+            
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that was clicked.
+             */
             @Override
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
@@ -86,7 +96,16 @@ public class MessageInbox extends AllplayersSherlockActivity {
 
         // Check for a user clicking on a list item
         mListView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+            
+            /**
+             * Callback method to be invoked when an item in this AdapterView has been clicked.
+             * 
+             * @param parent The adapter view where the click happened.
+             * @param view The view within the AdapterView that was clicked.
+             * @param position The position of the view in the adapter.
+             * @param id The row id of the item that was clicked.
+             */
+            public void onItemClick(AdapterView<?> parent, View view, int position, long index) {
 
                 Intent intent = (new Router(MessageInbox.this)).getMessageThreadIntent(mMessageList.get(position));
                 startActivity(intent);
@@ -95,8 +114,17 @@ public class MessageInbox extends AllplayersSherlockActivity {
 
         // Check for a user long clicking on a list item
         mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+            
+            /**
+             * Callback method to be invoked when an item in this view has been clicked and held.
+             * 
+             * @param parent The adapter view where the click happened.
+             * @param view The view within the AdapterView that was clicked.
+             * @param position The position of the view in the adapter.
+             * @param id The row id of the item that was clicked.
+             */
             @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long arg3) {
                 PopupMenu menu = new PopupMenu(getBaseContext(), view);
                 menu.inflate(R.menu.message_thread_menu);
                 menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -120,16 +148,14 @@ public class MessageInbox extends AllplayersSherlockActivity {
     }
 
     /**
-     * GetUserInboxTask.
      * Fetches the user's message inbox asynchronously.
-     *
      */
     public class GetUserInboxTask extends AsyncTask<Void, Void, String> {
 
         /**
-         * doInBackground().
-         * Fetch the user's message inbox.
-         *
+         * Performs a computation on a background thread. Fetches the user's message inbox.
+         * 
+         * @return The result of the API call.
          */
         @Override
         protected String doInBackground(Void... Args) {
@@ -137,11 +163,10 @@ public class MessageInbox extends AllplayersSherlockActivity {
         }
 
         /**
-         * onPostExecute().
-         * Take the JSON result from fetching the user's inbox and make it into useful data.
-         *
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
          * @param jsonResult: Result of fetching the user's inbox.
-         *
          */
         @Override
         protected void onPostExecute(String jsonResult) {
@@ -189,19 +214,41 @@ public class MessageInbox extends AllplayersSherlockActivity {
         }
     }
 
+    /**
+     * Deletes a message thread from the inbox.
+     * 
+     * TODO Currently there is an issue in the API where individual message deletion has some
+     * unwanted effects, these need to be fixed before single message deletion can be implemented.
+     */
     public class DeleteMessageTask extends AsyncTask<Void, Void, String> {
         private int position;
 
+        /**
+         * Constructor.
+         * 
+         * @param i The position of the message to be deleted in the array list of messages.
+         */
         public DeleteMessageTask(int i) {
             setProgressBarIndeterminateVisibility(true);
             position = i;
         }
 
+        /**
+         * Performs a calculation on the background thread. Deletes a message thread.
+         * 
+         * @return The result of the API call.
+         */
         @Override
         protected String doInBackground(Void... params) {
             return RestApiV1.deleteMessage(mMessageList.get(position).getId(), "thread");
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param jsonResult: Result of fetching the user's inbox.
+         */
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("done")) {
