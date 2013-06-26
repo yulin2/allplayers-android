@@ -26,7 +26,6 @@ import com.google.gson.Gson;
 
 /**
  * Interface to allow a user to select group recipients for a message.
- *
  */
 public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
@@ -54,13 +53,13 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Set up the page UI
         setContentView(R.layout.selectgroupcontacts);
 
+        // Set up the ActionBar.
         mActionBar.setTitle("Compose Message");
         mActionBar.setSubtitle("Select Group Recipients");
 
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
@@ -87,9 +86,9 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         mLoadMoreButton.setOnClickListener(new OnClickListener() {
 
             /**
-             * Called when the button is clicked.
+             * Called when a view has been clicked.
+             * 
              * @param v: The view that was clicked.
-             *
              */
             @Override
             public void onClick(View v) {
@@ -110,9 +109,9 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         doneButton.setOnClickListener(new View.OnClickListener() {
 
             /**
-             * Called when the button is clicked.
+             * Called when a view has been clicked.
+             * 
              * @param v: The view that was clicked.
-             *
              */
             @SuppressWarnings("unchecked")
             @Override
@@ -136,11 +135,11 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
     /**
      * This method will be called when an item in the list is selected.
+     * 
      * @param l: The ListView where the click happened.
      * @param v: The view that was clicked within the ListView.
      * @param position: The position of the view in the list.
      * @param id: The row id of the item that was clicked.
-     *
      */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -153,22 +152,34 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
     /**
      * Gets a user's groups.
-     *
      */
     public class GetUserGroupsTask extends AsyncTask<Void, Void, String> {
 
+        /**
+         * Performs a computation on a background thread.
+         * 
+         * @return Result of the API call. 
+         */
         @Override
         protected String doInBackground(Void... args) {
             return RestApiV1.getUserGroups(mOffset, LIMIT, "alphabetical_ascending");
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param jsonResult Result of the API call.
+         */
         @Override
         protected void onPostExecute(String jsonResult) {
             GroupsMap groups = new GroupsMap(jsonResult);
 
             if (groups.size() == 0) {
+                
                 // If the newly pulled group members is empty, indicate the end of data.
                 mEndOfData = true;
+                
                 // If the members list is also empty, there are no group members, so add
                 // a blank indicator showing so.
                 if (mGroupsList.size() == 0) {
@@ -179,6 +190,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
                     mListView.setEnabled(false);
                 }
             } else {
+                
                 // If we pulled less than 10 new members, indicate we are at the end of data.
                 if (groups.size() < LIMIT) {
                     mEndOfData = true;
@@ -188,22 +200,30 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
                 mGroupsList.addAll(groups.getGroupData());
                 mAdapter.notifyDataSetChanged();
             }
+            
             // If we are not at the end of data, show our load more button and increase our offset.
             if (!mEndOfData) {
                 mLoadMoreButton.setVisibility(View.VISIBLE);
                 mLoadingIndicator.setVisibility(View.GONE);
                 mOffset += groups.size();
-            } else { // If we are at the end of data, remove the load more button.
+                
+            // If we are at the end of data, remove the load more button.
+            } else {
                 mListView.removeFooterView(mFooter);
             }
         }
     }
 
-    /*
-     * Gets a group's members using a rest call.
+    /**
+     * Gets a group's members.
      */
     public class GetGroupMembersByGroupIdTask extends AsyncTask<ArrayList<GroupData>, Void, String> {
 
+        /**
+         * Performs a computation on a background thread.
+         * 
+         * @return Result of the API call. 
+         */
         @Override
         protected String doInBackground(ArrayList<GroupData>... groups) {
             String jsonResult = new String();
@@ -213,6 +233,12 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             return jsonResult;
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param jsonResult Result of the API call.
+         */
         @Override
         protected void onPostExecute(String jsonResult) {
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);

@@ -52,11 +52,11 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selectusercontacts);
 
-        // Set up the ActionBar
+        // Set up the ActionBar.
         mActionBar.setTitle("Compose Message");
         mActionBar.setSubtitle("Select Individual Recipients");
 
-        // Set up the Side Navigation Menu
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView) findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
@@ -121,7 +121,6 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
             }
         });
 
-
         // Get the first 15 groupmates.
         new GetUserGroupmatesTask().execute();
     }
@@ -148,11 +147,22 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
      */
     public class GetUserGroupmatesTask extends AsyncTask<Void, Void, String> {
 
+        /**
+         * Performs a computation on a background thread.
+         * 
+         * @return Result of the API call. 
+         */
         @Override
         protected String doInBackground(Void... args) {
             return RestApiV1.getUserGroupmates(mOffset, LIMIT);
         }
 
+        /**
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param jsonResult Result of the API call.
+         */
         @Override
         protected void onPostExecute(String jsonResult) {
             jsonResult = jsonResult.replaceAll("firstname", "fname");
