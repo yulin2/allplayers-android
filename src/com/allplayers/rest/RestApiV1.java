@@ -40,14 +40,23 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+/**
+ * App side of the API.
+ */
 public class RestApiV1 {
-    private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
-    private static final String CAP_TOKEN_NAME = "X-ALLPLAYERS-CAPTCHA-TOKEN";
-    private static final String CAP_SOLUTION_NAME = "X-ALLPLAYERS-CAPTCHA-SOLUTION";
-    private static String sCurrentUserUUID = "";
+    
     private static CookieHandler sCookieHandler = new CookieManager();
 
+    private static final String CAP_SOLUTION_NAME = "X-ALLPLAYERS-CAPTCHA-SOLUTION";
+    private static final String CAP_TOKEN_NAME = "X-ALLPLAYERS-CAPTCHA-TOKEN";
+    private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
+    private static String sCurrentUserUUID = "";
+
+    /**
+     * Default Constructor.
+     */
     public RestApiV1() {
+        
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
                 @Override
@@ -81,36 +90,43 @@ public class RestApiV1 {
         CookieHandler.setDefault(sCookieHandler);
     }
 
+    /**
+     * Checks if the user is currently logged in.
+     * 
+     * @return True if the current user is logged in, False if not.
+     */
     public static boolean isLoggedIn() {
+        
+        // If we don't have the user's UUID stored locally, we know that nobody is logged in. We can
+        // stop checking right here.
         if (sCurrentUserUUID.equals("") || sCurrentUserUUID.equals(null)) {
             logOut();
             return false;
         }
 
-        // Check an authorized call
+        // If we make it this far, we know that the app has the UUID saved, now we need to check if
+        // the API says that we are logged in.
         try {
             URL url = new URL(ENDPOINT + "users/" + sCurrentUserUUID + ".json");
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             InputStream inStream = connection.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(
                         inStream));
-
             String line = "";
-
             String result = "";
-
             while ((line = input.readLine()) != null) {
                 result += line;
             }
-
             JSONObject jsonResult = new JSONObject(result);
             String retrievedUUID = jsonResult.getString("uuid");
 
+            // Check if the the logged in user in the API is the same one that we have stored in the
+            // app. If not, something weird happened so we should log out both the app and the API.
             if (retrievedUUID.equals(sCurrentUserUUID)) {
                 return true;
-            } else { // This case should not occur
+            } else {
+                logOut();
                 return false;
             }
         } catch (Exception ex) {
@@ -119,6 +135,19 @@ public class RestApiV1 {
         }
     }
 
+    /**
+     * API call to create a new account on AllPlayers.com.
+     * 
+     * @param firstName Registrant's first name.
+     * @param lastName Registrant's last name.
+     * @param email Registrant's email.
+     * @param gender Registrant's gender (M or F).
+     * @param birthday Registrant's birthday (YYYY-MM-DD.
+     * @param password Registrant's password.
+     * @param capToken Captcha Token.
+     * @param capResponse Captcha Response.
+     * @return The response after making the API call.
+     */
     public static String createNewUser(String firstName, String lastName,
                                        String email, String gender, String birthday, String password,
                                        String capToken, String capResponse) {
