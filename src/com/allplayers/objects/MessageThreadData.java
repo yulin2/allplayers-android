@@ -1,4 +1,4 @@
-src/com/allplayers/objects/MessageData.javapackage com.allplayers.objects;
+package com.allplayers.objects;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
