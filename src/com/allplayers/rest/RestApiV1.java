@@ -49,7 +49,7 @@ public class RestApiV1 {
 
     private static final String CAP_SOLUTION_NAME = "X-ALLPLAYERS-CAPTCHA-SOLUTION";
     private static final String CAP_TOKEN_NAME = "X-ALLPLAYERS-CAPTCHA-TOKEN";
-    private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
+    private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
     private static String sCurrentUserUUID = "";
 
     /**
@@ -58,30 +58,46 @@ public class RestApiV1 {
     public RestApiV1() {
         
         // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+        TrustManager[] trustAllCerts = new TrustManager[] { 
+            new X509TrustManager() {
+            
+                /**
+                 * Returns the list of certificate issuer authorities which are trusted for
+                 * authentication of peers.
+                 */
                 @Override
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    // Unused
                     return null;
                 }
 
+                /**
+                 * Returns the list of certificate issuer authorities which are trusted for
+                 * authentication of peers.
+                 */
                 @Override
-                public void checkClientTrusted(
-                java.security.cert.X509Certificate[] certs, String authType) {
+                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    // Unused
                 }
 
+                /**
+                 * Checks whether the specified certificate chain (partial or complete) can be
+                 * validated and is trusted for server authentication for the specified key exchange
+                 * algorithm.
+                 */
                 @Override
                 public void checkServerTrusted(
                 java.security.cert.X509Certificate[] certs, String authType) {
+                    // Unused
                 }
-            }
-        };
+            }    
+        };  
 
         // Install the all-trusting trust manager
         try {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection
-            .setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/constructor/" + ex);
         }
@@ -135,6 +151,403 @@ public class RestApiV1 {
         }
     }
 
+    
+
+    /**
+     * API call to delete a message or message thread.
+     *
+     * @param id The unique id of the thread or message.
+     * @param type Whether you want to delete a message or thread.
+     *      "thread": Thread.
+     *      "msg": Message.
+     * @return The response after making the API call.
+     */
+    public static String deleteMessage(String id, String type) {
+        
+        return makeAuthenticatedDelete(ENDPOINT + "messages/" + id + "&type=" + type);
+    }
+
+    /**
+     * API call to update a message or message thread status.
+     *
+     * @param id The unique id of the thread or message.
+     * @param status The status you want to update to.
+     *      "1": Unread.
+     *      "2": Read.
+     * @param type Whether a message or thread is to be updated.
+     *      "thread": Thread.
+     *      "msg": Message.
+     *
+     * @return: Result from API.
+     */
+    public static String putMessage(int id, int status, String type) {
+        
+        String[][] contents = new String[2][2];
+
+        contents[0][0] = "status";
+        contents[0][1] = "" + status;
+
+        contents[1][0] = "type";
+        contents[1][1] = type;
+        
+        return makeAuthenticatedPut(ENDPOINT + "messages/" + id + ".json", contents);
+    }
+
+    /**
+     * API call to create a message reply.
+     *
+     * @param threadId The id of the thread to reply to.
+     * @param body The body of the message.
+     * @return: Result from API.
+     */
+    public static String postMessage(int threadId, String body) {
+        
+        String[][] contents = new String[2][2];
+        
+        contents[0][0] = "thread_id";
+        contents[0][1] = "" + threadId;
+        contents[1][0] = "body";
+        contents[1][1] = body;
+
+        return makeAuthenticatedPost(ENDPOINT + "messages.json", contents);
+    }
+
+    /**
+     * API call to create a new message to recipients.
+     *
+     * @param uuids An array of recipient uuids.
+     * @param subject The subject of the message.
+     * @param body The body of the message.
+     * @return Result from API.
+     */
+    public static String createNewMessage(String[] uuids, String subject, String body) {
+        
+        String[][] contents = new String[uuids.length + 2][2];
+        
+        for (int i = 0; i < uuids.length; i++) {
+            contents[i][0] = "recipients[" + i + "]";
+            contents[i][1] = uuids[i];
+        }
+        contents[uuids.length][0] = "subject";
+        contents[uuids.length][1] = subject;
+        contents[uuids.length + 1][0] = "body";
+        contents[uuids.length + 1][1] = body;
+        
+        return makeAuthenticatedPost(ENDPOINT + "messages.json", contents);
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// GET Calls (Albums Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// GET Calls (Groups Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// GET Calls (Events Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// GET Calls (Groups Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// GET Calls (Photos Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// GET Calls (Resources Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // GET Calls (Groups Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * API call to fetch the passed group's albums.
+     *
+     * @param groupUuid The UUID of the group whos data is being fetched.
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @return Result from API.
+     */
+    public static String getGroupAlbumsByGroupId(String groupUuid, int offset, int limit) {
+        
+        String query = ENDPOINT + "groups/" + groupUuid + "/albums.json";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
+    
+    /**
+     * API call to fetch a group's upcoming events.
+     *
+     * @param groupUuid The UUID of the group whos data is being fetched.
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @return Result from API.
+     */
+    public static String getGroupEventsUpcomingByGroupId(String groupUuid, int offset, int limit) {
+        
+        String query = ENDPOINT + "groups/" + groupUuid + "/events/upcoming.json";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
+    
+    /**
+     * API call to fetch the passed group's information.
+     *
+     * @param groupUuid The UUID of the group whos data is being fetched.
+     * @return Result from API.
+     */
+    public static String getGroupInformationByGroupId(String groupUuid) {
+        
+        String query = ENDPOINT + "groups/" + groupUuid + ".json";
+        
+        return makeAuthenticatedGet(query);
+    }
+
+    /**
+     * API call to fetch the passed group's members.
+     *
+     * @param groupUuid The UUID of the group whos data is being fetched.
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @return Result from API.
+     */
+    public static String getGroupMembersByGroupId(String groupUuid, int offset, int limit) {
+        
+        String query = ENDPOINT + "groups/" + groupUuid + "/members.json";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
+
+    /**
+     * API call to fetch the passed group's photos.
+     *
+     * @param groupUuid The UUID of the group whos data is being fetched.
+     * @return Result from API.
+     */
+    public static String getGroupPhotosByGroupId(String groupUuid) {
+        
+        String query = ENDPOINT + "groups/" + groupUuid + "/photos.json";
+        
+        return makeAuthenticatedGet(query);
+    }
+    
+    /**
+     * API call to fetch a list of groups that match the passed in search criteria.
+     * 
+     * @param search The search query for the groups.
+     * @param zipcode The zip code query for the groups.
+     * @param distance The distance query for the groups.
+     * @return Result from API.
+     */
+    public static String searchGroups(String search, int zipcode, int distance, int offset, int limit) {
+        
+        String query = ENDPOINT + "groups.json";
+        
+        if (search.length() > 0) {
+            try {
+                search = URLEncoder.encode(search, "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                // There is no reason that this should happen.
+            }
+            query += ("&search=\"" + search + "\"");
+        }
+        
+        // The input distance will only matter if a zipcode is given.
+        if (zipcode > 0) {
+            query += ("&distance[postal_code]=" + zipcode
+                            + "&distance[search_distance]=" + distance 
+                            + "&distance[search_units]=mile");
+        }
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeUnauthenticatedGet(query);
+    }
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // POST Calls (Groups Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // GET Calls (Messages Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Post Calls (Messages Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // GET Calls (Users Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * API call to fetch the currently logged in user's children.
+     *
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @return Result from API.
+     */
+    public static String getUserChildren(int offset, int limit) {
+        
+        String query = ENDPOINT + "users/" + sCurrentUserUUID + "/children.json";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
+    
+    /**
+     * API call to fetch the currently logged in user's upcoming events.
+     *
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @return Result from API.
+     */
+    public static String getUserEventsUpcoming(int offset, int limit) {
+        
+        String query = ENDPOINT + "users/" + sCurrentUserUUID + "/events/upcoming.json";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
+    
+    /**
+     * API call to fetch the currently logged in user's friends.
+     *
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @return Result from API.
+     */
+    public static String getUserFriends(int offset, int limit) {
+        
+        String query = ENDPOINT + "users/" + sCurrentUserUUID + "/friends.json";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query).replaceAll("&#039;", "'");
+    }
+    
+    /**
+     * API call to fetch the currently logged in user's friends.
+     *
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @return Result from API.
+     */
+    public static String getUserGroupmates(int offset, int limit) {
+        
+        String query = ENDPOINT + "users/" + sCurrentUserUUID + "/groupmates.json";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
+    
+    /**
+     * API call to fetch the currently logged in user's groups.
+     *
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @param sort The method that the data should be sorted by:
+     *      "radioactivity": Sort the data by group activity (radioactivity).
+     *      "alphabetical_ascending": Sort the data in alphabetically ascending order.
+     *      "alphabetical_descending": Sort the data in alphabetically descending order.
+     * @return Result from API.
+     */
+    public static String getUserGroups(int offset, int limit, String sort) {
+        
+        String query = ENDPOINT + "users/" + sCurrentUserUUID + "/groups.json";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        if (sort != null && !sort.equals("")) {
+            query += ("&sort=" + sort);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
+
+    /**
+     * API call to fetch the currently logged in user's guardians.
+     *
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @return Result from API.
+     */
+    public static String getUserGuardians(int offset, int limit) {
+        
+        String query = ENDPOINT + "users/" + sCurrentUserUUID + "/guardians.json";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // POST Calls (Users Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     /**
      * API call to create a new account on AllPlayers.com.
      * 
@@ -146,12 +559,13 @@ public class RestApiV1 {
      * @param password Registrant's password.
      * @param capToken Captcha Token.
      * @param capResponse Captcha Response.
-     * @return The response after making the API call.
+     * @return The response from the API call.
      */
-    public static String createNewUser(String firstName, String lastName,
-                                       String email, String gender, String birthday, 
-                                       String password, String capToken, String capResponse) {
+    public static String createNewUser(String firstName, String lastName, String email,
+                                       String gender, String birthday,String password,
+                                       String capToken, String capResponse) {
 
+        String query = "https://www.pdup.allplayers.com/api/v1/rest/users.json";
         String[][] contents = new String[6][2];
 
         // Set firstName
@@ -178,304 +592,33 @@ public class RestApiV1 {
         contents[5][0] = "password";
         contents[5][1] = password;
 
-        return makeUnauthenticatedPost("https://www.pdup.allplayers.com/api/v1/rest/users.json", contents,
-                                       capToken, capResponse);
+        return makeUnauthenticatedPost(query, contents, capToken, capResponse);
     }
 
     /**
-     * Log-in to the API.
+     * API call to log the user into the API.
      * 
      * @param username The user's entered username (or email).
      * @param password The user's entered password.
      * @return The response after making the API call.
      */
     public String validateLogin(String username, String password) {
+        
+        String query = ENDPOINT + "users/login.json";
         String[][] contents = new String[2][2];
+        
         contents[0][0] = "username";
         contents[0][1] = username;
         contents[1][0] = "password";
         contents[1][1] = password;
 
-        return makeAuthenticatedPost(ENDPOINT + "users/login.json", contents);
+        return makeAuthenticatedPost(query, contents);
     }
+    
 
-    /**
-     * deleteMessage()
-     * API call to delete a message or message thread.
-     *
-     * @param id: The unique id of the thread or message.
-     * @param type: Whether you want to delete a message or thread.
-     *      "thread": Thread.
-     *      "msg": Message.
-     * @return
-     */
-    public static String deleteMessage(String id, String type) {
-        Log.d("IC MESSAGE", ENDPOINT + "messages/" + id + "&type=" + type);
-        return makeAuthenticatedDelete(ENDPOINT + "messages/" + id + "&type=" + type);
-    }
+    
 
-    /**
-     * putMessage()
-     * API call to update a message or message thread status.
-     *
-     * @param id: The unique id of the thread or message.
-     * @param status: The status you want to update to.
-     *      1: Unread.
-     *      2: Read.
-     * @param type: Whether a message or thread is to be updated.
-     *      "thread": Thread.
-     *      "msg": Message.
-     *
-     * @return: Result from API.
-     */
-    public static String putMessage(int id, int status, String type) {
-        String[][] contents = new String[2][2];
-
-        contents[0][0] = "status";
-        contents[0][1] = "" + status;
-
-        contents[1][0] = "type";
-        contents[1][1] = type;
-        return makeAuthenticatedPut(
-                   ENDPOINT + "messages/" + id + ".json", contents);
-    }
-
-    /**
-     * postMessage()
-     * API call to create a message reply.
-     *
-     * @param threadId: The id of the thread to reply to.
-     * @param body: The actual body of the message.
-     *
-     * @return: Result from API.
-     */
-    public static String postMessage(int threadId, String body) {
-        String[][] contents = new String[2][2];
-        contents[0][0] = "thread_id";
-        contents[0][1] = "" + threadId;
-        contents[1][0] = "body";
-        contents[1][1] = body;
-
-        return makeAuthenticatedPost(ENDPOINT + "messages.json", contents);
-    }
-
-    /**
-     * createNewMessage()
-     * API call to create a new message to recipients.
-     *
-     * @param uuids: An array of recipient uuids.
-     * @param subject: The subject of the message.
-     * @param body: The body of the message.
-     *
-     * @return: Result from API.
-     */
-    public static String createNewMessage(String[] uuids, String subject,
-                                          String body) {
-        String[][] contents = new String[uuids.length + 2][2];
-        for (int i = 0; i < uuids.length; i++) {
-            contents[i][0] = "recipients[" + i + "]";
-            contents[i][1] = uuids[i];
-        }
-        contents[uuids.length][0] = "subject";
-        contents[uuids.length][1] = subject;
-        contents[uuids.length + 1][0] = "body";
-        contents[uuids.length + 1][1] = body;
-        return makeAuthenticatedPost(ENDPOINT + "messages.json", contents);
-    }
-
-    public static String searchGroups(String search, int zipcode, int distance) {
-        String searchTerms = ENDPOINT + "groups.json";
-        if (search.length() != 0) {
-            try {
-                search = URLEncoder.encode(search, "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            searchTerms += ("&search=\"" + search + "\"");
-        }
-        // As of right now, the input distance will only matter if a zipcode is
-        // given,
-        // so it is only considered in that case.
-        // TODO Add in considering the distance as "Distance from my location"
-        //if (zipcode != 0) {
-        //    searchTerms += ("&distance[postal_code]=" + zipcode
-        //                    + "&distance[search_distance]=" + distance + "&distance[search_units]=mile");
-        //}
-        Log.d("OC", searchTerms);
-        return makeUnauthenticatedGet(searchTerms);
-    }
-
-    /**
-     * getUserGroups().
-     * API call to fetch the currently logged in user's groups.
-     *
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @param limit: The number of results the API will return.
-     * @param sort: The method that the data should be sorted by:
-     *      "radioactivity": Sort the data by group activity (radioactivity).
-     *      "alphabetical_ascending": Sort the data in alphabetically ascending order.
-     *      "alphabetical_descending": Sort the data in alphabetically descending order.
-     * @return: Result from API.
-     *
-     */
-    public static String getUserGroups(int offset, int limit, String sort) {
-        String query = ENDPOINT + "users/" + sCurrentUserUUID + "/groups.json";
-        if (offset > 0) {
-            query += ("&offset=" + offset);
-        }
-        if (limit > -1) {
-            query += ("&limit=" + limit);
-        }
-        if (sort != null && !sort.equals("")) {
-            query += ("&sort=" + sort);
-        }
-        return makeAuthenticatedGet(query);
-    }
-
-    /**
-     * getUserFriends()
-     * API call to fetch the currently logged in user's friends.
-     *
-     * @return: Result from API.
-     */
-    public static String getUserFriends() {
-        String jsonResult = makeAuthenticatedGet(ENDPOINT + "users/"
-                            + sCurrentUserUUID + "/friends.json");
-        return jsonResult.replaceAll("&#039;", "'");
-    }
-
-    public static String getUserFriends(int offset, int limit) {
-        String jsonResult = makeAuthenticatedGet(ENDPOINT + "users/"
-                            + sCurrentUserUUID + "/friends.json&offset=" + offset + "&limit=" + limit);
-        return jsonResult.replaceAll("&#039;", "'");
-    }
-
-    /**
-     * getUserGroupmates().
-     * API call to fetch the currently logged in user's groupmates.
-     *
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @param limit: The number of results the API will return.
-     *
-     * @return: Result from API.
-     *
-     */
-    public static String getUserGroupmates(int offset, int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/groupmates.json&limit=" + limit + "&offset=" + offset);
-    }
-
-    /** API call to fetch the currently logged in user's children.
-      * @param offset Determines at what point the API returns data (starts after 'offset' results).
-      * @param limit The number of results the API will return.
-      * @return Result from API.
-      */
-    public static String getUserChildren(int offset, int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/children.json&limit=" + limit + "&offset=" + offset);
-    }
-
-    /** API call to fetch the currently logged in user's guardians.
-      * @param offset Determines at what point the API returns data (starts after 'offset' results).
-      * @param limit The number of results the API will return.
-      * @return Result from API.
-      */
-    public static String getUserGuardians(int offset, int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/guardians.json&limit=" + limit + "&offset=" + offset);
-    }
-
-    /**
-     * getUserEvents().
-     * API call to fetch the currently logged in user's events.
-     *
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @param limit: The number of results the API will return.
-     *
-     * @return: Result from API.
-     *
-     */
-    public static String getUserEvents(int offset, int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "users/" + sCurrentUserUUID
-                                    + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
-    }
-
-    public static String getGroupInformationByGroupId(String group_uuid) {
-        return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid + ".json");
-    }
-
-    /**
-     *
-     */
-    public static String getUserRolesInGroup(String groupUuid, String userUuid) {
-        return makeAuthenticatedGet(ENDPOINT + "groups/" + groupUuid + "/roles/" + userUuid + ".json");
-    }
-
-
-    /**
-     * getGroupAlbumsByGroupId().
-     * API call to fetch a group's list of albums.
-     *
-     * @param group_uuid: The unique id of the group.
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @param limit: The number of results the API will return.
-     *
-     * @return: Result from API.
-     *
-     */
-    public static String getGroupAlbumsByGroupId(String group_uuid, int offset,
-            int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
-                                    + "/albums.json&limit=" + limit + "&offset=" + offset);
-    }
-
-    /**
-     * getGroupEventsByGroupId().
-     * API call to fetch a group's list of events.
-     *
-     * @param group_uuid: The unique id of the group.
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @param limit: The number of results the API will return.
-     *
-     * @return: Result from API.
-     *
-     */
-    public static String getGroupEventsByGroupId(String group_uuid, int offset,
-            int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
-                                    + "/events/upcoming.json&limit=" + limit + "&offset=" + offset);
-    }
-
-
-    /**
-     * getGroupMembersByGroupId().
-     * API call to fetch a group's list of members.
-     *
-     * @param group_uuid: The unique id of the group.
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @param limit: The number of results the API will return.
-     *
-     * @return: Result from API.
-     *
-     */
-    public static String getGroupMembersByGroupId(String group_uuid, int offset,
-            int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "groups/" + group_uuid
-                                    + "/members.json&limit=" + limit + "&offset=" + offset);
-    }
-
-    /**
-     * getGroupPhotosByGroupId()
-     * API call to fetch a group's photo albums.
-     *
-     * @param group_uuid: The unique id of the group.
-     *
-     * @return: Result from API.
-     */
-    public static String getGroupPhotosByGroupId(String group_uuid) {
-        return makeAuthenticatedGet(ENDPOINT + "groups/photos.json");
-    }
+    
 
     public static String getAlbumByAlbumId(String album_uuid) {
         return makeAuthenticatedGet(ENDPOINT + "albums/" + album_uuid + ".json");
