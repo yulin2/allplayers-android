@@ -151,7 +151,15 @@ public class RestApiV1 {
         }
     }
 
+    /**
+     * Check if the user is logged in, then perform a GET call.
+     * 
+     * @param urlString The url of the GET call.
+     * @return Result from API.
+     */
     private static String makeAuthenticatedGet(String urlString) {
+        
+        // Check if the user is logged in.
         Log.d("IC", urlString);
         if (!isLoggedIn()) {
             return "You are not logged in";
