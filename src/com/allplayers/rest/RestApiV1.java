@@ -191,6 +191,12 @@ public class RestApiV1 {
         }
     }
 
+    /**
+     * Check if the user is logged in, then perform a DELETE call.
+     * 
+     * @param urlString The url of the DELETE call.
+     * @return Result from API.
+     */
     private static String makeAuthenticatedDelete(String urlString) {
         if (!isLoggedIn()) {
             return "You are not logged in";
@@ -215,6 +221,12 @@ public class RestApiV1 {
         }
     }
     
+    /**
+     * Check if the user is logged in, then perform a POST call.
+     * 
+     * @param urlString The url of the POST call.
+     * @return Result from API.
+     */
     private static String makeAuthenticatedPost(String urlString,
             String[][] contents) {
         
@@ -277,6 +289,12 @@ public class RestApiV1 {
         }
     }
 
+    /**
+     * Check if the user is logged in, then perform a PUT call.
+     * 
+     * @param urlString The url of the GET call.
+     * @return Result from API.
+     */
     private static String makeAuthenticatedPut(String urlString,
             String[][] contents) {
         if (!isLoggedIn()) {
@@ -321,6 +339,12 @@ public class RestApiV1 {
         }
     }
 
+    /**
+     * Perform a GET call.
+     * 
+     * @param urlString The url of the GET call.
+     * @return Result from API.
+     */
     private static String makeUnauthenticatedGet(String urlString) {
         
         // Make and return from unauthenticated get call
@@ -351,6 +375,12 @@ public class RestApiV1 {
         }
     }
 
+    /**
+     * Perform a POST call.
+     * 
+     * @param urlString The url of the POST call.
+     * @return Result from API.
+     */
     private static String makeUnauthenticatedPost(String urlString,
             String[][] contents, String captchaToken, String captchaResponse) {
 
@@ -388,8 +418,9 @@ public class RestApiV1 {
 
     /**
      * Get a Bitmap from a URL.
-     *
-     * TODO - Use same connection and cookies as REST requests.
+     * 
+     * @param urlString The URL where the image is stored.
+     * @return The bitmap stored at the passed URL.
      */
     public static Bitmap getRemoteImage(final String urlString) {
         try {
@@ -414,6 +445,9 @@ public class RestApiV1 {
         return null;
     }
     
+    /**
+     * Log the user out of the app and the API.
+     */
     public static void logOut() {
         try {
             CookieManager cm = ((CookieManager) CookieHandler.getDefault());
@@ -428,18 +462,38 @@ public class RestApiV1 {
         sCurrentUserUUID = "";
     }
 
+    /**
+     * Set sCurrentUserUUID to the passed value.
+     * 
+     * @param uuid The new value of sCurrentUserUUID
+     */
     public static void setCurrentUserUUID(String uuid) {
         sCurrentUserUUID = uuid;
     }
 
+    /**
+     * Returns the value of sCurrentUserUUID.
+     * 
+     * @return The value of sCurrentUserUUID.
+     */
     public static String getCurrentUserUUID() {
         return sCurrentUserUUID;
     }
 
+    /**
+     * Set sCookieHandler to the passed value.
+     * 
+     * @param cookieHandler The new value of sCookieHandler.
+     */
     public static void setCookieHandler(CookieHandler cookieHandler) {
         sCookieHandler = cookieHandler;
     }
 
+    /**
+     * Returns the value of sCookieHandler.
+     * 
+     * @return The value of sCookieHandler.
+     */
     public static CookieHandler getCookieHandler() {
         return sCookieHandler;
     }
