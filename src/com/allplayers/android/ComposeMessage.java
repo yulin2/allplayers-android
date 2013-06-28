@@ -133,7 +133,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
          */
         @Override
         protected Void doInBackground(String... params) {
-            RestApiV1.createNewMessage(mRecipientUuidList.toArray(new String[mRecipientUuidList.size()]), params[0], params[1]);
+            RestApiV1.createMessageNew(mRecipientUuidList.toArray(new String[mRecipientUuidList.size()]), params[0], params[1]);
             return null;
         }
         
