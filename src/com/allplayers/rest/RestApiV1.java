@@ -151,114 +151,389 @@ public class RestApiV1 {
         }
     }
 
+    private static String makeAuthenticatedGet(String urlString) {
+        Log.d("IC", urlString);
+        if (!isLoggedIn()) {
+            return "You are not logged in";
+        }
+
+        // Make and return from authenticated get call
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url
+                                           .openConnection();
+            connection.setDoInput(true);
+            InputStream inStream = connection.getInputStream();
+            if (connection.getResponseCode() == 204) {
+                return "error";
+            }
+            BufferedReader input = new BufferedReader(new InputStreamReader(
+                        inStream));
+
+            String line = "";
+            String result = "";
+            while ((line = input.readLine()) != null) {
+                result += line;
+            }
+
+            return result;
+        } catch (Exception ex) {
+            System.err.println("APCI_RestServices/makeAuthenticatedGet/" + ex);
+            return "error";
+        }
+    }
+
+    private static String makeAuthenticatedDelete(String urlString) {
+        if (!isLoggedIn()) {
+            return "You are not logged in";
+        }
+
+        // Make and return from authenticated delete call
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url
+                                           .openConnection();
+
+            connection.setRequestMethod("DELETE");
+            connection.setRequestProperty("Content-Type",
+                                          "application/x-www-form-urlencoded");
+            connection.getResponseCode();
+
+            return "done";
+        } catch (Exception ex) {
+            System.err.println("APCI_RestServices/makeAuthenticatedDelete/"
+                               + ex);
+            return "Failed to complete the delete.";
+        }
+    }
     
-
-    /**
-     * API call to delete a message or message thread.
-     *
-     * @param id The unique id of the thread or message.
-     * @param type Whether you want to delete a message or thread.
-     *      "thread": Thread.
-     *      "msg": Message.
-     * @return The response after making the API call.
-     */
-    public static String deleteMessage(String id, String type) {
+    private static String makeAuthenticatedPost(String urlString,
+            String[][] contents) {
         
-        return makeAuthenticatedDelete(ENDPOINT + "messages/" + id + "&type=" + type);
+        // Make and return from authenticated post call
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url
+                                           .openConnection();
+
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.setUseCaches(false);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type",
+                                          "application/x-www-form-urlencoded");
+
+            // If not logging in, set the cookies in the header
+            if (!urlString.equals(ENDPOINT + "users/login.json")) {
+                if (!isLoggedIn()) {
+                    return "You are not logged in";
+                }
+            }
+
+            DataOutputStream printout = new DataOutputStream(
+                connection.getOutputStream());
+
+            // Send POST output.
+            String content = "";
+            if (contents.length > 0) {
+                for (int i = 0; i < contents.length; i++) {
+                    if (i > 0) {
+                        content += "&";
+                    }
+
+                    content += contents[i][0] + "="
+                               + URLEncoder.encode(contents[i][1], "UTF-8");
+                }
+            }
+
+            printout.writeBytes(content);
+            printout.flush();
+            printout.close();
+
+            // Get response data.
+            BufferedReader input = new BufferedReader(new InputStreamReader(
+                        connection.getInputStream()));
+            String str;
+
+            String result = "";
+            while ((str = input.readLine()) != null) {
+                result += str;
+            }
+
+            input.close();
+
+            return result;
+        } catch (Exception ex) {
+            System.err.println("APCI_RestServices/makeAuthenticatedPost/" + ex);
+            return "error";
+        }
+    }
+
+    private static String makeAuthenticatedPut(String urlString,
+            String[][] contents) {
+        if (!isLoggedIn()) {
+            return "You are not logged in";
+        }
+
+        // Make and return from authenticated put call
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url
+                                           .openConnection();
+
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setRequestMethod("PUT");
+            connection.setRequestProperty("Content-Type",
+                                          "application/x-www-form-urlencoded");
+
+            DataOutputStream printout = new DataOutputStream(
+                connection.getOutputStream());
+
+            // Send PUT output.
+            String content = "";
+            if (contents.length > 0) {
+                for (int i = 0; i < contents.length; i++) {
+                    if (i > 0) {
+                        content += "&";
+                    }
+
+                    content += contents[i][0] + "="
+                               + URLEncoder.encode(contents[i][1], "UTF-8");
+                }
+            }
+
+            printout.writeBytes(content);
+            printout.flush();
+            printout.close();
+            return connection.getResponseMessage();
+        } catch (Exception ex) {
+            System.err.println("APCI_RestServices/makeAuthenticatedPut/" + ex);
+            return ex.toString();
+        }
+    }
+
+    private static String makeUnauthenticatedGet(String urlString) {
+        
+        // Make and return from unauthenticated get call
+        try {
+            URL url = new URL(urlString);
+            Log.d("IC", urlString + "\n" + url);
+            HttpURLConnection connection = (HttpURLConnection) url
+                                           .openConnection();
+            connection.setDoInput(true);
+            InputStream inStream = connection.getInputStream();
+            if (connection.getResponseCode() == 204) {
+                return "error";
+            }
+            BufferedReader input = new BufferedReader(new InputStreamReader(
+                        inStream));
+
+            String line = "";
+            String result = "";
+            while ((line = input.readLine()) != null) {
+                result += line;
+            }
+
+            return result;
+        } catch (Exception ex) {
+            System.err
+            .println("APCI_RestServices/makeUnauthenticatedGet/" + ex);
+            return ex.toString();
+        }
+    }
+
+    private static String makeUnauthenticatedPost(String urlString,
+            String[][] contents, String captchaToken, String captchaResponse) {
+
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost(urlString);
+        List<NameValuePair> request = new ArrayList<NameValuePair>();
+        for (int i = 0; i < contents.length; i++) {
+            request.add(new BasicNameValuePair(contents[i][0], contents[i][1]));
+        }
+
+        try {
+            post.setEntity(new UrlEncodedFormEntity(request));
+            if (captchaToken != null) {
+                post.addHeader(CAP_TOKEN_NAME, captchaToken);
+                post.addHeader(CAP_SOLUTION_NAME, captchaResponse);
+            }
+            HttpResponse response = client.execute(post);
+            HttpEntity entity = response.getEntity();
+            if (null != entity) {
+                String text = EntityUtils.toString(entity);
+                return text;
+            }
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "error";
     }
 
     /**
-     * API call to update a message or message thread status.
+     * Get a Bitmap from a URL.
      *
-     * @param id The unique id of the thread or message.
-     * @param status The status you want to update to.
-     *      "1": Unread.
-     *      "2": Read.
-     * @param type Whether a message or thread is to be updated.
-     *      "thread": Thread.
-     *      "msg": Message.
-     *
-     * @return: Result from API.
+     * TODO - Use same connection and cookies as REST requests.
      */
-    public static String putMessage(int id, int status, String type) {
-        
-        String[][] contents = new String[2][2];
+    public static Bitmap getRemoteImage(final String urlString) {
+        try {
+            HttpGet httpRequest = null;
 
-        contents[0][0] = "status";
-        contents[0][1] = "" + status;
+            try {
+                httpRequest = new HttpGet(new URL(urlString).toURI());
+            } catch (URISyntaxException ex) {
+                System.err.println("RestApiV1/getRemoteImage/" + ex);
+            }
 
-        contents[1][0] = "type";
-        contents[1][1] = type;
-        
-        return makeAuthenticatedPut(ENDPOINT + "messages/" + id + ".json", contents);
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpResponse response = httpclient.execute(httpRequest);
+            HttpEntity entity = response.getEntity();
+            BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+            InputStream instream = bufHttpEntity.getContent();
+            return BitmapFactory.decodeStream(instream);
+        } catch (IOException ex) {
+            System.err.println("RestApiV1/getRemoteImage/" + ex);
+        }
+
+        return null;
+    }
+    
+    public static void logOut() {
+        try {
+            CookieManager cm = ((CookieManager) CookieHandler.getDefault());
+            URI uri = new URI(ENDPOINT + "users/login.json");
+            List<HttpCookie> myCookies = cm.getCookieStore().get(uri);
+            for (int i = 0; i < myCookies.size(); i++) {
+                cm.getCookieStore().remove(uri, myCookies.get(i));
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        sCurrentUserUUID = "";
     }
 
-    /**
-     * API call to create a message reply.
-     *
-     * @param threadId The id of the thread to reply to.
-     * @param body The body of the message.
-     * @return: Result from API.
-     */
-    public static String postMessage(int threadId, String body) {
-        
-        String[][] contents = new String[2][2];
-        
-        contents[0][0] = "thread_id";
-        contents[0][1] = "" + threadId;
-        contents[1][0] = "body";
-        contents[1][1] = body;
-
-        return makeAuthenticatedPost(ENDPOINT + "messages.json", contents);
+    public static void setCurrentUserUUID(String uuid) {
+        sCurrentUserUUID = uuid;
     }
 
+    public static String getCurrentUserUUID() {
+        return sCurrentUserUUID;
+    }
+
+    public static void setCookieHandler(CookieHandler cookieHandler) {
+        sCookieHandler = cookieHandler;
+    }
+
+    public static CookieHandler getCookieHandler() {
+        return sCookieHandler;
+    }
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // GET Calls (Albums Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     /**
-     * API call to create a new message to recipients.
-     *
-     * @param uuids An array of recipient uuids.
-     * @param subject The subject of the message.
-     * @param body The body of the message.
+     * API call to fetch an album by its UUID.
+     * 
+     * @param albumUuid The UUID of the album that is being fetched.
      * @return Result from API.
      */
-    public static String createNewMessage(String[] uuids, String subject, String body) {
+    public static String getAlbumByAlbumId(String albumUuid) {
         
-        String[][] contents = new String[uuids.length + 2][2];
+        String query = ENDPOINT + "albums/" + albumUuid + ".json";
         
-        for (int i = 0; i < uuids.length; i++) {
-            contents[i][0] = "recipients[" + i + "]";
-            contents[i][1] = uuids[i];
-        }
-        contents[uuids.length][0] = "subject";
-        contents[uuids.length][1] = subject;
-        contents[uuids.length + 1][0] = "body";
-        contents[uuids.length + 1][1] = body;
-        
-        return makeAuthenticatedPost(ENDPOINT + "messages.json", contents);
+        return makeAuthenticatedGet(query);
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// GET Calls (Albums Endpoint)
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// GET Calls (Groups Endpoint)
-////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * API call to fetch an album's photos.
+     *
+     * @param albumUuid The UUID of the album whos photos are being fetched.
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @return: Result from API.
+     */
+    public static String getAlbumPhotosByAlbumId(String albumUuid, int offset, int limit) {
+        
+        String query = ENDPOINT + "albums/" + albumUuid + "/photos.json";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// GET Calls (Events Endpoint)
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// GET Calls (Groups Endpoint)
+    // GET Calls (Events Endpoint)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// GET Calls (Photos Endpoint)
-////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * API call to fetch an event by its ID.
+     * 
+     * @param eventId The ID of the event that is being fetched.
+     * @return Result from API.
+     */
+    public static String getEventByEventId(String eventId) {
+        
+        String query = ENDPOINT + "events/" + eventId + ".json";
+        
+        return makeAuthenticatedGet(query);
+    }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// GET Calls (Resources Endpoint)
+// POST Calls (Events Endpoint)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    /** 
+     * API call to create an event.
+     * 
+     * @param groupUuid The UUID of the group that the event should be created for.
+     * @param eventTitle The title of the event.
+     * @param eventDescription The description of the event.
+     * @param startDateTime The start time of the event (in the format YYYY-MM-DDTHH:MM:SS).
+     * @param endDateTime The end time of the event (in the format YYYY-MM-DDTHH:MM:SS).
+     * @return Result from API.
+    */
+    public static String createEvent(String groupUuid, String eventTitle, String eventDescription, String startDateTime, String endDateTime) {
+       
+        String query = ENDPOINT + "events/";
+        String[][] contents = new String[5][2];
 
+        // Set group
+        contents[0][0] = "groups[0]";
+        contents[0][1] = groupUuid;
+
+        // Set eventTitle
+        contents[1][0] = "title";
+        contents[1][1] = eventTitle;
+
+        // Set eventDescription
+        contents[2][0] = "description";
+        contents[2][1] = eventDescription;
+
+        // Set eventStartDateTime
+        contents[3][0] = "date_time[start]";
+        contents[3][1] = startDateTime;
+
+        // Set eventEndDateTime
+        contents[4][0] = "date_time[end]";
+        contents[4][1] = endDateTime;
+
+        return makeAuthenticatedPost(query, contents);
+    }
+   
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     // GET Calls (Groups Endpoint)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -394,18 +669,197 @@ public class RestApiV1 {
     }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-    // POST Calls (Groups Endpoint)
+    // Delete Calls (Messages Endpoint)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    /**
+     * API call to delete a message or message thread.
+     *
+     * @param id The unique id of the thread or message.
+     * @param type Whether you want to delete a message or thread.
+     *      "thread": Thread.
+     *      "msg": Message.
+     * @return The response after making the API call.
+     */
+    public static String deleteMessage(String id, String type) {
+        
+        String query = ENDPOINT + "messages/" + id + "&type=" + type;
+        
+        return makeAuthenticatedDelete(query);
+    }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     // GET Calls (Messages Endpoint)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    /**
+     * API call to fetch the currently logged in user's message inbox.
+     *
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     * @return Result from API.
+     */
+    public static String getUserInbox(int offset, int limit) {
+        
+        String query = ENDPOINT + "messages.json&box=inbox";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
+
+    /**
+     * API call to fetch the messages in a specific thread.
+     *
+     * @param threadId The unique id of the thread to fetch.
+     * @return Result from API.
+     */
+    public static String getUserMessagesByThreadId(String threadId) {
+        
+        String query = ENDPOINT + "messages/" + threadId + ".json";
+        
+        return makeAuthenticatedGet(query);
+    }
+    
+    /**
+     * API call to fetch the currently logged in user's message sent box.
+     *
+     * @param offset Determines at what point the API returns data (starts after 'offset' results).
+     * @param limit The number of results the API will return.
+     *
+     * @return: Result from API.
+     */
+    public static String getUserSentBox(int offset, int limit) {
+        
+        String query = ENDPOINT + "messages.json&box=sent";
+        
+        if (offset > 0) {
+            query += ("&offset=" + offset);
+        }
+        if (limit > -1) {
+            query += ("&limit=" + limit);
+        }
+        
+        return makeAuthenticatedGet(query);
+    }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Post Calls (Messages Endpoint)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    /**
+     * API call to create a new message.
+     *
+     * @param uuids An array of recipient uuids.
+     * @param subject The subject of the message.
+     * @param body The body of the message.
+     * @return Result from API.
+     */
+    public static String createMessageNew(String[] uuids, String subject, String body) {
+        
+        String query = ENDPOINT + "messages.json";
+        String[][] contents = new String[uuids.length + 2][2];
+        
+        for (int i = 0; i < uuids.length; i++) {
+            contents[i][0] = "recipients[" + i + "]";
+            contents[i][1] = uuids[i];
+        }
+        
+        contents[uuids.length][0] = "subject";
+        contents[uuids.length][1] = subject;
+        contents[uuids.length + 1][0] = "body";
+        contents[uuids.length + 1][1] = body;
+        
+        return makeAuthenticatedPost(query, contents);
+    }
+    
+    /**
+     * API call to create a message reply.
+     *
+     * @param threadId The id of the thread to reply to.
+     * @param body The body of the message.
+     * @return Result from API.
+     */
+    public static String createMessageReply (int threadId, String body) {
+        
+        String query = ENDPOINT + "messages.json";
+        String[][] contents = new String[2][2];
+        
+        contents[0][0] = "thread_id";
+        contents[0][1] = "" + threadId;
+        contents[1][0] = "body";
+        contents[1][1] = body;
+
+        return makeAuthenticatedPost(query, contents);
+    }
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Put Calls (Messages Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /** 
+     * API call to update a message or message thread status.
+     *
+     * @param id The unique id of the thread or message.
+     * @param status The status you want to update to.
+     *      "1": Unread.
+     *      "2": Read.
+     * @param type Whether a message or thread is to be updated.
+     *      "thread": Thread.
+     *      "msg": Message.
+     * @return: Result from API.
+     */
+    public static String putMessage(int id, int status, String type) {
+        
+        String query = ENDPOINT + "messages/" + id + ".json";
+        String[][] contents = new String[2][2];
+
+        contents[0][0] = "status";
+        contents[0][1] = "" + status;
+        contents[1][0] = "type";
+        contents[1][1] = type;
+        
+        return makeAuthenticatedPut(query, contents);
+    }
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // GET Calls (Photos Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * API call to fetch a photo by its UUID.
+     * 
+     * @param photoUuid The UUID of the photo that is being fetched.
+     * @return Result from API.
+     */
+    public static String getPhotoByPhotoId(String photoUuid) {
+        
+        String query = ENDPOINT + "photos/" + photoUuid + ".json";
+        
+        return makeAuthenticatedGet(query);
+    }
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // GET Calls (Resources Endpoint)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * API call to fetch a resource by its ID.
+     * 
+     * @param resourceId The ID of the photo that is being fetched.
+     * @return Result from API.
+     */
+    public static String getUserResourceByResourceId(String resourceId) {
+        
+        String query = ENDPOINT + "resources/" + resourceId + ".json";
+        
+        return makeAuthenticatedGet(query);
+    }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     // GET Calls (Users Endpoint)
@@ -613,409 +1067,5 @@ public class RestApiV1 {
         contents[1][1] = password;
 
         return makeAuthenticatedPost(query, contents);
-    }
-    
-
-    
-
-    
-
-    public static String getAlbumByAlbumId(String album_uuid) {
-        return makeAuthenticatedGet(ENDPOINT + "albums/" + album_uuid + ".json");
-    }
-
-    /**
-     * getAlbumPhotosByAlbumId().
-     * API call to fetch an album's list of photos.
-     *
-     * @param group_uuid: The unique id of the group.
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @param limit: The number of results the API will return.
-     *
-     * @return: Result from API.
-     *
-     */
-    public static String getAlbumPhotosByAlbumId(String album_uuid, int offset,
-            int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "albums/" + album_uuid
-                                    + "/photos.json&offset=" + offset + "&limit=" + limit);
-    }
-
-    public static String getPhotoByPhotoId(String photo_uuid) {
-        return makeAuthenticatedGet(ENDPOINT + "photos/" + photo_uuid + ".json");
-    }
-
-    /**
-     * getUserInbox()
-     * API call to fetch the currently logged in user's message inbox.
-     *
-     * @return: Result from API.
-     */
-    public static String getUserInbox() {
-        return makeAuthenticatedGet(ENDPOINT + "messages.json&box=inbox");
-    }
-
-    public static String getUserInbox(int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "messages.json&box=inbox&limit=" + limit);
-    }
-
-    public static String getUserInbox(int limit, int offset) {
-        return makeAuthenticatedGet(ENDPOINT + "messages.json&box=inbox&limit=" + limit + "&offset=" + offset);
-    }
-
-    /**
-     * getUserSentBox()
-     * API call to fetch the currently logged in user's message sent box.
-     *
-     * @param offset: Determines at what point the API returns data (starts after 'offset' results).
-     * @param limit: The number of results the API will return.
-     *
-     * @return: Result from API.
-     */
-    public static String getUserSentBox(int offset, int limit) {
-        return makeAuthenticatedGet(ENDPOINT + "messages.json&box=sent&offset=" + offset + "&limit=" + limit);
-    }
-
-    /**
-     * getUserMessagesByThreadId()
-     * API call to fetch a list of messages in a specific thread.
-     *
-     * @param thread_id: The unique id of the thread to fetch.
-     *
-     * @return: Result from API.
-     */
-    public static String getUserMessagesByThreadId(String thread_id) {
-        return makeAuthenticatedGet(ENDPOINT + "messages/" + thread_id
-                                    + ".json");
-    }
-
-    public static String getEventByEventId(String event_id) {
-        return makeAuthenticatedGet(ENDPOINT + "events/" + event_id + ".json");
-    }
-
-    public static String getUserResourceByResourceId(String resource_id) {
-        return makeAuthenticatedGet(ENDPOINT + "resources/" + resource_id
-                                    + ".json");
-    }
-    
-    /** Create an event.
-      * @param groupUuid The uuid of the group that the event should be created for.
-      * @param eventTitle The title of the event.
-      * @param eventDescription The description of the event.
-      * @param startDateTime The start time of the event (in the format YYYY-MM-DDTHH:MM:SS).
-      * @param endDateTime The end time of the event (in the format YYYY-MM-DDTHH:MM:SS).
-      * @return Result of the API call.
-     */
-    public static String createEvent(String groupUuid, String eventTitle, String eventDescription, String startDateTime, String endDateTime) {
-        String[][] contents = new String[5][2];
-
-        // Set group
-        contents[0][0] = "groups[0]";
-        contents[0][1] = groupUuid;
-        
-        // Set eventTitle
-        contents[1][0] = "title";
-        contents[1][1] = eventTitle;
-
-        // Set eventDescription
-        contents[2][0] = "description";
-        contents[2][1] = eventDescription;
-
-        // Set eventStartDateTime
-        contents[3][0] = "date_time[start]";
-        contents[3][1] = startDateTime;
-
-        // Set eventEndDateTime
-        contents[4][0] = "date_time[end]";
-        contents[4][1] = endDateTime;
-        
-        return makeAuthenticatedPost(ENDPOINT + "events/", contents);
-    }
-
-    private static String makeAuthenticatedGet(String urlString) {
-        Log.d("IC", urlString);
-        if (!isLoggedIn()) {
-            return "You are not logged in";
-        }
-
-        // Make and return from authenticated get call
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
-            connection.setDoInput(true);
-            InputStream inStream = connection.getInputStream();
-            if (connection.getResponseCode() == 204) {
-                return "error";
-            }
-            BufferedReader input = new BufferedReader(new InputStreamReader(
-                        inStream));
-
-            String line = "";
-            String result = "";
-            while ((line = input.readLine()) != null) {
-                result += line;
-            }
-
-            return result;
-        } catch (Exception ex) {
-            System.err.println("APCI_RestServices/makeAuthenticatedGet/" + ex);
-            return "error";
-        }
-    }
-
-    private static String makeAuthenticatedDelete(String urlString) {
-        if (!isLoggedIn()) {
-            return "You are not logged in";
-        }
-
-        // Make and return from authenticated delete call
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
-
-            connection.setRequestMethod("DELETE");
-            connection.setRequestProperty("Content-Type",
-                                          "application/x-www-form-urlencoded");
-            connection.getResponseCode();
-
-            return "done";
-        } catch (Exception ex) {
-            System.err.println("APCI_RestServices/makeAuthenticatedDelete/"
-                               + ex);
-            return "Failed to complete the delete.";
-        }
-    }
-
-    private static String makeAuthenticatedPut(String urlString,
-            String[][] contents) {
-        if (!isLoggedIn()) {
-            return "You are not logged in";
-        }
-
-        // Make and return from authenticated put call
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
-
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.setRequestMethod("PUT");
-            connection.setRequestProperty("Content-Type",
-                                          "application/x-www-form-urlencoded");
-
-            DataOutputStream printout = new DataOutputStream(
-                connection.getOutputStream());
-
-            // Send PUT output.
-            String content = "";
-            if (contents.length > 0) {
-                for (int i = 0; i < contents.length; i++) {
-                    if (i > 0) {
-                        content += "&";
-                    }
-
-                    content += contents[i][0] + "="
-                               + URLEncoder.encode(contents[i][1], "UTF-8");
-                }
-            }
-
-            printout.writeBytes(content);
-            printout.flush();
-            printout.close();
-            return connection.getResponseMessage();
-        } catch (Exception ex) {
-            System.err.println("APCI_RestServices/makeAuthenticatedPut/" + ex);
-            return ex.toString();
-        }
-    }
-
-    private static String makeUnauthenticatedGet(String urlString) {
-        // Make and return from unauthenticated get call
-        try {
-            URL url = new URL(urlString);
-            Log.d("IC", urlString + "\n" + url);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
-            connection.setDoInput(true);
-            InputStream inStream = connection.getInputStream();
-            if (connection.getResponseCode() == 204) {
-                return "error";
-            }
-            BufferedReader input = new BufferedReader(new InputStreamReader(
-                        inStream));
-
-            String line = "";
-            String result = "";
-            while ((line = input.readLine()) != null) {
-                result += line;
-            }
-
-            return result;
-        } catch (Exception ex) {
-            System.err
-            .println("APCI_RestServices/makeUnauthenticatedGet/" + ex);
-            return ex.toString();
-        }
-    }
-
-    private static String makeAuthenticatedPost(String urlString,
-            String[][] contents) {
-        // Make and return from authenticated post call
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
-
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setUseCaches(false);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type",
-                                          "application/x-www-form-urlencoded");
-
-            // If not logging in, set the cookies in the header
-            if (!urlString.equals(ENDPOINT + "users/login.json")) {
-                if (!isLoggedIn()) {
-                    return "You are not logged in";
-                }
-            }
-
-            DataOutputStream printout = new DataOutputStream(
-                connection.getOutputStream());
-
-            // Send POST output.
-            String content = "";
-            if (contents.length > 0) {
-                for (int i = 0; i < contents.length; i++) {
-                    if (i > 0) {
-                        content += "&";
-                    }
-
-                    content += contents[i][0] + "="
-                               + URLEncoder.encode(contents[i][1], "UTF-8");
-                }
-            }
-
-            printout.writeBytes(content);
-            printout.flush();
-            printout.close();
-
-            // Get response data.
-            BufferedReader input = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream()));
-            String str;
-
-            String result = "";
-            while ((str = input.readLine()) != null) {
-                result += str;
-            }
-
-            input.close();
-
-            return result;
-        } catch (Exception ex) {
-            System.err.println("APCI_RestServices/makeAuthenticatedPost/" + ex);
-            return "error";
-        }
-    }
-
-    private static String makeUnauthenticatedPost(String urlString,
-            String[][] contents, String captchaToken, String captchaResponse) {
-
-        HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost(urlString);
-        List<NameValuePair> request = new ArrayList<NameValuePair>();
-        for (int i = 0; i < contents.length; i++) {
-            request.add(new BasicNameValuePair(contents[i][0], contents[i][1]));
-        }
-        //request.set(4, new BasicNameValuePair("birthday", "1980-01-20"));
-        Log.d("request", request.toString());
-        Log.d("Sending Birth Date", contents[4][1]);
-        try {
-            post.setEntity(new UrlEncodedFormEntity(request));
-            Log.d("IC", EntityUtils.toString(post.getEntity()));
-            if (captchaToken != null) {
-                post.addHeader(CAP_TOKEN_NAME, captchaToken);
-                post.addHeader(CAP_SOLUTION_NAME, captchaResponse);
-            }
-            HttpResponse response = client.execute(post);
-            Log.d("Unathenticated Post", urlString + "HEADERS" + captchaToken + " | | " + captchaResponse + contents.toString());
-            HttpEntity entity = response.getEntity();
-            if (null != entity) {
-                String text = EntityUtils.toString(entity);
-                return text;
-            }
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return "error";
-    }
-
-    public static void logOut() {
-        try {
-            CookieManager cm = ((CookieManager) CookieHandler.getDefault());
-            URI uri = new URI(ENDPOINT + "users/login.json");
-            List<HttpCookie> myCookies = cm.getCookieStore().get(uri);
-            for (int i = 0; i < myCookies.size(); i++) {
-                cm.getCookieStore().remove(uri, myCookies.get(i));
-            }
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        sCurrentUserUUID = "";
-    }
-
-    /**
-     * Get a Bitmap from a URL.
-     *
-     * TODO - Use same connection and cookies as REST requests.
-     */
-    public static Bitmap getRemoteImage(final String urlString) {
-        try {
-            HttpGet httpRequest = null;
-
-            try {
-                httpRequest = new HttpGet(new URL(urlString).toURI());
-            } catch (URISyntaxException ex) {
-                System.err.println("RestApiV1/getRemoteImage/" + ex);
-            }
-
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpResponse response = httpclient.execute(httpRequest);
-            HttpEntity entity = response.getEntity();
-            BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
-            InputStream instream = bufHttpEntity.getContent();
-            return BitmapFactory.decodeStream(instream);
-        } catch (IOException ex) {
-            System.err.println("RestApiV1/getRemoteImage/" + ex);
-        }
-
-        return null;
-    }
-
-    public static void setCurrentUserUUID(String uuid) {
-        sCurrentUserUUID = uuid;
-    }
-
-    public static String getCurrentUserUUID() {
-        return sCurrentUserUUID;
-    }
-
-    public static void setCookieHandler(CookieHandler cookieHandler) {
-        sCookieHandler = cookieHandler;
-    }
-
-    public static CookieHandler getCookieHandler() {
-        return sCookieHandler;
-    }
+    }  
 }
