@@ -33,7 +33,7 @@
             android:layout_height="300dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/app_bg_artwork_cropped" />
+            android:src="@drawable/app_bg_artwork" />
 
         <TableLayout
             android:id="@+id/table"
@@ -125,9 +125,32 @@
             android:visibility="gone" >
         </Button>
         
+        <LinearLayout
+            android:id="@+id/alpha_banner_layout"
+            android:layout_below="@id/newAccountButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:weightSum="1">
+            
+            <ImageView
+                android:id="@+id/alphaBanner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".75"
+                android:layout_gravity="left"
+                android:src="@drawable/alpha_banner" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight=".25" />
+            
+        </LinearLayout>
+        
         <TextView
             android:id="@+id/account_create_success"
-            android:layout_below="@id/newAccountButton"
+            android:layout_below="@id/alpha_banner_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/account_create_success"
@@ -139,22 +162,23 @@
             android:id="@+id/ctrlActivityIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/newAccountButton"
+            android:layout_below="@id/alpha_banner_layout"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:indeterminateOnly="true"
             android:keepScreenOn="true"
             android:visibility="gone" />
+        
         <Button
             android:id="@+id/groupSearchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:drawableLeft="@drawable/search_25x25"
+            android:drawableLeft="@drawable/search_login_page_icon"
             android:gravity="left"
-            android:text="Search for Groups"
+            android:text="@string/search_for_groups"
             android:textColor="#33B5E5"
             android:visibility="gone" >
         </Button>

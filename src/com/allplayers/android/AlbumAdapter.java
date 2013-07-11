@@ -161,7 +161,9 @@ public class AlbumAdapter extends ArrayAdapter<AlbumData> {
          */
         @Override
         protected Bitmap doInBackground(String... photoUrl) {
-            Bitmap b = RestApiV1.getRemoteImage(photoUrl[0]);
+            
+            //TODO unhardcode
+            Bitmap b = RestApiV1.getRemoteImage(photoUrl[0], 1080, 1920);
             mImageCache.put(index + "", b);
             return b;
         }

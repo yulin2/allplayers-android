@@ -9,11 +9,13 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -94,6 +96,15 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             new GetRemoteImageTask().execute(mGroup.getLogo());
         }
     }
+    
+    @Override 
+    public void onDestroy() {
+        super.onDestroy();
+        
+        
+        
+    }
+    
 
     /**
      * Initialize the contents of the Activity's standard options menu.
@@ -193,7 +204,13 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
          */
         @Override
         protected Bitmap doInBackground(String... logoURL) {
-            return RestApiV1.getRemoteImage(logoURL[0]);
+            
+            Display display = getWindowManager().getDefaultDisplay(); 
+            int width = display.getWidth();  // deprecated
+            int height = display.getHeight();  // deprecated
+            
+            //TODO unhardcode
+            return RestApiV1.getRemoteImage(logoURL[0], width, height);
         }
 
         /**

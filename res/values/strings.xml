@@ -43,6 +43,7 @@
     <string name="invalid_gender">Please select a gender.</string>
     <string name="send_a_message">Send a message</string>
     <string name="friend_request">Request to add as friend</string>
+    <string name="search_for_groups">Search for Groups</string>
 
     <string-array name="sort_method">
         <item>Activity</item>

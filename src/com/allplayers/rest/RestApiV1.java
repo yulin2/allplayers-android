@@ -37,7 +37,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.os.Debug;
 import android.util.Log;
 
 /**
@@ -49,7 +51,11 @@ public class RestApiV1 {
 
     private static final String CAP_SOLUTION_NAME = "X-ALLPLAYERS-CAPTCHA-SOLUTION";
     private static final String CAP_TOKEN_NAME = "X-ALLPLAYERS-CAPTCHA-TOKEN";
-    private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
+    
+    //**FOR TESTING ONLY**//
+    //private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
+    private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
+    
     private static String sCurrentUserUUID = "";
 
     /**
@@ -417,12 +423,17 @@ public class RestApiV1 {
     }
 
     /**
-     * Get a Bitmap from a URL.
+     * Get a Bitmap from a URL. Will then resize it to a size near the passed in values. (The
+     * dimensions will differ a bit. We need to resize by a scale that is a power of 2 to keep
+     * things efficient.) Will only scale an image down, not up.
      * 
      * @param urlString The URL where the image is stored.
+     * @param width The width wanted by the caller.
+     * @param height The height wanted by the caller.
      * @return The bitmap stored at the passed URL.
      */
-    public static Bitmap getRemoteImage(final String urlString) {
+    public static Bitmap getRemoteImage(final String urlString, int requestedWidth, int requestedHeight) {
+                
         try {
             HttpGet httpRequest = null;
 
@@ -433,11 +444,101 @@ public class RestApiV1 {
             }
 
             HttpClient httpclient = new DefaultHttpClient();
+            
             HttpResponse response = httpclient.execute(httpRequest);
             HttpEntity entity = response.getEntity();
-            BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
-            InputStream instream = bufHttpEntity.getContent();
-            return BitmapFactory.decodeStream(instream);
+ 
+            BufferedHttpEntity bufHttpEntity = null;
+            
+            try {
+                bufHttpEntity = new BufferedHttpEntity(entity);
+            } catch (OutOfMemoryError oom) {
+                System.err.println("Out of memory, running GC");
+                
+                if (bufHttpEntity != null) {
+                    bufHttpEntity.consumeContent();
+                }
+                bufHttpEntity = null;
+                entity.consumeContent();
+                entity = null;
+                System.gc();
+            }
+            
+            // If we ran out of memory, then we just want to use a default image, so don't bother
+            // with any of this.
+            if (bufHttpEntity != null) {
+                
+                Bitmap bitmap;
+                InputStream instream = bufHttpEntity.getContent();
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                
+                // For starters, we just need some basic information about the photo (we don't want
+                // the photo itself... yet). This variable does just that. 
+                options.inJustDecodeBounds = true;
+                
+                // Fetch the dimensions of the photo. We'll use these to calculate the scaling of it.
+                BitmapFactory.decodeStream(instream, null, options);
+                
+                System.out.println("ImageWidth: " + options.outWidth + " ImageHeight: " + options.outHeight);
+                System.out.println("RequestedWidth: " + requestedWidth + " RequestedHeight: " + requestedHeight);
+
+                if ((options.outWidth > requestedWidth) || (options.outHeight > requestedHeight)) {
+                   
+                    System.out.println("In the resizing if");
+                    int scale = 1;
+                    boolean flag = true;
+                    
+                    // Calculate the scale that we need to get closest to the requested dimensions.
+                    for(int i = 2; flag; i *= 2) {
+                        if (!(((options.outWidth / i) > requestedWidth) || ((options.outHeight / i) > requestedHeight))) {
+                            flag = false;
+                        } else {
+                            scale = i;
+                        }
+                    }
+                    
+                    // Create a new options object to limit the size of the bitmap a bit (or a lot).
+                    options = new BitmapFactory.Options();
+                    
+                    // Change the color profile. Changing to RGB_565 from the default will 
+                    // half the size of the resulting bitmap. The best part is that we don't really
+                    // lose much color clarity at all in the image (seriousely, the difference is
+                    // nearly impossible to notice)! 
+                    options.inPreferredConfig = Config.RGB_565;
+                    
+                    // Set the sample size according to the devices screen size. We need to stick to
+                    // powers of 2 to keep things efficient. Because of this though, we may not be able
+                    // to get all that close to the size we want. Because of this, we just need to make
+                    // sure that the image size is at least equal to if not greater than the devices
+                    // screen resolution.
+                    options.inSampleSize = scale;
+                    
+                    instream = bufHttpEntity.getContent();
+                    bitmap = BitmapFactory.decodeStream(instream, null, options);
+                    
+                    bufHttpEntity.consumeContent();
+                    bufHttpEntity = null;
+                    
+                } else {
+                    
+                    options = new BitmapFactory.Options();
+                    instream = bufHttpEntity.getContent();
+                    
+                    // Change the color profile. Changing to RGB_565 from the default will 
+                    // half the size of the resulting bitmap. The best part is that we don't really
+                    // lose much color clarity at all in the image (seriousely, the difference is
+                    // nearly impossible to notice)! 
+                    options.inPreferredConfig = Config.RGB_565;
+                    bitmap = BitmapFactory.decodeStream(instream, null, options);
+                    
+                    instream = null;
+                }
+                
+                System.gc();
+                return bitmap;
+            }
+            
+            
         } catch (IOException ex) {
             System.err.println("RestApiV1/getRemoteImage/" + ex);
         }
@@ -692,6 +793,20 @@ public class RestApiV1 {
         return makeAuthenticatedGet(query);
     }
     
+   /**
+    * API call to fetch the passed user's roles in the passed group.
+    * 
+    * @param groupUuid The group whose roles will be checked.
+    * @param userUuid The user whose roles will be found.
+    * @return Result from API.
+    */
+   public static String getUserRolesInGroup(String groupUuid, String userUuid) {
+       
+       String query = ENDPOINT + "groups/" + groupUuid + "/roles/" + userUuid + ".json";
+       
+       return makeAuthenticatedGet(query);
+   }
+   
     /**
      * API call to fetch a list of groups that match the passed in search criteria.
      * 

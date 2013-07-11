@@ -94,7 +94,7 @@ public class MessageReply extends AllplayersSherlockActivity {
          * @return The result of the API call.
          */
         protected Void doInBackground(Object... args) {
-            RestApiV1.postMessage((Integer)args[0], (String)args[1]);
+            RestApiV1.createMessageReply((Integer)args[0], (String)args[1]);
             return null;
         }
     }

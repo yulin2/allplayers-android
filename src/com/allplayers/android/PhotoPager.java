@@ -228,7 +228,8 @@ public class PhotoPager extends AllplayersSherlockActivity {
              * @return A Bitmap of the image that was fetched.
              */
             protected Bitmap doInBackground(String... photoUrl) {
-                Bitmap b = RestApiV1.getRemoteImage(photoUrl[0]);
+                //TODO unhardcode
+                Bitmap b = RestApiV1.getRemoteImage(photoUrl[0], 1080, 1920);
                 mImageCache.put(index + "", b);
                 return b;
             }
