@@ -126,7 +126,7 @@
         </Button>
         
         <LinearLayout
-            android:id="@+id/alpha_banner_layout"
+            android:id="@+id/banner_layout"
             android:layout_below="@id/newAccountButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -135,12 +135,12 @@
             android:weightSum="1">
             
             <ImageView
-                android:id="@+id/alphaBanner"
+                android:id="@+id/betaBanner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".75"
                 android:layout_gravity="left"
-                android:src="@drawable/alpha_banner" />
+                android:src="@drawable/beta_banner" />
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -150,7 +150,7 @@
         
         <TextView
             android:id="@+id/account_create_success"
-            android:layout_below="@id/alpha_banner_layout"
+            android:layout_below="@id/banner_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/account_create_success"
@@ -162,7 +162,7 @@
             android:id="@+id/ctrlActivityIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/alpha_banner_layout"
+            android:layout_below="@id/banner_layout"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
