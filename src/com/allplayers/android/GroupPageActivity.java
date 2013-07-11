@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -206,10 +205,11 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
         protected Bitmap doInBackground(String... logoURL) {
             
             Display display = getWindowManager().getDefaultDisplay(); 
+            @SuppressWarnings("deprecation")
             int width = display.getWidth();  // deprecated
+            @SuppressWarnings("deprecation")
             int height = display.getHeight();  // deprecated
             
-            //TODO unhardcode
             return RestApiV1.getRemoteImage(logoURL[0], width, height);
         }
 
@@ -221,6 +221,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
          */
         @Override
         protected void onPostExecute(Bitmap logo) {
+            
             // Hide the loading indicator.
             mProgressBar.setVisibility(View.GONE);
 
