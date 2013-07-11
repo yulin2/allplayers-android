@@ -39,7 +39,8 @@
         <activity
             android:name="com.allplayers.android.Login"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -66,25 +67,25 @@
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Sherlock" />
+            android:theme="@style/Theme.Sherlock.NoActionBar" />
         <activity
             android:name="com.allplayers.android.MessageActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Sherlock" />
+            android:theme="@style/Theme.Sherlock.NoActionBar" />
         <activity
             android:name="com.allplayers.android.PhotosActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Sherlock" />
+            android:theme="@style/Theme.Sherlock.NoActionBar" />
         <activity
             android:name="com.allplayers.android.EventsActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Sherlock" />
+            android:theme="@style/Theme.Sherlock.NoActionBar" />
         <activity
             android:name="com.allplayers.android.AccountActivity"
             android:configChanges="orientation"
@@ -114,7 +115,7 @@
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Sherlock" />
+            android:theme="@style/Theme.Sherlock.NoActionBar" />
         <activity
             android:name="com.allplayers.android.GroupPageActivity"
             android:configChanges="orientation"
@@ -247,7 +248,7 @@
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Sherlock" />
+            android:theme="@style/Theme.Sherlock.NoActionBar" />
         <!-- End Contacts Activities -->
         
         <!-- Start Admin Toolbar Activityes -->
