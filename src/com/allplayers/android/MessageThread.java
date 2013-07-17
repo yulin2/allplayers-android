@@ -129,7 +129,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
             mThreadId = Integer.parseInt(threadID[0]);
             RestApiV1.putMessage(mThreadId, 0, "thread");
 
-            mJsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0]);
+            mJsonResult = RestApiV1.getUserMessagesByThreadId(threadID[0], getApplicationContext());
 
             return mJsonResult;
         }

@@ -164,7 +164,7 @@ public class MessageSent extends AllplayersSherlockActivity {
          */
         @Override
         protected String doInBackground(Void... Args) {
-            return RestApiV1.getUserSentBox(mOffset, LIMIT);
+            return RestApiV1.getUserSentBox(mOffset, LIMIT, getApplicationContext());
         }
 
         /**

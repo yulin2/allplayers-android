@@ -152,7 +152,7 @@ public class PhotosFragment extends ListFragment {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(mGroupCount, 15, null);
+            return RestApiV1.getUserGroups(mGroupCount, 15, null, getActivity().getApplicationContext());
         }
 
         /**
@@ -181,7 +181,7 @@ public class PhotosFragment extends ListFragment {
          */
         @Override 
         protected String doInBackground(String... groupUuid) {
-            return RestApiV1.getGroupAlbumsByGroupId(groupUuid[0], 0, 100);
+            return RestApiV1.getGroupAlbumsByGroupId(groupUuid[0], 0, 100, getActivity().getApplicationContext());
         }
 
         /**

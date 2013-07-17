@@ -49,6 +49,10 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
         
         super.onCreate(savedInstanceState);
         
+        sharedPreferences = getSharedPreferences("Critical_Data", 0);
+        RestApiV1.setCurrentUserUUID(sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
+        for (int i = 0; i < 100; i++) System.out.println("Setting dat UUID to: " + sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
+        
         // Set up the action bar.
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         mActionBar = getSupportActionBar();
@@ -61,8 +65,8 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
      * onDestroy(), or nothing, depending on later user activity.
      */
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
 
         // Save the user's UUID to local storage
         SharedPreferences sharedPreferences = getSharedPreferences("Critical_Data", 0);
@@ -77,8 +81,8 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
      * has navigated back to it). It will be followed by onStart() and then onResume().
      */
     @Override
-    public void onRestart() {
-        super.onRestart();
+    public void onStart() {
+        super.onStart();
         
         // Check what theme is currently seleted by the user.
         SharedPreferences sharedPreferences = getSharedPreferences("Theme Choice", 0);
@@ -95,6 +99,7 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
         // Make sure that the user's UUID is up to date.
         sharedPreferences = getSharedPreferences("Critical_Data", 0);
         RestApiV1.setCurrentUserUUID(sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
+        for (int i = 0; i < 100; i++) System.out.println("Setting dat UUID to: " + sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
     }
 
     /**

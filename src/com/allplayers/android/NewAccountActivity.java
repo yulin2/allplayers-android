@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -70,8 +69,8 @@ public class NewAccountActivity extends Activity {
         setContentView(R.layout.activity_new_account);
 
         // Set up the captcha on the page for the user to solve. This one is generated in the app
-        // using the same random number ranges used on the  site to avoid the wierdness of how the
-        // API works.
+        // using the same random number ranges used on the  site. This is done to avoid sending more
+        // network calls than we need to.
         setCaptcha();
 
         // Get a handle on all of the page elements in the XML.
@@ -186,14 +185,12 @@ public class NewAccountActivity extends Activity {
 
                 // Check that the first name field is not blank.
                 if (mFirstName.equals("")) {
-                    Log.d("Registration Status", "The first name field was left blank.");
                     errorOccured = true;
                     firstNameError();
                 }
 
                 // Check that the last name is not blank.
                 if (mLastName.equals("")) {
-                    Log.d("Registration Status", "The last name field was left blank.");
                     errorOccured = true;
                     lastNameError();
                 }
@@ -284,11 +281,6 @@ public class NewAccountActivity extends Activity {
                                    "There was an error in your submission.",
                                    Toast.LENGTH_LONG).show();
                 } else {
-                    Log.d("bday", mBirthDate);
-                    System.out.println(new String[] {
-                                           mFirstName, mLastName, mEmail, mGender, mBirthDate, mPassword,
-                                           mApiCaptchaToken, mApiCaptchaResponse
-                                       });
                     new AccountRegistrationTask().execute(new String[] {
                                                               mFirstName, mLastName, mEmail, mGender, mBirthDate, mPassword,
                                                               mApiCaptchaToken, mApiCaptchaResponse
@@ -302,7 +294,6 @@ public class NewAccountActivity extends Activity {
         // to make an API call before sending any data to get the captcha token and problem. To do
         // that we will just send some dummy data.
         new GetNewCaptchaTask().execute();
-        Log.d("Registration Status", "Finished onCreate(). The page is now set up");
     }
 
     /**
@@ -390,7 +381,6 @@ public class NewAccountActivity extends Activity {
      * and starting that activity.
      */
     private void onAccountCreateSuccess() {
-        Log.d("Registration Status", "Account successfuly registered.");
         Intent intent = new Intent();
         intent.putExtra("login credentials", new String[] {mEmail, mPassword});
         setResult(Activity.RESULT_OK, intent);
@@ -559,7 +549,6 @@ public class NewAccountActivity extends Activity {
             String jsonResult = RestApiV1.createNewUser(signupInformation[0], signupInformation[1],
                                 signupInformation[2], signupInformation[3], signupInformation[4],
                                 signupInformation[5], signupInformation[6], signupInformation[7]);
-            Log.d("API Response", jsonResult);
             return jsonResult;
         }
 
@@ -571,9 +560,15 @@ public class NewAccountActivity extends Activity {
          */
         @Override
         protected void onPostExecute(String jsonResult) {
+            
+            if (jsonResult.equals("error")) {
+                Toast toast = Toast.makeText(NewAccountActivity.this, "It appears that you are having connection issues, please check your network settings", Toast.LENGTH_LONG);
+                toast.show();
+            }
+            
             try {
                 JSONObject response = new JSONObject(jsonResult);
-                Log.d("JSONRESPONSE", jsonResult);
+                
                 // If the result gives us a uuid, we know that the account has been created
                 // successfully.
                 if (response.has("uuid")) {
@@ -641,25 +636,24 @@ public class NewAccountActivity extends Activity {
          */
         @Override
         protected String doInBackground(Void... arg0) {
-            Log.d("Registration Status", "Sending in dummy data to get a capthca to solve.");
             String jsonResult = RestApiV1.createNewUser("", "", "", "", "", "", null, null);
-            Log.d("API Response", jsonResult);
             return jsonResult;
         }
 
         /**
          * Take the result from the API call and if it is a "captcha_error" (which it always should
-         * be), parse out the math problem and captcha token, solve the math problem, and save the
+         * be), parse out the math problem and captcha token, solVve the math problem, and save the
          * token and math problem answer to be sent with the next API call.
          *
          * @param jsonResult: The result of the API call made in doInBackground().
          */
         @Override
-        protected void onPostExecute(String jsonResult) {
+        protected void onPostExecute(String jsonResult) {       
             JSONObject response;
+            
             try {
                 response = new JSONObject(jsonResult);
-
+                
                 // We should only ever get a captcha_error here
                 if (response.has("captcha_error")) {
                     mApiCaptchaToken = response.getJSONObject("captcha_error")

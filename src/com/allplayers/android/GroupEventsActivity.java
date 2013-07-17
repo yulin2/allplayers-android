@@ -139,7 +139,7 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
         protected String doInBackground(GroupData... groups) {
             
             // Call the API to return the group's events.
-            return RestApiV1.getGroupEventsUpcomingByGroupId(groups[0].getUUID(), mOffset, mLimit);
+            return RestApiV1.getGroupEventsUpcomingByGroupId(groups[0].getUUID(), mOffset, mLimit, getApplicationContext());
         }
 
         /**

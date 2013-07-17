@@ -158,7 +158,7 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserFriends(mOffset, LIMIT);
+            return RestApiV1.getUserFriends(mOffset, LIMIT, getApplicationContext());
         }
 
         /**

@@ -169,7 +169,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
          */
         @Override
         protected String doInBackground(String... group_uuid) {
-            return RestApiV1.getGroupInformationByGroupId(group_uuid[0]);
+            return RestApiV1.getGroupInformationByGroupId(group_uuid[0], getApplicationContext());
         }
 
         /**
@@ -305,7 +305,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
          */
         @Override
         protected String doInBackground(String... group_uuid) {
-            return RestApiV1.getGroupMembersByGroupId(group_uuid[0], 0, 0);
+            return RestApiV1.getGroupMembersByGroupId(group_uuid[0], 0, 0, getApplicationContext());
         }
 
         /**
@@ -345,7 +345,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
          */
         @Override
         protected String doInBackground(Void... voids) {
-            return RestApiV1.getUserRolesInGroup(mGroup.getUUID(), RestApiV1.getCurrentUserUUID());
+            return RestApiV1.getUserRolesInGroup(mGroup.getUUID(), RestApiV1.getCurrentUserUUID(), getApplicationContext());
         }
 
         /**

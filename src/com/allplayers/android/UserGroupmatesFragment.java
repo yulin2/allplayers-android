@@ -179,7 +179,7 @@ public class UserGroupmatesFragment extends ListFragment {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroupmates(mOffset, LIMIT);
+            return RestApiV1.getUserGroupmates(mOffset, LIMIT, getActivity().getApplicationContext());
         }
 
         /** 

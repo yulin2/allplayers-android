@@ -154,7 +154,7 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroupmates(mOffset, LIMIT);
+            return RestApiV1.getUserGroupmates(mOffset, LIMIT, getApplicationContext());
         }
 
         /**

@@ -36,6 +36,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import com.allplayers.android.Login;
+
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -52,8 +56,8 @@ public class RestApiV1 {
     private static final String CAP_TOKEN_NAME = "X-ALLPLAYERS-CAPTCHA-TOKEN";
     
     //**FOR TESTING ONLY**//
-    private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
-    //private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
+    //private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
+    private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
     
     private static String sCurrentUserUUID = "";
 
@@ -132,8 +136,7 @@ public class RestApiV1 {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             InputStream inStream = connection.getInputStream();
-            BufferedReader input = new BufferedReader(new InputStreamReader(
-                        inStream));
+            BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
             String line = "";
             String result = "";
             while ((line = input.readLine()) != null) {
@@ -150,6 +153,64 @@ public class RestApiV1 {
                 logOut();
                 return false;
             }
+
+        } catch (Exception ex) {
+            System.err.println("APCI_RestServices/isLoggedIn/" + ex);
+            return false;
+        }
+    }
+    
+    /**
+     * Checks if the user is currently logged in.
+     * 
+     * @return True if the current user is logged in, False if not.
+     */
+    public static boolean isLoggedInForAuthenticatedGet(Context appContext) {
+        
+        // If we don't have the user's UUID stored locally, we know that nobody is logged in. We can
+        // stop checking right here.
+        if (sCurrentUserUUID.equals("") || sCurrentUserUUID.equals(null)) {
+            logOut();
+            return false;
+        }
+
+        // If we make it this far, we know that the app has the UUID saved, now we need to check if
+        // the API says that we are logged in.
+        try {
+            URL url = new URL(ENDPOINT + "users/" + sCurrentUserUUID + ".json");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            InputStream inStream = connection.getInputStream();
+            BufferedReader input = new BufferedReader(new InputStreamReader(inStream));
+            String line = "";
+            String result = "";
+            while ((line = input.readLine()) != null) {
+                result += line;
+            }
+            JSONObject jsonResult = new JSONObject(result);
+            String retrievedUUID = jsonResult.getString("uuid");
+
+            // Check if the the logged in user in the API is the same one that we have stored in the
+            // app. If not, something weird happened so we should log out both the app and the API.
+            if (retrievedUUID.equals(sCurrentUserUUID)) {
+                return true;
+            } else {
+                logOut();
+                return false;
+            }
+            
+        } catch (IOException ex) {
+            
+            // Getting an IOException most likely means that the application was dumped from memory,
+            // reseting cookies and the such. Calling the Login activity will go through and log us
+            // back in (assuming that the user should actually be logged in).
+            
+            if (ex.equals("No authentication challenges found")) {
+                Intent intent = new Intent(appContext, Login.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                appContext.startActivity(intent);
+            }
+            return true;
         } catch (Exception ex) {
             System.err.println("APCI_RestServices/isLoggedIn/" + ex);
             return false;
@@ -162,18 +223,17 @@ public class RestApiV1 {
      * @param urlString The url of the GET call.
      * @return Result from API.
      */
-    private static String makeAuthenticatedGet(String urlString) {
+    private static String makeAuthenticatedGet(String urlString, Context appContext) {
         
         // Check if the user is logged in.
-        if (!isLoggedIn()) {
+        if (!isLoggedInForAuthenticatedGet(appContext)) {
             return "You are not logged in";
         }
 
         // Make and return from authenticated get call
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             InputStream inStream = connection.getInputStream();
             if (connection.getResponseCode() == 204) {
@@ -189,7 +249,22 @@ public class RestApiV1 {
             }
 
             return result;
+            
+        } catch (IOException ex) {
+            
+            // Getting an IOException most likely means that the application was dumped from memory,
+            // reseting cookies and the such. Calling the Login activity will go through and log us
+            // back in (assuming that the user should actually be logged in).
+            
+            if (ex.equals("No authentication challenges found")) {
+                Intent intent = new Intent(appContext, Login.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                appContext.startActivity(intent);
+            }
+            return ex.toString();
+            
         } catch (Exception ex) {
+            
             System.err.println("APCI_RestServices/makeAuthenticatedGet/" + ex);
             return "error";
         }
@@ -349,19 +424,20 @@ public class RestApiV1 {
      * @param urlString The url of the GET call.
      * @return Result from API.
      */
-    private static String makeUnauthenticatedGet(String urlString) {
+    private static String makeUnauthenticatedGet(String urlString, Context appContext) {
         
         // Make and return from unauthenticated get call
         try {
             URL url = new URL(urlString);
-            Log.d("IC", urlString + "\n" + url);
-            HttpURLConnection connection = (HttpURLConnection) url
-                                           .openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
             connection.setDoInput(true);
+            System.out.println("Response from api: " + connection.getResponseCode());
             InputStream inStream = connection.getInputStream();
             if (connection.getResponseCode() == 204) {
                 return "error";
             }
+            
             BufferedReader input = new BufferedReader(new InputStreamReader(
                         inStream));
 
@@ -372,9 +448,23 @@ public class RestApiV1 {
             }
 
             return result;
+            
+        } catch (IOException ex) {
+            
+            // Getting an "IOException: No authentication challenges found" error most likely means
+            // that the application was dumped from memory, reseting cookies and the such. Calling
+            // the Login activity will go through and log us back in (assuming that the user should
+            // actually be logged in).
+            //if (ex.toString().equals("java.io.IOException: No authentication challenges found")) {
+                Intent intent = new Intent(appContext, Login.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                appContext.startActivity(intent);
+            //}
+            return ex.toString();
+      
         } catch (Exception ex) {
-            System.err
-            .println("APCI_RestServices/makeUnauthenticatedGet/" + ex);
+            
+            System.err.println("APCI_RestServices/makeUnauthenticatedGet/" + ex);
             return ex.toString();
         }
     }
@@ -557,6 +647,9 @@ public class RestApiV1 {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+          catch (NullPointerException e) {
+              e.printStackTrace();
+        }
         sCurrentUserUUID = "";
     }
 
@@ -584,7 +677,7 @@ public class RestApiV1 {
      * @param cookieHandler The new value of sCookieHandler.
      */
     public static void setCookieHandler(CookieHandler cookieHandler) {
-        sCookieHandler = cookieHandler;
+        //sCookieHandler = cookieHandler;
     }
 
     /**
@@ -606,11 +699,11 @@ public class RestApiV1 {
      * @param albumUuid The UUID of the album that is being fetched.
      * @return Result from API.
      */
-    public static String getAlbumByAlbumId(String albumUuid) {
+    public static String getAlbumByAlbumId(String albumUuid, Context appContext) {
         
         String query = ENDPOINT + "albums/" + albumUuid + ".json";
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
 
     /**
@@ -621,7 +714,7 @@ public class RestApiV1 {
      * @param limit The number of results the API will return.
      * @return: Result from API.
      */
-    public static String getAlbumPhotosByAlbumId(String albumUuid, int offset, int limit) {
+    public static String getAlbumPhotosByAlbumId(String albumUuid, int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "albums/" + albumUuid + "/photos.json";
         
@@ -632,7 +725,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -645,11 +738,11 @@ public class RestApiV1 {
      * @param eventId The ID of the event that is being fetched.
      * @return Result from API.
      */
-    public static String getEventByEventId(String eventId) {
+    public static String getEventByEventId(String eventId, Context appContext) {
         
         String query = ENDPOINT + "events/" + eventId + ".json";
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -706,7 +799,7 @@ public class RestApiV1 {
      * @param limit The number of results the API will return.
      * @return Result from API.
      */
-    public static String getGroupAlbumsByGroupId(String groupUuid, int offset, int limit) {
+    public static String getGroupAlbumsByGroupId(String groupUuid, int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "groups/" + groupUuid + "/albums.json";
         
@@ -717,7 +810,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
     /**
@@ -728,7 +821,7 @@ public class RestApiV1 {
      * @param limit The number of results the API will return.
      * @return Result from API.
      */
-    public static String getGroupEventsUpcomingByGroupId(String groupUuid, int offset, int limit) {
+    public static String getGroupEventsUpcomingByGroupId(String groupUuid, int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "groups/" + groupUuid + "/events/upcoming.json";
         
@@ -739,7 +832,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
     /**
@@ -748,11 +841,11 @@ public class RestApiV1 {
      * @param groupUuid The UUID of the group whos data is being fetched.
      * @return Result from API.
      */
-    public static String getGroupInformationByGroupId(String groupUuid) {
+    public static String getGroupInformationByGroupId(String groupUuid, Context appContext) {
         
         String query = ENDPOINT + "groups/" + groupUuid + ".json";
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
 
     /**
@@ -763,7 +856,7 @@ public class RestApiV1 {
      * @param limit The number of results the API will return.
      * @return Result from API.
      */
-    public static String getGroupMembersByGroupId(String groupUuid, int offset, int limit) {
+    public static String getGroupMembersByGroupId(String groupUuid, int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "groups/" + groupUuid + "/members.json";
         
@@ -774,7 +867,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
 
     /**
@@ -783,11 +876,11 @@ public class RestApiV1 {
      * @param groupUuid The UUID of the group whos data is being fetched.
      * @return Result from API.
      */
-    public static String getGroupPhotosByGroupId(String groupUuid) {
+    public static String getGroupPhotosByGroupId(String groupUuid, Context appContext) {
         
         String query = ENDPOINT + "groups/" + groupUuid + "/photos.json";
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
    /**
@@ -797,11 +890,11 @@ public class RestApiV1 {
     * @param userUuid The user whose roles will be found.
     * @return Result from API.
     */
-   public static String getUserRolesInGroup(String groupUuid, String userUuid) {
+   public static String getUserRolesInGroup(String groupUuid, String userUuid, Context appContext) {
        
        String query = ENDPOINT + "groups/" + groupUuid + "/roles/" + userUuid + ".json";
        
-       return makeAuthenticatedGet(query);
+       return makeUnauthenticatedGet(query, appContext);
    }
    
     /**
@@ -812,7 +905,7 @@ public class RestApiV1 {
      * @param distance The distance query for the groups.
      * @return Result from API.
      */
-    public static String searchGroups(String search, int zipcode, int distance, int offset, int limit) {
+    public static String searchGroups(String search, int zipcode, int distance, int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "groups.json";
         
@@ -839,7 +932,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeUnauthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -873,7 +966,7 @@ public class RestApiV1 {
      * @param limit The number of results the API will return.
      * @return Result from API.
      */
-    public static String getUserInbox(int offset, int limit) {
+    public static String getUserInbox(int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "messages.json&box=inbox";
         
@@ -884,7 +977,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
 
     /**
@@ -893,11 +986,11 @@ public class RestApiV1 {
      * @param threadId The unique id of the thread to fetch.
      * @return Result from API.
      */
-    public static String getUserMessagesByThreadId(String threadId) {
+    public static String getUserMessagesByThreadId(String threadId, Context appContext) {
         
         String query = ENDPOINT + "messages/" + threadId + ".json";
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
     /**
@@ -908,7 +1001,7 @@ public class RestApiV1 {
      *
      * @return: Result from API.
      */
-    public static String getUserSentBox(int offset, int limit) {
+    public static String getUserSentBox(int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "messages.json&box=sent";
         
@@ -919,7 +1012,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1011,11 +1104,11 @@ public class RestApiV1 {
      * @param photoUuid The UUID of the photo that is being fetched.
      * @return Result from API.
      */
-    public static String getPhotoByPhotoId(String photoUuid) {
+    public static String getPhotoByPhotoId(String photoUuid, Context appContext) {
         
         String query = ENDPOINT + "photos/" + photoUuid + ".json";
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1028,11 +1121,11 @@ public class RestApiV1 {
      * @param resourceId The ID of the photo that is being fetched.
      * @return Result from API.
      */
-    public static String getUserResourceByResourceId(String resourceId) {
+    public static String getUserResourceByResourceId(String resourceId, Context appContext) {
         
         String query = ENDPOINT + "resources/" + resourceId + ".json";
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1046,7 +1139,7 @@ public class RestApiV1 {
      * @param limit The number of results the API will return.
      * @return Result from API.
      */
-    public static String getUserChildren(int offset, int limit) {
+    public static String getUserChildren(int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "users/" + sCurrentUserUUID + "/children.json";
         
@@ -1057,7 +1150,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
     /**
@@ -1067,7 +1160,7 @@ public class RestApiV1 {
      * @param limit The number of results the API will return.
      * @return Result from API.
      */
-    public static String getUserEventsUpcoming(int offset, int limit) {
+    public static String getUserEventsUpcoming(int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "users/" + sCurrentUserUUID + "/events/upcoming.json";
         
@@ -1078,7 +1171,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
     /**
@@ -1088,7 +1181,7 @@ public class RestApiV1 {
      * @param limit The number of results the API will return.
      * @return Result from API.
      */
-    public static String getUserFriends(int offset, int limit) {
+    public static String getUserFriends(int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "users/" + sCurrentUserUUID + "/friends.json";
         
@@ -1099,7 +1192,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query).replaceAll("&#039;", "'");
+        return makeUnauthenticatedGet(query, appContext).replaceAll("&#039;", "'");
     }
     
     /**
@@ -1109,7 +1202,7 @@ public class RestApiV1 {
      * @param limit The number of results the API will return.
      * @return Result from API.
      */
-    public static String getUserGroupmates(int offset, int limit) {
+    public static String getUserGroupmates(int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "users/" + sCurrentUserUUID + "/groupmates.json";
         
@@ -1120,7 +1213,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
     /**
@@ -1134,7 +1227,9 @@ public class RestApiV1 {
      *      "alphabetical_descending": Sort the data in alphabetically descending order.
      * @return Result from API.
      */
-    public static String getUserGroups(int offset, int limit, String sort) {
+    public static String getUserGroups(int offset, int limit, String sort, Context appContext) {
+        
+        System.out.println("Getting user groups from the user with the following UUID: " + sCurrentUserUUID);
         
         String query = ENDPOINT + "users/" + sCurrentUserUUID + "/groups.json";
         
@@ -1148,7 +1243,9 @@ public class RestApiV1 {
             query += ("&sort=" + sort);
         }
         
-        return makeAuthenticatedGet(query);
+        String result = makeUnauthenticatedGet(query, appContext);
+        System.out.println("I got: " + result);
+        return result;
     }
 
     /**
@@ -1158,7 +1255,7 @@ public class RestApiV1 {
      * @param limit The number of results the API will return.
      * @return Result from API.
      */
-    public static String getUserGuardians(int offset, int limit) {
+    public static String getUserGuardians(int offset, int limit, Context appContext) {
         
         String query = ENDPOINT + "users/" + sCurrentUserUUID + "/guardians.json";
         
@@ -1169,7 +1266,7 @@ public class RestApiV1 {
             query += ("&limit=" + limit);
         }
         
-        return makeAuthenticatedGet(query);
+        return makeUnauthenticatedGet(query, appContext);
     }
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -162,7 +162,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(mOffset, LIMIT, "alphabetical_ascending");
+            return RestApiV1.getUserGroups(mOffset, LIMIT, "alphabetical_ascending", getApplicationContext());
         }
 
         /**
@@ -228,7 +228,7 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
         protected String doInBackground(ArrayList<GroupData>... groups) {
             String jsonResult = new String();
             for (int i = 0; i < groups[0].size(); i++) {
-                jsonResult += (RestApiV1.getGroupMembersByGroupId(groups[0].get(i).getUUID(), 0, 0));
+                jsonResult += (RestApiV1.getGroupMembersByGroupId(groups[0].get(i).getUUID(), 0, 0, getApplicationContext()));
             }
             return jsonResult;
         }

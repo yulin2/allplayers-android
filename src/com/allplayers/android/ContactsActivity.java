@@ -54,7 +54,7 @@ public class ContactsActivity extends AllplayersSherlockFragmentActivity {
         mActionBar.addTab(mFriendsTab);
 
         mGroupmatesTab = mActionBar.newTab();
-        mGroupmatesTab.setText("Groupates");
+        mGroupmatesTab.setText("Groupmates");
         mGroupmatesTab.setTabListener(new ContactsTabListener<UserGroupmatesFragment>(this, "Groupmates", UserGroupmatesFragment.class));
         mActionBar.addTab(mGroupmatesTab);
 

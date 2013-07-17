@@ -125,7 +125,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
          */
         @Override
         protected String doInBackground(AlbumData... album) {
-            return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID(), 0, 0);
+            return RestApiV1.getAlbumPhotosByAlbumId(album[0].getUUID(), 0, 0, getApplicationContext());
         }
 
         /**

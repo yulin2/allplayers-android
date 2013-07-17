@@ -145,9 +145,15 @@ public class Login extends Activity {
              */
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(Login.this, NewAccountActivity.class);
-                startActivityForResult(intent, 0);
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if (activeNetworkInfo == null) {
+                    Toast noInternetConnection = Toast.makeText(getApplicationContext(), "No Connection \nCheck Internet Connectivity", Toast.LENGTH_LONG);
+                    noInternetConnection.show();
+                } else {
+                    Intent intent = new Intent(Login.this, NewAccountActivity.class);
+                    startActivityForResult(intent, 0);
+                }
             }
         });
 
@@ -160,7 +166,14 @@ public class Login extends Activity {
              */
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Login.this, FindGroupsActivity.class));
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if (activeNetworkInfo == null) {
+                    Toast noInternetConnection = Toast.makeText(getApplicationContext(), "No Connection \nCheck Internet Connectivity", Toast.LENGTH_LONG);
+                    noInternetConnection.show();
+                } else {
+                    startActivity(new Intent(Login.this, FindGroupsActivity.class));
+                }
             }
         });
     }
@@ -265,11 +278,18 @@ public class Login extends Activity {
 
                 Account account = new Account(email, "com.allplayers.android");
                 mAccountManager.addAccountExplicitly(account, encryptedPassword, null);
-
+                
+                // Save the user's UUID.
+                mSharedPreferences = getSharedPreferences("Critical_Data", 0);
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                editor.putString("UUID", RestApiV1.getCurrentUserUUID());
+                editor.commit();
+                                
                 Intent intent = new Intent(Login.this, GroupsActivity.class);
                 startActivity(intent);
                 finish();
                 return "validLogin";
+
             } catch (JSONException ex) {
                 System.err.println("Login/user_id/" + ex);
                 return "invalidLogin";

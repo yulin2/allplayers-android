@@ -57,6 +57,7 @@ public class GroupsFragment extends ListFragment {
         }
 
         // Load the first set of groups.
+        System.out.println("Fetching users groups");
         new GetUserGroupsTask().execute();
     }
     
@@ -188,7 +189,7 @@ public class GroupsFragment extends ListFragment {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(mPageNumber++ * LIMIT, LIMIT, mSortType);
+            return RestApiV1.getUserGroups(mPageNumber++ * LIMIT, LIMIT, mSortType, getActivity().getApplicationContext());
         }
 
         /**
@@ -199,6 +200,8 @@ public class GroupsFragment extends ListFragment {
          */
         @Override
         protected void onPostExecute(String jsonResult) {
+            
+            System.out.println("After requesting the group data, we get returned: " + jsonResult);
             if (!jsonResult.equals("error")) {
                 
                 // Create the new group data objects and add them to our list.

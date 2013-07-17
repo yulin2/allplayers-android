@@ -130,7 +130,7 @@ public class MessageFragment extends ListFragment {
          */
         @Override
         protected Void doInBackground(Void... args) {
-            mJsonResult = RestApiV1.getUserInbox(0,0);
+            mJsonResult = RestApiV1.getUserInbox(0,0, getActivity().getApplicationContext());
             return null;
         }
 

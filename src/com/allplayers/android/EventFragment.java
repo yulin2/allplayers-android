@@ -201,7 +201,7 @@ public class EventFragment extends ListFragment {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserEventsUpcoming(mOffset, LIMIT);
+            return RestApiV1.getUserEventsUpcoming(mOffset, LIMIT, getActivity().getApplicationContext());
         }
 
         /**

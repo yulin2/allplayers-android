@@ -2,9 +2,12 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -118,51 +121,56 @@ public class UserFriendsFragment extends ListFragment {
     }
 
     /** 
-     * This method will be called when an item in the list is selected.
+     * This method will be called when an item in the list is selected (only applies to API >= 11).
      * 
      * @param l The ListView where the click happened.
      * @param v The view that was clicked within the ListView.
      * @param position The position of the view in the list.
      * @param id The row id of the item that was clicked.
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
 
-        // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't want to
-        // do anything.
-        if (!(id == -1)) {
-            final int selectedPosition = position;
-            PopupMenu menu = new PopupMenu(mParentActivity, v);
-            menu.inflate(R.menu.friend_menu);
-            menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+        // Check which verion of Android is being run, anything pre-11 cannot display popup menus.
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+            
+            // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't want to
+            // do anything.
+            if (!(id == -1)) {
+                final int selectedPosition = position;
+                PopupMenu menu = new PopupMenu(mParentActivity, v);
+                menu.inflate(R.menu.friend_menu);
+                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-                /** 
-                 * Called when a menu item has been invoked.
-                 * 
-                 * @param item The menu item that was invoked.
-                 * @return Return true to consume this click and prevent others from executing.
-                 */
-                @Override
-                public boolean onMenuItemClick(android.view.MenuItem item) {
-                    switch (item.getItemId()) {
+                    /** 
+                     * Called when a menu item has been invoked.
+                     * 
+                     * @param item The menu item that was invoked.
+                     * @return Return true to consume this click and prevent others from executing.
+                     */
+                    @Override
+                    public boolean onMenuItemClick(android.view.MenuItem item) {
+                        switch (item.getItemId()) {
 
-                        // Go to SelectMessageContacts.class with the selected user autopopulated.
-                        case R.id.send_message: {
-                            Gson gson = new Gson();
-                            ArrayList<GroupMemberData> selectedUser =
-                                new ArrayList<GroupMemberData>();
-                            selectedUser.add(mMembersList.get(selectedPosition));
-                            String broadcastRecipients = gson.toJson(selectedUser);
-                            Intent intent = new Intent(mParentActivity,
-                                                       SelectMessageContacts.class);
-                            intent.putExtra("broadcastRecipients", broadcastRecipients);
-                            startActivity(intent);
+                            // Go to SelectMessageContacts.class with the selected user autopopulated.
+                            case R.id.send_message: {
+                                Gson gson = new Gson();
+                                ArrayList<GroupMemberData> selectedUser =
+                                    new ArrayList<GroupMemberData>();
+                                selectedUser.add(mMembersList.get(selectedPosition));
+                                String broadcastRecipients = gson.toJson(selectedUser);
+                                Intent intent = new Intent(mParentActivity,
+                                                           SelectMessageContacts.class);
+                                intent.putExtra("broadcastRecipients", broadcastRecipients);
+                                startActivity(intent);
+                            }
                         }
+                        return true;
                     }
-                    return true;
-                }
-            });
-            menu.show();
+                });
+                menu.show();
+            }
         }
     }
 
@@ -179,7 +187,10 @@ public class UserFriendsFragment extends ListFragment {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserFriends(mOffset, LIMIT);
+            
+            String value = RestApiV1.getUserFriends(mOffset, LIMIT, getActivity().getApplicationContext());
+            System.out.println("Value: " + value);
+            return value;
         }
 
         /** 
@@ -202,7 +213,7 @@ public class UserFriendsFragment extends ListFragment {
                 // a blank indicator showing so.
                 if (mMembersList.size() == 0) {
                     GroupMemberData blank = new GroupMemberData();
-                    blank.setName("No groupmates to display");
+                    blank.setName("No friends to display");
                     mMembersList.add(blank);
                     mAdapter.notifyDataSetChanged();
                     mListView.setEnabled(false);
