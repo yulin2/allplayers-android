@@ -15,12 +15,22 @@
          android:lines="1"
          android:maxLines="1"
          android:singleLine="true"
-         android:text="Subject"
-         android:textSize="18sp" >
+         android:textSize="18sp"
+         android:layout_marginTop="10dp" >
+     </TextView>
+     
+     <TextView
+         android:id="@+id/body"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_weight="1"
+         android:gravity="left"
+         android:textSize="16sp"
+         android:layout_marginTop="10dp" >
      </TextView>
 
      <TextView
-         android:id="@+id/last_sender"
+         android:id="@+id/date_updated"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_weight="1"
@@ -29,8 +39,8 @@
          android:lines="1"
          android:maxLines="1"
          android:singleLine="true"
-         android:text="body"
-         android:textSize="14sp" >
+         android:textSize="14sp"
+         android:layout_marginBottom="10dp" >
      </TextView>
 
 </LinearLayout>

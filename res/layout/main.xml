@@ -162,7 +162,7 @@
             android:id="@+id/ctrlActivityIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/banner_layout"
+            android:layout_below="@id/account_create_success"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
@@ -170,18 +170,20 @@
             android:keepScreenOn="true"
             android:visibility="gone" />
         
-        <Button
-            android:id="@+id/groupSearchButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:drawableLeft="@drawable/search_login_page_icon"
-            android:gravity="left"
-            android:text="@string/search_for_groups"
-            android:textColor="#33B5E5"
-            android:visibility="gone" >
-        </Button>
+        <!-- For now, we are not showing the group search button. There is not enough real functionality there yet for it to make sense to have it. -->
+<!--         <Button -->
+<!--             android:id="@+id/groupSearchButton" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_alignParentLeft="true" -->
+<!--             android:layout_alignParentBottom="true" -->
+<!--             android:drawableLeft="@drawable/search_login_page_icon" -->
+<!--             android:gravity="left" -->
+<!--             android:text="@string/search_for_groups" -->
+<!--             android:textColor="#33B5E5" -->
+<!--             android:visibility="gone" > -->
+<!--         </Button>  -->
+        
     </RelativeLayout>
 
 </LinearLayout>

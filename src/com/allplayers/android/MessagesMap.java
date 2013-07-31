@@ -1,6 +1,7 @@
 package com.allplayers.android;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.json.JSONException;
@@ -38,6 +39,7 @@ public class MessagesMap {
                     }
                 }
             }
+            Collections.sort(mMessageList);
         } catch (JSONException ex) {
             System.err.println("MessagesMap/" + ex);
         }

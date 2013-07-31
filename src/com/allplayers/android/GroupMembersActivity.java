@@ -2,8 +2,10 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
     private ProgressBar mLoadingIndicator;
     private ArrayList<GroupMemberData> mMembersList = new ArrayList<GroupMemberData>();
     private Button mLoadMoreButton;
+    private GetGroupMembersByGroupIdTask mGetGroupMembersByGroupIdTask;
     private GroupData mGroup;
     private int mOffset = 0;
     private boolean mEndOfData = false;
@@ -75,7 +78,8 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetGroupMembersByGroupIdTask().execute(mGroup);
+                mGetGroupMembersByGroupIdTask = new GetGroupMembersByGroupIdTask();
+                mGetGroupMembersByGroupIdTask.execute(mGroup);
             }
         });
 
@@ -98,7 +102,22 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
         mSideNavigationView.setMode(Mode.LEFT);
 
         // Populate the list with the first 8 members.
-        new GetGroupMembersByGroupIdTask().execute(mGroup);
+        mGetGroupMembersByGroupIdTask = new GetGroupMembersByGroupIdTask();
+        mGetGroupMembersByGroupIdTask.execute(mGroup);
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // Cancel any running asynchronous tasks.
+        if (mGetGroupMembersByGroupIdTask != null) {
+            mGetGroupMembersByGroupIdTask.cancel(true);
+        }
     }
 
     /** This method will be called when an item in the list is selected.
@@ -107,42 +126,47 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
      * @param position The position of the view in the list.
      * @param id The row id of the item that was clicked.
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
 
-        // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't want to
-        // do anything.
-        if (!(id == -1)) {
-            final int selectedPosition = position;
-            PopupMenu menu = new PopupMenu(GroupMembersActivity.this, v);
-            menu.inflate(R.menu.friend_menu);
-            menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+        // Check which verion of Android is being run, anything pre-11 cannot display popup menus.
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+            
+         // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't want to
+            // do anything.
+            if (!(id == -1)) {
+                final int selectedPosition = position;
+                PopupMenu menu = new PopupMenu(GroupMembersActivity.this, v);
+                menu.inflate(R.menu.friend_menu);
+                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-                /** Called when a menu item has been invoked.
-                 * @param item The menu item that was invoked.
-                 * @return Return true to consume this click and prevent others from executing.
-                 */
-                @Override
-                public boolean onMenuItemClick(android.view.MenuItem item) {
-                    switch (item.getItemId()) {
+                    /** Called when a menu item has been invoked.
+                     * @param item The menu item that was invoked.
+                     * @return Return true to consume this click and prevent others from executing.
+                     */
+                    @Override
+                    public boolean onMenuItemClick(android.view.MenuItem item) {
+                        switch (item.getItemId()) {
 
-                        // Go to SelectMessageContacts.class with the selected user autopopulated.
-                        case R.id.send_message: {
-                            Gson gson = new Gson();
-                            ArrayList<GroupMemberData> selectedUser =
-                                new ArrayList<GroupMemberData>();
-                            selectedUser.add(mMembersList.get(selectedPosition));
-                            String broadcastRecipients = gson.toJson(selectedUser);
-                            Intent intent = new Intent(GroupMembersActivity.this,
-                                                       SelectMessageContacts.class);
-                            intent.putExtra("broadcastRecipients", broadcastRecipients);
-                            startActivity(intent);
+                            // Go to SelectMessageContacts.class with the selected user autopopulated.
+                            case R.id.send_message: {
+                                Gson gson = new Gson();
+                                ArrayList<GroupMemberData> selectedUser =
+                                    new ArrayList<GroupMemberData>();
+                                selectedUser.add(mMembersList.get(selectedPosition));
+                                String broadcastRecipients = gson.toJson(selectedUser);
+                                Intent intent = new Intent(GroupMembersActivity.this,
+                                                           SelectMessageContacts.class);
+                                intent.putExtra("broadcastRecipients", broadcastRecipients);
+                                startActivity(intent);
+                            }
                         }
+                        return true;
                     }
-                    return true;
-                }
-            });
-            menu.show();
+                });
+                menu.show();
+            }
         }
     }
 

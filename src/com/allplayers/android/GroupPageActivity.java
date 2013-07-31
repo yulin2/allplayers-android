@@ -39,13 +39,18 @@ import com.google.gson.Gson;
  * Displays a page with a group's image and buttons to 
  */
 public class GroupPageActivity extends AllplayersSherlockActivity {
-
-    private GroupData mGroup;
-    private ArrayList<GroupMemberData> mMembersList;
-    private boolean isMember = false, isLoggedIn = false;
-    private ProgressBar mProgressBar;
+    
     private AllplayersSherlockActivity mParentActivity = this;
-    Menu mAdminMenu;
+    private ArrayList<GroupMemberData> mMembersList;
+    private CheckUserAdminPrivalegesAndCreateOptionsMenuTask mCheckUserAdminPrivalegesAndCreateOptionsMenuTask;
+    private GetGroupLocationTask mGetGroupLocationTask;
+    private GetGroupMembersByGroupIdTask mGetGroupMembersByGroupIdTask;
+    private GetRemoteImageTask mGetRemoteImageTask;
+    private GroupData mGroup;
+    private Menu mAdminMenu;
+    private ProgressBar mProgressBar;
+    
+    private boolean isMember = false, isLoggedIn = false;
 
     /**
      * Called when the activity is first created, this creates the Action Bar
@@ -89,21 +94,15 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
 
         // Load the group members so we check if the user belongs and can set up the UI.
         if (!RestApiV1.getCurrentUserUUID().equals("")) {
-            new GetGroupMembersByGroupIdTask().execute(mGroup.getUUID());
-            new GetGroupLocationTask().execute(mGroup.getUUID());
+            mGetGroupMembersByGroupIdTask = new GetGroupMembersByGroupIdTask();
+            mGetGroupMembersByGroupIdTask.execute(mGroup.getUUID());
+            mGetGroupLocationTask = new GetGroupLocationTask();
+            mGetGroupLocationTask.execute(mGroup.getUUID());
         } else {
-            new GetRemoteImageTask().execute(mGroup.getLogo());
+            mGetRemoteImageTask = new GetRemoteImageTask();
+            mGetRemoteImageTask.execute(mGroup.getLogo());
         }
     }
-    
-    @Override 
-    public void onDestroy() {
-        super.onDestroy();
-        
-        
-        
-    }
-    
 
     /**
      * Initialize the contents of the Activity's standard options menu.
@@ -114,8 +113,36 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         mAdminMenu = menu;
-        new CheckUserAdminPrivalegesAndCreateOptionsMenuTask().execute();
+        mCheckUserAdminPrivalegesAndCreateOptionsMenuTask = new CheckUserAdminPrivalegesAndCreateOptionsMenuTask();
+        mCheckUserAdminPrivalegesAndCreateOptionsMenuTask.execute();
         return true;
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // Stop any asynchronous tasks that we have running.
+        
+        if (mCheckUserAdminPrivalegesAndCreateOptionsMenuTask != null) {
+            mCheckUserAdminPrivalegesAndCreateOptionsMenuTask.cancel(true);
+        }
+        
+        if (mGetGroupMembersByGroupIdTask != null) {
+            mGetGroupMembersByGroupIdTask.cancel(true);
+        }
+        
+        if (mGetGroupLocationTask != null) {
+            mGetGroupLocationTask.cancel(true);
+        }
+        
+        if (mGetRemoteImageTask != null) {
+            mGetRemoteImageTask.cancel(true);
+        }
     }
 
     /**
@@ -331,7 +358,8 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
             }
             
             // Load the logo and then set up the UI.
-            new GetRemoteImageTask().execute(mGroup.getLogo());
+            mGetRemoteImageTask = new GetRemoteImageTask();
+            mGetRemoteImageTask.execute(mGroup.getLogo());
         }
     }
 

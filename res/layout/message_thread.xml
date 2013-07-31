@@ -1,23 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <ListView android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
-    
-    <com.devspark.sidenavigation.SideNavigationView
-        android:id="@+id/side_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    
-    <ProgressBar
-        android:id="@+id/progress_indicator"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_centerInParent="true"
-        android:indeterminateOnly="true"
-        android:keepScreenOn="true" />
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    android:weightSum="1" >
+	    
+	    <LinearLayout 
+	        android:id="@+id/thread_reply"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight=".90"
+	        android:orientation="horizontal"
+	        android:weightSum="1" >
+	        
+	        <EditText
+	            android:id="@+id/reply_text"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_weight=".25"
+	            android:inputType="textMultiLine"
+	            android:textSize="18sp"
+	            android:hint="Reply to thread" />
+	        
+	        <View
+                android:id="@+id/separator"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@color/android_blue" />
+	            
+	        <Button
+	            android:id="@+id/reply_button"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_weight=".75"
+	            android:text="Reply"
+	            android:background="@drawable/backgroundstate" />
+	            
+	    </LinearLayout>
+	    
+	    <View
+            android:id="@+id/separator2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/android_blue" />
+	    
+	    <ListView android:id="@+android:id/thread_list"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight=".10" > </ListView>
+
+	</LinearLayout>
+	
+	<com.devspark.sidenavigation.SideNavigationView
+            android:id="@+id/side_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        
+        <ProgressBar
+            android:id="@+id/progress_indicator"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_centerInParent="true"
+            android:indeterminateOnly="true"
+            android:keepScreenOn="true" />
+        
 </RelativeLayout>

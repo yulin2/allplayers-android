@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +32,7 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
     private ArrayList<GroupMemberData> mMembersList;
     private ArrayList<GroupMemberData> mSelectedMembers;
     private Button mLoadMoreButton;
+    private GetUserFriendsTask mGetUserFriendsTask;
     private ListView mListView;
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
@@ -91,7 +91,8 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetUserFriendsTask().execute();
+                mGetUserFriendsTask = new GetUserFriendsTask();
+                mGetUserFriendsTask.execute();
             }
         });
 
@@ -117,8 +118,6 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
                 String userData = gson.toJson(mSelectedMembers);
                 Intent intent = new Intent();
 
-                Log.d("User Data", userData);
-
                 intent.putExtra("userData", userData);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
@@ -126,7 +125,21 @@ public class SelectFriendContacts extends AllplayersSherlockListActivity {
         });
 
         // Get the first 15 friends.
-        new GetUserFriendsTask().execute();
+        mGetUserFriendsTask = new GetUserFriendsTask();
+        mGetUserFriendsTask.execute();
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        if (mGetUserFriendsTask != null) {
+            mGetUserFriendsTask.cancel(true);
+        }
     }
 
     /**

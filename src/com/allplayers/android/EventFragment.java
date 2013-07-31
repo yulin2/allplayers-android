@@ -30,6 +30,7 @@ public class EventFragment extends ListFragment {
     private ArrayList<EventData> mEventsList = new ArrayList<EventData>();
     private ArrayList<HashMap<String, String>> mTimeList = new ArrayList<HashMap<String, String>>();
     private Button mLoadMoreButton;
+    private GetUserEventsTask mGetUserEventsTask;
     private ProgressBar mLoadingIndicator;
     private SimpleAdapter mAdapter;
     private ViewGroup mFooter;
@@ -62,7 +63,8 @@ public class EventFragment extends ListFragment {
         mAdapter = new SimpleAdapter(mParentActivity, mTimeList, android.R.layout.simple_list_item_2, from, to);
 
         // Fetch the user's events.
-        new GetUserEventsTask().execute();
+        mGetUserEventsTask = new GetUserEventsTask();
+        mGetUserEventsTask.execute();
     }
 
     /**
@@ -93,13 +95,28 @@ public class EventFragment extends ListFragment {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetUserEventsTask().execute();
+                mGetUserEventsTask = new GetUserEventsTask();
+                mGetUserEventsTask.execute();
             }
         });
 
         // Add our footer to the bottom of the list and set our adapter.
         getListView().addFooterView(mFooter);
         setListAdapter(mAdapter);
+    }
+    
+    /**
+     * Called when the Fragment is no longer started. This is generally tied to Activity.onStop of
+     * the containing Activity's lifecycle.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // Cancel any running acynchronous tasks.
+        if (mGetUserEventsTask != null) {
+            mGetUserEventsTask.cancel(true);
+        }
     }
 
     /**

@@ -43,7 +43,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 /**
  * App side of the API.
@@ -56,8 +55,8 @@ public class RestApiV1 {
     private static final String CAP_TOKEN_NAME = "X-ALLPLAYERS-CAPTCHA-TOKEN";
     
     //**FOR TESTING ONLY**//
-    //private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
-    private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
+    private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
+    //private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
     
     private static String sCurrentUserUUID = "";
 
@@ -223,6 +222,7 @@ public class RestApiV1 {
      * @param urlString The url of the GET call.
      * @return Result from API.
      */
+    @SuppressWarnings("unused")
     private static String makeAuthenticatedGet(String urlString, Context appContext) {
         
         // Check if the user is logged in.

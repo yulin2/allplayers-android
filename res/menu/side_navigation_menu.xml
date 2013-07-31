@@ -21,14 +21,11 @@
         android:id="@+id/events"
         android:icon="@drawable/events_sidenav_icon"
         android:title="@string/events"/>
-    <item
-        android:id="@+id/search"
-        android:icon="@drawable/search_sidenav_icon"
-        android:title="@string/search"/>
-    <item
-        android:id="@+id/log_out"
-        android:icon="@drawable/logout_sidenav_icon"
-        android:title="@string/logout"/>
+    <!-- For now, we are not showing the group search button. There is not enough real functionality there yet for it to make sense to have it. -->
+<!--     <item -->
+<!--         android:id="@+id/search" -->
+<!--         android:icon="@drawable/search_sidenav_icon" -->
+<!--         android:title="@string/search"/> -->
     <item
         android:id="@+id/refresh"
         android:icon="@drawable/refresh_sidenav_icon"
@@ -37,5 +34,9 @@
         android:id="@+id/change_theme"
         android:icon="@drawable/switch_theme_sidenav_icon"
         android:title="Change Theme"/>
+    <item
+        android:id="@+id/log_out"
+        android:icon="@drawable/logout_sidenav_icon"
+        android:title="@string/logout"/>
 
 </menu>

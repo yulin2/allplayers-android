@@ -30,18 +30,21 @@ import com.allplayers.rest.RestApiV1;
  * Handles login. Also hosts the link to the registration page.
  */
 public class Login extends Activity {
+    private AttemptLoginTask mAttemptLoginTask;
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private TextView mPasswordLabel;
     private TextView mUsernameLabel;
     private Button mLoginButton;
     private Button mNewAccountButton;
+    @SuppressWarnings("unused")
     private Button mGroupSearchButton;
     private TextView mAccountCreateSuccess;
     private ProgressBar mLoadingIndicator;
     private AccountManager mAccountManager;
     private Context mContext;
     private SharedPreferences mSharedPreferences;
+    private Toast mToast;
 
     /**
      * Called when the activity is starting. 
@@ -67,7 +70,7 @@ public class Login extends Activity {
         mAccountManager = AccountManager.get(mContext);
         mLoginButton = (Button)findViewById(R.id.loginButton);
         mNewAccountButton = (Button)findViewById(R.id.newAccountButton);
-        mGroupSearchButton = (Button)findViewById(R.id.groupSearchButton);
+//        mGroupSearchButton = (Button)findViewById(R.id.groupSearchButton);
         mUsernameEditText = (EditText)findViewById(R.id.usernameField);
         mPasswordEditText = (EditText)findViewById(R.id.passwordField);
         mPasswordLabel = (TextView)findViewById(R.id.passwordLabel);
@@ -102,7 +105,8 @@ public class Login extends Activity {
                 String unencryptedPassword = textEncryptor.decrypt(storedPassword);
 
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new AttemptLoginTask().execute(storedEmail, unencryptedPassword);
+                mAttemptLoginTask = new AttemptLoginTask();
+                mAttemptLoginTask.execute(storedEmail, unencryptedPassword);
             }
         } else {
             
@@ -132,7 +136,8 @@ public class Login extends Activity {
                 String password = mPasswordEditText.getText().toString();
 
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new AttemptLoginTask().execute(email, password);
+                mAttemptLoginTask = new AttemptLoginTask();
+                mAttemptLoginTask.execute(email, password);
             }
         });
 
@@ -157,27 +162,47 @@ public class Login extends Activity {
             }
         });
 
-        mGroupSearchButton.setOnClickListener(new View.OnClickListener() {
-            
-            /**
-             * Called when a view has been clicked.
-             * 
-             * @param v The view that was clicked.
-             */
-            @Override
-            public void onClick(View v) {
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-                if (activeNetworkInfo == null) {
-                    Toast noInternetConnection = Toast.makeText(getApplicationContext(), "No Connection \nCheck Internet Connectivity", Toast.LENGTH_LONG);
-                    noInternetConnection.show();
-                } else {
-                    startActivity(new Intent(Login.this, FindGroupsActivity.class));
-                }
-            }
-        });
+        // For now, we are not showing the group search button. There is not enough real
+        // functionality there yet for it to make sense to have it.
+//        mGroupSearchButton.setOnClickListener(new View.OnClickListener() {
+//            
+//            /**
+//             * Called when a view has been clicked.
+//             * 
+//             * @param v The view that was clicked.
+//             */
+//            @Override
+//            public void onClick(View v) {
+//                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+//                if (activeNetworkInfo == null) {
+//                    Toast noInternetConnection = Toast.makeText(getApplicationContext(), "No Connection \nCheck Internet Connectivity", Toast.LENGTH_LONG);
+//                    noInternetConnection.show();
+//                } else {
+//                    startActivity(new Intent(Login.this, FindGroupsActivity.class));
+//                }
+//            }
+//        });
     }
-
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // Cancel the asynchronous task if it is running.
+        if (mAttemptLoginTask != null) {
+            mAttemptLoginTask.cancel(true);
+        }
+        
+        if (mToast != null) {
+            mToast.cancel();
+        }
+    }
+    
     /**
      * Called when an activity you launched exits, giving you the requestCode you started it with,
      * the resultCode it returned, and any additional data from it. The resultCode will be
@@ -199,6 +224,8 @@ public class Login extends Activity {
                 mUsernameEditText.setText(data.getStringArrayExtra("login credentials")[0]);
                 mPasswordEditText.setText(data.getStringArrayExtra("login credentials")[1]);
                 mAccountCreateSuccess.setVisibility(View.VISIBLE);
+                mToast = Toast.makeText(this, "Account successfuly created!", Toast.LENGTH_SHORT);
+                mToast.show();
             }
         }
     }
@@ -223,7 +250,7 @@ public class Login extends Activity {
     public void showLoginFields() {
         mLoginButton.setVisibility(View.VISIBLE);
         mNewAccountButton.setVisibility(View.VISIBLE);
-        mGroupSearchButton.setVisibility(View.VISIBLE);
+//        mGroupSearchButton.setVisibility(View.VISIBLE);
         mUsernameEditText.setVisibility(View.VISIBLE);
         mPasswordEditText.setVisibility(View.VISIBLE);
         mPasswordLabel.setVisibility(View.VISIBLE);

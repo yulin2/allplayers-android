@@ -50,7 +50,6 @@ public class AllplayersSherlockListActivity extends SherlockListActivity impleme
         
         sharedPreferences = getSharedPreferences("Critical_Data", 0);
         RestApiV1.setCurrentUserUUID(sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
-        for (int i = 0; i < 100; i++) System.out.println("Setting dat UUID to: " + sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
         
         // Set up the action bar.
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -98,7 +97,6 @@ public class AllplayersSherlockListActivity extends SherlockListActivity impleme
         // Make sure that the user's UUID is up to date.
         sharedPreferences = getSharedPreferences("Critical_Data", 0);
         RestApiV1.setCurrentUserUUID(sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
-        for (int i = 0; i < 100; i++) System.out.println("Setting dat UUID to: " + sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
     }
 
     /**

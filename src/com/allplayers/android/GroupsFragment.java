@@ -25,6 +25,7 @@ public class GroupsFragment extends ListFragment {
     private Activity mParentActivity;
     private ArrayAdapter<GroupData> mAdapter;
     private ArrayList<GroupData> mGroupList = new ArrayList<GroupData>();
+    private GetUserGroupsTask mGetUserGroupsTask;
     private ListView mListView;
     private ProgressBar mProgressBar;
     
@@ -57,8 +58,8 @@ public class GroupsFragment extends ListFragment {
         }
 
         // Load the first set of groups.
-        System.out.println("Fetching users groups");
-        new GetUserGroupsTask().execute();
+        mGetUserGroupsTask = new GetUserGroupsTask();
+        mGetUserGroupsTask.execute();
     }
     
     /**
@@ -107,7 +108,8 @@ public class GroupsFragment extends ListFragment {
                     }
                 }
                 if (mLoadMore && !loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-                    new GetUserGroupsTask().execute();
+                    mGetUserGroupsTask = new GetUserGroupsTask();
+                    mGetUserGroupsTask.execute();
                     loading = true;
                 }
             }
@@ -127,6 +129,20 @@ public class GroupsFragment extends ListFragment {
                 // We don't need this.
             }
         });
+    }
+    
+    /**
+     * Called when the Fragment is no longer started. This is generally tied to Activity.onStop of
+     * the containing Activity's lifecycle.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // Stop any asynchronous tasks that we have running.
+        if (mGetUserGroupsTask != null) {
+            mGetUserGroupsTask.cancel(true);
+        }
     }
 
     /**
@@ -201,7 +217,6 @@ public class GroupsFragment extends ListFragment {
         @Override
         protected void onPostExecute(String jsonResult) {
             
-            System.out.println("After requesting the group data, we get returned: " + jsonResult);
             if (!jsonResult.equals("error")) {
                 
                 // Create the new group data objects and add them to our list.

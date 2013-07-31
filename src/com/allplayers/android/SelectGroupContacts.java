@@ -34,6 +34,8 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
     private ArrayList<GroupData> mSelectedGroups;
     private ArrayList<GroupMemberData> mSelectedMembers;
     private Button mLoadMoreButton;
+    private GetGroupMembersByGroupIdTask mGetGroupMembersByGroupIdTask;
+    private GetUserGroupsTask mGetUserGroupsTask;
     private ListView mListView;
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
@@ -94,7 +96,8 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetUserGroupsTask().execute();
+                mGetUserGroupsTask = new GetUserGroupsTask();
+                mGetUserGroupsTask.execute();
             }
         });
 
@@ -124,13 +127,32 @@ public class SelectGroupContacts extends AllplayersSherlockListActivity {
 
                     // The serialization and finishing of this activity is handled in the async
                     // thread.
-                    new GetGroupMembersByGroupIdTask().execute(mSelectedGroups);
+                    mGetGroupMembersByGroupIdTask = new GetGroupMembersByGroupIdTask();
+                    mGetGroupMembersByGroupIdTask.execute(mSelectedGroups);
                 }
             }
         });
 
         // Get the first 15 groups.
-        new GetUserGroupsTask().execute();
+        mGetUserGroupsTask = new GetUserGroupsTask();
+        mGetUserGroupsTask.execute();
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        if (mGetGroupMembersByGroupIdTask != null) {
+            mGetGroupMembersByGroupIdTask.cancel(true);
+        }
+        
+        if (mGetUserGroupsTask != null) {
+            mGetUserGroupsTask.cancel(true);
+        }
     }
 
     /**

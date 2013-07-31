@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @SuppressWarnings("serial")
-public class MessageData extends DataObject {
+public class MessageData extends DataObject implements Comparable<MessageData> {
     
     private Date updatedDate = null;
 
@@ -183,5 +183,18 @@ public class MessageData extends DataObject {
         } else {
             is_new = "1";
         }
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo (MessageData another) {
+        if (Integer.parseInt(this.last_updated) < Integer.parseInt(another.last_updated)) {
+            return 1;
+        } else if (Integer.parseInt(this.last_updated) > Integer.parseInt(another.last_updated)) {
+            return -1;
+        }
+        return 0;
     }
 }

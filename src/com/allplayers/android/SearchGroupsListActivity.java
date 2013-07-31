@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -26,6 +25,7 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
 
     private ArrayList<GroupData> mGroupList;
     private ProgressBar mProgressBar;
+    private SearchGroupsTask mSearchGroupsTask;
     
     private boolean hasGroups = false;
 
@@ -67,7 +67,21 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
         int distance = router.getIntentSearchDistance();
 
         // Search for the groups using the passed in parameters.
-        new SearchGroupsTask().execute(query, zipcode, distance);
+        mSearchGroupsTask = new SearchGroupsTask();
+        mSearchGroupsTask.execute(query, zipcode, distance);
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override 
+    public void onStop() {
+        super.onStop();
+        
+        if (mSearchGroupsTask != null) {
+            mSearchGroupsTask.cancel(true);
+        }
     }
 
     /**
@@ -134,7 +148,6 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
          */
         @Override
         protected void onPostExecute(String jsonResult) {
-            Log.d("IC", jsonResult);
             GroupsMap groups = new GroupsMap(jsonResult);
             mGroupList = groups.getGroupData();
 

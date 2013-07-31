@@ -19,6 +19,8 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
  */
 public class MessageReply extends AllplayersSherlockActivity {
     
+    private PostMessageTask mPostMessageTask;
+    
     private String mMessageBody;
     private String mThreadId;
    
@@ -73,7 +75,8 @@ public class MessageReply extends AllplayersSherlockActivity {
             public void onClick(View v) {
                 mMessageBody = bodyField.getText().toString();
 
-                new PostMessageTask().execute(Integer.parseInt(mThreadId), mMessageBody);
+                mPostMessageTask = new PostMessageTask();
+                mPostMessageTask.execute(Integer.parseInt(mThreadId), mMessageBody);
 
                 Toast toast = Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG);
                 toast.show();
@@ -81,6 +84,19 @@ public class MessageReply extends AllplayersSherlockActivity {
                 finish();
             }
         });
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        if (mPostMessageTask != null) {
+            mPostMessageTask.cancel(true);
+        }
     }
 
     /**

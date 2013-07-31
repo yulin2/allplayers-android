@@ -7,15 +7,19 @@ import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
@@ -35,6 +39,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
     
     private ArrayAdapter<String> mAdapter;
     private ArrayList<GroupMemberData> mRecipientList = new ArrayList<GroupMemberData>();
+    private ArrayList<GroupMemberData> mSelectedRecipients = new ArrayList<GroupMemberData>();
 
     /**
      * Called when the activity is starting.
@@ -47,7 +52,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice);
 
         // Check if there is any data already in a previous version of this activity.
         if (icicle != null) {
@@ -58,7 +63,6 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         // Check if any data was sent in from a GroupPageActivity broadcast.
         if (getIntent().getExtras() != null) {
             addRecipientsToList(getIntent().getExtras().getString("broadcastRecipients"));
-            Log.d("SelectMessageContacts_Recieved", getIntent().getExtras().getString("broadcastRecipients"));
         }
         setContentView(R.layout.selectmessagecontacts);
 
@@ -73,48 +77,12 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         mSideNavigationView.setMode(Mode.LEFT);
 
         // Set up the page's ListView
+        getListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         setListAdapter(mAdapter);
-
-        getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
-            
-            /**
-             * Callback method to be invoked when an item in this view has been clicked and held.
-             * 
-             * @param parent The AbsListView where the click happened.
-             * @param view The view within the AbsListView that was clicked.
-             * @param position The position of the view in the list.
-             * @param id The row id of the item that was clicked.
-             * @return Returns true if the callback consumed the long click, false otherwise.
-             */
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long arg3) {
-                PopupMenu menu = new PopupMenu(SelectMessageContacts.this, view);
-                menu.inflate(R.menu.message_recipient_menu);
-                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                    
-                    /**
-                     * Called when a menu item has been invoked. This is the first code that is
-                     * executed; if it returns true, no other callbacks will be executed.
-                     * 
-                     * @param item The menu item that was invoked.
-                     * @return Return true to consume this click and prevent others from executing.
-                     */
-                    @Override
-                    public boolean onMenuItemClick(android.view.MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.removeRecipient:
-                                mAdapter.remove(mAdapter.getItem(position));
-                                mRecipientList.remove(position);
-                                break;
-                            case R.id.cancel:
-                        }
-                        return true;
-                    }
-                });
-                menu.show();
-                return true;
-            }
-        });
+        ListView listView = getListView();
+        for (int i = 0; i < getListAdapter().getCount(); i++) {
+            listView.setItemChecked(i, true);
+        }
 
         // "Add User Recipient" button.
         final Button addUserRecipientButton = (Button)findViewById(R.id.addGroupmatesRecipientButton);
@@ -162,7 +130,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                 if (!mRecipientList.isEmpty()) {
                     Intent intent = new Intent(SelectMessageContacts.this, ComposeMessage.class);
                     Gson gson = new Gson();
-                    String userData = gson.toJson(mRecipientList);
+                    String userData = gson.toJson(mSelectedRecipients);
                     intent.putExtra("userData", userData);
                     startActivity(intent);
                 } else {
@@ -210,6 +178,23 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         String currentRecipients = gson.toJson(mRecipientList);
         icicle.putString("currentRecipients", currentRecipients);
     }
+    
+    /**
+     * This method will be called when an item in the list is selected.
+     * 
+     * @param l: The ListView where the click happened.
+     * @param v: The view that was clicked within the ListView.
+     * @param position: The position of the view in the list.
+     * @param id: The row id of the item that was clicked.
+     */
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        if (mSelectedRecipients.contains(mRecipientList.get(position))) {
+            mSelectedRecipients.remove(mRecipientList.get(position));
+        } else {
+            mSelectedRecipients.add(mRecipientList.get(position));
+        }
+    }
 
     /**
      * Adds recipients to an ArrayList directly from a json string returned by the API.
@@ -227,6 +212,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
                     GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
                     if (member.isNew(mRecipientList)) {
                         mRecipientList.add(member);
+                        mSelectedRecipients.add(member);
                     }
                 }
                 for (int i = previousSize; i < mRecipientList.size(); i++) {
@@ -237,6 +223,10 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
             Collections.sort(mRecipientList, new RecipientComparator());
             mAdapter.sort(new NameComparator());
             mAdapter.notifyDataSetChanged();
+            ListView listView = getListView();
+            for (int i = 0; i < getListAdapter().getCount(); i++) {
+                listView.setItemChecked(i, true);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

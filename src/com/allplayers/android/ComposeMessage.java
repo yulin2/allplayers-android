@@ -30,6 +30,7 @@ public class ComposeMessage extends AllplayersSherlockActivity {
     private Activity mActivity = this;
     private ArrayList<String> mRecipientUuidList = new ArrayList<String>();
     private Button mSendButton;
+    private CreateNewMessageTask mCreateNewMessageTask;
     
     private String mMessageBody;
     private String mMessageSubject;
@@ -100,15 +101,29 @@ public class ComposeMessage extends AllplayersSherlockActivity {
                 mMessageSubject = subjectField.getText().toString();
 
                 // Spawn a thread to send the message.
-                new createNewMessageTask().execute(mMessageSubject, mMessageBody);
+                mCreateNewMessageTask = new CreateNewMessageTask();
+                mCreateNewMessageTask.execute(mMessageSubject, mMessageBody);
             }
         });
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        if (mCreateNewMessageTask != null) {
+            mCreateNewMessageTask.cancel(true);
+        }
     }
 
     /**
      * Sends the user's message.
      */
-    public class createNewMessageTask extends AsyncTask<String, Void, Void> {
+    public class CreateNewMessageTask extends AsyncTask<String, Void, Void> {
         Toast toast;
         
         /**

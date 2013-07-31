@@ -29,15 +29,16 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 public class GroupEventsActivity extends AllplayersSherlockListActivity {
     private ArrayList<EventData> mEventsList = new ArrayList<EventData>();
     private ArrayList<HashMap<String, String>> mAdapterList = new ArrayList<HashMap<String, String>>();
+    private Button mLoadMoreButton;
+    private GetGroupEventsTask mGetGroupEventsTask;
+    private GroupData mGroup;
+    private ProgressBar mLoadingIndicator;
     private SimpleAdapter mAdapter;
+    private ViewGroup mFooter;
+    
+    private boolean mCanRemoveFooter = false;
     private int mOffset = 0;
     private int mLimit = 10;
-    private ProgressBar mLoadingIndicator;
-    private ViewGroup mFooter;
-    private Button mLoadMoreButton;
-    private GroupData mGroup;
-    private boolean mCanRemoveFooter = false;
-
 
     /**
      * Called when the activity is starting.
@@ -88,7 +89,8 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetGroupEventsTask().execute(mGroup);
+                mGetGroupEventsTask = new GetGroupEventsTask();
+                mGetGroupEventsTask.execute(mGroup);
             }
         });
 
@@ -97,7 +99,22 @@ public class GroupEventsActivity extends AllplayersSherlockListActivity {
         setListAdapter(mAdapter);
 
         // Load the group's first set of events.
-        new GetGroupEventsTask().execute(mGroup);
+        mGetGroupEventsTask = new GetGroupEventsTask();
+        mGetGroupEventsTask.execute(mGroup);
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // Stop any asynchronous tasks that we have running.
+        if (mGetGroupEventsTask != null) {
+            mGetGroupEventsTask.cancel(true);
+        }
     }
 
     /**

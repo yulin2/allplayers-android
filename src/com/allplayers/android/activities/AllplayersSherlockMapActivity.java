@@ -51,7 +51,6 @@ public class AllplayersSherlockMapActivity extends SherlockMapActivity implement
         
         sharedPreferences = getSharedPreferences("Critical_Data", 0);
         RestApiV1.setCurrentUserUUID(sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
-        for (int i = 0; i < 100; i++) System.out.println("Setting dat UUID to: " + sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
         
         // Set up the action bar.
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);

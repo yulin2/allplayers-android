@@ -2,9 +2,11 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -31,12 +33,14 @@ public class UserGroupmatesFragment extends ListFragment {
     private ArrayAdapter<GroupMemberData> mAdapter;
     private ArrayList<GroupMemberData> mMembersList;
     private Button mLoadMoreButton;
+    private GetUserGroupmatesTask mGetUserGroupmatesTask;
     private ListView mListView;
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
 
     private final int LIMIT = 15;
     private boolean mDoneLoading = false;
+    private boolean mNoData = false;
     private boolean mEndOfData = false;
     private boolean mLoadedOnce = false;
     private int mOffset = 0;
@@ -59,7 +63,8 @@ public class UserGroupmatesFragment extends ListFragment {
         mMembersList = new ArrayList<GroupMemberData>();
 
         // Get the first 15 groupmates.
-        new GetUserGroupmatesTask().execute();
+        mGetUserGroupmatesTask = new GetUserGroupmatesTask();
+        mGetUserGroupmatesTask.execute();
     }
 
     /**
@@ -99,7 +104,8 @@ public class UserGroupmatesFragment extends ListFragment {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetUserGroupmatesTask().execute();
+                mGetUserGroupmatesTask = new GetUserGroupmatesTask();
+                mGetUserGroupmatesTask.execute();
             }
         });
 
@@ -111,10 +117,26 @@ public class UserGroupmatesFragment extends ListFragment {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
         } else if (!mDoneLoading) {
             mListView.addFooterView(mFooter);
+        } else if (mDoneLoading && mLoadedOnce && mNoData) {
+            mListView.setEnabled(false);
         }
 
         // Set our ListView adapter.
         setListAdapter(mAdapter);
+    }
+    
+    /**
+     * Called when the fragment is no longer in use. This is called after onStop() and before
+     * onDetach().
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // Stop any asynchronous tasks that we have running.
+        if (mGetUserGroupmatesTask != null) {
+            mGetUserGroupmatesTask.cancel(true);
+        }
     }
 
     /** 
@@ -125,44 +147,49 @@ public class UserGroupmatesFragment extends ListFragment {
      * @param position The position of the view in the list.
      * @param id The row id of the item that was clicked.
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
 
-        // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't want to
-        // do anything.
-        if (!(id == -1)) {
-            final int selectedPosition = position;
-            PopupMenu menu = new PopupMenu(mParentActivity, v);
-            menu.inflate(R.menu.friend_menu);
-            menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+     // Check which verion of Android is being run, anything pre-11 cannot display popup menus.
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+            
+            // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't want to
+            // do anything.
+            if (!(id == -1)) {
+                final int selectedPosition = position;
+                PopupMenu menu = new PopupMenu(mParentActivity, v);
+                menu.inflate(R.menu.friend_menu);
+                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-                /** 
-                 * Called when a menu item has been invoked.
-                 * 
-                 * @param item The menu item that was invoked.
-                 * @return Return true to consume this click and prevent others from executing.
-                 */
-                @Override
-                public boolean onMenuItemClick(android.view.MenuItem item) {
-                    switch (item.getItemId()) {
+                    /** 
+                     * Called when a menu item has been invoked.
+                     * 
+                     * @param item The menu item that was invoked.
+                     * @return Return true to consume this click and prevent others from executing.
+                     */
+                    @Override
+                    public boolean onMenuItemClick(android.view.MenuItem item) {
+                        switch (item.getItemId()) {
 
-                        // Go to SelectMessageContacts.class with the selected user autopopulated.
-                        case R.id.send_message: {
-                            Gson gson = new Gson();
-                            ArrayList<GroupMemberData> selectedUser =
-                                new ArrayList<GroupMemberData>();
-                            selectedUser.add(mMembersList.get(selectedPosition));
-                            String broadcastRecipients = gson.toJson(selectedUser);
-                            Intent intent = new Intent(mParentActivity,
-                                                       SelectMessageContacts.class);
-                            intent.putExtra("broadcastRecipients", broadcastRecipients);
-                            startActivity(intent);
+                            // Go to SelectMessageContacts.class with the selected user autopopulated.
+                            case R.id.send_message: {
+                                Gson gson = new Gson();
+                                ArrayList<GroupMemberData> selectedUser =
+                                    new ArrayList<GroupMemberData>();
+                                selectedUser.add(mMembersList.get(selectedPosition));
+                                String broadcastRecipients = gson.toJson(selectedUser);
+                                Intent intent = new Intent(mParentActivity,
+                                                           SelectMessageContacts.class);
+                                intent.putExtra("broadcastRecipients", broadcastRecipients);
+                                startActivity(intent);
+                            }
                         }
+                        return true;
                     }
-                    return true;
-                }
-            });
-            menu.show();
+                });
+                menu.show();
+            }
         }
     }
 
@@ -201,6 +228,7 @@ public class UserGroupmatesFragment extends ListFragment {
                 // If the members list is also empty, there are no group members, so add
                 // a blank indicator showing so.
                 if (mMembersList.size() == 0) {
+                    mNoData = true;
                     GroupMemberData blank = new GroupMemberData();
                     blank.setName("No groupmates to display");
                     mMembersList.add(blank);

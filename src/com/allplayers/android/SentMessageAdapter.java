@@ -47,10 +47,13 @@ public class SentMessageAdapter extends BaseAdapter {
         }
 
         TextView subject = (TextView) convertView.findViewById(R.id.subject);
-        subject.setText(entry.getSubject());
+        subject.setText("Subject: " + entry.getSubject());
+        
+        TextView body = (TextView) convertView.findViewById(R.id.body);
+        body.setText(entry.getMessageBody());
 
-        TextView senderName = (TextView) convertView.findViewById(R.id.last_sender);
-        senderName.setText("Last sent from " + entry.getLastSender());
+        TextView senderName = (TextView) convertView.findViewById(R.id.date_updated);
+        senderName.setText(entry.getDateString());
 
         return convertView;
     }

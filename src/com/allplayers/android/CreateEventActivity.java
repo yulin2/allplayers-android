@@ -15,6 +15,7 @@ import com.allplayers.objects.GroupData;
 import com.allplayers.rest.RestApiV1;
 import com.google.gson.Gson;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -194,6 +195,7 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
              * Called when a view has been clicked.
              * @param v The view that was clicked.
              */
+            @SuppressLint("SimpleDateFormat")
             @Override
             public void onClick(View v) {
                 
@@ -309,6 +311,19 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
         });
     }
     
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        if (mCreateEventTask != null) {
+            mCreateEventTask.cancel(true);
+        }
+    }
+    
     /** 
      * Sends an API call to have an event be created.
      */
@@ -401,6 +416,7 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
          * @param hourOfDay The hour that was set.
          * @param minute The minute that was set.
          */
+        @SuppressLint("SimpleDateFormat")
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             mEventStartHourOfDay = hourOfDay;
@@ -451,6 +467,7 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
          * @param monthOfYear The month that was set (0-11 for compatibility with Calendar.class).
          * @param dayOfMonth The day of the month that was set.
          */
+        @SuppressLint("SimpleDateFormat")
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             mEventStartYear = year;
@@ -502,6 +519,7 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
          * @param hourOfDay The hour that was set.
          * @param minute The minute that was set.
          */
+        @SuppressLint("SimpleDateFormat")
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             mEventEndHourOfDay = hourOfDay;
@@ -552,6 +570,7 @@ public class CreateEventActivity extends AllplayersSherlockFragmentActivity {
          * @param monthOfYear The month that was set (0-11 for compatibility with Calendar.class).
          * @param dayOfMonth The day of the month that was set.
          */
+        @SuppressLint("SimpleDateFormat")
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             mEventEndYear = year;

@@ -29,6 +29,8 @@ public class PhotosFragment extends ListFragment {
     private AlbumAdapter mAdapter;
     private ArrayList<AlbumData> mAlbumList = new ArrayList<AlbumData>();
     private Button mLoadMoreButton;
+    private GetGroupAlbumsByGroupIdTask mGetGroupAlbumsByGroupIdTask;
+    private GetUserGroupsTask mGetUserGroupsTask;
     private ListView mListView;
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
@@ -51,9 +53,22 @@ public class PhotosFragment extends ListFragment {
         
         // Set up the adapter.
         mAdapter = new AlbumAdapter(mParentActivity, R.layout.albumlistitem, mAlbumList);
+    }
+    
+    /**
+     * Called when the fragment's activity has been created and this fragment's view hierarchy
+     * instantiated.
+     * 
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state,
+     * this is the state.
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         
         // Grab the user's groups, we need this to get their albums. 
-        new GetUserGroupsTask().execute();
+        mGetUserGroupsTask = new GetUserGroupsTask();
+        mGetUserGroupsTask.execute();
     }
 
     /**
@@ -81,12 +96,32 @@ public class PhotosFragment extends ListFragment {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetUserGroupsTask().execute();
+                mGetUserGroupsTask = new GetUserGroupsTask();
+                mGetUserGroupsTask.execute();
             }
         });
         mListView = getListView();
         mListView.addFooterView(mFooter);
         setListAdapter(mAdapter);
+    }
+    
+    /**
+     * Called when the Fragment is no longer started. This is generally tied to Activity.onStop of
+     * the containing Activity's lifecycle.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // Stop any asynchronous tasks that we have running.
+        
+        if (mGetUserGroupsTask != null) {
+            mGetUserGroupsTask.cancel(true);
+        }
+        
+        if (mGetGroupAlbumsByGroupIdTask != null) {
+            mGetGroupAlbumsByGroupIdTask.cancel(true);        
+        }
     }
 
     /**
@@ -129,7 +164,9 @@ public class PhotosFragment extends ListFragment {
             }
             for (int i = 0; i < groupList.size(); i++) {
                 group_uuid = groupList.get(i).getUUID();
-                new GetGroupAlbumsByGroupIdTask().execute(group_uuid);
+                mGetGroupAlbumsByGroupIdTask = new GetGroupAlbumsByGroupIdTask();
+                mGetGroupAlbumsByGroupIdTask.execute(group_uuid);
+                
             }
         } else if (mGroupCount == 0) {
             String[] blankMessage = {"No photos to display"};
@@ -181,7 +218,8 @@ public class PhotosFragment extends ListFragment {
          */
         @Override 
         protected String doInBackground(String... groupUuid) {
-            return RestApiV1.getGroupAlbumsByGroupId(groupUuid[0], 0, 100, getActivity().getApplicationContext());
+            
+            return RestApiV1.getGroupAlbumsByGroupId(groupUuid[0], 0, 100, mParentActivity.getApplicationContext());
         }
 
         /**

@@ -2,7 +2,6 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -34,12 +33,14 @@ public class UserFriendsFragment extends ListFragment {
     private ArrayAdapter<GroupMemberData> mAdapter;
     private ArrayList<GroupMemberData> mMembersList;
     private Button mLoadMoreButton;
+    private GetUserFriendsTask mGetUserFriendsTask;
     private ListView mListView;
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
 
     private final int LIMIT = 15;
     private boolean mDoneLoading = false;
+    private boolean mNoData = false;
     private boolean mEndOfData = false;
     private boolean mLoadedOnce = false;
     private int mOffset = 0;
@@ -62,7 +63,8 @@ public class UserFriendsFragment extends ListFragment {
         mMembersList = new ArrayList<GroupMemberData>();
 
         // Get the first 15 friends.
-        new GetUserFriendsTask().execute();
+        mGetUserFriendsTask = new GetUserFriendsTask();
+        mGetUserFriendsTask.execute();
     }
 
     /**
@@ -102,7 +104,8 @@ public class UserFriendsFragment extends ListFragment {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetUserFriendsTask().execute();
+                mGetUserFriendsTask = new GetUserFriendsTask();
+                mGetUserFriendsTask.execute();
             }
         });
 
@@ -114,10 +117,26 @@ public class UserFriendsFragment extends ListFragment {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
         } else if (!mDoneLoading) {
             mListView.addFooterView(mFooter);
+        } else if (mDoneLoading && mLoadedOnce && mNoData) {
+            mListView.setEnabled(false);
         }
 
         // Set our ListView adapter.
         setListAdapter(mAdapter);
+    }
+    
+    /**
+     * Called when the fragment is no longer in use. This is called after onStop() and before
+     * onDetach().
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        
+        // Stop any asynchronous tasks that we have running.
+        if (mGetUserFriendsTask != null) {
+            mGetUserFriendsTask.cancel(true);
+        }
     }
 
     /** 
@@ -188,9 +207,7 @@ public class UserFriendsFragment extends ListFragment {
         @Override
         protected String doInBackground(Void... args) {
             
-            String value = RestApiV1.getUserFriends(mOffset, LIMIT, getActivity().getApplicationContext());
-            System.out.println("Value: " + value);
-            return value;
+            return RestApiV1.getUserFriends(mOffset, LIMIT, getActivity().getApplicationContext());
         }
 
         /** 
@@ -212,6 +229,7 @@ public class UserFriendsFragment extends ListFragment {
                 // If the members list is also empty, there are no group members, so add
                 // a blank indicator showing so.
                 if (mMembersList.size() == 0) {
+                    mNoData = true;
                     GroupMemberData blank = new GroupMemberData();
                     blank.setName("No friends to display");
                     mMembersList.add(blank);

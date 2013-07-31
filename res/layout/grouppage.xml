@@ -87,11 +87,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.devspark.sidenavigation.SideNavigationView
-        android:id="@+id/side_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <ProgressBar
         android:id="@+id/progress_indicator"
         android:layout_width="75dp"
@@ -99,5 +94,10 @@
         android:layout_centerInParent="true"
         android:indeterminateOnly="true"
         android:keepScreenOn="true" />
-
+    
+    <com.devspark.sidenavigation.SideNavigationView
+        android:id="@+id/side_navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    
 </RelativeLayout>

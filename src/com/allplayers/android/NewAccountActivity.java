@@ -8,52 +8,59 @@ import org.json.JSONObject;
 
 import com.allplayers.rest.RestApiV1;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class NewAccountActivity extends Activity {
 
-    AccountRegistrationTask registration;
+    private AccountRegistrationTask mAccountRegistrationTask;
+    private Activity mActivity = this;
+    private GetNewCaptchaTask mGetNewCaptchaTask;
 
-    EditText mFirstNameEditText;
-    EditText mLastNameEditText;
-    EditText mEmailEditText;
-    EditText mPasswordEditText;
-    EditText mVerifyPasswordEditText;
-    Spinner mGenderSpinner;
-    TextView mGenderSpinnerError;
-    DatePicker mDatePicker;
-    TextView mDatePickerError;
-    TextView mCaptchaTextView;
-    EditText mCaptchaEditText;
-    Button mSubmit;
+    private EditText mFirstNameEditText;
+    private EditText mLastNameEditText;
+    private EditText mEmailEditText;
+    private EditText mPasswordEditText;
+    private EditText mVerifyPasswordEditText;
+    private Spinner mGenderSpinner;
+    private TextView mGenderSpinnerError;
+    private DatePicker mDatePicker;
+    private TextView mDatePickerError;
+    private TextView mCaptchaTextView;
+    private EditText mCaptchaEditText;
+    private Button mSubmit;
+    private ProgressBar mProgressBar;
+    private Toast mToast;
 
-    int mGeneratedCaptchaAnswerInt;
-    String mFirstName;
-    String mLastName;
-    String mEmail;
-    String mPassword;
-    String mVerifyPassword;
-    String mApiCaptchaToken;
-    String mApiCaptchaProblem;
-    String mApiCaptchaResponse;
-    String mGeneratedCaptchaProblem;
-    String mGeneratedCaptchaResponse;
-    String mGender = "U";
-    String mBirthDate;
+    private int mGeneratedCaptchaAnswerInt;
+    private String mFirstName;
+    private String mLastName;
+    private String mEmail;
+    private String mPassword;
+    private String mVerifyPassword;
+    private String mApiCaptchaToken;
+    private String mApiCaptchaProblem;
+    private String mApiCaptchaResponse;
+    private String mGeneratedCaptchaProblem;
+    private String mGeneratedCaptchaResponse;
+    private String mGender = "U";
+    private String mBirthDate;
 
     /**
      * Called when the activity is starting.
@@ -86,9 +93,7 @@ public class NewAccountActivity extends Activity {
         mCaptchaTextView = (TextView)findViewById(R.id.captcha);
         mCaptchaEditText = (EditText)findViewById(R.id.captcha_answer);
         mSubmit = (Button)findViewById(R.id.submit);
-
-        // Set up an AccaountRegistrationTask.
-        registration = new AccountRegistrationTask();
+        mProgressBar = (ProgressBar)findViewById(R.id.create_account_progress_bar);
 
         // Setup the text view for the captcha.
         mCaptchaTextView.setText(mGeneratedCaptchaProblem + " = ");
@@ -153,6 +158,10 @@ public class NewAccountActivity extends Activity {
              */
             @Override
             public void onClick(View v) {
+                // Hide the keyboard.
+                InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE); 
+
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
                 // Set to true if any of the fields are incorrect.
                 boolean errorOccured = false;
@@ -281,7 +290,8 @@ public class NewAccountActivity extends Activity {
                                    "There was an error in your submission.",
                                    Toast.LENGTH_LONG).show();
                 } else {
-                    new AccountRegistrationTask().execute(new String[] {
+                    mAccountRegistrationTask = new AccountRegistrationTask();
+                    mAccountRegistrationTask.execute(new String[] {
                                                               mFirstName, mLastName, mEmail, mGender, mBirthDate, mPassword,
                                                               mApiCaptchaToken, mApiCaptchaResponse
                                                           });
@@ -293,7 +303,29 @@ public class NewAccountActivity extends Activity {
         // We need to get a captcha token and problem. Because of the way the API is set up, we need
         // to make an API call before sending any data to get the captcha token and problem. To do
         // that we will just send some dummy data.
-        new GetNewCaptchaTask().execute();
+        mGetNewCaptchaTask = new GetNewCaptchaTask();
+        mGetNewCaptchaTask.execute();
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        if (mAccountRegistrationTask != null) {
+            mAccountRegistrationTask.cancel(true);
+        }
+        
+        if (mGetNewCaptchaTask != null) {
+            mGetNewCaptchaTask.cancel(true);
+        }
+        
+        if (mToast != null) {
+            mToast.cancel();
+        }
     }
 
     /**
@@ -529,6 +561,13 @@ public class NewAccountActivity extends Activity {
      */
     public class AccountRegistrationTask extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected void onPreExecute() {
+            mProgressBar.setVisibility(View.VISIBLE);
+            mToast = Toast.makeText(mActivity, "Creating account...", Toast.LENGTH_LONG);
+            mToast.show();
+
+        }
         /**
          * Performs a computation on a background thread. In this case, makes an API call.
          *
@@ -560,10 +599,17 @@ public class NewAccountActivity extends Activity {
          */
         @Override
         protected void onPostExecute(String jsonResult) {
-            
+            mProgressBar.setVisibility(View.GONE);
+            mToast.cancel();
             if (jsonResult.equals("error")) {
                 Toast toast = Toast.makeText(NewAccountActivity.this, "It appears that you are having connection issues, please check your network settings", Toast.LENGTH_LONG);
-                toast.show();
+                
+                // You cannot specify a length value for toast apart from LENGTH_LONG (~3.5s) and
+                // LENGTH_SHORT (~2s). Calling show multiple times though extends the time. This
+                // will make the toast show for ~10.5s which should be more suitable.
+                for (int i = 0; i < 3; i++) {
+                    toast.show();
+                }
             }
             
             try {
@@ -599,7 +645,8 @@ public class NewAccountActivity extends Activity {
                     // If there was a form error found by the server, we will need a new captcha.
                     // This should never occur though because we check for all of the registration
                     // conditions locally.
-                    new GetNewCaptchaTask().execute();
+                    mGetNewCaptchaTask = new GetNewCaptchaTask();
+                    mGetNewCaptchaTask.execute();
                 } else {
 
                     // Its bad news if we get an API response that isn't one of these errors. It

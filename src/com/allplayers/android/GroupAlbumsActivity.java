@@ -32,6 +32,7 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
     private AlbumAdapter mAlbumListAdapter;
     private ArrayList<AlbumData> mAlbumList;
     private Button mLoadMoreButton;
+    private GetGroupAlbumsByGroupIdTask mGetGroupAlbumsByGroupIdTask;
     private GroupData mGroup;
     private ListView mListView;
     private ProgressBar mLoadingIndicator;
@@ -68,7 +69,8 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
         mSideNavigationView.setMode(Mode.LEFT);
 
         // Get the group's albums.
-        new GetGroupAlbumsByGroupIdTask().execute(mGroup);
+        mGetGroupAlbumsByGroupIdTask = new GetGroupAlbumsByGroupIdTask();
+        mGetGroupAlbumsByGroupIdTask.execute(mGroup);
 
         // Variable initialization.
         mEndOfData = false;
@@ -92,7 +94,8 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetGroupAlbumsByGroupIdTask().execute(mGroup);
+                mGetGroupAlbumsByGroupIdTask = new GetGroupAlbumsByGroupIdTask();
+                mGetGroupAlbumsByGroupIdTask.execute(mGroup);
             }
         });
 
@@ -117,6 +120,20 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
                 startActivity(intent);
             }
         });
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // Cancel any running asynchronous tasks.
+        if (mGetGroupAlbumsByGroupIdTask != null) {
+            mGetGroupAlbumsByGroupIdTask.cancel(true);
+        }
     }
 
     /**

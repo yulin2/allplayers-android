@@ -26,6 +26,7 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
     
     private AlbumData mAlbum;
     private ArrayList<PhotoData> mPhotoList;
+    private GetAlbumPhotosByAlbumIdTask mGetAlbumPhotosByAlbumIdTask;
     private GridView mGridView;
     private PhotoAdapter mPhotoAdapter;
     private ProgressBar mProgressBar;
@@ -88,7 +89,22 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
         mSideNavigationView.setMode(Mode.LEFT);
 
         // Load the photos for the album.
-        new GetAlbumPhotosByAlbumIdTask().execute(mAlbum);
+        mGetAlbumPhotosByAlbumIdTask = new GetAlbumPhotosByAlbumIdTask();
+        mGetAlbumPhotosByAlbumIdTask.execute(mAlbum);
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // Stop any asynchronous tasks that we have running.
+        if (mGetAlbumPhotosByAlbumIdTask != null) {
+            mGetAlbumPhotosByAlbumIdTask.cancel(true);
+        }
     }
 
     /**

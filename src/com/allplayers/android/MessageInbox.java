@@ -2,8 +2,10 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,8 @@ public class MessageInbox extends AllplayersSherlockActivity {
 
     private ArrayList<MessageData> mMessageList;
     private Button mLoadMoreButton;
+    private DeleteMessageTask mDeleteMessageTask;
+    private GetUserInboxTask mGetUserInboxTask;
     private ListView mListView;
     private MessageAdapter mMessageListAdapter;
     private ProgressBar mLoadingIndicator;
@@ -86,7 +90,8 @@ public class MessageInbox extends AllplayersSherlockActivity {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetUserInboxTask().execute();
+                mGetUserInboxTask = new GetUserInboxTask();
+                mGetUserInboxTask.execute();
             }
         });
 
@@ -123,28 +128,53 @@ public class MessageInbox extends AllplayersSherlockActivity {
              * @param position The position of the view in the adapter.
              * @param id The row id of the item that was clicked.
              */
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long arg3) {
-                PopupMenu menu = new PopupMenu(getBaseContext(), view);
-                menu.inflate(R.menu.message_thread_menu);
-                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(android.view.MenuItem item) {
-                        switch (item.getItemId()) {
-                        case R.id.delete:
-                            new DeleteMessageTask(position).execute();
-                            break;
+                
+                // Check which verion of Android is being run, anything pre-11 cannot display popup menus.
+                if (android.os.Build.VERSION.SDK_INT >= 11) {
+                    
+                    PopupMenu menu = new PopupMenu(getBaseContext(), view);
+                    menu.inflate(R.menu.message_thread_menu);
+                    menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(android.view.MenuItem item) {
+                            switch (item.getItemId()) {
+                            case R.id.delete:
+                                mDeleteMessageTask = new DeleteMessageTask(position);
+                                mDeleteMessageTask.execute();
+                                break;
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
-                menu.show();
+                    });
+                    menu.show();
+                }
                 return true;
             }
         });
 
         // Load the user's inbox.
-        new GetUserInboxTask().execute();
+        mGetUserInboxTask = new GetUserInboxTask();
+        mGetUserInboxTask.execute();
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        if (mDeleteMessageTask != null) {
+            mDeleteMessageTask.cancel(true);
+        }
+        
+        if (mGetUserInboxTask != null) {
+            mGetUserInboxTask.cancel(true);
+        }
     }
 
     /**

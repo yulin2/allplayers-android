@@ -32,6 +32,7 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
     private ArrayList<GroupMemberData> mMembersList;
     private ArrayList<GroupMemberData> mSelectedMembers;
     private Button mLoadMoreButton;
+    private GetUserGroupmatesTask mGetUserGroupmatesTask;
     private ListView mListView;
     private ProgressBar mLoadingIndicator;
     private ViewGroup mFooter;
@@ -90,7 +91,8 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetUserGroupmatesTask().execute();
+                mGetUserGroupmatesTask = new GetUserGroupmatesTask();
+                mGetUserGroupmatesTask.execute();
             }
         });
 
@@ -122,7 +124,21 @@ public class SelectUserContacts extends AllplayersSherlockListActivity {
         });
 
         // Get the first 15 groupmates.
-        new GetUserGroupmatesTask().execute();
+        mGetUserGroupmatesTask = new GetUserGroupmatesTask();
+        mGetUserGroupmatesTask.execute();
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        if (mGetUserGroupmatesTask != null) {
+            mGetUserGroupmatesTask.cancel(true);
+        }
     }
 
     /**

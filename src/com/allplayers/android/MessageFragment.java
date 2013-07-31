@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.allplayers.objects.MessageData;
 import com.allplayers.rest.RestApiV1;
@@ -20,9 +22,11 @@ import com.allplayers.rest.RestApiV1;
  */
 public class MessageFragment extends ListFragment {
     
-    private Activity parentActivity;
+    private Activity mParentActivity;
     private ArrayList<HashMap<String, String>> mChoiceList = new ArrayList<HashMap<String, String>>(2);
     private ArrayList<MessageData> mMessageList;
+    private GetUserInboxTask mGetUserInboxTask;
+    private Toast statusToast;
     
     private int mNumUnread = 0; 
     private String mJsonResult = "";
@@ -37,11 +41,34 @@ public class MessageFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        parentActivity = this.getActivity();
+        mParentActivity = this.getActivity();
 
+        statusToast = Toast.makeText(mParentActivity, "Checking for new messages...", Toast.LENGTH_LONG);
+        statusToast.setGravity(Gravity.CENTER, 0, 0);
+        statusToast.show();
+        
         // Gets the user's inbox. Needed to display the number of messages the user has in their
         // inbox.
-        new GetUserInboxTask().execute();
+        mGetUserInboxTask = new GetUserInboxTask();
+        mGetUserInboxTask.execute();
+    }
+    
+    /**
+     * Called when the Fragment is no longer started. This is generally tied to Activity.onStop of
+     * the containing Activity's lifecycle.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        // Stop any asynchronous tasks that we have running.
+        if (mGetUserInboxTask != null) {
+            mGetUserInboxTask.cancel(true);
+        }
+        
+        if (statusToast != null) {
+            statusToast.cancel();
+        }
     }
 
     /**
@@ -62,20 +89,20 @@ public class MessageFragment extends ListFragment {
             Bundle bundle = new Bundle();
             bundle.putString("inboxJSON", mJsonResult);
 
-            Intent intent = new Intent(parentActivity, MessageInbox.class);
+            Intent intent = new Intent(mParentActivity, MessageInbox.class);
             intent.putExtras(bundle);
             startActivity(intent);
             
         // Go to the sentbox.
         } else if (position == 1) {
 
-            Intent intent = new Intent(parentActivity, MessageSent.class);
+            Intent intent = new Intent(mParentActivity, MessageSent.class);
             startActivity(intent);
             
         // Go to the message creation interface.
         } else if (position == 2) {
 
-            Intent intent = new Intent(parentActivity, SelectMessageContacts.class);
+            Intent intent = new Intent(mParentActivity, SelectMessageContacts.class);
             startActivity(intent);       
         }
     }
@@ -84,18 +111,26 @@ public class MessageFragment extends ListFragment {
      * Uses the API call result passed to populate the inbox of the user with the messages.
      */
     protected void populateInbox() {
+        
+        // Cancel the "checking for new messages toast if it is still running".
+        statusToast.cancel();
+        
         MessagesMap messages = new MessagesMap(mJsonResult);
         mMessageList = messages.getMessageData();
         HashMap<String, String> map;
 
         if (!mMessageList.isEmpty()) {
             for (int i = 0; i < mMessageList.size(); i++) {
-                if (Integer.parseInt(mMessageList.get(i).getNew()) > 0) {
+                if (Integer.parseInt(mMessageList.get(i).getNew()) == 1) {
                     mNumUnread++;
                 }
             }
         }
 
+        statusToast = Toast.makeText(mParentActivity, "You have " + mNumUnread + " unread messages", Toast.LENGTH_SHORT);
+        statusToast.setGravity(Gravity.CENTER, 0, 0);
+        statusToast.show();
+        
         map = new HashMap<String, String>();
         map.put("line1", "Inbox");
         map.put("line2", mNumUnread + " Unread");
@@ -115,7 +150,7 @@ public class MessageFragment extends ListFragment {
 
         int[] to = { android.R.id.text1, android.R.id.text2 };
 
-        SimpleAdapter adapter = new SimpleAdapter(parentActivity, mChoiceList, android.R.layout.simple_list_item_2, from, to);
+        SimpleAdapter adapter = new SimpleAdapter(mParentActivity, mChoiceList, android.R.layout.simple_list_item_2, from, to);
         setListAdapter(adapter);
     }
 
@@ -130,7 +165,7 @@ public class MessageFragment extends ListFragment {
          */
         @Override
         protected Void doInBackground(Void... args) {
-            mJsonResult = RestApiV1.getUserInbox(0,0, getActivity().getApplicationContext());
+            mJsonResult = RestApiV1.getUserInbox(0,50, getActivity().getApplicationContext());
             return null;
         }
 
@@ -143,5 +178,4 @@ public class MessageFragment extends ListFragment {
             populateInbox();
         }
     }
-
 }

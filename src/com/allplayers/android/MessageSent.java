@@ -2,21 +2,15 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -33,6 +27,8 @@ public class MessageSent extends AllplayersSherlockActivity {
 
     private ArrayList<MessageData> mMessageList;
     private Button mLoadMoreButton;
+    private DeleteMessageTask mDeleteMessageTask;
+    private GetUserSentboxTask mGetUserSentboxTask;
     private ListView mListView;
     private ProgressBar mLoadingIndicator;
     private SentMessageAdapter mMessageListAdapter;
@@ -67,7 +63,8 @@ public class MessageSent extends AllplayersSherlockActivity {
         mSideNavigationView.setMode(Mode.LEFT);
 
         // Load the user's sentbox.
-        new GetUserSentboxTask().execute();
+        mGetUserSentboxTask  = new GetUserSentboxTask();
+        mGetUserSentboxTask.execute();
 
         // Variable initialization.
         mMessageList = new ArrayList<MessageData>();
@@ -89,67 +86,74 @@ public class MessageSent extends AllplayersSherlockActivity {
             public void onClick(View v) {
                 mLoadMoreButton.setVisibility(View.GONE);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                new GetUserSentboxTask().execute();
+                mGetUserSentboxTask = new GetUserSentboxTask();
+                mGetUserSentboxTask.execute();
             }
         });
 
         // Set up the list view that will show all of the data.
         mListView.addFooterView(mFooter);
         mListView.setAdapter(mMessageListAdapter);
-        mListView.setOnItemClickListener(new OnItemClickListener() {
-            
-            /**
-             * Callback method to be invoked when an item in this AdapterView has been clicked.
-             * 
-             * @param parent The adapter view where the click happened.
-             * @param view The view within the AdapterView that was clicked.
-             * @param position The position of the view in the adapter.
-             * @param id The row id of the item that was clicked.
-             */
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long index) {
 
-                Intent intent = (new Router(MessageSent.this)).getMessageThreadIntent(mMessageList.get(position));
-                startActivity(intent);
-            }
-        });
-
-        // Check for a user long clicking on a list item
-        mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+        // Currently, the API has an issue with DELETE functionality.
+//        mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
             
-            /**
-             * Callback method to be invoked when an item in this view has been clicked and held.
-             * 
-             * @param parent The adapter view where the click happened.
-             * @param view The view within the AdapterView that was clicked.
-             * @param position The position of the view in the adapter.
-             * @param id The row id of the item that was clicked.
-             */
-            @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
-                PopupMenu menu = new PopupMenu(getBaseContext(), view);
-                menu.inflate(R.menu.message_thread_menu);
-                menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                    
-                    /**
-                     * Called when a menu item has been invoked. This is the first code that is
-                     * executed; if it returns true, no other callbacks will be executed.
-                     */
-                    @Override
-                    public boolean onMenuItemClick(android.view.MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.delete: {
-                                new DeleteMessageTask(position).execute();
-                                break;
-                            }
-                        }
-                        return true;
-                    }
-                });
-                menu.show();
-                return true;
-            }
-        });
+//            /**
+//             * Callback method to be invoked when an item in this view has been clicked and held.
+//             * 
+//             * @param parent The adapter view where the click happened.
+//             * @param view The view within the AdapterView that was clicked.
+//             * @param position The position of the view in the adapter.
+//             * @param id The row id of the item that was clicked.
+//             */
+//            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
+//                
+//             // Check which verion of Android is being run, anything pre-11 cannot display popup menus.
+//                if (android.os.Build.VERSION.SDK_INT >= 11) {
+//                    PopupMenu menu = new PopupMenu(getBaseContext(), view);
+//                    menu.inflate(R.menu.message_thread_menu);
+//                    menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//                        
+//                        /**
+//                         * Called when a menu item has been invoked. This is the first code that is
+//                         * executed; if it returns true, no other callbacks will be executed.
+//                         */
+//                        @Override
+//                        public boolean onMenuItemClick(android.view.MenuItem item) {
+//                            switch (item.getItemId()) {
+//                                case R.id.delete: {
+//                                    mDeleteMessageTask = new DeleteMessageTask(position);
+//                                    mDeleteMessageTask.execute();
+//                                    break;
+//                                }
+//                            }
+//                            return true;
+//                        }
+//                    });
+//                    menu.show();
+//                }
+//                return true;
+//            }
+//        });
+    }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        if (mGetUserSentboxTask != null) {
+            mGetUserSentboxTask.cancel(true);
+        }
+        
+        if (mDeleteMessageTask != null) {
+            mDeleteMessageTask.cancel(true);
+        }
     }
 
     /**
@@ -256,6 +260,7 @@ public class MessageSent extends AllplayersSherlockActivity {
          */
         @Override
         protected void onPostExecute(String result) {
+            System.out.println("Result of DELETE request: " + result);
             if (result.equals("done")) {
                 mMessageList.remove(position);
                 mMessageListAdapter.notifyDataSetChanged();

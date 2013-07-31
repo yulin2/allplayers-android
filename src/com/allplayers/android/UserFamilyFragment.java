@@ -2,9 +2,11 @@ package com.allplayers.android;
 
 import java.util.ArrayList;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -49,6 +51,8 @@ public class UserFamilyFragment extends Fragment {
     private boolean mHasBeenLoaded = false;
 
     private Activity mParentActivity;
+    private GetUserChildrenTask mGetUserChildrenTask;
+    private GetUserGuardiansTask mGetUserGuardiansTask;
 
     /**
      * Called to do initial creation of a fragment. This is called after onAttach(Activity) and
@@ -135,46 +139,51 @@ public class UserFamilyFragment extends Fragment {
              * @param position The position of the view in the adapter.
              * @param id The row id of the item that was clicked.
              */
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-                // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't
-                // want to do anything.
-                if (!(id == -1)) {
-                    final int selectedPosition = position;
-                    PopupMenu menu = new PopupMenu(mParentActivity, v);
-                    menu.inflate(R.menu.friend_menu);
-                    menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                // Check which verion of Android is being run, anything pre-11 cannot display popup menus.
+                if (android.os.Build.VERSION.SDK_INT >= 11) {
+                    
+                    // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't
+                    // want to do anything.
+                    if (!(id == -1)) {
+                        final int selectedPosition = position;
+                        PopupMenu menu = new PopupMenu(mParentActivity, v);
+                        menu.inflate(R.menu.friend_menu);
+                        menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-                        /** 
-                         * Called when a menu item has been invoked.
-                         * 
-                         * @param item The menu item that was invoked.
-                         * @return Return true to consume this click and prevent others from
-                         * executing.
-                         */
-                        @Override
-                        public boolean onMenuItemClick(android.view.MenuItem item) {
-                            switch (item.getItemId()) {
+                            /** 
+                             * Called when a menu item has been invoked.
+                             * 
+                             * @param item The menu item that was invoked.
+                             * @return Return true to consume this click and prevent others from
+                             * executing.
+                             */
+                            @Override
+                            public boolean onMenuItemClick(android.view.MenuItem item) {
+                                switch (item.getItemId()) {
 
-                                // Go to SelectMessageContacts.class with the selected user
-                                // autopopulated.
-                                case R.id.send_message: {
-                                    Gson gson = new Gson();
-                                    ArrayList<GroupMemberData> selectedUser =
-                                        new ArrayList<GroupMemberData>();
-                                    selectedUser.add(mChildrenList.get(selectedPosition));
-                                    String broadcastRecipients = gson.toJson(selectedUser);
-                                    Intent intent = new Intent(mParentActivity,
-                                                               SelectMessageContacts.class);
-                                    intent.putExtra("broadcastRecipients", broadcastRecipients);
-                                    startActivity(intent);
+                                    // Go to SelectMessageContacts.class with the selected user
+                                    // autopopulated.
+                                    case R.id.send_message: {
+                                        Gson gson = new Gson();
+                                        ArrayList<GroupMemberData> selectedUser =
+                                            new ArrayList<GroupMemberData>();
+                                        selectedUser.add(mChildrenList.get(selectedPosition));
+                                        String broadcastRecipients = gson.toJson(selectedUser);
+                                        Intent intent = new Intent(mParentActivity,
+                                                                   SelectMessageContacts.class);
+                                        intent.putExtra("broadcastRecipients", broadcastRecipients);
+                                        startActivity(intent);
+                                    }
                                 }
+                                return true;
                             }
-                            return true;
-                        }
-                    });
-                    menu.show();
+                        });
+                        menu.show();
+                    }
                 }
             }
         });
@@ -189,54 +198,61 @@ public class UserFamilyFragment extends Fragment {
              * @param position The position of the view in the adapter.
              * @param id The row id of the item that was clicked.
              */
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-                // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't
-                // want to do anything.
-                if (!(id == -1)) {
-                    final int selectedPosition = position;
-                    PopupMenu menu = new PopupMenu(mParentActivity, v);
-                    menu.inflate(R.menu.friend_menu);
-                    menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                // Check which verion of Android is being run, anything pre-11 cannot display popup menus.
+                if (android.os.Build.VERSION.SDK_INT >= 11) {
+                    
+                    // Check if the loading indicator is being clicked (its id is '-1'). If so, we don't
+                    // want to do anything.
+                    if (!(id == -1)) {
+                        final int selectedPosition = position;
+                        PopupMenu menu = new PopupMenu(mParentActivity, v);
+                        menu.inflate(R.menu.friend_menu);
+                        menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-                        /** 
-                         * Called when a menu item has been invoked.
-                         * 
-                         * @param item The menu item that was invoked.
-                         * @return Return true to consume this click and prevent others from
-                         * executing.
-                         */
-                        @Override
-                        public boolean onMenuItemClick(android.view.MenuItem item) {
-                            switch (item.getItemId()) {
+                            /** 
+                             * Called when a menu item has been invoked.
+                             * 
+                             * @param item The menu item that was invoked.
+                             * @return Return true to consume this click and prevent others from
+                             * executing.
+                             */
+                            @Override
+                            public boolean onMenuItemClick(android.view.MenuItem item) {
+                                switch (item.getItemId()) {
 
-                                // Go to SelectMessageContacts.class with the selected user
-                                // autopopulated.
-                                case R.id.send_message: {
-                                    Gson gson = new Gson();
-                                    ArrayList<GroupMemberData> selectedUser =
-                                        new ArrayList<GroupMemberData>();
-                                    selectedUser.add(mGuardiansList.get(selectedPosition));
-                                    String broadcastRecipients = gson.toJson(selectedUser);
-                                    Intent intent = new Intent(mParentActivity,
-                                                               SelectMessageContacts.class);
-                                    intent.putExtra("broadcastRecipients", broadcastRecipients);
-                                    startActivity(intent);
+                                    // Go to SelectMessageContacts.class with the selected user
+                                    // autopopulated.
+                                    case R.id.send_message: {
+                                        Gson gson = new Gson();
+                                        ArrayList<GroupMemberData> selectedUser =
+                                            new ArrayList<GroupMemberData>();
+                                        selectedUser.add(mGuardiansList.get(selectedPosition));
+                                        String broadcastRecipients = gson.toJson(selectedUser);
+                                        Intent intent = new Intent(mParentActivity,
+                                                                   SelectMessageContacts.class);
+                                        intent.putExtra("broadcastRecipients", broadcastRecipients);
+                                        startActivity(intent);
+                                    }
                                 }
+                                return true;
                             }
-                            return true;
-                        }
-                    });
-                    menu.show();
+                        });
+                        menu.show();
+                    }
                 }
-            }
+            }      
         });
 
         // Populate the listviews.
         if (!mHasBeenLoaded) {
-            new GetUserChildrenTask().execute();
-            new GetUserGuardiansTask().execute();
+            mGetUserChildrenTask = new GetUserChildrenTask();
+            mGetUserChildrenTask.execute();
+            mGetUserGuardiansTask = new GetUserGuardiansTask();
+            mGetUserGuardiansTask.execute();
             mHasBeenLoaded = true;
         } else {
             if (mChildrenDoneLoading) {
@@ -251,6 +267,24 @@ public class UserFamilyFragment extends Fragment {
             if (mGuardiansNoData) {
                 mGuardiansListView.setEnabled(false);
             }
+        }
+    }
+    
+    /**
+     * Called when the fragment is no longer in use. This is called after onStop() and before
+     * onDetach().
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        
+        // Stop any asynchronous tasks that we have running.
+        if (mGetUserChildrenTask != null) {
+            mGetUserChildrenTask.cancel(true);
+        }
+        
+        if (mGetUserGuardiansTask != null) {
+            mGetUserGuardiansTask.cancel(true);
         }
     }
 
