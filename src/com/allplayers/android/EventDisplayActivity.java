@@ -76,7 +76,7 @@ public class EventDisplayActivity extends AllplayersSherlockMapActivity {
         MarkerOptions marker = new MarkerOptions()
         .position(location)
         .title(mEvent.getTitle())
-        .snippet("Start: " + mEvent.getStartDateString() + "\nEnd: " + mEvent.getEndDateString());
+        .snippet("Start: " + mEvent.getStartDateString() + "\nEnd: " + mEvent.getEndDateString() + "\nClick for More Details");
 
         // Add our marker to the map.
         map.setInfoWindowAdapter(new CustomInfoAdapter(getLayoutInflater()));
