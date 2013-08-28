@@ -1,6 +1,9 @@
 
 package com.allplayers.android;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 
 import com.allplayers.android.activities.AllplayersSherlockFragmentActivity;
@@ -42,7 +45,15 @@ public class PhotosActivity extends AllplayersSherlockFragmentActivity {
     @Override
     public void onBackPressed() {
         
-        // This is used to fix a problem with the activity stack on API 10.
-        moveTaskToBack(true);
+        new AlertDialog.Builder(this)
+        .setTitle("Quit?")
+        .setMessage("Are you sure you want to quit?")
+        .setNegativeButton(android.R.string.no, null)
+        .setPositiveButton(android.R.string.yes, new OnClickListener() {
+
+            public void onClick(DialogInterface arg0, int arg1) {
+                moveTaskToBack(true);
+            }
+        }).create().show();
     }
 }
