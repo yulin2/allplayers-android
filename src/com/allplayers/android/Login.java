@@ -56,6 +56,9 @@ public class Login extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+        // Reset the status of the dumpedFromMemory variable. 
+        RestApiV1.dumpedFromMemory = false;
 
         // TODO Figure out why we need this! None of the networking is in the ui thread anymore, so
         // we arent sure what the issue is.
@@ -284,7 +287,6 @@ public class Login extends Activity {
                 if (RestApiV1.isLoggedIn()) {
                     Intent intent = new Intent(Login.this, GroupsActivity.class);
                     startActivity(intent);
-                    finish();
                     return "validLogin";
                 }
 

@@ -42,6 +42,15 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
     @Override
     public void onCreate(Bundle savedInstanceState) {
         
+        // Check if the app was dropped from memory, if so, log the user back in.
+        if ((RestApiV1.getCurrentUserUUID() == null) || (RestApiV1.getCurrentUserUUID() == "")) {
+            RestApiV1.dumpedFromMemory = true;
+            Intent intent = new Intent(this, Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            this.startActivity(intent);
+            finish();
+        }
+        
         // Check which theme is selected by the user and apply it.
         SharedPreferences sharedPreferences = getSharedPreferences("Theme Choice", 0);
         setTheme(sharedPreferences.getInt("Theme", android.R.style.Theme_Holo));
