@@ -205,7 +205,7 @@ public class GroupsFragment extends ListFragment {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroups(mPageNumber++ * LIMIT, LIMIT, mSortType, getActivity().getApplicationContext());
+            return RestApiV1.getUserGroups(mPageNumber++ * LIMIT, LIMIT, mSortType);
         }
 
         /**

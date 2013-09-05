@@ -301,7 +301,7 @@ public class UserFamilyFragment extends Fragment {
          */
         @Override
         protected String doInBackground(Void... params) {
-            return RestApiV1.getUserChildren(0, 0, getActivity().getApplicationContext());
+            return RestApiV1.getUserChildren(0, 0);
         }
 
         /** 
@@ -351,7 +351,7 @@ public class UserFamilyFragment extends Fragment {
         protected String doInBackground(Void... params) {
 
             // The number of guardians that a user has is always quite low so just pull all of them.
-            return RestApiV1.getUserGuardians(0, 0, getActivity().getApplicationContext());
+            return RestApiV1.getUserGuardians(0, 0);
         }
 
         /** 

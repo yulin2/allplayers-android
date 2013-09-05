@@ -206,7 +206,7 @@ public class UserGroupmatesFragment extends ListFragment {
          */
         @Override
         protected String doInBackground(Void... args) {
-            return RestApiV1.getUserGroupmates(mOffset, LIMIT, getActivity().getApplicationContext());
+            return RestApiV1.getUserGroupmates(mOffset, LIMIT);
         }
 
         /** 

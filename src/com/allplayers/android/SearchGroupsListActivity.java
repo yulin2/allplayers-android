@@ -137,7 +137,7 @@ public class SearchGroupsListActivity extends AllplayersSherlockListActivity {
          */
         @Override
         protected String doInBackground(Object... args) {
-            return RestApiV1.searchGroups((String) args[0], (Integer) args[1], (Integer) args[2], 0, 0, getApplicationContext());
+            return RestApiV1.searchGroups((String) args[0], (Integer) args[1], (Integer) args[2], 0, 0);
         }
 
         /**

@@ -207,7 +207,7 @@ public class UserFriendsFragment extends ListFragment {
         @Override
         protected String doInBackground(Void... args) {
             
-            return RestApiV1.getUserFriends(mOffset, LIMIT, getActivity().getApplicationContext());
+            return RestApiV1.getUserFriends(mOffset, LIMIT);
         }
 
         /** 

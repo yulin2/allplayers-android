@@ -189,7 +189,7 @@ public class MessageInbox extends AllplayersSherlockActivity {
          */
         @Override
         protected String doInBackground(Void... Args) {
-            return RestApiV1.getUserInbox(mOffset, LIMIT, getApplicationContext());
+            return RestApiV1.getUserInbox(mOffset, LIMIT);
         }
 
         /**

@@ -149,7 +149,7 @@ public class GroupAlbumsActivity  extends AllplayersSherlockActivity {
          */
         @Override
         protected String doInBackground(GroupData... groups) {
-            return RestApiV1.getGroupAlbumsByGroupId(groups[0].getUUID(), mOffset, LIMIT, getApplicationContext());
+            return RestApiV1.getGroupAlbumsByGroupId(groups[0].getUUID(), mOffset, LIMIT);
         }
 
         /**

@@ -182,7 +182,7 @@ public class GroupMembersActivity extends AllplayersSherlockListActivity {
          */
         @Override
         protected String doInBackground(GroupData... groups) {
-            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID(), mOffset, LIMIT, getApplicationContext());
+            return RestApiV1.getGroupMembersByGroupId(groups[0].getUUID(), mOffset, LIMIT);
         }
 
         /**
