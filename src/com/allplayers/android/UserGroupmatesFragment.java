@@ -61,10 +61,16 @@ public class UserGroupmatesFragment extends ListFragment {
 
         // Variable initialization.
         mMembersList = new ArrayList<GroupMemberData>();
-
+   
+        // Checking for the null savedInstanceState is a temporary bandaid. Since it is not being
+        // used for any other purpose, this is the easiest way to check if the activity is being
+        // resumed after being dumped from memory.
+        // TODO: Find a real fix and rip off the bandaid.
         // Get the first 15 groupmates.
-        mGetUserGroupmatesTask = new GetUserGroupmatesTask();
-        mGetUserGroupmatesTask.execute();
+        if (savedInstanceState == null) {
+            mGetUserGroupmatesTask = new GetUserGroupmatesTask();
+            mGetUserGroupmatesTask.execute();
+        }        
     }
 
     /**

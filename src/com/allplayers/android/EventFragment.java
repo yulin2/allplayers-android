@@ -63,8 +63,14 @@ public class EventFragment extends ListFragment {
         mAdapter = new SimpleAdapter(mParentActivity, mTimeList, android.R.layout.simple_list_item_2, from, to);
 
         // Fetch the user's events.
-        mGetUserEventsTask = new GetUserEventsTask();
-        mGetUserEventsTask.execute();
+        // Checking for the null savedInstanceState is a temporary bandaid. Since it is not being
+        // used for any other purpose, this is the easiest way to check if the activity is being
+        // resumed after being dumped from memory.
+        // TODO: Find a real fix and rip off the bandaid.
+        if (savedInstanceState == null) {
+            mGetUserEventsTask = new GetUserEventsTask();
+            mGetUserEventsTask.execute();
+        }        
     }
 
     /**

@@ -94,8 +94,14 @@ public class MessageThread extends AllplayersSherlockActivity {
         mListView = (ListView)findViewById(R.id.thread_list);
         
         // Grab the thread's messages.
-        mPutAndGetMessagesTask = new PutAndGetMessagesTask();
-        mPutAndGetMessagesTask.execute(threadID);
+        // Checking for the null savedInstanceState is a temporary bandaid. Since it is not being
+        // used for any other purpose, this is the easiest way to check if the activity is being
+        // resumed after being dumped from memory.
+        // TODO: Find a real fix and rip off the bandaid.
+        if (savedInstanceState == null) {
+            mPutAndGetMessagesTask = new PutAndGetMessagesTask();
+            mPutAndGetMessagesTask.execute(threadID);
+        }        
 
         // It has been found that deleting a message through the API completely obliterates it from
         // the site. This is not expected functionality and needs to be researched more.

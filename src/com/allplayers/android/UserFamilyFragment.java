@@ -248,24 +248,31 @@ public class UserFamilyFragment extends Fragment {
         });
 
         // Populate the listviews.
-        if (!mHasBeenLoaded) {
-            mGetUserChildrenTask = new GetUserChildrenTask();
-            mGetUserChildrenTask.execute();
-            mGetUserGuardiansTask = new GetUserGuardiansTask();
-            mGetUserGuardiansTask.execute();
-            mHasBeenLoaded = true;
-        } else {
-            if (mChildrenDoneLoading) {
-                mChildrenLoadingIndicator.setVisibility(View.GONE);
-            }
-            if (mGuardiansDoneLoading) {
-                mGuardiansLoadingIndicator.setVisibility(View.GONE);
-            }
-            if (mChildrenNoData) {
-                mChildrenListView.setEnabled(false);
-            }
-            if (mGuardiansNoData) {
-                mGuardiansListView.setEnabled(false);
+        // Checking for the null savedInstanceState is a temporary bandaid. Since it is not being
+        // used for any other purpose, this is the easiest way to check if the activity is being
+        // resumed after being dumped from memory.
+        // TODO: Find a real fix and rip off the bandaid.
+        if (savedInstanceState == null) {
+            // Populate the listviews.
+            if (!mHasBeenLoaded) {
+                mGetUserChildrenTask = new GetUserChildrenTask();
+                mGetUserChildrenTask.execute();
+                mGetUserGuardiansTask = new GetUserGuardiansTask();
+                mGetUserGuardiansTask.execute();
+                mHasBeenLoaded = true;
+            } else {
+                if (mChildrenDoneLoading) {
+                    mChildrenLoadingIndicator.setVisibility(View.GONE);
+                }
+                if (mGuardiansDoneLoading) {
+                    mGuardiansLoadingIndicator.setVisibility(View.GONE);
+                }
+                if (mChildrenNoData) {
+                    mChildrenListView.setEnabled(false);
+                }
+                if (mGuardiansNoData) {
+                    mGuardiansListView.setEnabled(false);
+                }
             }
         }
     }
