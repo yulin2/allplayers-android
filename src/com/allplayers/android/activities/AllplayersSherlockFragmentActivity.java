@@ -156,11 +156,6 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
                 break;
             }
     
-            case R.id.photos: {
-                invokeActivity(PhotosActivity.class);
-                break;
-            }
-    
             case R.id.events: {
                 invokeActivity(EventsActivity.class);
                 break;

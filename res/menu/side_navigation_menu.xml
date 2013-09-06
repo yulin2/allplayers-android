@@ -14,10 +14,6 @@
         android:icon="@drawable/messages_sidenav_icon"
         android:title="@string/messages"/>
     <item
-        android:id="@+id/photos"
-        android:icon="@drawable/photos_sidenav_icon"
-        android:title="@string/photos"/>
-    <item
         android:id="@+id/events"
         android:icon="@drawable/events_sidenav_icon"
         android:title="@string/events"/>

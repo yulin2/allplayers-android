@@ -157,11 +157,6 @@ public class AllplayersSherlockActivity extends SherlockActivity implements ISid
                 break;
             }
     
-            case R.id.photos: {
-                invokeActivity(PhotosActivity.class);
-                break;
-            }
-    
             case R.id.events: {
                 invokeActivity(EventsActivity.class);
                 break;

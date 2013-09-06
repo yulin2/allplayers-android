@@ -60,11 +60,6 @@ public class Login extends Activity {
         // Reset the status of the dumpedFromMemory variable. 
         RestApiV1.dumpedFromMemory = false;
 
-        // TODO Figure out why we need this! None of the networking is in the ui thread anymore, so
-        // we arent sure what the issue is.
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 

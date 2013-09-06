@@ -332,6 +332,7 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
          */
         @Override
         protected String doInBackground(String... group_uuid) {
+            isLoggedIn = RestApiV1.isLoggedIn();
             return RestApiV1.getGroupMembersByGroupId(group_uuid[0], 0, 0);
         }
 
@@ -343,7 +344,6 @@ public class GroupPageActivity extends AllplayersSherlockActivity {
          */
         @Override
         protected void onPostExecute(String jsonResult) {
-            isLoggedIn = RestApiV1.isLoggedIn();
             GroupMembersMap groupMembers = new GroupMembersMap(jsonResult);
             mMembersList = groupMembers.getGroupMemberData();
             String currentUUID = RestApiV1.getCurrentUserUUID();
