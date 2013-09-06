@@ -152,7 +152,8 @@
             android:layout_height = "wrap_content"
             android:gravity="center_horizontal"
             style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal" 
-            android:indeterminate="true" />
+            android:indeterminate="true" 
+            android:visibility="gone" />
         
     </LinearLayout>
 
