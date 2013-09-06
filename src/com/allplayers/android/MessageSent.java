@@ -260,7 +260,6 @@ public class MessageSent extends AllplayersSherlockActivity {
          */
         @Override
         protected void onPostExecute(String result) {
-            System.out.println("Result of DELETE request: " + result);
             if (result.equals("done")) {
                 mMessageList.remove(position);
                 mMessageListAdapter.notifyDataSetChanged();
