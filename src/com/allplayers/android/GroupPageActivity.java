@@ -36,7 +36,7 @@ import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
 /**
- * Displays a page with a group's image and buttons to 
+ * Displays a page with a group's image and buttons to access subpages.
  */
 public class GroupPageActivity extends AllplayersSherlockActivity {
     

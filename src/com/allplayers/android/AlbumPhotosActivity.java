@@ -69,12 +69,13 @@ public class AlbumPhotosActivity extends AllplayersSherlockActivity {
                 
                 // If there is a photo in the selected position that is clicked on, open the pager
                 // for photo viewing.
-                if (mPhotoList.get(position) != null) {
-                    
-                    // Display the album's photos.
-                    Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoPagerActivityIntent(mPhotoList.get(position));
-                    intent.putExtra("album title", mAlbum.getTitle());
-                    startActivity(intent);
+                if (!mPhotoList.isEmpty()) {
+                    if (mPhotoList.get(position) != null) {
+                        // Display the album's photos.
+                        Intent intent = (new Router(AlbumPhotosActivity.this)).getPhotoPagerActivityIntent(mPhotoList.get(position));
+                        intent.putExtra("album title", mAlbum.getTitle());
+                        startActivity(intent);
+                    }  
                 }
             }
         });

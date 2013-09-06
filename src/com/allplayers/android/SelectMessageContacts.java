@@ -54,18 +54,21 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
 
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice);
 
+        getListAdapter();
+        
         // Check if there is any data already in a previous version of this activity.
         if (icicle != null) {
             String currentRecipients = icicle.getString("currentRecipients");
-            addRecipientsToList(currentRecipients);
+            addRecipientsToList(currentRecipients, false);
         }
 
         // Check if any data was sent in from a GroupPageActivity broadcast.
         if (getIntent().getExtras() != null) {
-            addRecipientsToList(getIntent().getExtras().getString("broadcastRecipients"));
+            addRecipientsToList(getIntent().getExtras().getString("broadcastRecipients"), false);
         }
+        
         setContentView(R.layout.selectmessagecontacts);
-
+        
         // Set up the ActionBar.
         mActionBar.setTitle("Compose Messsage");
         mActionBar.setSubtitle("Recipients");
@@ -159,7 +162,7 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
         if (requestCode == 0 || requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 String userData = data.getStringExtra("userData");
-                addRecipientsToList(userData);
+                addRecipientsToList(userData, true);
             }
         }
     }
@@ -200,9 +203,11 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
      * Adds recipients to an ArrayList directly from a json string returned by the API.
      * 
      * @param json The recipients to be added to the ArrayList in the form of a json string.
+     * @param check Whether or not to go throught the list and check all of the items.
      */
-    public void addRecipientsToList(String json) {
+    public void addRecipientsToList(String json, boolean check) {
         try {
+                        
             int previousSize = mRecipientList.size();
             JSONArray jsonArray = new JSONArray(json);
             if (jsonArray.length() > 0) {
@@ -224,10 +229,13 @@ public class SelectMessageContacts extends AllplayersSherlockListActivity {
             mAdapter.sort(new NameComparator());
             mAdapter.notifyDataSetChanged();
             ListView listView = getListView();
-            for (int i = 0; i < getListAdapter().getCount(); i++) {
-                listView.setItemChecked(i, true);
+            
+            if (check) {
+                for (int i = 0; i < getListAdapter().getCount(); i++) {
+                    listView.setItemChecked(i, true);
+                }
             }
-
+                
         } catch (JSONException e) {
             e.printStackTrace();
         }

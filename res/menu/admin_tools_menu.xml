@@ -3,13 +3,13 @@
     
     <item 
          android:id="@+id/menu_broadcast"
-         android:icon="@drawable/broadcast_icon_text"
+         android:icon="@drawable/broadcast_icon_25x25"
          android:title="Broadcast"
          android:showAsAction="ifRoom|withText" />
     
     <item 
          android:id="@+id/menu_create_event"
-         android:icon="@drawable/event_icon_text"
+         android:icon="@drawable/event_icon_25x25"
          android:title="Create Event"
          android:showAsAction="ifRoom|withText" />
 </menu>
