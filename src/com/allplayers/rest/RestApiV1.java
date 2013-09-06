@@ -51,8 +51,6 @@ public class RestApiV1 {
     private static final String CAP_SOLUTION_NAME = "X-ALLPLAYERS-CAPTCHA-SOLUTION";
     private static final String CAP_TOKEN_NAME = "X-ALLPLAYERS-CAPTCHA-TOKEN";
     
-    //**FOR TESTING ONLY**//
-    //private static final String ENDPOINT = "https://www.pdup.allplayers.com/?q=api/v1/rest/";
     private static final String ENDPOINT = "https://www.allplayers.com/?q=api/v1/rest/";
     
     private static String sCurrentUserUUID = "";
@@ -1194,8 +1192,6 @@ public class RestApiV1 {
                                        String gender, String birthday,String password,
                                        String capToken, String capResponse) {
 
-        //**FOR TESTING ONLY**//
-        // String query = "https://www.pdup.allplayers.com/api/v1/rest/users.json";
         String query = "https://www.allplayers.com/api/v1/rest/users.json";
         String[][] contents = new String[6][2];
 
