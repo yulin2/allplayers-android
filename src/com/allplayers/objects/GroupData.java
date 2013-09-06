@@ -1,5 +1,7 @@
 package com.allplayers.objects;
 
+import java.util.ArrayList;
+
 @SuppressWarnings("serial")
 public class GroupData extends DataObject {
     
@@ -16,6 +18,26 @@ public class GroupData extends DataObject {
      */
     public GroupData() {
 
+    }
+    
+    /**
+     * Check if this DataObject exists in an ArrayList list.
+     *
+     * @param list The list to look through.
+     * @return Whether or not this object is new to the list its being added to.
+     */
+    @Override
+    public boolean isNew(ArrayList <? extends DataObject > list) {
+        if (!list.isEmpty()) {
+            for (int i = 0; i < list.size(); i++) {
+                GroupData object = (GroupData) list.get(i);
+                
+                if (uuid.equals(object.getUUID())) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
