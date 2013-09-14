@@ -48,6 +48,13 @@ public class MessageData extends DataObject implements Comparable<MessageData> {
         date = new Date(date.getTime() + offset);
         return date;
     }
+    
+    private Date fixTimezone(Date date) {
+        TimeZone timezone = TimeZone.getDefault();
+        int offset = timezone.getOffset(date.getTime());
+        date = new Date(date.getTime() + offset);
+        return date;
+    }
 
     /**
      * Returns the timestamp of the message (in the form of a string).
@@ -85,11 +92,15 @@ public class MessageData extends DataObject implements Comparable<MessageData> {
             updateVariables();
         }
         calendar.setTime(updatedDate);
-
+        
+        Date date = new Date();
+        TimeZone timezone = TimeZone.getDefault();
+        int offset = timezone.getOffset(date.getTime());
+        
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH) + 1; //because calendar uses 0-11 instead of 1-12
         int year = calendar.get(Calendar.YEAR);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY) + offset;
         int minute = calendar.get(Calendar.MINUTE);
         String AmPm = "AM";
 
@@ -105,7 +116,7 @@ public class MessageData extends DataObject implements Comparable<MessageData> {
 
         DecimalFormat df = new DecimalFormat("00");
 
-        return "" + df.format(month) + "/" + df.format(day) + "/" + year + " " + df.format(hour) + ":" + df.format(minute) + AmPm;
+        return "" + df.format(month) + "/" + df.format(day) + "/" + year + " " + df.format(hour) + ":" + df.format(minute) + AmPm;        
     }
 
     /**
