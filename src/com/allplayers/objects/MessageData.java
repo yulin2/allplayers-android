@@ -100,7 +100,7 @@ public class MessageData extends DataObject implements Comparable<MessageData> {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH) + 1; //because calendar uses 0-11 instead of 1-12
         int year = calendar.get(Calendar.YEAR);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY) + offset;
+        int hour = calendar.get(Calendar.HOUR_OF_DAY) + Math.abs(offset / (1000*60*60));
         int minute = calendar.get(Calendar.MINUTE);
         String AmPm = "AM";
 

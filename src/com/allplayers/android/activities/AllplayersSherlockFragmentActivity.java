@@ -61,7 +61,6 @@ public class AllplayersSherlockFragmentActivity extends SherlockFragmentActivity
         RestApiV1.setCurrentUserUUID(sharedPreferences.getString("UUID", "ERROR: The string UUID could not be fetched from sharedPreferences"));
         
         // Set up the action bar.
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         mActionBar = getSupportActionBar();
         mActionBar.setIcon(R.drawable.menu_icon);
         mActionBar.setHomeButtonEnabled(true);
