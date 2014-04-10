@@ -35,7 +35,7 @@
                 android:background="@drawable/backgroundstate"
                 android:padding="4dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/members_400x400"
+                android:src="@drawable/members_group_page_icon"
                 android:visibility="invisible" />
 
             <ImageButton
@@ -48,7 +48,7 @@
                 android:background="@drawable/backgroundstate"
                 android:padding="4dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/photos_400x400"
+                android:src="@drawable/photos_group_page_icon"
                 android:visibility="invisible" />
         </LinearLayout>
 
@@ -69,7 +69,7 @@
                 android:background="@drawable/backgroundstate"
                 android:padding="4dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/events_400x400"
+                android:src="@drawable/events_group_page_icon"
                 android:visibility="invisible" />
 
             <ImageButton
@@ -82,15 +82,10 @@
                 android:background="@drawable/backgroundstate"
                 android:padding="4dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/location_400x400"
+                android:src="@drawable/location_group_page_icon"
                 android:visibility="invisible" />
         </LinearLayout>
     </LinearLayout>
-
-    <com.devspark.sidenavigation.SideNavigationView
-        android:id="@+id/side_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <ProgressBar
         android:id="@+id/progress_indicator"
@@ -99,5 +94,10 @@
         android:layout_centerInParent="true"
         android:indeterminateOnly="true"
         android:keepScreenOn="true" />
-
+    
+    <com.devspark.sidenavigation.SideNavigationView
+        android:id="@+id/side_navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    
 </RelativeLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1" >
+    
+    <TextView
+        android:id="@+id/children_listview_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".04"
+        android:gravity="center"
+        android:text="Children"
+        android:textSize="18dp"
+        android:textColor="@color/android_blue" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight=".01"
+        android:background="@color/android_blue" />
+    <ListView
+        android:id="@+id/children_listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".45" />
+    <TextView
+        android:id="@+id/guardians_listview_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".04"
+        android:gravity="center"
+        android:text="Guardians"
+        android:textSize="18dp"
+        android:textColor="@color/android_blue" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight=".01"
+        android:background="@color/android_blue" />
+    <ListView 
+        android:id="@+id/guardians_listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".45" />
+    
+</LinearLayout>

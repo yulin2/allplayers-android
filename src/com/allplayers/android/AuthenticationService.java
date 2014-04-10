@@ -22,15 +22,17 @@ import android.os.IBinder;
 import android.util.Log;
 
 /**
- * Service to handle Account authentication. It instantiates the authenticator
- * and returns its IBinder.
+ * Service to handle Account authentication. It instantiates the authenticator and returns its
+ * IBinder.
  */
 public class AuthenticationService extends Service {
 
     private static final String TAG = "AuthenticationService";
-
     private Authenticator mAuthenticator;
 
+    /**
+     * Called by the system when the service is first created.
+     */
     @Override
     public void onCreate() {
         if (Log.isLoggable(TAG, Log.VERBOSE)) {
@@ -39,6 +41,9 @@ public class AuthenticationService extends Service {
         mAuthenticator = new Authenticator(this);
     }
 
+    /**
+     * Called by the system to notify a Service that it is no longer used and is being removed.
+     */
     @Override
     public void onDestroy() {
         if (Log.isLoggable(TAG, Log.VERBOSE)) {
@@ -46,6 +51,10 @@ public class AuthenticationService extends Service {
         }
     }
 
+    /**
+     * Return the communication channel to the service. May return null if clients can not bind to
+     * the service.
+     */
     @Override
     public IBinder onBind(Intent intent) {
         if (Log.isLoggable(TAG, Log.VERBOSE)) {

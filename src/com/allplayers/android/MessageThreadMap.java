@@ -9,10 +9,18 @@ import org.json.JSONObject;
 import com.allplayers.objects.MessageThreadData;
 import com.google.gson.Gson;
 
+/**
+ * Custom ArrayList used to hold MessageThreadData.
+ */
 public class MessageThreadMap {
     private ArrayList<MessageThreadData> mMessageList = new ArrayList<MessageThreadData>();
     private String[] mNames;
 
+    /**
+     * Constructor.
+     * 
+     * @param jsonResult Result from API call. Used directly to populate the ArrayList.
+     */
     public MessageThreadMap(String jsonResult) {
         try {
             JSONObject jsonObject = new JSONObject(jsonResult);
@@ -35,6 +43,12 @@ public class MessageThreadMap {
         }
     }
 
+    /**
+     * Returns all of the name values in the passed in JSONObject.
+     * 
+     * @param jo The JSONObject to be searched for names to return.
+     * @return All of the name values in the passed in JSONObject.
+     */
     private static String[] getNames(JSONObject jo) {
         int length = jo.length();
 
@@ -53,7 +67,21 @@ public class MessageThreadMap {
         return names;
     }
 
+    /**
+     * Returns the ArrayList of MessageData. 
+     * 
+     * @return The ArrayList of MessageData.
+     */
     public ArrayList<MessageThreadData> getMessageThreadData() {
         return mMessageList;
+    }
+    
+    /**
+     * Returns the size of the ArrayList of MessageThreadData.
+     * 
+     * @return The size of the ArrayList of MessageThreadData.
+     */
+    public int size() {
+        return mMessageList.size();
     }
 }

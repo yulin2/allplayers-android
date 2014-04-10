@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AllPlayers.com</string>
+    <string name="app_name">AllPlayers (Beta)</string>
     <string name="groups">Groups</string>
     <string name="messages">Messages</string>
+    <string name="contacts">Contacts</string>
     <string name="photos">Photo Albums</string>
     <string name="events">Events</string>
     <string name="logout">Log Out</string>
@@ -11,8 +12,8 @@
     <string name="search">Search</string>
     <string name="done">Done</string>
     <string name="reply">Reply</string>
-    <string name="add_group">Add Group</string>
-    <string name="add_user">Add User</string>
+    <string name="add_groupmates">Add Groupmates</string>
+    <string name="add_friends">Add Friends</string>
     <string name="compose">Compose Message</string>
     <string name="send">Send</string>
     <string name="login">Login</string>
@@ -38,14 +39,20 @@
     <string name="sort">Sort:</string>
     <string name="load_more">Load More</string>
     <string name="account_create_success">Thanks for joining AllPlayers.com! We have sent you an email with instructions on how to verify your account with us.</string>
-    <string name="invalid_age">I am sorry, but AllPlayers.com cannot create an account for you at this time. To create an AllPlayers.com account, you must be 13 years of age or older. This is in compliance with out COPPA+ Guardian Watch.</string>
+    <string name="invalid_age">I am sorry, but AllPlayers.com cannot create an account for you at this time. To create an AllPlayers.com account, you must be 13 years of age or older. This is in compliance with our COPPA+ Guardian Watch.</string>
     <string name="invalid_gender">Please select a gender.</string>
-    
-    
+    <string name="send_a_message">Send a message</string>
+    <string name="friend_request">Request to add as friend</string>
+    <string name="search_for_groups">Search for Groups</string>
+
     <string-array name="sort_method">
         <item>Activity</item>
         <item>Alpha Asc.</item>
         <item>Alpha Desc.</item>
     </string-array>
+
+    <string name="title_activity_create_event">CreateEventActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

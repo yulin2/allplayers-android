@@ -5,65 +5,107 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.allplayers.android.activities.AllplayersSherlockListActivity;
+import com.allplayers.android.activities.AllplayersSherlockActivity;
 import com.allplayers.objects.MessageData;
 import com.allplayers.objects.MessageThreadData;
 import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
-public class MessageThread extends AllplayersSherlockListActivity {
+/**
+ * Displays the messages in a message thread.
+ */
+public class MessageThread extends AllplayersSherlockActivity {
+    
     private ArrayList<MessageThreadData> mMessageThreadList;
-    private boolean hasMessages = false;
-    private String mJsonResult = "";
-    private int mThreadId;
     private ArrayList<HashMap<String, String>> mInfoList = new ArrayList<HashMap<String, String>>(2);
+    private Button mReplyButton;
+    @SuppressWarnings("unused")
+    private DeleteMessageTask mDeleteMessageTask;
+    private EditText mEditText;
+    private ListView mListView;
     private MessageData mMessage;
+    private PostMessageTask mPostMessageTask;
+    private PutAndGetMessagesTask mPutAndGetMessagesTask;
     private ProgressBar mLoadingIndicator;
+    private Toast mToast;
     private SimpleAdapter mAdapter;
 
+    @SuppressWarnings("unused")
+    private boolean hasMessages = false;
+    private int mThreadId;
+    private String mJsonResult = "";
+    private String mMessageBody = "";
+
     /**
-     * Called when the activity is first created, this sets up some variables,
-     * creates the Action Bar, and sets up the Side Navigation Menu.
-     * @param savedInstanceState: Saved data from the last instance of the
-     * activity.
+     * Called when the activity is starting.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.message_thread);
+        
+        // Grab the message thread ID from the intent.
         mMessage = (new Router(this)).getIntentMessage();
         String threadID = mMessage.getThreadID();
 
-        setContentView(R.layout.message_thread);
+        // Set up the loading indicator.
         mLoadingIndicator = (ProgressBar) findViewById(R.id.progress_indicator);
 
-
+        // Set up the Actionbar.
         mActionBar.setTitle("Messages");
 
+        // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
 
-        new PutAndGetMessagesTask().execute(threadID);
+        // Set up the text field.
+        mEditText = (EditText) findViewById(R.id.reply_text);
+        
+        // Set up the Button.
+        mReplyButton = (Button)findViewById(R.id.reply_button);
+        mReplyButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mMessageBody = mEditText.getText().toString();
+
+                mPostMessageTask = new PostMessageTask();
+                mPostMessageTask.execute(mThreadId, mMessageBody);
+            }
+        });
+        
+        // Set up the ListView.
+        mListView = (ListView)findViewById(R.id.thread_list);
+        
+        // Grab the thread's messages.
+        // Checking for the null savedInstanceState is a temporary bandaid. Since it is not being
+        // used for any other purpose, this is the easiest way to check if the activity is being
+        // resumed after being dumped from memory.
+        // TODO: Find a real fix and rip off the bandaid.
+        if (savedInstanceState == null) {
+            mPutAndGetMessagesTask = new PutAndGetMessagesTask();
+            mPutAndGetMessagesTask.execute(threadID);
+        }        
 
         // It has been found that deleting a message through the API completely obliterates it from
         // the site. This is not expected functionality and needs to be researched more.
+        // TODO Figure out why the API does this. It's not very nice.
         /*getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long arg3) {
@@ -74,7 +116,8 @@ public class MessageThread extends AllplayersSherlockListActivity {
                     public boolean onMenuItemClick(android.view.MenuItem item) {
                         switch (item.getItemId()) {
                         case R.id.delete:
-                            new DeleteMessageTask(position).execute();
+                            mDeleteMessageTask = new DeleteMessageTask(position);
+                            mDeleteMessageTask.execute();
                             break;
                         }
                         return true;
@@ -85,31 +128,94 @@ public class MessageThread extends AllplayersSherlockListActivity {
             }
         });*/
     }
-
+    
     /**
-     * Listener for the list on the page.
-     * @param l
-     * @param v
-     * @param position: The position in the list of the clicked item.
-     * @param id: The id of the list item that was clicked.
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
      */
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-
-        super.onListItemClick(l, v, position, id);
-
-        if (hasMessages) {
-            Intent intent = (new Router(this)).getMessageViewSingleIntent(mMessage, mMessageThreadList.get(position));
-            startActivity(intent);
+    public void onStop() {
+        super.onStop();
+        //mDeleteMessageTask.cancel(true);
+        
+        if (mPutAndGetMessagesTask != null) {
+            mPutAndGetMessagesTask.cancel(true);
+        }
+        
+        if (mPostMessageTask != null) {
+            mPostMessageTask.cancel(true);
         }
     }
 
+//    /**
+//     * This method will be called when an item in the list is selected.
+//     * 
+//     * @param l The ListView where the click happened.
+//     * @param v The view that was clicked within the ListView.
+//     * @param position: The position of the view in the list.
+//     * @param id: The row id of the item that was clicked.
+//     */
+//    @Override
+//    protected void onListItemClick(ListView l, View v, int position, long id) {
+//        super.onListItemClick(l, v, position, id);
+//
+//        if (hasMessages) {
+//            Intent intent = (new Router(this)).getMessageViewSingleIntent(mMessage, mMessageThreadList.get(position));
+//            startActivity(intent);
+//        }
+//    }
+
+
+    /**
+     * Posts a user's message.
+     */
+    public class PostMessageTask extends AsyncTask<Object, Void, Void> {
+        
+        @Override
+        protected void onPreExecute() {
+            
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+            mToast = Toast.makeText(MessageThread.this, "Sending Message...", Toast.LENGTH_LONG);
+            mToast.setGravity(Gravity.CENTER, 0, 0);
+            mToast.show();
+            
+        }
+        
+        /**
+         * Performs a calculation on the background thread. Sends the composed message.
+         * 
+         * @return The result of the API call.
+         */
+        protected Void doInBackground(Object... args) {
+            RestApiV1.createMessageReply((Integer)args[0], (String)args[1]);
+            return null;
+        }
+        
+        @Override
+        protected void onPostExecute(Void voids) {
+            mLoadingIndicator.setVisibility(View.GONE);
+            mToast.cancel();
+            mToast = Toast.makeText(MessageThread.this, "Message Sent!", Toast.LENGTH_SHORT);
+            mToast.setGravity(Gravity.CENTER, 0, 0);
+            mToast.show();
+            refresh();
+        }
+    }
+    
     /**
      * An async task containing the REST calls needed to populate the messages
      * list.
      */
     public class PutAndGetMessagesTask extends AsyncTask<String, Void, String> {
 
+        /**
+         * Performs a calculation on the background thread. Since we have accessed this thread, we
+         * need to mark it as "read".
+         * 
+         * @param threadID The ID of the current thread.
+         * @return The result of getting the thread's messages from the API.
+         */
+        @Override 
         protected String doInBackground(String... threadID) {
 
             mThreadId = Integer.parseInt(threadID[0]);
@@ -121,10 +227,10 @@ public class MessageThread extends AllplayersSherlockListActivity {
         }
 
         /**
-         * Gets a user's sent and received messages and puts this data into the
-         * user's message thread.
-         * @param jsonResult: The json result containing the data for the user's
-         * sent and received messages in this thread.
+         * Runs on the UI thread after doInBackground(Params...). The specified result is the value
+         * returned by doInBackground(Params...).
+         * 
+         * @param jsonResult: Result of fetching the thread's messages.
          */
         protected void onPostExecute(String jsonResult) {
 
@@ -134,6 +240,7 @@ public class MessageThread extends AllplayersSherlockListActivity {
 
             mActionBar.setSubtitle("Thread started by " + mMessageThreadList.get(0).getSenderName());
 
+            // Sort the messages by time. 
             Collections.sort(mMessageThreadList, new Comparator<Object>() {
                 public int compare(Object o1, Object o2) {
                     MessageThreadData m1 = (MessageThreadData) o1;
@@ -142,12 +249,13 @@ public class MessageThread extends AllplayersSherlockListActivity {
                 }
             });
 
+            // Populate the list items with message data.
             if (!mMessageThreadList.isEmpty()) {
                 hasMessages = true;
                 for (int i = 0; i < mMessageThreadList.size(); i++) {
                     map = new HashMap<String, String>();
                     map.put("line1", mMessageThreadList.get(i).getMessageBody());
-                    map.put("line2", "From: " + mMessageThreadList.get(i).getSenderName() + " - " + mMessageThreadList.get(i).getDateString());
+                    map.put("line2", mMessageThreadList.get(i).getSenderName() + " - " + mMessageThreadList.get(i).getDateString());
                     mInfoList.add(map);
                 }
             } else {
@@ -164,11 +272,18 @@ public class MessageThread extends AllplayersSherlockListActivity {
             int[] to = { android.R.id.text1, android.R.id.text2 };
 
             mAdapter = new SimpleAdapter(MessageThread.this, mInfoList, android.R.layout.simple_list_item_2, from, to);
-            setListAdapter(mAdapter);
+            //setListAdapter(mAdapter);
+            mListView.setAdapter(mAdapter);
             mLoadingIndicator.setVisibility(View.GONE);
         }
     }
 
+    /**
+     * Deletes a message from the thread.
+     * 
+     * TODO Currently there is an issue in the API where individual message deletion has some
+     * unwanted effects, these need to be fixed before single message deletion can be implemented.
+     */
     public class DeleteMessageTask extends AsyncTask<Void, Void, String> {
         private int position;
 

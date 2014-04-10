@@ -8,20 +8,25 @@ import org.json.JSONException;
 import com.allplayers.objects.GroupMemberData;
 import com.google.gson.Gson;
 
+/**
+ * Custom ArrayList used to hold GroupMemberData.
+ */
 public class GroupMembersMap {
     private ArrayList<GroupMemberData> mMembersList = new ArrayList<GroupMemberData>();
 
+    /**
+     * Constructor. 
+     * 
+     * @param jsonResult Result from API call. Used directly to populate the ArrayList.
+     */
     public GroupMembersMap(String jsonResult) {
+        
         try {
             JSONArray jsonArray = new JSONArray(jsonResult);
-
             if (jsonArray.length() > 0) {
-
-                // Used to create GroupMemberData objects from json.
                 Gson gson = new Gson();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     GroupMemberData member = gson.fromJson(jsonArray.getString(i), GroupMemberData.class);
-
                     if (member.isNew(mMembersList)) {
                         mMembersList.add(member);
                     }
@@ -32,10 +37,20 @@ public class GroupMembersMap {
         }
     }
 
+    /**
+     * Returns the array list.
+     * 
+     * @return the array list.
+     */
     public ArrayList<GroupMemberData> getGroupMemberData() {
         return mMembersList;
     }
 
+    /**
+     * Returns the size of the array list.
+     * 
+     * @return the size of the array list.
+     */
     public int size() {
         return mMembersList.size();
     }

@@ -14,19 +14,30 @@ import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
+/**
+ * Interface for the user to search for groups.
+ */
 public class FindGroupsActivity extends AllplayersSherlockActivity {
+    private Button mSearchButton;
     private EditText mSearchEditText;
     private EditText mZipcodeEditText;
     private EditText mDistanceEditText;
     private TextView mDistanceLabel;
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is starting.
+     * 
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.findgroups);
 
+        // Check if the user is logged in or not. If not, get rid of the side nav menu button. We
+        // dont want some random dude perusing through the app without an account. 
         if (RestApiV1.getCurrentUserUUID().equals("")) {
             mActionBar.setHomeButtonEnabled(false);
         }
@@ -48,6 +59,16 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
 
         // Add a watcher for the zipcode input to allow distance search if a valid zip is given.
         mZipcodeEditText.addTextChangedListener(new TextWatcher() {
+            
+            /**
+             * This method is called to notify you that, within s, the count characters beginning
+             * at start have just replaced old text that had length before.
+             * 
+             * @param s The sequence that is being checked for changes.
+             * @param start Where the text replacement started.
+             * @param before Where the text replacement ended.
+             * @param count The number of characters whos text was replaced.
+             */
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // We only want to show the distance field if the zipcode has a valid length of 5.
@@ -60,17 +81,44 @@ public class FindGroupsActivity extends AllplayersSherlockActivity {
                     mDistanceLabel.setVisibility(View.GONE);
                 }
             }
+            
+            /**
+             * This method is called to notify you that, somewhere within s, the text has been
+             * changed. 
+             * 
+             * @param s The Editable that has been edited.
+             */
             @Override
             public void afterTextChanged(Editable s) {
+                // UNUSED
             }
+            
+            /**
+             * This method is called to notify you that, within s, the count characters beginning at
+             * start are about to be replaced by new text with length after.
+             * 
+             * @param s The sequence that is being checked for changes.
+             * @param start Where the text replacement started.
+             * @param before Where the text replacement ended.
+             * @param count The number of characters whos text was replaced.
+             */
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // UNUSED
             }
         });
 
-        final Button searchButton = (Button) findViewById(R.id.searchGroupsButton);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        mSearchButton = (Button) findViewById(R.id.searchGroupsButton);
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            
+            /**
+             * Called when a view has been clicked.
+             * 
+             * @param v The view that was clicked.
+             */
+            @Override
             public void onClick(View v) {
+                
                 // Get the text input.
                 String query = mSearchEditText.getText().toString().trim();
                 String zipcodeString = mZipcodeEditText.getText().toString().trim();

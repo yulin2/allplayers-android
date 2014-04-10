@@ -23,19 +23,23 @@ import com.allplayers.rest.RestApiV1;
 import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 
+/**
+ * Displays an albums photos.
+ */
 public class PhotoPager extends AllplayersSherlockActivity {
 
-    private ViewPager mViewPager;
-    private PhotoPagerAdapter mPhotoAdapter;
     private PhotoData mCurrentPhoto;
+    private PhotoPagerAdapter mPhotoAdapter;
+    private ViewPager mViewPager;
+    
     private int mCurrentPhotoIndex;
 
     /**
-     * Called when the activity is first created, this sets up some variables,
-     * creates the Action Bar, and sets up the Side Navigation Menu.
-     * @param savedInstanceState: Saved data from the last instance of the
-     * activity.
-     * @TODO The side navigation menu does NOT work due to conflicting views.
+     * Called when the activity is starting.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     * down then this Bundle contains the data it most recently supplied in
+     * onSaveInstanceState(Bundle). Otherwise it is null.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class PhotoPager extends AllplayersSherlockActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_pager);
 
+        // Initialize variables.
         mCurrentPhoto = (new Router(this)).getIntentPhoto();
         mViewPager = new ViewPager(this);
         mPhotoAdapter = new PhotoPagerAdapter(this, mCurrentPhoto);
@@ -55,31 +60,33 @@ public class PhotoPager extends AllplayersSherlockActivity {
         mViewPager.setAdapter(mPhotoAdapter);
         mViewPager.setCurrentItem(mCurrentPhotoIndex);
 
+        // Set up the ActionBar.
         mActionBar.setTitle(getIntent().getStringExtra("album title"));
 
+        // Set up the Side Navigation Menu
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
         mSideNavigationView.setMenuItems(R.menu.side_navigation_menu);
         mSideNavigationView.setMenuClickCallback(this);
         mSideNavigationView.setMode(Mode.LEFT);
-
     }
 
     /**
-     * Called before placing the activity in a background state. Saves the
-     * instance data for the activity to be used the next time onCreate() is
-     * called.
-     * @param icicle: The bundle to add to.
+     * Called to retrieve per-instance state from an activity before being killed so that the state
+     * can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle) (the Bundle populated
+     * by this method will be passed to both).
+     * 
+     * @param outState Bundle in which to place your saved state.
      */
-    protected void onSaveInstanceState(Bundle icicle) {
-
-        super.onSaveInstanceState(icicle);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
         mCurrentPhotoIndex = mViewPager.getCurrentItem();
-        icicle.putInt("photoToStart", mCurrentPhotoIndex);
+        outState.putInt("photoToStart", mCurrentPhotoIndex);
     }
 
     /**
-     * @TODO EDIT ME
+     * Custom PagerAdapter used to display photos.
      */
     public class PhotoPagerAdapter extends PagerAdapter {
 
@@ -88,9 +95,10 @@ public class PhotoPager extends AllplayersSherlockActivity {
         private List<PhotoData> photos;
 
         /**
-         * @TODO EDIT ME
-         * @param context:
-         * @param item:
+         * Constructor.
+         * 
+         * @param contex The current context.
+         * @param item The PhotoData item to be displayed.
          */
         public PhotoPagerAdapter(Context context, PhotoData item) {
             mContext = context;
@@ -130,9 +138,11 @@ public class PhotoPager extends AllplayersSherlockActivity {
         }
 
         /**
-         * @TODO EDIT ME
-         * @param collection:
-         * @param position:
+         * Create the page for the given position.
+         * 
+         * @param collection The containing View in which the page will be shown.
+         * @param position The page position to be instantiated.
+         * @return Returns an Object representing the new page.
          */
         @Override
         public Object instantiateItem(View collection, int position) {
@@ -151,67 +161,85 @@ public class PhotoPager extends AllplayersSherlockActivity {
         }
 
         /**
-         * @TODO EDIT ME
-         * @param container:
-         * @param position:
-         * @param object:
+         * Remove a page for the given position.
+         * 
+         * @param container The containing View from which the page will be removed.
+         * @param position The page position to be removed.
+         * @param object The same object that was returned by instantiateItem(View, int).
          */
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-
             ((ViewPager) container).removeView((ImageView) object);
         }
 
         /**
-         * @TODO Returns the size of the list of photos.
+         * Returns the number of views available.
+         * 
+         * @return The number of views available.
          */
         @Override
         public int getCount() {
-
             return photos.size();
         }
 
         /**
-         * @TODO EDIT ME
-         * @param view:
-         * @param obj:
+         * Determines whether a page View is associated with a specific key object as returned by
+         * instantiateItem(ViewGroup, int). 
+         * 
+         * @param view Page View to check for association with obj.
+         * @param obj Object to check for association with view.
+         * @return Returns true if view is associated with the key object object.
          */
         @Override
         public boolean isViewFromObject(View view, Object obj) {
-
             return view == obj;
         }
 
         /**
-         * Get's a user's image using a rest call and displays it.
+         * Get's a user's image..
          */
         public class GetRemoteImageTask extends AsyncTask<String, Void, Bitmap> {
             private final WeakReference<ImageView> viewReference;
             private int index;
 
+            /**
+             * Constructor.
+             * 
+             * @param im The ImageView that will hold the fetched image.
+             * @param ind The index of the ImageView that will hold the fetched image.
+             */
             GetRemoteImageTask(ImageView im, int ind) {
                 viewReference = new WeakReference<ImageView>(im);
                 index = ind;
             }
 
+            /**
+             * Runs on the UI thread before doInBackground(Params...).
+             */
             @Override
             protected void onPreExecute() {
                 ((Activity) mContext).setProgressBarIndeterminateVisibility(true);
             }
 
             /**
-             * Gets the requested image using a REST call.
-             * @param photoUrl: The URL of the photo to fetch.
+             * Performs a computation on a background thread. Gets the requested image.
+             * 
+             * @param photoUrl The URL of the photo to fetch.
+             * @return A Bitmap of the image that was fetched.
              */
             protected Bitmap doInBackground(String... photoUrl) {
-                Bitmap b = RestApiV1.getRemoteImage(photoUrl[0]);
+                //TODO unhardcode
+                Bitmap b = RestApiV1.getRemoteImage(photoUrl[0], 1080, 1920);
                 mImageCache.put(index + "", b);
                 return b;
             }
 
             /**
-             * Adds the fetched image to an array of the album's images.
-             * @param image: The image to be added.
+             * Runs on the UI thread after doInBackground(Params...). The specified result is the
+             * value returned by doInBackground(Params...).Adds the fetched image to an array of the
+             * album's images.
+             * 
+             * @param bm The image to be added.
              */
             protected void onPostExecute(Bitmap bm) {
                 ((Activity) mContext).setProgressBarIndeterminateVisibility(false);

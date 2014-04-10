@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,21 +22,33 @@ import com.devspark.sidenavigation.SideNavigationView;
 import com.devspark.sidenavigation.SideNavigationView.Mode;
 import com.google.gson.Gson;
 
+/**
+ * Interface for the user to compose a message after selecting its recipients.
+ */
 public class ComposeMessage extends AllplayersSherlockActivity {
+    
+    private Activity mActivity = this;
+    private ArrayList<String> mRecipientUuidList = new ArrayList<String>();
+    private Button mSendButton;
+    private CreateNewMessageTask mCreateNewMessageTask;
+    
     private String mMessageBody;
     private String mMessageSubject;
-    private ArrayList<String> mRecipientUuidList = new ArrayList<String>();
 
-    /** called when the activity is first created. */
+    /**
+     *  Called when the activity is starting.  
+     *  
+     *  @param savedInstanceState If the activity is being re-initialized after previously being
+     *  shut down then this Bundle contains the data it most recently supplied in
+     *  onSaveInstanceState(Bundle). Otherwise it is null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.composemessage);
 
         // Set up the ActionBar.
         mActionBar.setTitle("Compose Message");
-        mActionBar.setSubtitle("New Message");
 
         // Set up the Side Navigation Menu.
         mSideNavigationView = (SideNavigationView)findViewById(R.id.side_navigation_view);
@@ -60,6 +74,13 @@ public class ComposeMessage extends AllplayersSherlockActivity {
                 e.printStackTrace();
             }
         }
+        
+        // Set the subtitle for the action bar depending on how many message recipients there are.
+        if (mRecipientUuidList.size() == 1) {
+            mActionBar.setSubtitle("New Message to 1 recipient");
+        } else {
+            mActionBar.setSubtitle("New Message to " + mRecipientUuidList.size() + " recipients");
+        }
 
         // The field for the message subject.
         final EditText subjectField = (EditText)findViewById(R.id.subjectField);
@@ -69,33 +90,79 @@ public class ComposeMessage extends AllplayersSherlockActivity {
         final EditText bodyField = (EditText)findViewById(R.id.bodyField);
         bodyField.setText("");
 
-        final Button sendButton = (Button)findViewById(R.id.sendMessageButton);
-
-        sendButton.setOnClickListener(new View.OnClickListener() {
+        // Set up the send button.
+        mSendButton  = (Button)findViewById(R.id.sendMessageButton);
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
+                
                 // Pull the body and subject from the form.
                 mMessageBody = bodyField.getText().toString();
                 mMessageSubject = subjectField.getText().toString();
 
                 // Spawn a thread to send the message.
-                new createNewMessageTask().execute(mMessageSubject, mMessageBody);
-
-                // Show a popup message that the message is being sent.
-                Toast.makeText(getBaseContext(), "Message Sent!", Toast.LENGTH_LONG).show();
-
-                // End the activity.
-                finish();
+                mCreateNewMessageTask = new CreateNewMessageTask();
+                mCreateNewMessageTask.execute(mMessageSubject, mMessageBody);
             }
         });
     }
+    
+    /**
+     * Called when you are no longer visible to the user. You will next receive either onRestart(),
+     * onDestroy(), or nothing, depending on later user activity.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        
+        if (mCreateNewMessageTask != null) {
+            mCreateNewMessageTask.cancel(true);
+        }
+    }
 
     /**
-     * Posts a user's message using a rest call.
+     * Sends the user's message.
      */
-    public class createNewMessageTask extends AsyncTask<String, Void, Void> {
+    public class CreateNewMessageTask extends AsyncTask<String, Void, Void> {
+        Toast toast;
+        
+        /**
+         * Runs on the UI thread before doInBackground(Params...).
+         */
+        @Override
+        protected void onPreExecute() {
+            
+            // Show the progress spinner and a message so we know that the message is in progress of
+            // being sent.
+            setProgressBarIndeterminateVisibility(true);
+            toast = Toast.makeText(mActivity, "Sending Message...", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+        
+        /**
+         * Performs a computation on a background thread.
+         * @param params 
+         *      • params[0] Message sumbject.
+         *      • params[1] Message body.
+         */
+        @Override
         protected Void doInBackground(String... params) {
-            RestApiV1.createNewMessage(mRecipientUuidList.toArray(new String[mRecipientUuidList.size()]), params[0], params[1]);
+            RestApiV1.createMessageNew(mRecipientUuidList.toArray(new String[mRecipientUuidList.size()]), params[0], params[1]);
             return null;
+        }
+        
+        /**
+         * Runs on the UI thread after doInBackground(Params...).
+         * @param voids Nothing... Nothing at all.
+         */
+        @Override
+        protected void onPostExecute(Void voids) {
+            toast.cancel();
+            toast = Toast.makeText(mActivity, "Message Sent!", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            mActivity.finish();
         }
     }
 }

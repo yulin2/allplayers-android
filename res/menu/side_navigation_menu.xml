@@ -3,31 +3,36 @@
 
     <item
         android:id="@+id/groups"
-        android:icon="@drawable/groups_icon"
+        android:icon="@drawable/groups_sidenav_icon"
         android:title="@string/groups"/>
     <item
+        android:id="@+id/contacts"
+        android:icon="@drawable/contacts_sidenav_icon"
+        android:title="@string/contacts"/>
+    <item
         android:id="@+id/messages"
-        android:icon="@drawable/messages_icon"
+        android:icon="@drawable/messages_sidenav_icon"
         android:title="@string/messages"/>
     <item
-        android:id="@+id/photos"
-        android:icon="@drawable/photos_icon"
-        android:title="@string/photos"/>
-    <item
         android:id="@+id/events"
-        android:icon="@drawable/events_icon"
+        android:icon="@drawable/events_sidenav_icon"
         android:title="@string/events"/>
-    <item
-        android:id="@+id/search"
-        android:icon="@drawable/search_200x200"
-        android:title="@string/search"/>
-    <item
-        android:id="@+id/log_out"
-        android:icon="@drawable/logout_200x200"
-        android:title="@string/logout"/>
+    <!-- For now, we are not showing the group search button. There is not enough real functionality there yet for it to make sense to have it. -->
+<!--     <item -->
+<!--         android:id="@+id/search" -->
+<!--         android:icon="@drawable/search_sidenav_icon" -->
+<!--         android:title="@string/search"/> -->
     <item
         android:id="@+id/refresh"
-        android:icon="@drawable/refresh_200x200"
+        android:icon="@drawable/refresh_sidenav_icon"
         android:title="@string/refresh"/>
+    <item
+        android:id="@+id/change_theme"
+        android:icon="@drawable/switch_theme_sidenav_icon"
+        android:title="Change Theme"/>
+    <item
+        android:id="@+id/log_out"
+        android:icon="@drawable/logout_sidenav_icon"
+        android:title="@string/logout"/>
 
 </menu>
