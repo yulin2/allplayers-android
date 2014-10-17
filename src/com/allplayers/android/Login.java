@@ -88,24 +88,32 @@ public class Login extends Activity {
         
         // There should only be one allplayers type account in the device at once.
         if (accounts.length == 1) {
-            String storedEmail = accounts[0].name;
-            String storedPassword = mAccountManager.getPassword(accounts[0]);
-            String storedSecretKey = LocalStorage.readSecretKey(mContext);
+            final String storedEmail = accounts[0].name;
+            final String storedPassword = mAccountManager.getPassword(accounts[0]);
 
-            if (storedSecretKey == null || storedSecretKey.equals("")) {
-                LocalStorage.writeSecretKey(mContext);
-                storedSecretKey = LocalStorage.readSecretKey(mContext);
-            }
+            new AsyncTask<Void, Void, String>() {
+                protected String doInBackground(Void... args) {
+                    String storedSecretKey = LocalStorage.readSecretKey(mContext);
+                    if (storedSecretKey == null || storedSecretKey.equals("")) {
+                        LocalStorage.writeSecretKey(mContext);
+                        storedSecretKey = LocalStorage.readSecretKey(mContext);
+                    }
+                    return storedSecretKey;
+                }
 
-            if (storedEmail != null && !storedEmail.equals("") && storedPassword != null && !storedPassword.equals("")) {
-                BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-                textEncryptor.setPassword(storedSecretKey);
-                String unencryptedPassword = textEncryptor.decrypt(storedPassword);
+                protected void onPostExecute(String storedSecretKey) {
+                    if (storedEmail != null && !storedEmail.equals("") && storedPassword != null 
+                            && !storedPassword.equals("")) {
+                        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+                        textEncryptor.setPassword(storedSecretKey);
+                        String unencryptedPassword = textEncryptor.decrypt(storedPassword);
 
-                mLoadingIndicator.setVisibility(View.VISIBLE);
-                mAttemptLoginTask = new AttemptLoginTask();
-                mAttemptLoginTask.execute(storedEmail, unencryptedPassword);
-            }
+                        mLoadingIndicator.setVisibility(View.VISIBLE);
+                        mAttemptLoginTask = new AttemptLoginTask();
+                        mAttemptLoginTask.execute(storedEmail, unencryptedPassword);
+                    }
+                }
+            }.execute();
         } else {
             
             // TODO: Clear user saved data as well
