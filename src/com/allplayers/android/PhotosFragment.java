@@ -157,7 +157,12 @@ public class PhotosFragment extends ListFragment {
         if (!groupList.isEmpty()) {
             String group_uuid;
 
-            LocalStorage.writeUserAlbums(mParentActivity.getBaseContext(), "", true);
+            new AsyncTask<Void, Void, java.lang.Void>() {
+                protected java.lang.Void doInBackground(Void... args) {
+                    LocalStorage.writeUserAlbums(mParentActivity.getBaseContext(), "", true);
+                    return null;
+                }
+            }.execute();
             mGroupCount += groupList.size();
             if (groupList.size() < 15) {
                 mCanRemoveFooter = true;
